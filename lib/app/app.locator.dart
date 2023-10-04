@@ -4,6 +4,7 @@
 // StackedLocatorGenerator
 // **************************************************************************
 
+import 'package:rag/services/database_service.dart';
 // ignore_for_file: public_member_api_docs, implementation_imports, depend_on_referenced_packages
 
 import 'package:stacked_services/src/bottom_sheet/bottom_sheet_service.dart';
@@ -19,12 +20,11 @@ Future<void> setupLocator({
 }) async {
 // Register environments
   locator.registerEnvironment(
-    environment: environment,
-    environmentFilter: environmentFilter,
-  );
+      environment: environment, environmentFilter: environmentFilter,);
 
 // Register dependencies
   locator.registerLazySingleton(BottomSheetService.new);
   locator.registerLazySingleton(DialogService.new);
   locator.registerLazySingleton(NavigationService.new);
+  locator.registerLazySingleton(DatabaseService.new);
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rag/ui/bottom_sheets/notice/notice_sheet_model.dart';
 import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-import 'package:rag/ui/bottom_sheets/notice/notice_sheet_model.dart';
 
 class NoticeSheet extends StackedView<NoticeSheetModel> {
   const NoticeSheet({
@@ -12,7 +11,7 @@ class NoticeSheet extends StackedView<NoticeSheetModel> {
     required this.request,
     super.key,
   });
-  final Function(SheetResponse)? completer;
+  final void Function(SheetResponse) completer;
   final SheetRequest request;
 
   @override

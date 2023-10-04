@@ -1,9 +1,9 @@
+import 'package:file_upload/widgets/file_upload_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
-
 import 'package:rag/ui/views/home/home_viewmodel.dart';
+import 'package:stacked/stacked.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
   const HomeView({super.key});
@@ -19,10 +19,13 @@ class HomeView extends StackedView<HomeViewModel> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Center(
-            child: Column(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                verticalSpaceLarge,
+                const SizedBox(
+                  width: 400,
+                  child: FileUploadWidget(),
+                ),
                 Column(
                   children: [
                     const Text(

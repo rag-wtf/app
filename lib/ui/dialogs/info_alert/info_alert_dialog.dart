@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
+import 'package:rag/ui/dialogs/info_alert/info_alert_dialog_model.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-import 'package:rag/ui/dialogs/info_alert/info_alert_dialog_model.dart';
 
 const double _graphicSize = 60;
 
