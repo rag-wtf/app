@@ -9,9 +9,10 @@ import 'package:rag/ui/dialogs/info_alert/info_alert_dialog_model.dart';
 const double _graphicSize = 60;
 
 class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
-
   const InfoAlertDialog({
-    required this.request, required this.completer, super.key,
+    required this.request,
+    required this.completer,
+    super.key,
   });
   final DialogRequest request;
   final Function(DialogResponse) completer;
@@ -41,7 +42,9 @@ class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
                       Text(
                         request.title!,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w900,),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                       verticalSpaceTiny,
                       Text(
@@ -73,9 +76,11 @@ class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
             ),
             verticalSpaceMedium,
             GestureDetector(
-              onTap: () => completer(DialogResponse(
-                confirmed: true,
-              ),),
+              onTap: () => completer(
+                DialogResponse(
+                  confirmed: true,
+                ),
+              ),
               child: Container(
                 height: 50,
                 width: double.infinity,

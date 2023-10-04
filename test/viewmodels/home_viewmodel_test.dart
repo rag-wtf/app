@@ -29,11 +29,13 @@ void main() {
 
         final model = getModel();
         model.showBottomSheet();
-        verify(bottomSheetService.showCustomSheet(
-          variant: BottomSheetType.notice,
-          title: ksHomeBottomSheetTitle,
-          description: ksHomeBottomSheetDescription,
-        ),);
+        verify(
+          bottomSheetService.showCustomSheet(
+            variant: BottomSheetType.notice,
+            title: ksHomeBottomSheetTitle,
+            description: ksHomeBottomSheetDescription,
+          ),
+        );
       });
     });
   });

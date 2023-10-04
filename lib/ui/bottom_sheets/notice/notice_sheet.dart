@@ -8,7 +8,9 @@ import 'package:rag/ui/bottom_sheets/notice/notice_sheet_model.dart';
 
 class NoticeSheet extends StackedView<NoticeSheetModel> {
   const NoticeSheet({
-    required this.completer, required this.request, super.key,
+    required this.completer,
+    required this.request,
+    super.key,
   });
   final Function(SheetResponse)? completer;
   final SheetRequest request;
