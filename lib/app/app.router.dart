@@ -69,7 +69,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
-        transition: transition,);
+        transition: transition);
   }
 
   Future<dynamic> navigateToStartupView([
@@ -83,7 +83,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
-        transition: transition,);
+        transition: transition);
   }
 
   Future<dynamic> replaceWithHomeView([
@@ -97,7 +97,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
-        transition: transition,);
+        transition: transition);
   }
 
   Future<dynamic> replaceWithStartupView([
@@ -111,6 +111,6 @@ extension NavigatorStateExtension on _i5.NavigationService {
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
-        transition: transition,);
+        transition: transition);
   }
 }

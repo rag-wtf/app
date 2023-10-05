@@ -16,8 +16,6 @@ dependencies:
   intl: ^0.18.0
   stacked: ^3.4.0
   stacked_services: ^1.1.0
-  surrealdb_wasm:
-    path: ../surrealdb_wasm
 
 dev_dependencies:
   build_runner: ^2.4.5

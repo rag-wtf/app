@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:file_upload/database_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
@@ -84,6 +85,7 @@ class UploadFile extends ChangeNotifier {
 }
 
 class UploadFileService {
+  final DatabaseService databaseService = DatabaseService();
   Future<UploadFile?> pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -155,11 +157,19 @@ class UploadFileService {
         double progress = count * 0.01;
         file.processingProgress = progress;
       },
-    ).then((response) {
+    ).then((response) async {
       // Handle the response data in here
       debugPrint("RESPONSE FROM SERVER");
-      List<Map<String, dynamic>> embeddings = jsonDecode(response.data);
-      debugPrint(embeddings.toString());
+      debugPrint("response.data.runtimeType ${response.data.runtimeType}");
+      debugPrint("response.data.length ${List.castFrom(response.data).length}");
+      //List<Map<String, dynamic>> embeddings =
+      //    jsonDecode(response.data.toString());
+      await databaseService.connect();
+      await databaseService.use(createSchema: true);
+      final result = await databaseService.insertDocuments(
+        List<Map<String, dynamic>>.from(response.data),
+      );
+      debugPrint("insert documents result $result");
     }).catchError((error) {
       // Handle the error in here
       if (error is DioException) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/l10n.dart';
-import 'package:rag/services/database_service.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:rag/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:rag/ui/views/home/home_view.dart';
@@ -19,7 +18,6 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton<BottomSheetService>(classType: BottomSheetService),
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
-    LazySingleton<DatabaseService>(classType: DatabaseService),
 // @stacked-service
   ],
   bottomsheets: [

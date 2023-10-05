@@ -5,7 +5,7 @@ class DatabaseService {
     DEFINE TABLE documents SCHEMAFULL;
     DEFINE FIELD id ON TABLE documents TYPE uuid;
     DEFINE FIELD content ON TABLE documents TYPE string;
-    DEFINE FIELD embedding ON TABLE documents TYPE array<float, 384>; --768 or 1024
+    DEFINE FIELD embedding ON TABLE documents TYPE array<float, 384>;
     DEFINE FIELD metadata ON TABLE documents TYPE object;
     DEFINE INDEX idx_mtree_embedding ON documents FIELDS embedding MTREE DIMENSION 384 DIST COSINE;
   ''';
