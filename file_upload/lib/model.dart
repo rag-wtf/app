@@ -167,7 +167,7 @@ class UploadFileService {
       await databaseService.connect();
       await databaseService.use(createSchema: true);
       final result = await databaseService.insertDocuments(
-        List<Map<String, dynamic>>.from(response.data),
+        jsonEncode(response.data),
       );
       debugPrint("insert documents result $result");
     }).catchError((error) {

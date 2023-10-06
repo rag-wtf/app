@@ -2,8 +2,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class DatabaseService {
   static const documentsTableSql = '''
-    DEFINE TABLE documents SCHEMAFULL;
-    DEFINE FIELD id ON TABLE documents TYPE uuid;
+    DEFINE TABLE documents;
     DEFINE FIELD content ON TABLE documents TYPE string;
     DEFINE FIELD embedding ON TABLE documents TYPE array<float, 384>;
     DEFINE FIELD metadata ON TABLE documents TYPE object;
@@ -27,12 +26,10 @@ class DatabaseService {
     }
   }
 
-  Future<dynamic> insertDocuments(List<Map<String, dynamic>> documents) async {
+  Future<dynamic> insertDocuments(String documents) async {
     return db.query(
-      insertDocumentsSql,
-      {
-        'documents': documents,
-      },
+      insertDocumentsSql.replaceFirst(r'$documents',
+          documents.replaceAll('"id":"_"', '"id":rand::uuid::v7()')),
     );
   }
 }
