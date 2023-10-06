@@ -1,0 +1,22 @@
+name: surrealdb_console
+description: SurrealDB Console Widget.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  console:
+    path: ../console
+  flutter:
+    sdk: flutter
+  surrealdb_wasm:
+    path: ../../surrealdb_wasm
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.0
+  very_good_analysis: ^5.1.0
