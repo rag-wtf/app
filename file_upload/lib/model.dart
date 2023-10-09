@@ -86,12 +86,17 @@ class UploadFile extends ChangeNotifier {
 
 class UploadFileService {
   final DatabaseService databaseService = DatabaseService();
+
+  bool isGzFile(final fileBytes) {
+    return (fileBytes[0] == 0x1f && fileBytes[1] == 0x8b);
+  }
+
   Future<UploadFile?> pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: allowedExtensions.split(","),
       allowMultiple: false,
-      withData: false,
+      withData: true,
       withReadStream: true,
     );
 
@@ -107,6 +112,9 @@ class UploadFileService {
       final fileBytes = file.bytes;
       fileName = file.name;
       mimeType = lookupMimeType(fileName, headerBytes: fileBytes);
+      if (mimeType == null && file.extension == 'gz') {
+        mimeType = "application/gzip";
+      }
     } else {
       final filePath = file.path;
       if (filePath != null) {
@@ -115,7 +123,7 @@ class UploadFileService {
       }
     }
 
-    debugPrint("mimeType $mimeType");
+    debugPrint("fileName $fileName, mimeType $mimeType");
 
     final contentType = mimeType != null ? MediaType.parse(mimeType) : null;
 
@@ -146,6 +154,12 @@ class UploadFileService {
 
     dio.post(
       backendUrl,
+      /*
+      options: Options(
+      headers: {
+          'Content-Encoding': 'gzip',
+        },
+      ), */
       data: formData,
       cancelToken: cancelToken,
       onSendProgress: (int sent, int total) {
@@ -159,11 +173,17 @@ class UploadFileService {
       },
     ).then((response) async {
       // Handle the response data in here
-      debugPrint("RESPONSE FROM SERVER");
+      debugPrint("RESPONSE FROM SERVER ${response.headers}");
       debugPrint("response.data.runtimeType ${response.data.runtimeType}");
-      debugPrint("response.data.length ${List.castFrom(response.data).length}");
-      //List<Map<String, dynamic>> embeddings =
-      //    jsonDecode(response.data.toString());
+      //final data = gzip.decode(response.data).cast<Map<String, dynamic>>();
+      /*final data = GZipDecoder()
+          .decodeBytes(
+            response.data,
+            verify: true,
+          )
+          .cast<Map<String, dynamic>>();
+          */
+      debugPrint("response.data.length ${response.data.length}");
       await databaseService.connect();
       await databaseService.use(createSchema: true);
       final result = await databaseService.insertDocuments(
