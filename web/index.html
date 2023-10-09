@@ -36,9 +36,16 @@
     <link rel="manifest" href="manifest.json" />
     <script
       type="module"
-      src="/assets/packages/surrealdb_wasm/assets/wasm/surrealdb/surrealdb.js"
+      src="/assets/packages/surrealdb_wasm/assets/wasm/surrealdb/surrealdb_wasm.js"
       defer
     ></script>
+    <script type="module" defer>
+      import init from "/assets/packages/surrealdb_wasm/assets/wasm/surrealdb/surrealdb_wasm.js";
+
+      // Initialize the Wasm module
+      await init();
+      console.log("Surreal initialized!!!");
+    </script>
   </head>
 
   <body>
