@@ -5,14 +5,14 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 class SurrealdbConsole extends StatefulWidget {
   const SurrealdbConsole({
     required this.endpoint,
-    required this.ns,
-    required this.db,
+    this.ns,
+    this.db,
     super.key,
   });
 
   final String endpoint;
-  final String ns;
-  final String db;
+  final String? ns;
+  final String? db;
 
   @override
   State<SurrealdbConsole> createState() => _SurrealdbConsoleState();
@@ -23,7 +23,9 @@ class _SurrealdbConsoleState extends State<SurrealdbConsole> {
 
   Future<void> initFunction() async {
     await db.connect(widget.endpoint);
-    await db.use(ns: widget.ns, db: widget.db);
+    if (widget.ns != null && widget.db != null) {
+      await db.use(ns: widget.ns, db: widget.db);
+    }
   }
 
   Future<Object?> executeFunction(String value) async {
