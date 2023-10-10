@@ -14,6 +14,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
+  rag_console:
+    path: rag_console
   stacked: ^3.4.0
   stacked_services: ^1.1.0
   surrealdb_console:

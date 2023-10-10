@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
+import 'package:rag_console/rag_console.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_console/surrealdb_console.dart';
 
@@ -29,6 +30,19 @@ class HomeView extends StackedView<HomeViewModel> {
                 ),
                 Column(
                   children: [
+                    const Expanded(
+                      child: SizedBox(
+                        width: 500,
+                        child: RagConsole(
+                          endpoint: 'indxdb://rag',
+                          ns: 'rag',
+                          db: 'test',
+                          embeddings_api_base: 'http://localhost:8000',
+                          embeddings_api_key: '',
+                        ),
+                      ),
+                    ),
+                    verticalSpaceSmall,
                     const Expanded(
                       child: SizedBox(
                         width: 500,
