@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:env_reader/env_reader.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
@@ -13,6 +14,11 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   // Add cross-flavor configuration here
   WidgetsFlutterBinding.ensureInitialized();
+  await Env.load(
+    source: EnvLoader.asset('assets/env/.env'),
+    password: 'qzG[?My3<xF.f_rkZ]D^~b',
+  );
+
   await setupLocator();
   setupDialogUi();
   setupBottomSheetUi();

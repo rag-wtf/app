@@ -8,7 +8,16 @@ import 'upload_file_zone_widget.dart';
 import 'upload_file_list_widget.dart';
 
 class FileUploadWidget extends StatefulWidget {
-  const FileUploadWidget({Key? key}) : super(key: key);
+  const FileUploadWidget(
+      {Key? key,
+      required this.dataIngestionApiUrl,
+      required this.embeddingsApiBase,
+      required this.embeddingsApiKey})
+      : super(key: key);
+
+  final String dataIngestionApiUrl;
+  final String embeddingsApiBase;
+  final String embeddingsApiKey;
 
   @override
   State<FileUploadWidget> createState() => _FileUploadWidgetState();
@@ -20,7 +29,11 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
   @override
   void initState() {
     super.initState();
-    _viewModel = UploadFileListViewModel(UploadFileList());
+    _viewModel = UploadFileListViewModel(UploadFileList(
+      dataIngestionApiUrl: widget.dataIngestionApiUrl,
+      embeddingsApiBase: widget.embeddingsApiBase,
+      embeddingsApiKey: widget.embeddingsApiKey,
+    ));
   }
 
   Future<void> addItem() async {

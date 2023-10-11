@@ -1,3 +1,4 @@
+import 'package:env_reader/env_reader.dart';
 import 'package:file_upload/widgets/file_upload_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/common/app_colors.dart';
@@ -16,6 +17,13 @@ class HomeView extends StackedView<HomeViewModel> {
     HomeViewModel viewModel,
     Widget? child,
   ) {
+    debugPrint('HomeView ${Env.read<String>('CONFIG')}');
+    final dataIngestionApiUrl = Env.read<String>('DATA_INGESTION_API_URL') ??
+        'DATA_INGESTION_API_URL undefined';
+    final embeddingsApiBase = Env.read<String>('EMBEDDINGS_API_BASE') ??
+        'EMBEDDINGS_API_BASE undefined';
+    final embeddingsApiKey = Env.read<String>('EMBEDDINGS_API_KEY') ??
+        'EMBEDDINGS_API_KEY undefined';
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -24,22 +32,25 @@ class HomeView extends StackedView<HomeViewModel> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(
+                SizedBox(
                   width: 400,
-                  child: FileUploadWidget(),
+                  child: FileUploadWidget(
+                    dataIngestionApiUrl: dataIngestionApiUrl,
+                    embeddingsApiBase: embeddingsApiBase,
+                    embeddingsApiKey: embeddingsApiKey,
+                  ),
                 ),
                 Column(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: SizedBox(
                         width: 500,
                         child: RagConsole(
                           endpoint: 'indxdb://rag',
                           ns: 'rag',
                           db: 'test',
-                          embeddings_api_base:
-                              'https://limcheekin-bge-small-en-v1-5.hf.space/v1',
-                          embeddings_api_key: '',
+                          embeddings_api_base: embeddingsApiBase,
+                          embeddings_api_key: embeddingsApiKey,
                         ),
                       ),
                     ),

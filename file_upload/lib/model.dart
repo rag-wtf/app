@@ -11,7 +11,18 @@ import 'constants.dart';
 
 class UploadFileList {
   final List<UploadFile> items = [];
-  final UploadFileService _uploadFileService = UploadFileService();
+  late UploadFileService _uploadFileService;
+
+  UploadFileList(
+      {required String dataIngestionApiUrl,
+      required String embeddingsApiBase,
+      required String embeddingsApiKey}) {
+    _uploadFileService = UploadFileService(
+      dataIngestionApiUrl: dataIngestionApiUrl,
+      embeddingsApiBase: embeddingsApiBase,
+      embeddingsApiKey: embeddingsApiKey,
+    );
+  }
 
   Future<void> add() async {
     final item = await _uploadFileService.pickFile();
@@ -85,8 +96,18 @@ class UploadFile extends ChangeNotifier {
 }
 
 class UploadFileService {
-  final DatabaseService databaseService = DatabaseService();
+  UploadFileService(
+      {required this.dataIngestionApiUrl,
+      required this.embeddingsApiBase,
+      required this.embeddingsApiKey}) {
+    databaseService = DatabaseService();
+  }
 
+  final String dataIngestionApiUrl;
+  final String embeddingsApiBase;
+  final String embeddingsApiKey;
+
+  late DatabaseService databaseService;
   bool isGzFile(final fileBytes) {
     return (fileBytes[0] == 0x1f && fileBytes[1] == 0x8b);
   }
@@ -152,14 +173,9 @@ class UploadFileService {
       "file": multipartFile,
     });
 
+    debugPrint('dataIngestionApiUrl $dataIngestionApiUrl');
     dio.post(
-      backendUrl,
-      /*
-      options: Options(
-      headers: {
-          'Content-Encoding': 'gzip',
-        },
-      ), */
+      dataIngestionApiUrl,
       data: formData,
       cancelToken: cancelToken,
       onSendProgress: (int sent, int total) {
@@ -185,7 +201,7 @@ class UploadFileService {
           */
       debugPrint("response.data.length ${response.data.length}");
       await databaseService.connect();
-      await databaseService.use(createSchema: true);
+      await databaseService.use(createSchema: false);
       final result = await databaseService.insertDocuments(
         jsonEncode(response.data),
       );
@@ -200,7 +216,7 @@ class UploadFileService {
             file.updateStatus(UploadFileStatus.cancelled, DateTime.now());
             break;
           default:
-            debugPrint("*** DioException ERROR ${error.message}");
+            debugPrint("*** DioException ERROR $error");
             // TODO: the error may cause by no response streaming support in AWS Lambda,
             // Self hosting need not to perform the conditional check
             if (error.message != null) {
