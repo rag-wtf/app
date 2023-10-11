@@ -37,7 +37,8 @@ class HomeView extends StackedView<HomeViewModel> {
                           endpoint: 'indxdb://rag',
                           ns: 'rag',
                           db: 'test',
-                          embeddings_api_base: 'http://localhost:8000',
+                          embeddings_api_base:
+                              'https://limcheekin-bge-small-en-v1-5.hf.space/v1',
                           embeddings_api_key: '',
                         ),
                       ),

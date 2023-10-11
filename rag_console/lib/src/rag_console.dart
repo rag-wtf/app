@@ -64,7 +64,7 @@ class _RagConsoleState extends State<RagConsole> {
         case 'e':
           final input = value.substring(3);
           final response = await dio.post(
-            '${widget.embeddings_api_base}/v1/embeddings',
+            '${widget.embeddings_api_base}/embeddings',
             options: Options(
               headers: {
                 'Content-type': 'application/json',
