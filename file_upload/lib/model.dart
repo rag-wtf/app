@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
 import 'package:file_upload/database_service.dart';
 import 'package:flutter/foundation.dart';
@@ -108,8 +109,16 @@ class UploadFileService {
   final String embeddingsApiKey;
 
   late DatabaseService databaseService;
+  final gzipEncoder = GZipEncoder();
+
   bool isGzFile(final fileBytes) {
     return (fileBytes[0] == 0x1f && fileBytes[1] == 0x8b);
+  }
+
+  // gzip request
+  List<int> gzipRequestEncoder(String request, RequestOptions options) {
+    options.headers.putIfAbsent('Content-Encoding', () => 'gzip');
+    return gzipEncoder.encode(utf8.encode(request))!;
   }
 
   Future<UploadFile?> pickFile() async {
@@ -191,21 +200,38 @@ class UploadFileService {
       // Handle the response data in here
       debugPrint("RESPONSE FROM SERVER ${response.headers}");
       debugPrint("response.data.runtimeType ${response.data.runtimeType}");
-      //final data = gzip.decode(response.data).cast<Map<String, dynamic>>();
-      /*final data = GZipDecoder()
-          .decodeBytes(
-            response.data,
-            verify: true,
-          )
-          .cast<Map<String, dynamic>>();
-          */
-      debugPrint("response.data.length ${response.data.length}");
+      final document = Map<String, dynamic>.from(response.data);
+      final chunkedTexts =
+          document['items'].map((item) => item['content']).toList();
+
+      final embeddingsResponse = await dio.post(
+        '$embeddingsApiBase/embeddings',
+        options: Options(
+          headers: {
+            'Content-type': 'application/json',
+            if (embeddingsApiKey.isNotEmpty)
+              'Authorization': 'Bearer $embeddingsApiKey',
+          },
+          requestEncoder: gzipRequestEncoder,
+        ),
+        data: {
+          'input': chunkedTexts,
+        },
+      );
+      debugPrint(
+          "embeddingsResponse.data.length ${embeddingsResponse.data.length}");
+      //debugPrint('embeddingsResponse.data ${embeddingsResponse.data}');
+      final embeddings = embeddingsResponse.data['data'];
+      final documentItems = document['items'];
+      for (int i = 0; i < documentItems.length; i++) {
+        documentItems[i]['embedding'] = embeddings[i]['embedding'];
+      }
       await databaseService.connect();
       await databaseService.use(createSchema: false);
       final result = await databaseService.insertDocuments(
-        jsonEncode(response.data),
+        jsonEncode(document),
       );
-      debugPrint("insert documents result $result");
+      //debugPrint("insert documents result $result");
     }).catchError((error) {
       // Handle the error in here
       if (error is DioException) {
