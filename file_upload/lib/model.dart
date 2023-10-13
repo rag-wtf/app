@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
+import 'package:mime_type/mime_type.dart';
 import 'constants.dart';
 
 class UploadFileList {
@@ -47,7 +48,7 @@ class UploadFile extends ChangeNotifier {
   final String name;
   final int size;
   final MediaType? contentType;
-  final Stream<List<int>> stream;
+  final List<List<int>> data;
   UploadFileStatus status = UploadFileStatus.pending;
   double _uploadingProgress = 0;
   double _processingProgress = 0;
@@ -59,7 +60,7 @@ class UploadFile extends ChangeNotifier {
     this.name,
     this.size,
     this.contentType,
-    this.stream,
+    this.data,
   );
 
   double get uploadingProgress => _uploadingProgress;
@@ -126,7 +127,7 @@ class UploadFileService {
       type: FileType.custom,
       allowedExtensions: allowedExtensions.split(","),
       allowMultiple: false,
-      withData: true,
+      withData: false,
       withReadStream: true,
     );
 
@@ -134,7 +135,7 @@ class UploadFileService {
       return null;
     }
 
-    final file = result.files.first;
+    PlatformFile file = result.files.first;
     String? mimeType;
     String fileName = unknownFileName;
     if (kIsWeb) {
@@ -142,9 +143,6 @@ class UploadFileService {
       final fileBytes = file.bytes;
       fileName = file.name;
       mimeType = lookupMimeType(fileName, headerBytes: fileBytes);
-      if (mimeType == null && file.extension == 'gz') {
-        mimeType = "application/gzip";
-      }
     } else {
       final filePath = file.path;
       if (filePath != null) {
@@ -153,6 +151,7 @@ class UploadFileService {
       }
     }
 
+    mimeType ??= mime(fileName);
     debugPrint("fileName $fileName, mimeType $mimeType");
 
     final contentType = mimeType != null ? MediaType.parse(mimeType) : null;
@@ -163,7 +162,22 @@ class UploadFileService {
       throw Exception(fileStreamExceptionMessage);
     }
 
-    return UploadFile(fileName, file.size, contentType, fileReadStream);
+    // Buffer the stream so that it can be process multiple times
+    final fileData = await fileReadStream.toList();
+
+    return UploadFile(
+      fileName,
+      file.size,
+      contentType,
+      fileData,
+    );
+  }
+
+  Future<String> convertStreamToString(Stream<List<int>> stream) async {
+    final StringBuffer buffer = StringBuffer();
+    await stream.transform(utf8.decoder).forEach(buffer.write);
+    debugPrint('buffer $buffer');
+    return buffer.toString();
   }
 
   void upload(UploadFile file) async {
@@ -172,7 +186,7 @@ class UploadFileService {
     file._cancelToken = cancelToken;
 
     final multipartFile = MultipartFile.fromStream(
-      () => file.stream,
+      () => Stream.fromIterable(file.data),
       file.size,
       filename: file.name,
       contentType: file.contentType,
@@ -185,6 +199,14 @@ class UploadFileService {
     debugPrint('dataIngestionApiUrl $dataIngestionApiUrl');
     dio.post(
       dataIngestionApiUrl,
+      /*options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
+          'Access-Control-Allow-Methods': 'POST',
+        },
+      ),*/
       data: formData,
       cancelToken: cancelToken,
       onSendProgress: (int sent, int total) {
@@ -200,9 +222,16 @@ class UploadFileService {
       // Handle the response data in here
       debugPrint("RESPONSE FROM SERVER ${response.headers}");
       debugPrint("response.data.runtimeType ${response.data.runtimeType}");
+      debugPrint("/ingest ${response.data}");
       final document = Map<String, dynamic>.from(response.data);
+      final documentItems = List<Map<String, dynamic>>.from(document['items']);
+      if (documentItems.isEmpty) {
+        documentItems.add({
+          'content': await convertStreamToString(Stream.fromIterable(file.data))
+        });
+      }
       final chunkedTexts =
-          document['items'].map((item) => item['content']).toList();
+          documentItems.map((item) => item['content']).toList();
 
       final embeddingsResponse = await dio.post(
         '$embeddingsApiBase/embeddings',
@@ -219,12 +248,21 @@ class UploadFileService {
         },
       );
       debugPrint(
-          "embeddingsResponse.data.length ${embeddingsResponse.data.length}");
-      //debugPrint('embeddingsResponse.data ${embeddingsResponse.data}');
-      final embeddings = embeddingsResponse.data['data'];
-      final documentItems = document['items'];
-      for (int i = 0; i < documentItems.length; i++) {
-        documentItems[i]['embedding'] = embeddings[i]['embedding'];
+          "embeddingsResponse.data.runtimeType ${embeddingsResponse.data.runtimeType}");
+      debugPrint('embeddingsResponse.data ${embeddingsResponse.data}');
+      List embeddingsData = List.empty();
+      try {
+        final embeddings = Map<String, dynamic>.from(embeddingsResponse.data);
+        embeddingsData = List.from(embeddings['data']);
+
+        debugPrint('embeddingsData $embeddingsData');
+        document['items'] = List.generate(
+          documentItems.length,
+          (index) => {...documentItems[index], ...embeddingsData[index]},
+        );
+      } catch (e, s) {
+        debugPrint("ERROR: $e");
+        debugPrintStack(label: "STACKTRACE", maxFrames: 10, stackTrace: s);
       }
       await databaseService.connect();
       await databaseService.use(createSchema: false);
@@ -251,8 +289,8 @@ class UploadFileService {
             }
         }
       } else {
-        debugPrint("*** Other ERROR ${error.message}");
-        file.errorMessage = error.message;
+        debugPrint("*** Other ERROR $error");
+        file.errorMessage = error.toString();
         file.updateStatus(UploadFileStatus.failed, DateTime.now());
       }
     }).whenComplete(() {
