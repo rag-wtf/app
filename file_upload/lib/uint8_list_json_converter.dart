@@ -7,9 +7,7 @@ class Uint8ListJsonConverter
 
   @override
   Uint8List fromJson(List<Object?> json) {
-    return json.isNotEmpty
-        ? Uint8List.fromList(List<int>.from(json))
-        : Uint8List(0);
+    return Uint8List.fromList(List<int>.from(json));
   }
 
   @override
