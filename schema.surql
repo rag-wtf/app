@@ -36,7 +36,13 @@ DEFINE FIELD file ON Document TYPE bytes;
 DEFINE FIELD name ON Document TYPE string;
 DEFINE FIELD originFileSize ON Document TYPE number;
 DEFINE FIELD status ON Document TYPE string;
-DEFINE FIELD updated ON Document TYPE datetime;
+DEFINE FIELD updated ON Document TYPE option<datetime>;
+DEFINE FIELD items ON Document TYPE array<object>;
+DEFINE FIELD items.content ON Document TYPE string;
+DEFINE FIELD items.embedding ON Document TYPE array<float, 384>;
+DEFINE FIELD items.metadata ON Document TYPE object;
+DEFINE FIELD items.tokensCount ON Document TYPE number;
+DEFINE FIELD items.updated ON Document TYPE option<datetime>;
 
 -- ------------------------------
 -- TABLE: DocumentToDocumentItem

@@ -122,6 +122,17 @@ class UploadFileService {
     return gzipEncoder.encode(utf8.encode(request))!;
   }
 
+  Future<Uint8List> streamToUint8List(
+      Stream<List<int>> stream, int totalLength) async {
+    final byteData = Uint8List(totalLength);
+
+    await for (final List<int> chunk in stream) {
+      byteData.addAll(chunk);
+    }
+
+    return byteData;
+  }
+
   Future<UploadFile?> pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -140,7 +151,8 @@ class UploadFileService {
     String fileName = unknownFileName;
     if (kIsWeb) {
       // REF: https://github.com/miguelpruivo/flutter_file_picker/wiki/FAQ#q-how-do-i-access-the-path-on-web
-      final fileBytes = file.bytes;
+      final fileBytes =
+          file.bytes; // Even withData: true, always null in web platform
       fileName = file.name;
       mimeType = lookupMimeType(fileName, headerBytes: fileBytes);
     } else {
