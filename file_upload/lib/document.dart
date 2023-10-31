@@ -2,9 +2,9 @@
 
 import 'dart:typed_data';
 
+import 'package:file_upload/date_time_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
-import 'uint8_list_json_converter.dart';
 part 'document.freezed.dart';
 part 'document.g.dart';
 
@@ -51,7 +51,9 @@ abstract class Document with _$Document {
         "errorMessage": {
           "type": "string"
         },
-        "file": {},
+        "file": {
+          "type": ["string", "null"]
+        },
         "name": {
           "type": "string"
         },
@@ -90,13 +92,13 @@ abstract class Document with _$Document {
     required int compressedFileSize,
     String? content,
     required String contentType,
-    required String created,
+    @DateTimeJsonConverter() required DateTime created,
     required String errorMessage,
-    @Uint8ListJsonConverter() required Uint8List file,
+    String? file,
     required String name,
     required int originFileSize,
     required String status,
-    required String updated,
+    @DateTimeJsonConverter() required DateTime updated,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
   }) = _Document;

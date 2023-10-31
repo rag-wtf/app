@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'document.dart';
 
@@ -15,13 +17,15 @@ class DocumentRepository {
       return document;
     }
     final payload = document.toJson();
-    final result = await db.create(
-      "Document",
-      payload,
+    payload.removeWhere((key, value) => value == null);
+    final result = await db.query(
+      'CREATE ONLY Document CONTENT ${jsonEncode(payload)}',
     );
 
     return Document.fromJson(
-      Map<String, dynamic>.from(result as Map),
+      Map<String, dynamic>.from(
+        (result as List).first as Map,
+      ),
     );
   }
 
@@ -47,16 +51,25 @@ class DocumentRepository {
   }
 
   Future<Document?> updateDocument(Document document) async {
+    document = document.validate();
+    final isValid = document.errors == null;
+    if (!isValid) {
+      return document;
+    }
+
     final payload = document.toJson();
     final id = payload.remove('id');
     if (await db.select(id) == null) return null;
-    final result = await db.merge(
-      id,
-      payload,
+
+    payload.removeWhere((key, value) => value == null);
+    final result = await db.query(
+      'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
     );
 
     return Document.fromJson(
-      Map<String, dynamic>.from(result as Map),
+      Map<String, dynamic>.from(
+        (result as List).first as Map,
+      ),
     );
   }
 

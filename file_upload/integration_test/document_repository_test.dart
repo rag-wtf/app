@@ -11,10 +11,24 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   late DocumentRepository repository;
   final db = Surreal();
+  const documentSql = '''
+DEFINE TABLE Document SCHEMALESS;
+DEFINE FIELD compressedFileSize ON Document TYPE number;
+DEFINE FIELD content ON Document TYPE option<string>;
+DEFINE FIELD contentType ON Document TYPE string;
+DEFINE FIELD created ON Document TYPE datetime;
+DEFINE FIELD errorMessage ON Document TYPE string;
+DEFINE FIELD file ON Document TYPE option<string>;
+DEFINE FIELD name ON Document TYPE string;
+DEFINE FIELD originFileSize ON Document TYPE number;
+DEFINE FIELD status ON Document TYPE string;
+DEFINE FIELD updated ON Document TYPE option<datetime>;
+''';
 
   setUpAll(() async {
     await db.connect('mem://');
     await db.use(ns: 'test', db: 'test');
+    await db.query(documentSql);
     repository = DocumentRepository(db: db);
   });
 
@@ -24,13 +38,12 @@ void main() {
       final document = Document(
         compressedFileSize: 100,
         contentType: 'text/plain',
-        created: '2022-01-01T12:00:00Z',
+        created: DateTime.now(),
         errorMessage: '',
-        file: Uint8List(0),
         name: 'Test Document',
         originFileSize: 200,
         status: 'active',
-        updated: '2022-01-01T12:00:00Z',
+        updated: DateTime.now(),
       );
 
       // Act
@@ -45,13 +58,13 @@ void main() {
       final document = Document(
         compressedFileSize: 100,
         contentType: '',
-        created: '2022-01-01T12:00:00Z',
+        created: DateTime.now(),
         errorMessage: '',
-        file: Uint8List.fromList([10, 20, 30, 40]),
+        file: 'base64 encoded',
         name: 'Test Document',
         originFileSize: 200,
         status: 'active',
-        updated: '2022-01-01T12:00:00Z',
+        updated: DateTime.now(),
       );
 
       // Act
@@ -70,20 +83,19 @@ void main() {
         {
           'compressedFileSize': 100,
           'contentType': 'text/plain',
-          'created': '2022-01-01T12:00:00Z',
+          'created': '2023-10-31T03:19:16.601Z',
           'errorMessage': '',
-          'file': [],
           'name': 'Test Document 1',
           'originFileSize': 200,
           'status': 'active',
-          'updated': '2022-01-01T12:00:00Z',
+          'updated': '2023-10-31T03:19:16.601Z',
         },
         {
           'compressedFileSize': 150,
           'contentType': 'text/html',
           'created': '2022-01-01T13:00:00Z',
           'errorMessage': '',
-          'file': [],
+          'file': 'base64 encoded string',
           'name': 'Test Document 2',
           'originFileSize': 250,
           'status': 'inactive',
@@ -107,13 +119,13 @@ void main() {
       final document = Document(
         compressedFileSize: 100,
         contentType: 'text/plain',
-        created: '2022-01-01T12:00:00Z',
+        created: DateTime.now(),
         errorMessage: '',
-        file: Uint8List.fromList([10, 20, 30, 40]),
+        file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
         status: 'active',
-        updated: '2022-01-01T12:00:00Z',
+        updated: DateTime.now(),
       );
       final result = await repository.createDocument(document);
       String id = result.id!;
@@ -126,7 +138,7 @@ void main() {
       expect(
         getDocumentById?.file,
         equals(
-          Uint8List.fromList([10, 20, 30, 40]),
+          'base64 encoded string',
         ),
       );
     });
@@ -146,13 +158,13 @@ void main() {
       final document = Document(
         compressedFileSize: 100,
         contentType: 'text/plain',
-        created: '2022-01-01T12:00:00Z',
+        created: DateTime.now(),
         errorMessage: '',
-        file: Uint8List.fromList([10, 20, 30, 40]),
+        file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
         status: 'active',
-        updated: '2022-01-01T12:00:00Z',
+        updated: DateTime.now(),
       );
       final created = await repository.createDocument(document);
 
@@ -170,13 +182,13 @@ void main() {
         id: 'Document:1',
         compressedFileSize: 100,
         contentType: 'text/plain',
-        created: '2022-01-01T12:00:00Z',
+        created: DateTime.now(),
         errorMessage: '',
-        file: Uint8List.fromList([10, 20, 30, 40]),
+        file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
         status: 'active',
-        updated: '2022-01-01T12:00:00Z',
+        updated: DateTime.now(),
       );
 
       // Act & Assert
@@ -190,13 +202,13 @@ void main() {
       final document = Document(
         compressedFileSize: 100,
         contentType: 'text/plain',
-        created: '2022-01-01T12:00:00Z',
+        created: DateTime.now(),
         errorMessage: '',
-        file: Uint8List.fromList([10, 20, 30, 40]),
+        file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
         status: 'active',
-        updated: '2022-01-01T12:00:00Z',
+        updated: DateTime.now(),
       );
       final created = await repository.createDocument(document);
 
