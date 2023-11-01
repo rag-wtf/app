@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:file_upload/date_time_json_converter.dart';
-import 'package:file_upload/document_item.dart';
+import 'package:document/src/date_time_json_converter.dart';
+import 'package:document/src/document_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
 part 'document.freezed.dart';
@@ -9,6 +9,25 @@ part 'document.g.dart';
 
 @freezed
 abstract class Document with _$Document {
+  const factory Document({
+    required int compressedFileSize,
+    required String contentType,
+    @DateTimeJsonConverter() required DateTime created,
+    required String errorMessage,
+    required String name,
+    required int originFileSize,
+    required String status,
+    String? id,
+    String? content,
+    String? file,
+    @DateTimeJsonConverter() DateTime? updated,
+    List<DocumentItem>? items,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    List<ValidationError>? errors,
+  }) = _Document;
+
+  factory Document.fromJson(Map<String, dynamic> json) =>
+      _$DocumentFromJson(json);
   // ignore: unused_element
   const Document._();
 
@@ -77,26 +96,6 @@ abstract class Document with _$Document {
 
   static final jsonSchema = JsonSchema.create(_schema);
 
-  const factory Document({
-    String? id,
-    required int compressedFileSize,
-    String? content,
-    required String contentType,
-    @DateTimeJsonConverter() required DateTime created,
-    required String errorMessage,
-    String? file,
-    required String name,
-    required int originFileSize,
-    required String status,
-    @DateTimeJsonConverter() DateTime? updated,
-    List<DocumentItem>? items,
-    @JsonKey(includeFromJson: false, includeToJson: false)
-    List<ValidationError>? errors,
-  }) = _Document;
-
-  factory Document.fromJson(Map<String, dynamic> json) =>
-      _$DocumentFromJson(json);
-
   Document validate() {
     final json = toJson();
     final results = jsonSchema.validate(json);
@@ -110,14 +109,14 @@ abstract class Document with _$Document {
 
   static dynamic toMap(dynamic input) {
     if (input is Map) {
-      Map<String, dynamic> result = {};
+      final result = <String, dynamic>{};
       input.forEach((key, value) {
-        result[key] = toMap(value);
+        result[key.toString()] = toMap(value);
       });
       return result;
     } else if (input is List) {
-      List<dynamic> result = [];
-      for (var item in input) {
+      final result = <dynamic>[];
+      for (final item in input) {
         result.add(toMap(item));
       }
       return result;

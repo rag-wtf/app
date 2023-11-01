@@ -1,17 +1,26 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:file_upload/date_time_json_converter.dart';
+import 'package:document/src/date_time_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
 part 'document_item.freezed.dart';
 part 'document_item.g.dart';
 
 @freezed
-@JsonSerializable(
-  includeIfNull: false,
-  createFactory: false,
-)
 abstract class DocumentItem with _$DocumentItem {
+  const factory DocumentItem({
+    required String content,
+    required List<double> embedding,
+    required Object metadata,
+    required int tokensCount,
+    String? id,
+    @DateTimeJsonConverter() DateTime? updated,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    List<ValidationError>? errors,
+  }) = _DocumentItem;
+
+  factory DocumentItem.fromJson(Map<String, dynamic> json) =>
+      _$DocumentItemFromJson(json);
   // ignore: unused_element
   const DocumentItem._();
 
@@ -55,20 +64,6 @@ abstract class DocumentItem with _$DocumentItem {
 ''';
 
   static final jsonSchema = JsonSchema.create(_schema);
-
-  const factory DocumentItem({
-    String? id,
-    required String content,
-    required List<double> embedding,
-    required Object metadata,
-    required int tokensCount,
-    @DateTimeJsonConverter() DateTime? updated,
-    @JsonKey(includeFromJson: false, includeToJson: false)
-    List<ValidationError>? errors,
-  }) = _DocumentItem;
-
-  factory DocumentItem.fromJson(Map<String, dynamic> json) =>
-      _$DocumentItemFromJson(json);
 
   DocumentItem validate() {
     final json = toJson();

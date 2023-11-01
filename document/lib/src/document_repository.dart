@@ -1,20 +1,19 @@
 import 'dart:convert';
 
+import 'package:document/src/document.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
-import 'document.dart';
 
 class DocumentRepository {
-  final Surreal db;
-
   const DocumentRepository({
     required this.db,
   });
+  final Surreal db;
 
   Future<Document> createDocument(Document document) async {
-    document = document.validate();
-    final isValid = document.errors == null;
+    final validatedDocument = document.validate();
+    final isValid = validatedDocument.errors == null;
     if (!isValid) {
-      return document;
+      return validatedDocument;
     }
     final payload = document.toJson();
     final result = await db.query(
@@ -22,18 +21,22 @@ class DocumentRepository {
     );
 
     return Document.fromJson(
-      Document.toMap(
-        (result as List).first,
+      Map<String, dynamic>.from(
+        Document.toMap(
+          (result! as List).first,
+        ) as Map,
       ),
     );
   }
 
   Future<List<Document>> getAllDocuments() async {
-    final results = await db.query("SELECT * FROM Document") as List;
+    final results = (await db.query('SELECT * FROM Document'))! as List;
     return results
         .map(
           (result) => Document.fromJson(
-            Document.toMap(result),
+            Map<String, dynamic>.from(
+              Document.toMap(result) as Map,
+            ),
           ),
         )
         .toList();
@@ -44,20 +47,22 @@ class DocumentRepository {
 
     return result != null
         ? Document.fromJson(
-            Document.toMap(result),
+            Map<String, dynamic>.from(
+              Document.toMap(result) as Map,
+            ),
           )
         : null;
   }
 
   Future<Document?> updateDocument(Document document) async {
-    document = document.validate();
-    final isValid = document.errors == null;
+    final validatedDocument = document.validate();
+    final isValid = validatedDocument.errors == null;
     if (!isValid) {
-      return document;
+      return validatedDocument;
     }
 
     final payload = document.toJson();
-    final id = payload.remove('id');
+    final id = payload.remove('id') as String;
     if (await db.select(id) == null) return null;
 
     payload.removeWhere((key, value) => value == null);
@@ -66,8 +71,10 @@ class DocumentRepository {
     );
 
     return Document.fromJson(
-      Document.toMap(
-        (result as List).first,
+      Map<String, dynamic>.from(
+        Document.toMap(
+          (result! as List).first,
+        ) as Map,
       ),
     );
   }
@@ -77,7 +84,9 @@ class DocumentRepository {
 
     return result != null
         ? Document.fromJson(
-            Document.toMap(result),
+            Map<String, dynamic>.from(
+              Document.toMap(result) as Map,
+            ),
           )
         : null;
   }

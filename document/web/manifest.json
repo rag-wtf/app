@@ -1,11 +1,11 @@
 {
-  "name": "file_upload",
-  "short_name": "file_upload",
+  "name": "document",
+  "short_name": "document",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
   "theme_color": "#0175C2",
-  "description": "File Upload Module",
+  "description": "document module",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [

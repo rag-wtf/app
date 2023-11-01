@@ -114,3 +114,5 @@ app.*.map.json
 !.idea/runConfigurations/
 
 chromedriver
+**/*.g.dart
+**/*.freezed.dart

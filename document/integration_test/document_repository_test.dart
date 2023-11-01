@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:file_upload/document.dart';
-import 'package:file_upload/document_item.dart';
-import 'package:file_upload/document_repository.dart';
+import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
@@ -92,8 +90,10 @@ DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
       final result = await repository.createDocument(document);
 
       // Assert
-      expect(result.errors?.first.toString(),
-          '/contentType: minLength violated ( vs 1)');
+      expect(
+        result.errors?.first.toString(),
+        '/contentType: minLength violated ( vs 1)',
+      );
     });
   });
 
@@ -149,7 +149,7 @@ DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
         updated: DateTime.now(),
       );
       final result = await repository.createDocument(document);
-      String id = result.id!;
+      final id = result.id!;
 
       // Act
       final getDocumentById = await repository.getDocumentById(id);
