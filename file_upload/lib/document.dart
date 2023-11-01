@@ -1,8 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'dart:typed_data';
-
 import 'package:file_upload/date_time_json_converter.dart';
+import 'package:file_upload/document_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
 part 'document.freezed.dart';
@@ -20,25 +19,14 @@ abstract class Document with _$Document {
     "document": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "compressedFileSize": {
           "type": "number"
         },
         "content": {
-          "anyOf": [
-            {
-              "anyOf": [
-                {
-                  "not": {}
-                },
-                {
-                  "type": "string"
-                }
-              ]
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": "string"
         },
         "contentType": {
           "type": "string",
@@ -52,7 +40,7 @@ abstract class Document with _$Document {
           "type": "string"
         },
         "file": {
-          "type": ["string", "null"]
+          "type": "string"
         },
         "name": {
           "type": "string"
@@ -66,6 +54,9 @@ abstract class Document with _$Document {
         "updated": {
           "type": "string",
           "format": "date-time"
+        },
+        "items": {
+          "type": ["array", "null"]
         }
       },
       "required": [
@@ -75,8 +66,7 @@ abstract class Document with _$Document {
         "errorMessage",
         "name",
         "originFileSize",
-        "status",
-        "updated"
+        "status"
       ],
       "additionalProperties": false
     }
@@ -98,7 +88,8 @@ abstract class Document with _$Document {
     required String name,
     required int originFileSize,
     required String status,
-    @DateTimeJsonConverter() required DateTime updated,
+    @DateTimeJsonConverter() DateTime? updated,
+    List<DocumentItem>? items,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
   }) = _Document;
@@ -108,7 +99,6 @@ abstract class Document with _$Document {
 
   Document validate() {
     final json = toJson();
-    json.remove('id');
     final results = jsonSchema.validate(json);
     if (!results.isValid) {
       return copyWith(

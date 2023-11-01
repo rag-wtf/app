@@ -17,7 +17,7 @@ class DocumentRepository {
       return document;
     }
     final payload = document.toJson();
-    payload.removeWhere((key, value) => value == null);
+    print(jsonEncode(payload));
     final result = await db.query(
       'CREATE ONLY Document CONTENT ${jsonEncode(payload)}',
     );
