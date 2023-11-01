@@ -11,12 +11,14 @@ part 'document.g.dart';
 abstract class Document with _$Document {
   const factory Document({
     required int compressedFileSize,
-    required String contentType,
+    required String fileMimeType, // could be gzip file
+    required String contentMimeType, // mime type of content of the gzip file
     @DateTimeJsonConverter() required DateTime created,
     required String? errorMessage,
     required String name,
     required int originFileSize,
     required String status,
+    required int tokensCount,
     String? id,
     String? content,
     String? file,
@@ -48,7 +50,10 @@ abstract class Document with _$Document {
         "content": {
           "type": "string"
         },
-        "contentType": {
+        "fileMimeType": {
+          "type": "string"
+        },
+        "contentMimeType": {
           "type": "string",
           "minLength": 1
         },
@@ -71,6 +76,9 @@ abstract class Document with _$Document {
         "status": {
           "type": "string"
         },
+        "tokensCount": {
+          "type": "number"
+        },
         "metadata": {
           "type": "object"
         },
@@ -84,11 +92,13 @@ abstract class Document with _$Document {
       },
       "required": [
         "compressedFileSize",
-        "contentType",
+        "fileMimeType",
+        "contentMimeType",
         "created",
         "name",
         "originFileSize",
-        "status"
+        "status",
+        "tokensCount"
       ],
       "additionalProperties": false
     }

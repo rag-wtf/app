@@ -22,7 +22,9 @@ void main() {
       // Arrange
       final document = Document(
         compressedFileSize: 100,
-        contentType: 'text/plain',
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        tokensCount: 10,
         created: DateTime.now(),
         errorMessage: '',
         name: 'Test Document',
@@ -57,7 +59,9 @@ void main() {
       // Arrange
       final document = Document(
         compressedFileSize: 100,
-        contentType: '',
+        fileMimeType: 'text/plain',
+        contentMimeType: '',
+        tokensCount: 10,
         created: DateTime.now(),
         errorMessage: '',
         file: 'base64 encoded',
@@ -73,7 +77,7 @@ void main() {
       // Assert
       expect(
         result.errors?.first.toString(),
-        '/contentType: minLength violated ( vs 1)',
+        '/contentMimeType: minLength violated ( vs 1)',
       );
     });
   });
@@ -84,7 +88,9 @@ void main() {
       final documents = [
         {
           'compressedFileSize': 100,
-          'contentType': 'text/plain',
+          'fileMimeType': 'text/plain',
+          'contentMimeType': 'text/plain',
+          'tokensCount': 10,
           'created': '2023-10-31T03:19:16.601Z',
           'errorMessage': '',
           'name': 'Test Document 1',
@@ -94,7 +100,9 @@ void main() {
         },
         {
           'compressedFileSize': 150,
-          'contentType': 'text/html',
+          'fileMimeType': 'text/plain',
+          'contentMimeType': 'text/plain',
+          'tokensCount': 10,
           'created': '2022-01-01T13:00:00Z',
           'errorMessage': '',
           'file': 'base64 encoded string',
@@ -120,7 +128,9 @@ void main() {
       // Arrange
       final document = Document(
         compressedFileSize: 100,
-        contentType: 'text/plain',
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        tokensCount: 10,
         created: DateTime.now(),
         errorMessage: '',
         file: 'base64 encoded string',
@@ -159,7 +169,9 @@ void main() {
       // Arrange
       final document = Document(
         compressedFileSize: 100,
-        contentType: 'text/plain',
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        tokensCount: 10,
         created: DateTime.now(),
         errorMessage: '',
         file: 'base64 encoded string',
@@ -183,7 +195,9 @@ void main() {
       final document = Document(
         id: 'Document:1',
         compressedFileSize: 100,
-        contentType: 'text/plain',
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        tokensCount: 10,
         created: DateTime.now(),
         errorMessage: '',
         file: 'base64 encoded string',
@@ -203,7 +217,9 @@ void main() {
       // Arrange
       final document = Document(
         compressedFileSize: 100,
-        contentType: 'text/plain',
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        tokensCount: 10,
         created: DateTime.now(),
         errorMessage: '',
         file: 'base64 encoded string',
