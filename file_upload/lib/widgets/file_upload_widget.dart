@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 import '../constants.dart';
 import '../model.dart';
@@ -25,6 +26,9 @@ class FileUploadWidget extends StatefulWidget {
 
 class _FileUploadWidgetState extends State<FileUploadWidget> {
   late UploadFileListViewModel _viewModel;
+  static const ns = 'rag';
+  static const db = 'test';
+  final surreal = Surreal();
 
   @override
   void initState() {
@@ -33,7 +37,12 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
       dataIngestionApiUrl: widget.dataIngestionApiUrl,
       embeddingsApiBase: widget.embeddingsApiBase,
       embeddingsApiKey: widget.embeddingsApiKey,
+      surreal: surreal,
     ));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await surreal.connect('indxdb://$ns');
+      await surreal.use(ns: ns, db: db);
+    });
   }
 
   Future<void> addItem() async {

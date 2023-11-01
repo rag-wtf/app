@@ -20,6 +20,8 @@ dependencies:
   mime_type: ^1.0.0
   file_icon: ^1.0.0
   surrealdb_wasm:
+  document:
+    path: ../document
 
 dev_dependencies:
   flutter_test:

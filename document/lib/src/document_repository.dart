@@ -17,7 +17,7 @@ DEFINE FIELD tokensCount ON Document TYPE number;
 DEFINE FIELD fileMimeType ON Document TYPE string;
 DEFINE FIELD contentMimeType ON Document TYPE string;
 DEFINE FIELD created ON Document TYPE datetime;
-DEFINE FIELD errorMessage ON Document TYPE string;
+DEFINE FIELD errorMessage ON Document TYPE option<string>;
 DEFINE FIELD file ON Document TYPE option<string>;
 DEFINE FIELD name ON Document TYPE string;
 DEFINE FIELD originFileSize ON Document TYPE number;

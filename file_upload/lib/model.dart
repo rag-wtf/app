@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
-import 'package:file_upload/database_service.dart';
+import 'package:document/document.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'constants.dart';
 
 class UploadFileList {
@@ -18,11 +19,13 @@ class UploadFileList {
   UploadFileList(
       {required String dataIngestionApiUrl,
       required String embeddingsApiBase,
-      required String embeddingsApiKey}) {
+      required String embeddingsApiKey,
+      required Surreal surreal}) {
     _uploadFileService = UploadFileService(
       dataIngestionApiUrl: dataIngestionApiUrl,
       embeddingsApiBase: embeddingsApiBase,
       embeddingsApiKey: embeddingsApiKey,
+      db: surreal,
     );
   }
 
@@ -47,7 +50,7 @@ enum UploadFileStatus {
 class UploadFile extends ChangeNotifier {
   final String name;
   final int size;
-  final MediaType? contentType;
+  final MediaType contentType;
   final List<List<int>> data;
   UploadFileStatus status = UploadFileStatus.pending;
   double _uploadingProgress = 0;
@@ -101,16 +104,19 @@ class UploadFileService {
   UploadFileService(
       {required this.dataIngestionApiUrl,
       required this.embeddingsApiBase,
-      required this.embeddingsApiKey}) {
-    databaseService = DatabaseService();
+      required this.embeddingsApiKey,
+      required Surreal db}) {
+    documentRepository = DocumentRepository(db: db);
   }
 
   final String dataIngestionApiUrl;
   final String embeddingsApiBase;
   final String embeddingsApiKey;
 
-  late DatabaseService databaseService;
+  late DocumentRepository documentRepository;
+
   final gzipEncoder = GZipEncoder();
+  final gzipDecoder = GZipDecoder();
 
   bool isGzFile(final fileBytes) {
     return (fileBytes[0] == 0x1f && fileBytes[1] == 0x8b);
@@ -122,15 +128,19 @@ class UploadFileService {
     return gzipEncoder.encode(utf8.encode(request))!;
   }
 
-  Future<Uint8List> streamToUint8List(
-      Stream<List<int>> stream, int totalLength) async {
-    final byteData = Uint8List(totalLength);
-
-    await for (final List<int> chunk in stream) {
-      byteData.addAll(chunk);
+  Future<String> compressFileToBase64(List<int> bytes) async {
+    if (isGzFile(bytes)) {
+      return base64Encode(bytes);
+    } else {
+      return base64Encode(
+        gzipEncoder.encode(bytes)!,
+      );
     }
+  }
 
-    return byteData;
+  Future<List<int>> decompressFileFromBase64(String file) async {
+    final bytes = base64Decode(file);
+    return isGzFile(bytes) ? gzipDecoder.decodeBytes(bytes) : bytes;
   }
 
   Future<UploadFile?> pickFile() async {
@@ -180,7 +190,7 @@ class UploadFileService {
     return UploadFile(
       fileName,
       file.size,
-      contentType,
+      contentType!,
       fileData,
     );
   }
@@ -196,6 +206,7 @@ class UploadFileService {
     final dio = Dio();
     final cancelToken = CancelToken();
     file._cancelToken = cancelToken;
+    Map<String, dynamic>? documentMap;
 
     final multipartFile = MultipartFile.fromStream(
       () => Stream.fromIterable(file.data),
@@ -235,8 +246,9 @@ class UploadFileService {
       debugPrint("RESPONSE FROM SERVER ${response.headers}");
       debugPrint("response.data.runtimeType ${response.data.runtimeType}");
       debugPrint("/ingest ${response.data}");
-      final document = Map<String, dynamic>.from(response.data);
-      final documentItems = List<Map<String, dynamic>>.from(document['items']);
+      documentMap = Map<String, dynamic>.from(response.data);
+      final documentItems =
+          List<Map<String, dynamic>>.from(documentMap?['items']);
       if (documentItems.isEmpty) {
         documentItems.add({
           'content': await convertStreamToString(Stream.fromIterable(file.data))
@@ -267,21 +279,24 @@ class UploadFileService {
         final embeddings = Map<String, dynamic>.from(embeddingsResponse.data);
         embeddingsData = List.from(embeddings['data']);
 
-        debugPrint('embeddingsData $embeddingsData');
-        document['items'] = List.generate(
+        //debugPrint('embeddingsData $embeddingsData');
+        documentMap?['items'] = List.generate(
           documentItems.length,
-          (index) => {...documentItems[index], ...embeddingsData[index]},
+          (index) {
+            final documentItem = documentItems[index];
+            return DocumentItem(
+              content: documentItem['content'],
+              embedding: List<double>.from(embeddingsData[index]['embedding']),
+              metadata: documentItem['metadata'] ?? {},
+              tokensCount: documentItem['tokens_count'] ?? 0,
+            );
+          },
         );
       } catch (e, s) {
         debugPrint("ERROR: $e");
         debugPrintStack(label: "STACKTRACE", maxFrames: 10, stackTrace: s);
       }
-      await databaseService.connect();
-      await databaseService.use(createSchema: false);
-      final result = await databaseService.insertDocuments(
-        jsonEncode(document),
-      );
-      //debugPrint("insert documents result $result");
+      //debugPrint("document ${jsonEncode(documentMap)}");
     }).catchError((error) {
       // Handle the error in here
       if (error is DioException) {
@@ -305,13 +320,34 @@ class UploadFileService {
         file.errorMessage = error.toString();
         file.updateStatus(UploadFileStatus.failed, DateTime.now());
       }
-    }).whenComplete(() {
+    }).whenComplete(() async {
       // Any cleanup code goes here
       debugPrint('Request completed');
       if (file.status != UploadFileStatus.failed &&
           file.status != UploadFileStatus.cancelled) {
         file.updateStatus(UploadFileStatus.completed, DateTime.now());
       }
+      String base64EncodedFile = await compressFileToBase64(
+        file.data.first,
+      );
+      final document = Document(
+        content: documentMap?['content'],
+        tokensCount: documentMap?['tokens_count'],
+        compressedFileSize: base64EncodedFile.length,
+        fileMimeType: file.contentType.mimeType,
+        contentMimeType: documentMap?['mime_type'],
+        created: DateTime.now(),
+        errorMessage: file.errorMessage,
+        name: file.name,
+        originFileSize: file.size,
+        status: file.status.toString(),
+        file: base64EncodedFile,
+        items: List<DocumentItem>.from(documentMap?['items']),
+      );
+      await documentRepository.createSchema();
+      final result = await documentRepository.createDocument(document);
+      debugPrint('result.id ${result.id}');
+      assert(result.id != null);
     });
   }
 }
