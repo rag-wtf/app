@@ -107,4 +107,22 @@ abstract class Document with _$Document {
     }
     return this;
   }
+
+  static dynamic toMap(dynamic input) {
+    if (input is Map) {
+      Map<String, dynamic> result = {};
+      input.forEach((key, value) {
+        result[key] = toMap(value);
+      });
+      return result;
+    } else if (input is List) {
+      List<dynamic> result = [];
+      for (var item in input) {
+        result.add(toMap(item));
+      }
+      return result;
+    } else {
+      return input;
+    }
+  }
 }

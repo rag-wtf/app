@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:file_upload/document.dart';
+import 'package:file_upload/document_item.dart';
 import 'package:file_upload/document_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -23,6 +23,12 @@ DEFINE FIELD name ON Document TYPE string;
 DEFINE FIELD originFileSize ON Document TYPE number;
 DEFINE FIELD status ON Document TYPE string;
 DEFINE FIELD updated ON Document TYPE option<datetime>;
+DEFINE FIELD items ON Document TYPE option<array<object>>;
+DEFINE FIELD items.*.content ON Document TYPE string;
+DEFINE FIELD items.*.embedding ON Document TYPE array<float, 384>;
+DEFINE FIELD items.*.metadata ON Document TYPE object;
+DEFINE FIELD items.*.tokensCount ON Document TYPE number;
+DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
 ''';
 
   setUpAll(() async {
@@ -44,6 +50,20 @@ DEFINE FIELD updated ON Document TYPE option<datetime>;
         originFileSize: 200,
         status: 'active',
         updated: DateTime.now(),
+        items: [
+          const DocumentItem(
+            content: 'content 1',
+            embedding: [12.1, 13.4, 5.0],
+            metadata: {'id': 'customId1'},
+            tokensCount: 4,
+          ),
+          const DocumentItem(
+            content: 'content 2',
+            embedding: [11.1, 12.2, 13.3],
+            metadata: {'id': 'customId2'},
+            tokensCount: 5,
+          ),
+        ],
       );
 
       // Act
@@ -51,6 +71,7 @@ DEFINE FIELD updated ON Document TYPE option<datetime>;
 
       // Assert
       expect(result.id, isNotNull);
+      expect(result.items, hasLength(2));
     });
 
     test('should have validation errors', () async {

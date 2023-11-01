@@ -17,14 +17,13 @@ class DocumentRepository {
       return document;
     }
     final payload = document.toJson();
-    print(jsonEncode(payload));
     final result = await db.query(
       'CREATE ONLY Document CONTENT ${jsonEncode(payload)}',
     );
 
     return Document.fromJson(
-      Map<String, dynamic>.from(
-        (result as List).first as Map,
+      Document.toMap(
+        (result as List).first,
       ),
     );
   }
@@ -34,7 +33,7 @@ class DocumentRepository {
     return results
         .map(
           (result) => Document.fromJson(
-            Map<String, dynamic>.from(result as Map),
+            Document.toMap(result),
           ),
         )
         .toList();
@@ -45,7 +44,7 @@ class DocumentRepository {
 
     return result != null
         ? Document.fromJson(
-            Map<String, dynamic>.from(result as Map),
+            Document.toMap(result),
           )
         : null;
   }
@@ -67,8 +66,8 @@ class DocumentRepository {
     );
 
     return Document.fromJson(
-      Map<String, dynamic>.from(
-        (result as List).first as Map,
+      Document.toMap(
+        (result as List).first,
       ),
     );
   }
@@ -78,7 +77,7 @@ class DocumentRepository {
 
     return result != null
         ? Document.fromJson(
-            Map<String, dynamic>.from(result as Map),
+            Document.toMap(result),
           )
         : null;
   }
