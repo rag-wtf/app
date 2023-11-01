@@ -9,31 +9,12 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   late DocumentRepository repository;
   final db = Surreal();
-  const documentSql = '''
-DEFINE TABLE Document SCHEMALESS;
-DEFINE FIELD compressedFileSize ON Document TYPE number;
-DEFINE FIELD content ON Document TYPE option<string>;
-DEFINE FIELD contentType ON Document TYPE string;
-DEFINE FIELD created ON Document TYPE datetime;
-DEFINE FIELD errorMessage ON Document TYPE string;
-DEFINE FIELD file ON Document TYPE option<string>;
-DEFINE FIELD name ON Document TYPE string;
-DEFINE FIELD originFileSize ON Document TYPE number;
-DEFINE FIELD status ON Document TYPE string;
-DEFINE FIELD updated ON Document TYPE option<datetime>;
-DEFINE FIELD items ON Document TYPE option<array<object>>;
-DEFINE FIELD items.*.content ON Document TYPE string;
-DEFINE FIELD items.*.embedding ON Document TYPE array<float, 384>;
-DEFINE FIELD items.*.metadata ON Document TYPE object;
-DEFINE FIELD items.*.tokensCount ON Document TYPE number;
-DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
-''';
 
   setUpAll(() async {
     await db.connect('mem://');
     await db.use(ns: 'test', db: 'test');
-    await db.query(documentSql);
     repository = DocumentRepository(db: db);
+    await repository.createSchema();
   });
 
   group('createDocument', () {

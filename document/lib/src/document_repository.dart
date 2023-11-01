@@ -9,6 +9,30 @@ class DocumentRepository {
   });
   final Surreal db;
 
+  static const schemaSql = '''
+DEFINE TABLE Document SCHEMALESS;
+DEFINE FIELD compressedFileSize ON Document TYPE number;
+DEFINE FIELD content ON Document TYPE option<string>;
+DEFINE FIELD contentType ON Document TYPE string;
+DEFINE FIELD created ON Document TYPE datetime;
+DEFINE FIELD errorMessage ON Document TYPE string;
+DEFINE FIELD file ON Document TYPE option<string>;
+DEFINE FIELD name ON Document TYPE string;
+DEFINE FIELD originFileSize ON Document TYPE number;
+DEFINE FIELD status ON Document TYPE string;
+DEFINE FIELD updated ON Document TYPE option<datetime>;
+DEFINE FIELD items ON Document TYPE option<array<object>>;
+DEFINE FIELD items.*.content ON Document TYPE string;
+DEFINE FIELD items.*.embedding ON Document TYPE array<float, 384>;
+DEFINE FIELD items.*.metadata ON Document TYPE object;
+DEFINE FIELD items.*.tokensCount ON Document TYPE number;
+DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
+''';
+
+  Future<void> createSchema() async {
+    await db.query(schemaSql);
+  }
+
   Future<Document> createDocument(Document document) async {
     final validatedDocument = document.validate();
     final isValid = validatedDocument.errors == null;
