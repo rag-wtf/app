@@ -15,7 +15,6 @@ dependencies:
   flutter:
     sdk: flutter
   surrealdb_wasm:
-    path: ../../surrealdb_wasm
 
 dev_dependencies:
   flutter_test:

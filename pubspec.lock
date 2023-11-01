@@ -295,10 +295,9 @@ packages:
   flutter_console_widget:
     dependency: transitive
     description:
-      name: flutter_console_widget
-      sha256: "6f3d53604c3ed1096c9a1095f91ea6ccac62ed6922282bdc6b2687b6d20ea508"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../flutter_console"
+      relative: true
+    source: path
     version: "0.0.3"
   flutter_localizations:
     dependency: "direct main"
@@ -737,9 +736,10 @@ packages:
   surrealdb_wasm:
     dependency: transitive
     description:
-      path: "../surrealdb_wasm"
-      relative: true
-    source: path
+      name: surrealdb_wasm
+      sha256: "5fc1e86fe4ea96edffa886661fbf37e5cc62be41ce0cbe9ffd3ec3f9e7d9e3ab"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.7.0+1"
   term_glyph:
     dependency: transitive
