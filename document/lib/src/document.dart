@@ -13,13 +13,14 @@ abstract class Document with _$Document {
     required int compressedFileSize,
     required String contentType,
     @DateTimeJsonConverter() required DateTime created,
-    required String errorMessage,
+    required String? errorMessage,
     required String name,
     required int originFileSize,
     required String status,
     String? id,
     String? content,
     String? file,
+    Object? metadata,
     @DateTimeJsonConverter() DateTime? updated,
     List<DocumentItem>? items,
     @JsonKey(includeFromJson: false, includeToJson: false)
@@ -70,19 +71,21 @@ abstract class Document with _$Document {
         "status": {
           "type": "string"
         },
+        "metadata": {
+          "type": "object"
+        },
         "updated": {
           "type": "string",
           "format": "date-time"
         },
         "items": {
-          "type": ["array", "null"]
+          "type": "array"
         }
       },
       "required": [
         "compressedFileSize",
         "contentType",
         "created",
-        "errorMessage",
         "name",
         "originFileSize",
         "status"
