@@ -63,7 +63,7 @@ class _RagConsoleState extends State<RagConsole> {
       switch (command) {
         case 'e':
           final input = value.substring(3);
-          final response = await dio.post(
+          final response = await dio.post<Map<String, dynamic>>(
             '${widget.embeddings_api_base}/embeddings',
             options: Options(
               headers: {
@@ -84,7 +84,8 @@ class _RagConsoleState extends State<RagConsole> {
       }
     } else {
       throw Exception(
-          'All supported commands must be started with /, type /? or /h to see the list of supported commands.');
+        'All supported commands must be started with /, type /? or /h to see the list of supported commands.',
+      );
     }
   }
 
