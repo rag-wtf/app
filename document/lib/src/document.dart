@@ -34,80 +34,78 @@ abstract class Document with _$Document {
   // ignore: unused_element
   const Document._();
 
-  static const _schema = r'''
-{
-  "$ref": "#/definitions/document",
-  "definitions": {
-    "document": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
+  static const _jsonSchema = {
+    r'$ref': '#/definitions/document',
+    'definitions': {
+      'document': {
+        'type': 'object',
+        'properties': {
+          'id': {
+            'type': 'string',
+          },
+          'compressedFileSize': {
+            'type': 'number',
+          },
+          'content': {
+            'type': 'string',
+          },
+          'fileMimeType': {
+            'type': 'string',
+          },
+          'contentMimeType': {
+            'type': 'string',
+            'minLength': 1,
+          },
+          'created': {
+            'type': 'string',
+            'format': 'date-time',
+          },
+          'errorMessage': {
+            'type': 'string',
+          },
+          'file': {
+            'type': 'string',
+          },
+          'name': {
+            'type': 'string',
+          },
+          'originFileSize': {
+            'type': 'number',
+          },
+          'status': {
+            'type': 'string',
+          },
+          'tokensCount': {
+            'type': 'number',
+          },
+          'metadata': {
+            'type': 'object',
+          },
+          'updated': {
+            'type': 'string',
+            'format': 'date-time',
+          },
+          'items': {
+            'type': 'array',
+          },
         },
-        "compressedFileSize": {
-          "type": "number"
-        },
-        "content": {
-          "type": "string"
-        },
-        "fileMimeType": {
-          "type": "string"
-        },
-        "contentMimeType": {
-          "type": "string",
-          "minLength": 1
-        },
-        "created": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "errorMessage": {
-          "type": "string"
-        },
-        "file": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "originFileSize": {
-          "type": "number"
-        },
-        "status": {
-          "type": "string"
-        },
-        "tokensCount": {
-          "type": "number"
-        },
-        "metadata": {
-          "type": "object"
-        },
-        "updated": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "items": {
-          "type": "array"
-        }
+        'required': [
+          'compressedFileSize',
+          'fileMimeType',
+          'contentMimeType',
+          'created',
+          'name',
+          'originFileSize',
+          'status',
+          'tokensCount',
+        ],
+        'additionalProperties': false,
       },
-      "required": [
-        "compressedFileSize",
-        "fileMimeType",
-        "contentMimeType",
-        "created",
-        "name",
-        "originFileSize",
-        "status",
-        "tokensCount"
-      ],
-      "additionalProperties": false
-    }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
-}
-''';
+    },
+    r'$schema': 'http://json-schema.org/draft-07/schema#',
+  };
 
-  static final jsonSchema = JsonSchema.create(_schema);
+  static final jsonSchema = JsonSchema.create(_jsonSchema);
 
   Document validate() {
     final json = toJson();
