@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
+import 'test_data.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   late DocumentRepository repository;
@@ -32,15 +34,15 @@ void main() {
         status: 'active',
         updated: DateTime.now(),
         items: [
-          const DocumentItem(
+          DocumentItem(
             content: 'content 1',
-            embedding: [12.1, 13.4, 5.0],
+            embedding: testData['ten']!,
             metadata: {'id': 'customId1'},
             tokensCount: 4,
           ),
-          const DocumentItem(
+          DocumentItem(
             content: 'content 2',
-            embedding: [11.1, 12.2, 13.3],
+            embedding: testData['two']!,
             metadata: {'id': 'customId2'},
             tokensCount: 5,
           ),

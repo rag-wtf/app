@@ -53,6 +53,8 @@ DEFINE FIELD items.*.metadata ON Document TYPE object;
 DEFINE FIELD items.*.tokensCount ON Document TYPE number;
 DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
 ''';
+//DEFINE INDEX idx_mtree_embedding ON Document FIELDS items.*.embedding MTREE DIMENSION 384 DIST COSINE;
+
   static String get sqlSchema => _sqlSchema;
 
   static const _jsonSchema = {
