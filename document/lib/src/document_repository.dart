@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:document/src/document.dart';
+import 'package:json_schema/json_schema.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class DocumentRepository {
@@ -14,12 +15,12 @@ class DocumentRepository {
   }
 
   Future<Document> createDocument(Document document) async {
-    final validatedDocument = document.validate();
-    final isValid = validatedDocument.errors == null;
-    if (!isValid) {
-      return validatedDocument;
-    }
     final payload = document.toJson();
+    final validationErrors = Document.validate(payload);
+    final isValid = validationErrors == null;
+    if (!isValid) {
+      return document.copyWith(errors: validationErrors);
+    }
     final result = await db.query(
       'CREATE ONLY Document CONTENT ${jsonEncode(payload)}',
     );
@@ -59,13 +60,12 @@ class DocumentRepository {
   }
 
   Future<Document?> updateDocument(Document document) async {
-    final validatedDocument = document.validate();
-    final isValid = validatedDocument.errors == null;
-    if (!isValid) {
-      return validatedDocument;
-    }
-
     final payload = document.toJson();
+    final validationErrors = Document.validate(payload);
+    final isValid = validationErrors == null;
+    if (!isValid) {
+      return document.copyWith(errors: validationErrors);
+    }
     final id = payload.remove('id') as String;
     if (await db.select(id) == null) return null;
 

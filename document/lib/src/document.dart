@@ -31,8 +31,6 @@ abstract class Document with _$Document {
 
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
-  // ignore: unused_element
-  const Document._();
 
   static const _sqlSchema = '''
 DEFINE TABLE Document SCHEMALESS;
@@ -130,15 +128,12 @@ DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
 
   static final jsonSchema = JsonSchema.create(_jsonSchema);
 
-  Document validate() {
-    final json = toJson();
+  static List<ValidationError>? validate(Map<String, dynamic> json) {
     final results = jsonSchema.validate(json);
     if (!results.isValid) {
-      return copyWith(
-        errors: results.errors,
-      );
+      return results.errors;
     }
-    return this;
+    return null;
   }
 
   static dynamic toMap(dynamic input) {
