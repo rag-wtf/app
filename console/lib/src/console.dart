@@ -34,7 +34,7 @@ class _ConsoleState extends State<Console> {
         endline: true,
       );
       if (result != null) {
-        debugPrint('Console: result $result');
+        // debugPrint('Console: result $result');
         if (result is Iterable) {
           if (result.isNotEmpty) {
             if (result.first is List) {

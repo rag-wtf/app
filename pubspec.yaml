@@ -7,7 +7,7 @@ environment:
   sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
-  env_reader: ^1.6.0
+  env_reader: ^2.1.0
   file_upload:
     path: file_upload
   flutter:
