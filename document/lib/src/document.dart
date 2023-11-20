@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:document/src/date_time_json_converter.dart';
-import 'package:document/src/document_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
 part 'document.freezed.dart';
@@ -24,7 +23,6 @@ abstract class Document with _$Document {
     String? file,
     Object? metadata,
     @DateTimeJsonConverter() DateTime? updated,
-    List<DocumentItem>? items,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
   }) = _Document;
@@ -33,7 +31,8 @@ abstract class Document with _$Document {
       _$DocumentFromJson(json);
 
   static const _sqlSchema = '''
-DEFINE TABLE Document SCHEMALESS;
+DEFINE TABLE Document SCHEMAFULL;
+DEFINE FIELD id ON Document TYPE record;
 DEFINE FIELD compressedFileSize ON Document TYPE number;
 DEFINE FIELD content ON Document TYPE option<string>;
 DEFINE FIELD tokensCount ON Document TYPE number;
@@ -46,15 +45,14 @@ DEFINE FIELD name ON Document TYPE string;
 DEFINE FIELD originFileSize ON Document TYPE number;
 DEFINE FIELD status ON Document TYPE string;
 DEFINE FIELD updated ON Document TYPE option<datetime>;
-DEFINE FIELD items ON Document TYPE option<array>;
-DEFINE FIELD items.* ON Document TYPE object;
-DEFINE FIELD items.*.content ON Document TYPE string;
-DEFINE FIELD items.*.embedding ON Document TYPE array<float, 384>;
-DEFINE FIELD items.*.metadata ON Document TYPE object;
-DEFINE FIELD items.*.tokensCount ON Document TYPE number;
-DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
 
-DEFINE INDEX embeddingMtreeIndex ON Document FIELDS items.*.embedding MTREE DIMENSION 384 DIST COSINE;
+DEFINE TABLE DocumentEmbedding SCHEMAFULL;
+DEFINE FIELD id ON DocumentEmbedding TYPE record;
+DEFINE FIELD in ON DocumentEmbedding TYPE record<Document>;
+DEFINE FIELD out ON DocumentEmbedding TYPE record<Embedding>;
+DEFINE INDEX documentEmbeddingUniqueIndex 
+    ON DocumentEmbedding 
+    FIELDS in, out UNIQUE;
 ''';
 
   static String get sqlSchema => _sqlSchema;
@@ -109,9 +107,6 @@ DEFINE INDEX embeddingMtreeIndex ON Document FIELDS items.*.embedding MTREE DIME
           'updated': {
             'type': 'string',
             'format': 'date-time',
-          },
-          'items': {
-            'type': 'array',
           },
         },
         'required': [

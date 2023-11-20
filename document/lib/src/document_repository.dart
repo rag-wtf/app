@@ -9,28 +9,40 @@ class DocumentRepository {
   });
   final Surreal db;
 
-  Future<void> createSchema() async {
-    await db.query(Document.sqlSchema);
+  Future<void> createSchema([
+    Transaction? txn,
+  ]) async {
+    txn == null
+        ? await db.query(Document.sqlSchema)
+        : txn.query(Document.sqlSchema);
   }
 
-  Future<Document> createDocument(Document document) async {
+  Future<Document> createDocument(
+    Document document, [
+    Transaction? txn,
+  ]) async {
     final payload = document.toJson();
     final validationErrors = Document.validate(payload);
     final isValid = validationErrors == null;
     if (!isValid) {
       return document.copyWith(errors: validationErrors);
     }
-    final result = await db.query(
-      'CREATE ONLY Document CONTENT ${jsonEncode(payload)}',
-    );
 
-    return Document.fromJson(
-      Map<String, dynamic>.from(
-        Document.toMap(
-          (result! as List).first,
-        ) as Map,
-      ),
-    );
+    final sql = 'CREATE ONLY Document CONTENT ${jsonEncode(payload)}';
+    if (txn == null) {
+      final result = await db.query(sql);
+
+      return Document.fromJson(
+        Map<String, dynamic>.from(
+          Document.toMap(
+            (result! as List).first,
+          ) as Map,
+        ),
+      );
+    } else {
+      txn.query(sql);
+      return document;
+    }
   }
 
   Future<List<Document>> getAllDocuments() async {
@@ -68,7 +80,6 @@ class DocumentRepository {
     final id = payload.remove('id') as String;
     if (await db.select(id) == null) return null;
 
-    payload.removeWhere((key, value) => value == null);
     final result = await db.query(
       'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
     );
