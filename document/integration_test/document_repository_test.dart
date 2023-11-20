@@ -35,16 +35,34 @@ void main() {
         updated: DateTime.now(),
         items: [
           DocumentItem(
-            content: 'content 1',
-            embedding: testData['ten']!,
+            content: 'apple',
+            embedding: testData['apple']!,
             metadata: {'id': 'customId1'},
             tokensCount: 4,
           ),
           DocumentItem(
-            content: 'content 2',
-            embedding: testData['two']!,
+            content: 'ten',
+            embedding: testData['ten']!,
             metadata: {'id': 'customId2'},
             tokensCount: 5,
+          ),
+          DocumentItem(
+            content: 'twenty',
+            embedding: testData['twenty']!,
+            metadata: {'id': 'customId3'},
+            tokensCount: 15,
+          ),
+          DocumentItem(
+            content: 'two',
+            embedding: testData['two']!,
+            metadata: {'id': 'customId4'},
+            tokensCount: 7,
+          ),
+          DocumentItem(
+            content: 'banana',
+            embedding: testData['banana']!,
+            metadata: {'id': 'customId5'},
+            tokensCount: 10,
           ),
         ],
       );
@@ -54,7 +72,20 @@ void main() {
 
       // Assert
       expect(result.id, isNotNull);
-      expect(result.items, hasLength(2));
+      expect(result.items, hasLength(5));
+
+      // retrieve with cosine similarity search
+      print(
+        await db.query(
+          '''
+          SELECT id, items.*.content, 
+          vector::similarity::cosine(items.*.embedding, ${jsonEncode(listAllFruits)}) AS score
+          FROM Document
+          ORDER BY score DESC
+          LIMIT 3;
+        ''',
+        ),
+      );
     });
 
     test('should have validation errors', () async {

@@ -46,14 +46,16 @@ DEFINE FIELD name ON Document TYPE string;
 DEFINE FIELD originFileSize ON Document TYPE number;
 DEFINE FIELD status ON Document TYPE string;
 DEFINE FIELD updated ON Document TYPE option<datetime>;
-DEFINE FIELD items ON Document TYPE option<array<object>>;
+DEFINE FIELD items ON Document TYPE option<array>;
+DEFINE FIELD items.* ON Document TYPE object;
 DEFINE FIELD items.*.content ON Document TYPE string;
 DEFINE FIELD items.*.embedding ON Document TYPE array<float, 384>;
 DEFINE FIELD items.*.metadata ON Document TYPE object;
 DEFINE FIELD items.*.tokensCount ON Document TYPE number;
 DEFINE FIELD items.*.updated ON Document TYPE option<datetime>;
+
+DEFINE INDEX embeddingMtreeIndex ON Document FIELDS items.*.embedding MTREE DIMENSION 384 DIST COSINE;
 ''';
-//DEFINE INDEX idx_mtree_embedding ON Document FIELDS items.*.embedding MTREE DIMENSION 384 DIST COSINE;
 
   static String get sqlSchema => _sqlSchema;
 

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:document/src/document.dart';
-import 'package:json_schema/json_schema.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class DocumentRepository {
