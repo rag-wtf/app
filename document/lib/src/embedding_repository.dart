@@ -139,6 +139,13 @@ class EmbeddingRepository {
         : null;
   }
 
+  /* TODO: Re-test the following query in v1.1:
+      const sql = r'''
+SELECT *, vector::similarity::cosine(embedding, $vector) AS score
+FROM Embedding
+WHERE embedding <$k> $vector
+ORDER BY score DESC;''';
+*/
   Future<List<Embedding>> similaritySearch(List<double> vector, int k) async {
     const sql = r'''
 SELECT *, vector::similarity::cosine(embedding, $vector) AS score
