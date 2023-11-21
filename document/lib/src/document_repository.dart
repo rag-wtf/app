@@ -28,7 +28,7 @@ class DocumentRepository {
       return document.copyWith(errors: validationErrors);
     }
 
-    final sql = 'CREATE ONLY Document CONTENT ${jsonEncode(payload)}';
+    final sql = 'CREATE ONLY Document CONTENT ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await db.query(sql);
 

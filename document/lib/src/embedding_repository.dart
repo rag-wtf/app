@@ -28,7 +28,7 @@ class EmbeddingRepository {
       return embedding.copyWith(errors: validationErrors);
     }
 
-    final sql = 'CREATE ONLY Embedding CONTENT ${jsonEncode(payload)}';
+    final sql = 'CREATE ONLY Embedding CONTENT ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await db.query(sql);
 
@@ -61,7 +61,7 @@ class EmbeddingRepository {
       }
     }
 
-    const sql = r'INSERT INTO Embedding $payloads';
+    const sql = r'INSERT INTO Embedding $payloads;';
     final bindings = {'payloads': payloads};
 
     if (txn == null) {

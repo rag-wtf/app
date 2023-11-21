@@ -45,14 +45,6 @@ DEFINE FIELD name ON Document TYPE string;
 DEFINE FIELD originFileSize ON Document TYPE number;
 DEFINE FIELD status ON Document TYPE string;
 DEFINE FIELD updated ON Document TYPE option<datetime>;
-
-DEFINE TABLE DocumentEmbedding SCHEMAFULL;
-DEFINE FIELD id ON DocumentEmbedding TYPE record;
-DEFINE FIELD in ON DocumentEmbedding TYPE record<Document>;
-DEFINE FIELD out ON DocumentEmbedding TYPE record<Embedding>;
-DEFINE INDEX documentEmbeddingUniqueIndex 
-    ON DocumentEmbedding 
-    FIELDS in, out UNIQUE;
 ''';
 
   static String get sqlSchema => _sqlSchema;
