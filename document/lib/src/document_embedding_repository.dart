@@ -21,14 +21,6 @@ class DocumentEmbeddingRepository {
     DocumentEmbedding documentEmbedding, [
     Transaction? txn,
   ]) async {
-    final payload = documentEmbedding.toJson();
-    final validationErrors = DocumentEmbedding.validate(payload);
-    print(validationErrors);
-    final isValid = validationErrors == null;
-    if (!isValid) {
-      return documentEmbedding.copyWith(errors: validationErrors);
-    }
-
     final documentId = documentEmbedding.documentId;
     final embeddingId = documentEmbedding.embeddingId;
 
@@ -52,27 +44,17 @@ class DocumentEmbeddingRepository {
     }
   }
 
-  Future<List<DocumentEmbedding>> createEmbeddings(
+  Future<List<DocumentEmbedding>> createDocumentEmbeddings(
     List<DocumentEmbedding> documentEmbeddings, [
     Transaction? txn,
   ]) async {
     final sqlBuffer = StringBuffer();
-    for (var i = 0; i < documentEmbeddings.length; i++) {
-      final documentEmbedding = documentEmbeddings[i];
-      final payload = documentEmbedding.toJson();
-      final validationErrors = DocumentEmbedding.validate(payload);
-      final isValid = validationErrors == null;
-      if (isValid) {
-        final documentId = documentEmbedding.documentId;
-        final embeddingId = documentEmbedding.embeddingId;
-        sqlBuffer.write(
-          'RELATE ONLY $documentId->DocumentEmbedding->$embeddingId;',
-        );
-      } else {
-        documentEmbeddings[i] =
-            documentEmbedding.copyWith(errors: validationErrors);
-        return documentEmbeddings;
-      }
+    for (final documentEmbedding in documentEmbeddings) {
+      final documentId = documentEmbedding.documentId;
+      final embeddingId = documentEmbedding.embeddingId;
+      sqlBuffer.write(
+        'RELATE ONLY $documentId->DocumentEmbedding->$embeddingId;',
+      );
     }
 
     if (txn == null) {
@@ -95,18 +77,18 @@ class DocumentEmbeddingRepository {
   }
 
   Future<List<Embedding>> getAllEmbeddingsOfDocument(String documentId) async {
-    const sql = r'''
-SELECT ->DocumentEmbedding->Embedding.* FROM Document 
+    final sql = '''
+SELECT ->DocumentEmbedding->Embedding.* AS Embedding FROM Document 
 WHERE array::first(array::distinct(->DocumentEmbedding<-Document)) == $documentId;
 ''';
-    final bindings = {
-      'documentId': documentId,
-    };
+
     final results = (await db.query(
       sql,
-      bindings: bindings,
     ))! as List;
-    return results
+    final result = Map<String, dynamic>.from(results.first as Map);
+    final embeddings = result['Embedding'] as List;
+
+    return embeddings
         .map(
           (result) => Embedding.fromJson(
             Map<String, dynamic>.from(
