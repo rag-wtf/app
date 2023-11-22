@@ -46,8 +46,6 @@ void main() {
       );
 
       // Assert
-      //final results = List<List<dynamic>>.from(txnResults! as List);
-      //expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
       expect(await documentRepository.isSchemaCreated(), isTrue);
       expect(await embeddingRepository.isSchemaCreated(), isTrue);
       expect(await documentEmbeddingRepository.isSchemaCreated(), isTrue);
