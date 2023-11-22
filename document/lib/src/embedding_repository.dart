@@ -9,6 +9,13 @@ class EmbeddingRepository {
   });
   final Surreal db;
 
+  Future<bool> isSchemaCreated() async {
+    final results = (await db.query('INFO FOR DB'))! as List;
+    final result = Map<String, dynamic>.from(results.first as Map);
+    final tables = Map<String, dynamic>.from(result['tables'] as Map);
+    return tables.containsKey('Embedding');
+  }
+
   Future<void> createSchema([
     Transaction? txn,
   ]) async {

@@ -17,11 +17,41 @@ void main() {
     await db.connect('mem://');
     await db.use(ns: 'test', db: 'test');
     documentRepository = DocumentRepository(db: db);
-    await documentRepository.createSchema();
     embeddingRepository = EmbeddingRepository(db: db);
-    await embeddingRepository.createSchema();
     documentEmbeddingRepository = DocumentEmbeddingRepository(db: db);
-    await documentEmbeddingRepository.createSchema();
+  });
+
+  group('isSchemaCreated', () {
+    test('should return false', () async {
+      // Assert
+      expect(await documentRepository.isSchemaCreated(), isFalse);
+      expect(await embeddingRepository.isSchemaCreated(), isFalse);
+      expect(await documentEmbeddingRepository.isSchemaCreated(), isFalse);
+    });
+
+    test('should create schemas and return true', () async {
+      // Act
+      await db.transaction(
+        (txn) async {
+          if (!await documentRepository.isSchemaCreated()) {
+            await documentRepository.createSchema(txn);
+          }
+          if (!await embeddingRepository.isSchemaCreated()) {
+            await embeddingRepository.createSchema(txn);
+          }
+          if (!await documentEmbeddingRepository.isSchemaCreated()) {
+            await documentEmbeddingRepository.createSchema(txn);
+          }
+        },
+      );
+
+      // Assert
+      //final results = List<List<dynamic>>.from(txnResults! as List);
+      //expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
+      expect(await documentRepository.isSchemaCreated(), isTrue);
+      expect(await embeddingRepository.isSchemaCreated(), isTrue);
+      expect(await documentEmbeddingRepository.isSchemaCreated(), isTrue);
+    });
   });
 
   test('should create document embedding', () async {

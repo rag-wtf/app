@@ -14,7 +14,22 @@ void main() {
     await db.connect('mem://');
     await db.use(ns: 'test', db: 'test');
     repository = DocumentRepository(db: db);
-    await repository.createSchema();
+  });
+
+  group('isSchemaCreated', () {
+    test('should return false', () async {
+      // Assert
+      expect(await repository.isSchemaCreated(), isFalse);
+    });
+
+    test('should create schema and return true', () async {
+      // Arrange
+      if (!await repository.isSchemaCreated()) {
+        await repository.createSchema();
+      }
+      // Assert
+      expect(await repository.isSchemaCreated(), isTrue);
+    });
   });
 
   group('createDocument', () {
