@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:ulid/ulid.dart';
 import 'constants.dart';
 
 class UploadFileList {
@@ -106,14 +107,14 @@ class UploadFileService {
       required this.embeddingsApiBase,
       required this.embeddingsApiKey,
       required Surreal db}) {
-    documentRepository = DocumentRepository(db: db);
+    documentService = DocumentService(db: db);
   }
 
   final String dataIngestionApiUrl;
   final String embeddingsApiBase;
   final String embeddingsApiKey;
 
-  late DocumentRepository documentRepository;
+  late DocumentService documentService;
 
   final gzipEncoder = GZipEncoder();
   final gzipDecoder = GZipDecoder();
@@ -276,15 +277,17 @@ class UploadFileService {
       debugPrint('embeddingsResponse.data ${embeddingsResponse.data}');
       List embeddingsData = List.empty();
       try {
-        final embeddings = Map<String, dynamic>.from(embeddingsResponse.data);
-        embeddingsData = List.from(embeddings['data']);
+        final embeddingsDataMap =
+            Map<String, dynamic>.from(embeddingsResponse.data);
+        embeddingsData = List.from(embeddingsDataMap['data']);
 
         //debugPrint('embeddingsData $embeddingsData');
-        documentMap?['items'] = List.generate(
+        final embeddings = List.generate(
           documentItems.length,
           (index) {
             final documentItem = documentItems[index];
-            return DocumentItem(
+            return Embedding(
+              id: 'Embedding:${Ulid()}',
               content: documentItem['content'],
               embedding: List<double>.from(embeddingsData[index]['embedding']),
               metadata: documentItem['metadata'] ?? {},
@@ -292,6 +295,7 @@ class UploadFileService {
             );
           },
         );
+        documentMap?['embeddings'] = embeddings;
       } catch (e, s) {
         debugPrint("ERROR: $e");
         debugPrintStack(label: "STACKTRACE", maxFrames: 10, stackTrace: s);
@@ -331,8 +335,9 @@ class UploadFileService {
         file.data.first,
       );
       final document = Document(
+        id: 'Document:${Ulid()}',
         content: documentMap?['content'],
-        tokensCount: documentMap?['tokens_count'],
+        tokensCount: documentMap?['tokens_count'] ?? 0,
         compressedFileSize: base64EncodedFile.length,
         fileMimeType: file.contentType.mimeType,
         contentMimeType: documentMap?['mime_type'],
@@ -342,12 +347,16 @@ class UploadFileService {
         originFileSize: file.size,
         status: file.status.toString(),
         file: base64EncodedFile,
-        items: List<DocumentItem>.from(documentMap?['items']),
       );
-      await documentRepository.createSchema();
-      final result = await documentRepository.createDocument(document);
-      debugPrint('result.id ${result.id}');
-      assert(result.id != null);
+      if (!await documentService.isSchemaCreated()) {
+        await documentService.createSchema();
+      }
+      final result = await documentService.createDocumentEmbeddings(
+        document,
+        documentMap?['embeddings'],
+      );
+      assert(result != null);
+      debugPrint('result $result');
     });
   }
 }
