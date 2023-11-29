@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:console/console.dart';
@@ -12,16 +11,16 @@ class RagConsole extends StatefulWidget {
     required this.endpoint,
     required this.ns,
     required this.db,
-    required this.embeddings_api_base,
-    required this.embeddings_api_key,
+    required this.embeddingsApiBase,
+    required this.embeddingsApiKey,
     super.key,
   });
 
   final String endpoint;
   final String ns;
   final String db;
-  final String embeddings_api_base;
-  final String embeddings_api_key;
+  final String embeddingsApiBase;
+  final String embeddingsApiKey;
 
   @override
   State<RagConsole> createState() => _RagConsoleState();
@@ -64,12 +63,12 @@ class _RagConsoleState extends State<RagConsole> {
         case 'e':
           final input = value.substring(3);
           final response = await dio.post<Map<String, dynamic>>(
-            '${widget.embeddings_api_base}/embeddings',
+            '${widget.embeddingsApiBase}/embeddings',
             options: Options(
               headers: {
                 'Content-type': 'application/json',
-                if (widget.embeddings_api_key.isNotEmpty)
-                  'Authorization': 'Bearer ${widget.embeddings_api_key}',
+                if (widget.embeddingsApiKey.isNotEmpty)
+                  'Authorization': 'Bearer ${widget.embeddingsApiKey}',
               },
               requestEncoder: gzipEncoder,
             ),
@@ -92,8 +91,10 @@ class _RagConsoleState extends State<RagConsole> {
   @override
   Widget build(BuildContext context) {
     return Console(
-      content:
-          'Connected to ${widget.endpoint}, ns: ${widget.ns}, db: ${widget.db}.\nembeddings_api_base: ${widget.embeddings_api_base}\n\n',
+      content: '''
+Connected to ${widget.endpoint}, ns: ${widget.ns}, db: ${widget.db}.
+embeddingsApiBase: ${widget.embeddingsApiBase}
+''',
       initFunction: initFunction,
       executeFunction: executeFunction,
     );
