@@ -30,6 +30,21 @@ class _RagConsoleState extends State<RagConsole> {
   final db = Surreal();
   final dio = Dio();
   final _gzipEncoder = GZipEncoder();
+  static const helpMessageHint =
+      'Type /h to see the list of supported commands.';
+  static const helpMessage = '''
+/e <input>
+Create embeddings for the given <input>.
+Example: 
+/e this is single input value
+/e ["this is", "multiple input", "values"]  
+
+/sql <query>
+Execute <query> statement of SurrealQL.
+Example:
+/sql INFO FOR DB; 
+/sql SELECT * FROM DocumentEmbedding;
+''';
 
   Future<void> initFunction() async {
     await db.connect(widget.endpoint);
@@ -60,6 +75,8 @@ class _RagConsoleState extends State<RagConsole> {
       final command = match.group(1);
       debugPrint('command $command');
       switch (command) {
+        case 'h':
+          return helpMessage;
         case 'e':
           final input = value.substring(3);
           final response = await dio.post<Map<String, dynamic>>(
@@ -78,13 +95,15 @@ class _RagConsoleState extends State<RagConsole> {
           );
           return response.data;
 
+        case 'sql':
+          final query = value.substring(5);
+          return db.query(query);
+
         default:
-          throw Exception('Unsupported command: /$command');
+          throw Exception('Unsupported command: /$command. $helpMessageHint');
       }
     } else {
-      throw Exception(
-        'All supported commands must be started with /, type /? or /h to see the list of supported commands.',
-      );
+      throw Exception(helpMessageHint);
     }
   }
 
@@ -94,6 +113,7 @@ class _RagConsoleState extends State<RagConsole> {
       content: '''
 Connected to ${widget.endpoint}, ns: ${widget.ns}, db: ${widget.db}.
 embeddingsApiBase: ${widget.embeddingsApiBase}
+$helpMessageHint
 ''',
       initFunction: initFunction,
       executeFunction: executeFunction,

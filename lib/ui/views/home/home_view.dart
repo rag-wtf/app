@@ -6,7 +6,6 @@ import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 import 'package:rag_console/rag_console.dart';
 import 'package:stacked/stacked.dart';
-import 'package:surrealdb_console/surrealdb_console.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
   const HomeView({super.key});
@@ -51,17 +50,6 @@ class HomeView extends StackedView<HomeViewModel> {
                           db: 'test',
                           embeddingsApiBase: embeddingsApiBase,
                           embeddingsApiKey: embeddingsApiKey,
-                        ),
-                      ),
-                    ),
-                    verticalSpaceSmall,
-                    const Expanded(
-                      child: SizedBox(
-                        width: 500,
-                        child: SurrealdbConsole(
-                          endpoint: 'indxdb://rag',
-                          ns: 'rag',
-                          db: 'test',
                         ),
                       ),
                     ),

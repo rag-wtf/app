@@ -19,8 +19,6 @@ dependencies:
     path: rag_console
   stacked: ^3.4.0
   stacked_services: ^1.1.0
-  surrealdb_console:
-    path: surrealdb_console
 
 dev_dependencies:
   build_runner: ^2.4.5
