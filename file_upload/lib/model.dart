@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
@@ -11,6 +12,7 @@ import 'package:mime/mime.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
+import 'package:retry/retry.dart';
 import 'constants.dart';
 
 class UploadFileList {
@@ -118,6 +120,73 @@ class UploadFileService {
 
   final gzipEncoder = GZipEncoder();
   final gzipDecoder = GZipDecoder();
+
+  Future<List> sendInBatches(
+    Dio dio,
+    List<String> chunkedTexts, {
+    int batchSize = 10,
+  }) async {
+    // Calculate the number of batches
+    int numBatches = (chunkedTexts.length / batchSize).ceil();
+    final embeddings = [];
+
+    for (var i = 0; i < numBatches; i++) {
+      // Get the start and end indices of the current batch
+      int start = i * batchSize;
+      int end = start + batchSize;
+
+      debugPrint('start $start, end $end');
+
+      // Get the current batch of texts
+      List<String> batch =
+          chunkedTexts.sublist(start, min(end, chunkedTexts.length));
+
+      // Send the batch and add the future to the list
+      final response = await retry(
+        () => dio.post(
+          '$embeddingsApiBase/embeddings',
+          options: Options(
+            headers: {
+              'Content-type': 'application/json',
+              if (embeddingsApiKey.isNotEmpty)
+                'Authorization': 'Bearer $embeddingsApiKey',
+            },
+            requestEncoder: gzipRequestEncoder,
+          ),
+          data: {
+            'input': batch,
+          },
+        ).then((response) {
+          debugPrint('Batch ${i + 1} sent successfully');
+          return response;
+        }),
+        retryIf: (e) =>
+            e is DioException &&
+            (e.type == DioExceptionType.connectionTimeout ||
+                e.type == DioExceptionType.sendTimeout ||
+                e.type == DioExceptionType.receiveTimeout),
+        maxAttempts: 3,
+        delayFactor: const Duration(seconds: 1),
+      ).catchError(
+        (e) {
+          debugPrint('Failed to send batch ${i + 1}: $e');
+          throw e;
+        },
+      );
+
+      final embeddingsDataMap = Map<String, dynamic>.from(response.data);
+      embeddings.addAll(
+        List.from(
+          embeddingsDataMap['data'],
+        ),
+      );
+      Future.delayed(const Duration(seconds: 1));
+    }
+
+    debugPrint('sendInBatches: embeddings.length = ${embeddings.length}');
+
+    return embeddings;
+  }
 
   bool isGzFile(final fileBytes) {
     return (fileBytes[0] == 0x1f && fileBytes[1] == 0x8b);
@@ -244,9 +313,9 @@ class UploadFileService {
       },
     ).then((response) async {
       // Handle the response data in here
-      debugPrint("RESPONSE FROM SERVER ${response.headers}");
-      debugPrint("response.data.runtimeType ${response.data.runtimeType}");
-      debugPrint("/ingest ${response.data}");
+      //debugPrint("RESPONSE FROM SERVER ${response.headers}");
+      //debugPrint("response.data.runtimeType ${response.data.runtimeType}");
+      //debugPrint("/ingest ${response.data}");
       documentMap = Map<String, dynamic>.from(response.data);
       final documentItems =
           List<Map<String, dynamic>>.from(documentMap?['items']);
@@ -255,10 +324,19 @@ class UploadFileService {
           'content': await convertStreamToString(Stream.fromIterable(file.data))
         });
       }
-      final chunkedTexts =
-          documentItems.map((item) => item['content']).toList();
+      final chunkedTexts = List<String>.from(
+        documentItems.map((item) => item['content']).toList(),
+      );
+      debugPrint('chunkedTexts ${chunkedTexts.length}');
+      debugPrint('chunkedTexts[0] ${chunkedTexts[0]}');
 
-      final embeddingsResponse = await dio.post(
+      final embeddingsData = await sendInBatches(
+        dio,
+        chunkedTexts,
+        batchSize: 10,
+      );
+
+      /*     final embeddingsResponse = await dio.post(
         '$embeddingsApiBase/embeddings',
         options: Options(
           headers: {
@@ -271,17 +349,8 @@ class UploadFileService {
         data: {
           'input': chunkedTexts,
         },
-      );
-      debugPrint(
-          "embeddingsResponse.data.runtimeType ${embeddingsResponse.data.runtimeType}");
-      debugPrint('embeddingsResponse.data ${embeddingsResponse.data}');
-      List embeddingsData = List.empty();
+      );*/
       try {
-        final embeddingsDataMap =
-            Map<String, dynamic>.from(embeddingsResponse.data);
-        embeddingsData = List.from(embeddingsDataMap['data']);
-
-        //debugPrint('embeddingsData $embeddingsData');
         final embeddings = List.generate(
           documentItems.length,
           (index) {
@@ -356,7 +425,7 @@ class UploadFileService {
         documentMap?['embeddings'],
       );
       assert(result != null);
-      debugPrint('result $result');
+      //debugPrint('result $result');
     });
   }
 }
