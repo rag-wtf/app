@@ -5,6 +5,7 @@ import 'package:console/console.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rag_console/src/chat_message.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class RagConsole extends StatefulWidget {
@@ -14,6 +15,10 @@ class RagConsole extends StatefulWidget {
     required this.db,
     required this.embeddingsApiBase,
     required this.embeddingsApiKey,
+    required this.generationApiBase,
+    required this.generationApiKey,
+    this.systemMessage =
+        'You are a very helpful and friendly assistant that will follow user instructions closely.',
     super.key,
   });
 
@@ -22,6 +27,9 @@ class RagConsole extends StatefulWidget {
   final String db;
   final String embeddingsApiBase;
   final String embeddingsApiKey;
+  final String generationApiBase;
+  final String generationApiKey;
+  final String systemMessage;
 
   @override
   State<RagConsole> createState() => _RagConsoleState();
@@ -31,6 +39,7 @@ class _RagConsoleState extends State<RagConsole> {
   final db = Surreal();
   final dio = Dio();
   final _gzipEncoder = GZipEncoder();
+  final messages = <ChatMessage>[];
   late DocumentService documentService;
   static const helpMessageHint =
       'Type /h to see the list of supported commands.';
@@ -47,6 +56,15 @@ Example:
 /r How to breath properly?
 /r What is meditation?  
 
+/g <question>
+Generate response to the question.
+Example: 
+/g What is your name?
+/g Tell me more about LLM. 
+
+/c
+Clear chat messages stored in the memory
+
 /sql <query>
 Execute <query> statement of SurrealQL.
 Example:
@@ -54,10 +72,23 @@ Example:
 /sql SELECT * FROM DocumentEmbedding;
 ''';
 
+  void initMessages() {
+    messages
+      ..clear()
+      ..add(
+        ChatMessage(
+          role: Role.system,
+          content: widget.systemMessage,
+          dateTime: DateTime.now(),
+        ),
+      );
+  }
+
   Future<void> initFunction() async {
     await db.connect(widget.endpoint);
     await db.use(ns: widget.ns, db: widget.db);
     documentService = DocumentService(db: db);
+    initMessages();
   }
 
   // gzip request
@@ -93,6 +124,45 @@ Example:
     return response.data;
   }
 
+  Future<String> generate(String question) async {
+    messages.add(
+      ChatMessage(
+        role: Role.user,
+        content: question,
+        dateTime: DateTime.now(),
+      ),
+    );
+    final response = await dio.post<Map<String, dynamic>>(
+      '${widget.generationApiBase}/chat/completions',
+      options: Options(
+        headers: {
+          'Content-type': 'application/json',
+          if (widget.generationApiKey.isNotEmpty)
+            'Authorization': 'Bearer ${widget.generationApiKey}',
+        },
+      ),
+      data: {
+        'messages': messages.map((message) => message.toJson()).toList(),
+      },
+    );
+    final responseData = response.data;
+    final choice = Map<String, dynamic>.from(
+      (responseData?['choices'] as List).first as Map,
+    );
+    final message = Map<String, dynamic>.from(
+      choice['message'] as Map,
+    );
+    final content = (message['content'] as String).trimLeft();
+    messages.add(
+      ChatMessage(
+        role: Role.assistant,
+        content: content,
+        dateTime: DateTime.now(),
+      ),
+    );
+    return content;
+  }
+
   Future<List<Map<String, dynamic>>> retrieve(String input) async {
     final responseData = await embed(input);
     final embedding = (responseData?['data'] as List).first as Map;
@@ -116,6 +186,12 @@ Example:
         case 'r':
           final input = value.substring(3);
           return retrieve(input);
+        case 'g':
+          final input = value.substring(3);
+          return generate(input);
+        case 'c':
+          initMessages();
+          return 'Chat messages is cleared from the memory.';
         case 'sql':
           final query = value.substring(5);
           return db.query(query);
@@ -134,7 +210,8 @@ Example:
     return Console(
       content: '''
 Connected to ${widget.endpoint}, ns: ${widget.ns}, db: ${widget.db}.
-embeddingsApiBase: ${widget.embeddingsApiBase}
+embeddingsApiBaseUrl: ${widget.embeddingsApiBase}
+generationApiBaseUrl: ${widget.generationApiBase}
 $helpMessageHint
 ''',
       initFunction: initFunction,

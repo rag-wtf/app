@@ -16,13 +16,20 @@ class HomeView extends StackedView<HomeViewModel> {
     HomeViewModel viewModel,
     Widget? child,
   ) {
-    debugPrint('HomeView ${Env.read<String>('CONFIG')}');
     final dataIngestionApiUrl = Env.read<String>('DATA_INGESTION_API_URL') ??
         'DATA_INGESTION_API_URL undefined';
     final embeddingsApiBase = Env.read<String>('EMBEDDINGS_API_BASE') ??
         'EMBEDDINGS_API_BASE undefined';
     final embeddingsApiKey = Env.read<String>('EMBEDDINGS_API_KEY') ??
         'EMBEDDINGS_API_KEY undefined';
+    final generationApiBase = Env.read<String>('GENERATION_API_BASE') ??
+        'GENERATION_API_BASE undefined';
+    final generationApiKey = Env.read<String>('GENERATION_API_KEY') ??
+        'GENERATION_API_KEY undefined';
+
+    debugPrint('generationApiBase $generationApiBase');
+    debugPrint('generationApiKey $generationApiKey');
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -50,6 +57,8 @@ class HomeView extends StackedView<HomeViewModel> {
                           db: 'test',
                           embeddingsApiBase: embeddingsApiBase,
                           embeddingsApiKey: embeddingsApiKey,
+                          generationApiBase: generationApiBase,
+                          generationApiKey: generationApiKey,
                         ),
                       ),
                     ),
