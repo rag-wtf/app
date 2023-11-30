@@ -83,4 +83,8 @@ class DocumentService {
       return null;
     }
   }
+
+  Future<List<Embedding>> similaritySearch(List<double> vector, int k) async {
+    return embeddingRepository.similaritySearch(vector, k);
+  }
 }

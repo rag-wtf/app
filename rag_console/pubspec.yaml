@@ -12,6 +12,8 @@ dependencies:
   console:
     path: ../console
   dio: ^5.3.3
+  document:
+    path: ../document
   flutter:
     sdk: flutter
   surrealdb_wasm:

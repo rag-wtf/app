@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:archive/archive_io.dart';
 import 'package:console/console.dart';
 import 'package:dio/dio.dart';
+import 'package:document/document.dart';
 import 'package:flutter/widgets.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
@@ -30,6 +31,7 @@ class _RagConsoleState extends State<RagConsole> {
   final db = Surreal();
   final dio = Dio();
   final _gzipEncoder = GZipEncoder();
+  late DocumentService documentService;
   static const helpMessageHint =
       'Type /h to see the list of supported commands.';
   static const helpMessage = '''
@@ -38,6 +40,12 @@ Create embeddings for the given <input>.
 Example: 
 /e this is single input value
 /e ["this is", "multiple input", "values"]  
+
+/r <question>
+Retrieve contents relevant to the question.
+Example: 
+/r How to breath properly?
+/r What is meditation?  
 
 /sql <query>
 Execute <query> statement of SurrealQL.
@@ -49,6 +57,7 @@ Example:
   Future<void> initFunction() async {
     await db.connect(widget.endpoint);
     await db.use(ns: widget.ns, db: widget.db);
+    documentService = DocumentService(db: db);
   }
 
   // gzip request
@@ -66,6 +75,32 @@ Example:
     }
   }
 
+  Future<Map<String, dynamic>?> embed(String input) async {
+    final response = await dio.post<Map<String, dynamic>>(
+      '${widget.embeddingsApiBase}/embeddings',
+      options: Options(
+        headers: {
+          'Content-type': 'application/json',
+          if (widget.embeddingsApiKey.isNotEmpty)
+            'Authorization': 'Bearer ${widget.embeddingsApiKey}',
+        },
+        requestEncoder: gzipEncoder,
+      ),
+      data: {
+        'input': getEmbeddingInput(input),
+      },
+    );
+    return response.data;
+  }
+
+  Future<List<Map<String, dynamic>>> retrieve(String input) async {
+    final responseData = await embed(input);
+    final embedding = (responseData?['data'] as List).first as Map;
+    final queryVector = List<double>.from(embedding['embedding'] as List);
+    final embeddings = await documentService.similaritySearch(queryVector, 3);
+    return embeddings.map((e) => e.toJson()).toList();
+  }
+
   Future<Object?> executeFunction(String value) async {
     final regex =
         RegExp(r'^/(\w+)'); // Matches the first word starting with "/"
@@ -75,30 +110,17 @@ Example:
       final command = match.group(1);
       debugPrint('command $command');
       switch (command) {
-        case 'h':
-          return helpMessage;
         case 'e':
           final input = value.substring(3);
-          final response = await dio.post<Map<String, dynamic>>(
-            '${widget.embeddingsApiBase}/embeddings',
-            options: Options(
-              headers: {
-                'Content-type': 'application/json',
-                if (widget.embeddingsApiKey.isNotEmpty)
-                  'Authorization': 'Bearer ${widget.embeddingsApiKey}',
-              },
-              requestEncoder: gzipEncoder,
-            ),
-            data: {
-              'input': getEmbeddingInput(input),
-            },
-          );
-          return response.data;
-
+          return embed(input);
+        case 'r':
+          final input = value.substring(3);
+          return retrieve(input);
         case 'sql':
           final query = value.substring(5);
           return db.query(query);
-
+        case 'h':
+          return helpMessage;
         default:
           throw Exception('Unsupported command: /$command. $helpMessageHint');
       }
