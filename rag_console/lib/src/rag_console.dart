@@ -19,6 +19,15 @@ class RagConsole extends StatefulWidget {
     required this.generationApiKey,
     this.systemMessage =
         'You are a very helpful and friendly assistant that will follow user instructions closely.',
+    this.promptTemplate = '''
+Answer the question based on the following information:
+{context}
+If the available information is insufficient or inadequate,
+just tell the user you don't know the answer.
+
+Question: {question}
+
+Answer: ''',
     super.key,
   });
 
@@ -30,6 +39,7 @@ class RagConsole extends StatefulWidget {
   final String generationApiBase;
   final String generationApiKey;
   final String systemMessage;
+  final String promptTemplate;
 
   @override
   State<RagConsole> createState() => _RagConsoleState();
@@ -54,7 +64,7 @@ Example:
 Retrieve contents relevant to the question.
 Example: 
 /r How to breath properly?
-/r What is meditation?  
+/r What is meditation?
 
 /g <question>
 Generate response to the question.
@@ -65,6 +75,13 @@ Example:
 /c
 Clear chat messages stored in the memory
 
+/rag <question>
+Generate response based on information retrieved from the question.
+Example: 
+/rag What is fine-tuning?
+/rag List all advanced RAG techniques. 
+
+
 /sql <query>
 Execute <query> statement of SurrealQL.
 Example:
@@ -72,13 +89,13 @@ Example:
 /sql SELECT * FROM DocumentEmbedding;
 ''';
 
-  void initMessages() {
+  void initMessages([String? systemMessage]) {
     messages
       ..clear()
       ..add(
         ChatMessage(
           role: Role.system,
-          content: widget.systemMessage,
+          content: systemMessage ?? widget.systemMessage,
           dateTime: DateTime.now(),
         ),
       );
@@ -124,14 +141,16 @@ Example:
     return response.data;
   }
 
-  Future<String> generate(String question) async {
+  Future<String> generate(String prompt, [String? input]) async {
     messages.add(
       ChatMessage(
         role: Role.user,
-        content: question,
+        content: prompt,
         dateTime: DateTime.now(),
       ),
     );
+    final messagesMap = messages.map((message) => message.toJson()).toList();
+    debugPrint(messagesMap.toString());
     final response = await dio.post<Map<String, dynamic>>(
       '${widget.generationApiBase}/chat/completions',
       options: Options(
@@ -142,7 +161,7 @@ Example:
         },
       ),
       data: {
-        'messages': messages.map((message) => message.toJson()).toList(),
+        'messages': messagesMap,
       },
     );
     final responseData = response.data;
@@ -153,6 +172,17 @@ Example:
       choice['message'] as Map,
     );
     final content = (message['content'] as String).trimLeft();
+
+    if (input != null) {
+      final chatMessage = messages.removeLast();
+      messages.add(
+        ChatMessage(
+          role: Role.user,
+          content: input,
+          dateTime: chatMessage.dateTime,
+        ),
+      );
+    }
     messages.add(
       ChatMessage(
         role: Role.assistant,
@@ -163,12 +193,12 @@ Example:
     return content;
   }
 
-  Future<List<Map<String, dynamic>>> retrieve(String input) async {
+  Future<List<Embedding>> retrieve(String input) async {
     final responseData = await embed(input);
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
     final embeddings = await documentService.similaritySearch(queryVector, 3);
-    return embeddings.map((e) => e.toJson()).toList();
+    return embeddings;
   }
 
   Future<Object?> executeFunction(String value) async {
@@ -185,13 +215,24 @@ Example:
           return embed(input);
         case 'r':
           final input = value.substring(3);
-          return retrieve(input);
+          final embeddings = await retrieve(input);
+          return embeddings.map((e) => e.toJson()).toList();
         case 'g':
           final input = value.substring(3);
           return generate(input);
         case 'c':
           initMessages();
           return 'Chat messages is cleared from the memory.';
+        case 'rag':
+          final input = value.substring(5);
+          final embeddings = await retrieve(input);
+          final context = embeddings.map((e) {
+            return '${e.content} ${e.score} ${e.id}';
+          }).join('\n');
+          final prompt = widget.promptTemplate
+              .replaceFirst('{context}', context)
+              .replaceFirst('{question}', input);
+          return generate(prompt, input);
         case 'sql':
           final query = value.substring(5);
           return db.query(query);
