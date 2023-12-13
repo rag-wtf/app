@@ -622,10 +622,11 @@ packages:
   surrealdb_wasm:
     dependency: "direct main"
     description:
-      path: "../../surrealdb_wasm"
-      relative: true
-    source: path
-    version: "0.7.0+1"
+      name: surrealdb_wasm
+      sha256: d594ab461695377620436101db8399239a1871b42701538c9bd2b7a01000ee62
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0+3"
   sync_http:
     dependency: transitive
     description:

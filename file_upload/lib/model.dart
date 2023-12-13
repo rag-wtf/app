@@ -288,7 +288,7 @@ class UploadFileService {
     final formData = FormData.fromMap({
       "file": multipartFile,
     });
-
+    //const vpsIngestionApiUrl = 'http://199.181.238.6:8000/ingest';
     debugPrint('dataIngestionApiUrl $dataIngestionApiUrl');
     dio.post(
       dataIngestionApiUrl,

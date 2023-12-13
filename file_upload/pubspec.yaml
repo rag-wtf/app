@@ -19,8 +19,7 @@ dependencies:
   mime: ^1.0.4
   mime_type: ^1.0.0
   file_icon: ^1.0.0
-  surrealdb_wasm:
-    path: ../../surrealdb_wasm
+  surrealdb_wasm: ^0.7.0+3
   document:
     path: ../document
   ulid: ^2.0.0
