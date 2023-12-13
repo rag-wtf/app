@@ -17,8 +17,8 @@ jobs:
 
       - name: Generate Codes
         run: |
-          chmod +x ./document/generate.sh && ./document/generate.sh
-          chmod +x ./rag_console/generate.sh && ./rag_console/generate.sh
+          chmod +x ./document/generate.sh && cd document && ./generate.sh && cd ..
+          chmod +x ./rag_console/generate.sh && cd rag_console && ./generate.sh
 
       - name: Flutter Build
         run: >
