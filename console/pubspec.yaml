@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_console_widget:
-    path: ../../flutter_console
+    path: ../flutter_console
 
 dev_dependencies:
   flutter_test:

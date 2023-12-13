@@ -278,7 +278,7 @@ packages:
   flutter_console_widget:
     dependency: transitive
     description:
-      path: "../flutter_console"
+      path: flutter_console
       relative: true
     source: path
     version: "0.0.3"
