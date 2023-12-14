@@ -35,6 +35,6 @@ dependency_overrides:
 
 flutter:
   assets:
-    - assets/env/
+    - assets/
   uses-material-design: true
   generate: true

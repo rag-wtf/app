@@ -16,7 +16,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Env.load(
     EnvStringLoader(
-      await rootBundle.loadString('assets/env/.env'),
+      await rootBundle.loadString('assets/config'),
     ),
     'qzG[?My3<xF.f_rkZ]D^~b',
   );
