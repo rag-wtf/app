@@ -149,9 +149,9 @@ class RightWidget extends StatelessWidget {
               endpoint: surrealEndpoint,
               ns: surrealNamespace,
               db: surrealDatabase,
-              embeddingsApiBase: viewModel.getSettingValue(embeddingsApiUrlKey),
+              embeddingsApiUrl: viewModel.getSettingValue(embeddingsApiUrlKey),
               embeddingsApiKey: viewModel.getSettingValue(embeddingsApiKey),
-              generationApiBase: viewModel.getSettingValue(generationApiUrlKey),
+              generationApiUrl: viewModel.getSettingValue(generationApiUrlKey),
               generationApiKey: viewModel.getSettingValue(generationApiKey),
             ),
           ],
@@ -184,7 +184,7 @@ class LeftWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FileUploadWidget(
       dataIngestionApiUrl: viewModel.getSettingValue(dataIngestionApiUrlKey),
-      embeddingsApiBase: viewModel.getSettingValue(embeddingsApiUrlKey),
+      embeddingsApiUrl: viewModel.getSettingValue(embeddingsApiUrlKey),
       embeddingsApiKey: viewModel.getSettingValue(embeddingsApiKey),
     );
   }

@@ -12,12 +12,12 @@ class FileUploadWidget extends StatefulWidget {
   const FileUploadWidget(
       {Key? key,
       required this.dataIngestionApiUrl,
-      required this.embeddingsApiBase,
+      required this.embeddingsApiUrl,
       required this.embeddingsApiKey})
       : super(key: key);
 
   final String dataIngestionApiUrl;
-  final String embeddingsApiBase;
+  final String embeddingsApiUrl;
   final String embeddingsApiKey;
 
   @override
@@ -26,8 +26,6 @@ class FileUploadWidget extends StatefulWidget {
 
 class _FileUploadWidgetState extends State<FileUploadWidget> {
   late UploadFileListViewModel _viewModel;
-  static const ns = 'rag';
-  static const db = 'test';
   final surreal = Surreal();
 
   @override
@@ -35,13 +33,16 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
     super.initState();
     _viewModel = UploadFileListViewModel(UploadFileList(
       dataIngestionApiUrl: widget.dataIngestionApiUrl,
-      embeddingsApiBase: widget.embeddingsApiBase,
+      embeddingsApiUrl: widget.embeddingsApiUrl,
       embeddingsApiKey: widget.embeddingsApiKey,
       surreal: surreal,
     ));
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await surreal.connect('indxdb://$ns');
-      await surreal.use(ns: ns, db: db);
+      const surrealEndpoint = 'indxdb://rag';
+      const surrealNamespace = 'rag';
+      const surrealDatabase = 'rag';
+      await surreal.connect(surrealEndpoint);
+      await surreal.use(ns: surrealNamespace, db: surrealDatabase);
     });
   }
 

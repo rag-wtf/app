@@ -21,12 +21,12 @@ class UploadFileList {
 
   UploadFileList(
       {required String dataIngestionApiUrl,
-      required String embeddingsApiBase,
+      required String embeddingsApiUrl,
       required String embeddingsApiKey,
       required Surreal surreal}) {
     _uploadFileService = UploadFileService(
       dataIngestionApiUrl: dataIngestionApiUrl,
-      embeddingsApiBase: embeddingsApiBase,
+      embeddingsApiUrl: embeddingsApiUrl,
       embeddingsApiKey: embeddingsApiKey,
       db: surreal,
     );
@@ -106,14 +106,14 @@ class UploadFile extends ChangeNotifier {
 class UploadFileService {
   UploadFileService(
       {required this.dataIngestionApiUrl,
-      required this.embeddingsApiBase,
+      required this.embeddingsApiUrl,
       required this.embeddingsApiKey,
       required Surreal db}) {
     documentService = DocumentService(db: db);
   }
 
   final String dataIngestionApiUrl;
-  final String embeddingsApiBase;
+  final String embeddingsApiUrl;
   final String embeddingsApiKey;
 
   late DocumentService documentService;
@@ -144,7 +144,7 @@ class UploadFileService {
       // Send the batch and add the future to the list
       final response = await retry(
         () => dio.post(
-          '$embeddingsApiBase/embeddings',
+          embeddingsApiUrl,
           options: Options(
             headers: {
               'Content-type': 'application/json',

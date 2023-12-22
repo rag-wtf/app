@@ -1,6 +1,6 @@
+import 'package:settings/settings.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.router.dart';
-import 'package:settings/src/constants.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:stacked_services/stacked_services.dart';
@@ -12,7 +12,6 @@ class StartupViewModel extends BaseViewModel {
   Future<void> runStartupLogic() async {
     // This is where you can make decisions on where your app should navigate
     // when you have custom startup logic
-
     await _navigationService.replaceWithSettingsView(prefix: prefix);
   }
 }

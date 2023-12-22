@@ -13,9 +13,9 @@ class RagConsole extends StatefulWidget {
     required this.endpoint,
     required this.ns,
     required this.db,
-    required this.embeddingsApiBase,
+    required this.embeddingsApiUrl,
     required this.embeddingsApiKey,
-    required this.generationApiBase,
+    required this.generationApiUrl,
     required this.generationApiKey,
     this.systemMessage =
         'You are a very helpful and friendly assistant that will follow user instructions closely.',
@@ -34,9 +34,9 @@ Answer: ''',
   final String endpoint;
   final String ns;
   final String db;
-  final String embeddingsApiBase;
+  final String embeddingsApiUrl;
   final String embeddingsApiKey;
-  final String generationApiBase;
+  final String generationApiUrl;
   final String generationApiKey;
   final String systemMessage;
   final String promptTemplate;
@@ -125,7 +125,7 @@ Example:
 
   Future<Map<String, dynamic>?> embed(String input) async {
     final response = await dio.post<Map<String, dynamic>>(
-      '${widget.embeddingsApiBase}/embeddings',
+      widget.embeddingsApiUrl,
       options: Options(
         headers: {
           'Content-type': 'application/json',
@@ -152,7 +152,7 @@ Example:
     final messagesMap = messages.map((message) => message.toJson()).toList();
     debugPrint(messagesMap.toString());
     final response = await dio.post<Map<String, dynamic>>(
-      '${widget.generationApiBase}/chat/completions',
+      widget.generationApiUrl,
       options: Options(
         headers: {
           'Content-type': 'application/json',
@@ -251,8 +251,8 @@ Example:
     return Console(
       content: '''
 Connected to ${widget.endpoint}, ns: ${widget.ns}, db: ${widget.db}.
-embeddingsApiBaseUrl: ${widget.embeddingsApiBase}
-generationApiBaseUrl: ${widget.generationApiBase}
+embeddingsApiUrl: ${widget.embeddingsApiUrl}
+generationApiUrl: ${widget.generationApiUrl}
 $helpMessageHint
 ''',
       initFunction: initFunction,
