@@ -1,22 +1,10 @@
-import 'package:env_reader/env_reader.dart';
 import 'package:file_upload/widgets/file_upload_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:rag/ui/common/app_colors.dart';
-import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 import 'package:rag_console/rag_console.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
-final dataIngestionApiUrl = Env.read<String>('DATA_INGESTION_API_URL') ??
-    'DATA_INGESTION_API_URL undefined';
-final embeddingsApiBase =
-    Env.read<String>('EMBEDDINGS_API_BASE') ?? 'EMBEDDINGS_API_BASE undefined';
-final embeddingsApiKey =
-    Env.read<String>('EMBEDDINGS_API_KEY') ?? 'EMBEDDINGS_API_KEY undefined';
-final generationApiBase =
-    Env.read<String>('GENERATION_API_BASE') ?? 'GENERATION_API_BASE undefined';
-final generationApiKey =
-    Env.read<String>('GENERATION_API_KEY') ?? 'GENERATION_API_KEY undefined';
 const largeScreenWidth = 800.0;
 const mediumScreenWidth = 600.0;
 
@@ -55,17 +43,17 @@ class HomeView extends StackedView<HomeViewModel> {
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: BodyWidget(constraints.maxWidth),
+              child: BodyWidget(viewModel, constraints.maxWidth),
             ),
           ),
           drawer: constraints.maxWidth < mediumScreenWidth
-              ? const Drawer(
-                  child: LeftWidget(),
+              ? Drawer(
+                  child: LeftWidget(viewModel),
                 )
               : null,
           endDrawer: constraints.maxWidth < largeScreenWidth
-              ? const Drawer(
-                  child: RightWidget(),
+              ? Drawer(
+                  child: RightWidget(viewModel),
                 )
               : null,
         );
@@ -82,76 +70,103 @@ class HomeView extends StackedView<HomeViewModel> {
 
 class BodyWidget extends StatelessWidget {
   const BodyWidget(
+    this.viewModel,
     this.maxWidth, {
     super.key,
   });
 
   final double maxWidth;
+  final HomeViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
     if (maxWidth >= largeScreenWidth) {
-      return const Row(
+      return Row(
         children: [
           Flexible(
             flex: 3,
-            child: LeftWidget(),
+            child: LeftWidget(viewModel),
           ),
           Flexible(
             flex: 4,
-            child: CenterWidget(),
+            child: CenterWidget(viewModel),
           ),
           Flexible(
             flex: 3,
-            child: RightWidget(),
+            child: RightWidget(viewModel),
           ),
         ],
       );
     } else if (maxWidth >= mediumScreenWidth) {
-      return const Row(
+      return Row(
         children: [
           Flexible(
             flex: 4,
-            child: LeftWidget(),
+            child: LeftWidget(viewModel),
           ),
           Flexible(
             flex: 6,
-            child: CenterWidget(),
+            child: CenterWidget(viewModel),
           ),
         ],
       );
     } else {
-      return const Center(
-        child: CenterWidget(),
+      return Center(
+        child: CenterWidget(viewModel),
       );
     }
   }
 }
 
 class RightWidget extends StatelessWidget {
-  const RightWidget({
+  const RightWidget(
+    this.viewModel, {
     super.key,
   });
+  final HomeViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
-    return RagConsole(
-      endpoint: 'indxdb://rag',
-      ns: 'rag',
-      db: 'test',
-      embeddingsApiBase: embeddingsApiBase,
-      embeddingsApiKey: embeddingsApiKey,
-      generationApiBase: generationApiBase,
-      generationApiKey: generationApiKey,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const TabBar(
+            tabs: [
+              Tab(
+                text: 'Settings',
+              ),
+              Tab(
+                text: 'Console',
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            const SettingsView(prefix),
+            RagConsole(
+              endpoint: surrealEndpoint,
+              ns: surrealNamespace,
+              db: surrealDatabase,
+              embeddingsApiBase: viewModel.getSettingValue(embeddingsApiUrlKey),
+              embeddingsApiKey: viewModel.getSettingValue(embeddingsApiKey),
+              generationApiBase: viewModel.getSettingValue(generationApiUrlKey),
+              generationApiKey: viewModel.getSettingValue(generationApiKey),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class CenterWidget extends StatelessWidget {
-  const CenterWidget({
+  const CenterWidget(
+    this.viewModel, {
     super.key,
   });
-
+  final HomeViewModel viewModel;
   @override
   Widget build(BuildContext context) {
     return Container(color: Colors.green);
@@ -159,16 +174,18 @@ class CenterWidget extends StatelessWidget {
 }
 
 class LeftWidget extends StatelessWidget {
-  const LeftWidget({
+  const LeftWidget(
+    this.viewModel, {
     super.key,
   });
+  final HomeViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
     return FileUploadWidget(
-      dataIngestionApiUrl: dataIngestionApiUrl,
-      embeddingsApiBase: embeddingsApiBase,
-      embeddingsApiKey: embeddingsApiKey,
+      dataIngestionApiUrl: viewModel.getSettingValue(dataIngestionApiUrlKey),
+      embeddingsApiBase: viewModel.getSettingValue(embeddingsApiUrlKey),
+      embeddingsApiKey: viewModel.getSettingValue(embeddingsApiKey),
     );
   }
 }

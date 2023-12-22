@@ -5,8 +5,10 @@ import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:rag/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:rag/ui/views/home/home_view.dart';
 import 'package:rag/ui/views/startup/startup_view.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 @StackedApp(
   routes: [
@@ -18,6 +20,12 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton<BottomSheetService>(classType: BottomSheetService),
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
+    LazySingleton<SettingService>(classType: SettingService),
+    LazySingleton<DatabaseService>(
+      classType: DatabaseService,
+      asType: Surreal,
+      resolveUsing: DatabaseService.getInstance,
+    ),
 // @stacked-service
   ],
   bottomsheets: [

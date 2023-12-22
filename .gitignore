@@ -116,3 +116,4 @@ app.*.map.json
 chromedriver
 **/*.g.dart
 **/*.freezed.dart
+lib/gen/

@@ -7,7 +7,6 @@ environment:
   sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
-  env_reader: ^2.1.0
   file_upload:
     path: file_upload
   flutter:
@@ -17,12 +16,16 @@ dependencies:
   intl: ^0.18.1
   rag_console:
     path: rag_console
+  settings:
+    path: settings
   stacked: ^3.4.0
   stacked_services: ^1.1.0
+  surrealdb_wasm: ^0.7.0+3
 
 dev_dependencies:
   analyzer: ^6.3.0
   build_runner: ^2.4.5
+  flutter_gen_runner:
   flutter_test:
     sdk: flutter
   mockito: ^5.4.1

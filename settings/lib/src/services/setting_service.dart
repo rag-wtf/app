@@ -42,7 +42,9 @@ class SettingService {
   Future<void> initialise(String prefix) async {
     if (Env.read(dataIngestionApiUrlKey) == null) {
       await Env.load(
-        EnvStringLoader(await rootBundle.loadString('assets/settings')),
+        EnvStringLoader(
+          await rootBundle.loadString('packages/settings/assets/settings'),
+        ),
         'yG5~mhzE*;X&ZgF#]tQ,Ue',
       );
     }
