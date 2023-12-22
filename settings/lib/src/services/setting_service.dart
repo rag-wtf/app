@@ -46,10 +46,13 @@ class SettingService {
         'yG5~mhzE*;X&ZgF#]tQ,Ue',
       );
     }
-    final settings = await _settingRepository.getAllSettings(prefix);
-    if (settings.isNotEmpty) {
-      for (final setting in settings) {
-        _settings[setting.key] = setting;
+
+    if (_settings.isEmpty) {
+      final settings = await _settingRepository.getAllSettings(prefix);
+      if (settings.isNotEmpty) {
+        for (final setting in settings) {
+          _settings[setting.key] = setting;
+        }
       }
     }
   }
