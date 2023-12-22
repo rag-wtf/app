@@ -21,7 +21,7 @@ jobs:
         run: |
           chmod +x ./document/generate.sh && cd document && ./generate.sh && cd ..
           chmod +x ./rag_console/generate.sh && cd rag_console && ./generate.sh && cd ..
-          cd settings && stacked generate && cd ..
+          chmod +x ./settings/generate.sh && cd settings && ./generate.sh && cd ..
 
       - name: Flutter Build
         run: >
