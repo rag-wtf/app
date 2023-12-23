@@ -21,6 +21,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
+    LazySingleton<SettingRepository>(classType: SettingRepository),
     LazySingleton<DatabaseService>(
       classType: DatabaseService,
       asType: Surreal,
