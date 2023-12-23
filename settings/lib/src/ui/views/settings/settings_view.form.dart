@@ -260,10 +260,10 @@ mixin $SettingsView {
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    for (final controller in _SettingsViewTextEditingControllers.values) {
+    for (var controller in _SettingsViewTextEditingControllers.values) {
       controller.dispose();
     }
-    for (final focusNode in _SettingsViewFocusNodes.values) {
+    for (var focusNode in _SettingsViewFocusNodes.values) {
       focusNode.dispose();
     }
 
@@ -326,8 +326,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      DataIngestionApiUrlValueKey,
-    )) {
+        DataIngestionApiUrlValueKey)) {
       _SettingsViewTextEditingControllers[DataIngestionApiUrlValueKey]?.text =
           value ?? '';
     }
@@ -361,8 +360,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      EmbeddingsApiUrlValueKey,
-    )) {
+        EmbeddingsApiUrlValueKey)) {
       _SettingsViewTextEditingControllers[EmbeddingsApiUrlValueKey]?.text =
           value ?? '';
     }
@@ -374,8 +372,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      EmbeddingsApiKeyValueKey,
-    )) {
+        EmbeddingsApiKeyValueKey)) {
       _SettingsViewTextEditingControllers[EmbeddingsApiKeyValueKey]?.text =
           value ?? '';
     }
@@ -387,8 +384,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      EmbeddingsDimensionValueKey,
-    )) {
+        EmbeddingsDimensionValueKey)) {
       _SettingsViewTextEditingControllers[EmbeddingsDimensionValueKey]?.text =
           value ?? '';
     }
@@ -400,8 +396,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      EmbeddingsApiBatchSizeValueKey,
-    )) {
+        EmbeddingsApiBatchSizeValueKey)) {
       _SettingsViewTextEditingControllers[EmbeddingsApiBatchSizeValueKey]
           ?.text = value ?? '';
     }
@@ -413,8 +408,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      SimilaritySearchTypeValueKey,
-    )) {
+        SimilaritySearchTypeValueKey)) {
       _SettingsViewTextEditingControllers[SimilaritySearchTypeValueKey]?.text =
           value ?? '';
     }
@@ -426,8 +420,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      SimilaritySearchIndexValueKey,
-    )) {
+        SimilaritySearchIndexValueKey)) {
       _SettingsViewTextEditingControllers[SimilaritySearchIndexValueKey]?.text =
           value ?? '';
     }
@@ -439,8 +432,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      RetrieveTopNResultsValueKey,
-    )) {
+        RetrieveTopNResultsValueKey)) {
       _SettingsViewTextEditingControllers[RetrieveTopNResultsValueKey]?.text =
           value ?? '';
     }
@@ -452,8 +444,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      GenerationApiUrlValueKey,
-    )) {
+        GenerationApiUrlValueKey)) {
       _SettingsViewTextEditingControllers[GenerationApiUrlValueKey]?.text =
           value ?? '';
     }
@@ -465,8 +456,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      GenerationApiKeyValueKey,
-    )) {
+        GenerationApiKeyValueKey)) {
       _SettingsViewTextEditingControllers[GenerationApiKeyValueKey]?.text =
           value ?? '';
     }
@@ -478,8 +468,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      PromptTemplateValueKey,
-    )) {
+        PromptTemplateValueKey)) {
       _SettingsViewTextEditingControllers[PromptTemplateValueKey]?.text =
           value ?? '';
     }
@@ -512,8 +501,7 @@ extension ValueProperties on FormStateHelper {
     );
 
     if (_SettingsViewTextEditingControllers.containsKey(
-      RepetitionPenaltyValueKey,
-    )) {
+        RepetitionPenaltyValueKey)) {
       _SettingsViewTextEditingControllers[RepetitionPenaltyValueKey]?.text =
           value ?? '';
     }
@@ -721,58 +709,56 @@ extension ValueProperties on FormStateHelper {
 }
 
 extension Methods on FormStateHelper {
-  String? setDataIngestionApiUrlValidationMessage(String? validationMessage) =>
+  setDataIngestionApiUrlValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[DataIngestionApiUrlValueKey] =
           validationMessage;
-  String? setChunkSizeValidationMessage(String? validationMessage) =>
+  setChunkSizeValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[ChunkSizeValueKey] = validationMessage;
-  String? setChunkOverlapValidationMessage(String? validationMessage) =>
+  setChunkOverlapValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[ChunkOverlapValueKey] = validationMessage;
-  String? setEmbeddingsApiUrlValidationMessage(String? validationMessage) =>
+  setEmbeddingsApiUrlValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[EmbeddingsApiUrlValueKey] =
           validationMessage;
-  String? setEmbeddingsApiKeyValidationMessage(String? validationMessage) =>
+  setEmbeddingsApiKeyValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[EmbeddingsApiKeyValueKey] =
           validationMessage;
-  String? setEmbeddingsDimensionValidationMessage(String? validationMessage) =>
+  setEmbeddingsDimensionValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[EmbeddingsDimensionValueKey] =
           validationMessage;
-  String? setEmbeddingsApiBatchSizeValidationMessage(
-          String? validationMessage) =>
+  setEmbeddingsApiBatchSizeValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[EmbeddingsApiBatchSizeValueKey] =
           validationMessage;
-  String? setSimilaritySearchTypeValidationMessage(String? validationMessage) =>
+  setSimilaritySearchTypeValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[SimilaritySearchTypeValueKey] =
           validationMessage;
-  String? setSimilaritySearchIndexValidationMessage(
-          String? validationMessage) =>
+  setSimilaritySearchIndexValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[SimilaritySearchIndexValueKey] =
           validationMessage;
-  String? setRetrieveTopNResultsValidationMessage(String? validationMessage) =>
+  setRetrieveTopNResultsValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[RetrieveTopNResultsValueKey] =
           validationMessage;
-  String? setGenerationApiUrlValidationMessage(String? validationMessage) =>
+  setGenerationApiUrlValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[GenerationApiUrlValueKey] =
           validationMessage;
-  String? setGenerationApiKeyValidationMessage(String? validationMessage) =>
+  setGenerationApiKeyValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[GenerationApiKeyValueKey] =
           validationMessage;
-  String? setPromptTemplateValidationMessage(String? validationMessage) =>
+  setPromptTemplateValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[PromptTemplateValueKey] = validationMessage;
-  String? setTemperatureValidationMessage(String? validationMessage) =>
+  setTemperatureValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[TemperatureValueKey] = validationMessage;
-  String? setTopPValidationMessage(String? validationMessage) =>
+  setTopPValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[TopPValueKey] = validationMessage;
-  String? setRepetitionPenaltyValidationMessage(String? validationMessage) =>
+  setRepetitionPenaltyValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[RepetitionPenaltyValueKey] =
           validationMessage;
-  String? setTopKValidationMessage(String? validationMessage) =>
+  setTopKValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[TopKValueKey] = validationMessage;
-  String? setMaxNewTokensValidationMessage(String? validationMessage) =>
+  setMaxNewTokensValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[MaxNewTokensValueKey] = validationMessage;
-  String? setStopValidationMessage(String? validationMessage) =>
+  setStopValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[StopValueKey] = validationMessage;
-  String? setStreamValidationMessage(String? validationMessage) =>
+  setStreamValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[StreamValueKey] = validationMessage;
 
   /// Clears text input fields on the Form
@@ -838,7 +824,7 @@ String? getValidationMessage(String key) {
   final validatorForKey = _SettingsViewTextValidations[key];
   if (validatorForKey == null) return null;
 
-  final validationMessageForKey = validatorForKey(
+  String? validationMessageForKey = validatorForKey(
     _SettingsViewTextEditingControllers[key]!.text,
   );
 

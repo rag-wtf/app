@@ -1,16 +1,14 @@
 import 'dart:convert';
 
+import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class SettingRepository {
-  const SettingRepository({
-    required this.db,
-  });
-  final Surreal db;
+  final _db = locator<Surreal>();
 
   Future<bool> isSchemaCreated(String prefix) async {
-    final results = (await db.query('INFO FOR DB'))! as List;
+    final results = (await _db.query('INFO FOR DB'))! as List;
     final result = Map<String, dynamic>.from(results.first as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${prefix}_${Setting.tableName}');
@@ -21,7 +19,7 @@ class SettingRepository {
     Transaction? txn,
   ]) async {
     final sqlSchema = Setting.sqlSchema.replaceAll('{prefix}', prefix);
-    txn == null ? await db.query(sqlSchema) : txn.query(sqlSchema);
+    txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
   Future<Setting> createSetting(
@@ -33,7 +31,7 @@ class SettingRepository {
     final sql = '''
 CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
     if (txn == null) {
-      final result = await db.query(sql);
+      final result = await _db.query(sql);
 
       return Setting.fromJson(
         Map<String, dynamic>.from(
@@ -47,7 +45,7 @@ CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<List<Setting>> getAllSettings(String prefix) async {
-    final results = (await db
+    final results = (await _db
         .query('SELECT * FROM ${prefix}_${Setting.tableName}'))! as List;
     return results
         .map(
@@ -61,7 +59,7 @@ CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<Setting?> getSettingById(String id) async {
-    final result = await db.select(id);
+    final result = await _db.select(id);
     return result != null
         ? Setting.fromJson(
             Map<String, dynamic>.from(
@@ -77,7 +75,7 @@ SELECT * FROM ${prefix}_${Setting.tableName}
 WHERE key = "$key" 
 LIMIT 1
 ''';
-    final result = await db.query(sql);
+    final result = await _db.query(sql);
 
     return result != null && (result as List).isNotEmpty
         ? Setting.fromJson(
@@ -91,9 +89,9 @@ LIMIT 1
   Future<Setting?> updateSetting(Setting setting) async {
     final payload = setting.toJson();
     final id = payload.remove('id') as String;
-    if (await db.select(id) == null) return null;
+    if (await _db.select(id) == null) return null;
 
-    final result = await db.query(
+    final result = await _db.query(
       'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
     );
 
@@ -105,7 +103,7 @@ LIMIT 1
   }
 
   Future<Setting?> deleteSetting(String id) async {
-    final result = await db.delete(id);
+    final result = await _db.delete(id);
 
     return result != null
         ? Setting.fromJson(
@@ -117,6 +115,6 @@ LIMIT 1
   }
 
   Future<void> deleteAllSettings(String prefix) async {
-    await db.delete('${prefix}_${Setting.tableName}');
+    await _db.delete('${prefix}_${Setting.tableName}');
   }
 }

@@ -8,7 +8,7 @@ import 'package:settings/src/services/setting_repository.dart';
 
 class SettingService {
   final Map<String, Setting> _settings = {};
-  final SettingRepository _settingRepository = SettingRepository(db: locator());
+  final _settingRepository = locator<SettingRepository>();
   final _log = getLogger('SettingService');
 
   Setting get(String key, {Type? type}) {

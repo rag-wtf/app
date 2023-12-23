@@ -2,20 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-void main() {
+Future<void> main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  late SettingRepository repository;
-  final db = Surreal();
+  await setupLocator();
+  final db = locator<Surreal>();
+  final repository = locator<SettingRepository>();
 
   setUpAll(() async {
-    await db.connect('mem://');
-    await db.use(ns: 'test', db: 'test');
-    repository = SettingRepository(db: db);
+    await Future<void>.delayed(const Duration(seconds: 3));
   });
 
   tearDown(() async {
