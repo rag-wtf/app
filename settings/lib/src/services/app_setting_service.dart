@@ -1,4 +1,5 @@
 import 'package:env_reader/env_reader.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
@@ -6,10 +7,10 @@ import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
 
-class SettingService {
+class AppSettingService {
   final Map<String, Setting> _settings = {};
   final _settingRepository = locator<SettingRepository>();
-  final _log = getLogger('SettingService');
+  final _log = getLogger('AppSettingService');
 
   Setting get(String key, {Type? type}) {
     Setting setting;
@@ -39,18 +40,18 @@ class SettingService {
     );
   }
 
-  Future<void> initialise(String tablePrefix) async {
+  Future<void> initialise() async {
     if (Env.read(dataIngestionApiUrlKey) == null) {
       await Env.load(
         EnvStringLoader(
-          await rootBundle.loadString('packages/settings/assets/settings'),
+          await rootBundle.loadString('packages/settings/assets/app_settings'),
         ),
         'yG5~mhzE*;X&ZgF#]tQ,Ue',
       );
     }
 
     if (_settings.isEmpty) {
-      final settings = await _settingRepository.getAllSettings(tablePrefix);
+      final settings = await _settingRepository.getAllSettings(appTablePrefix);
       if (settings.isNotEmpty) {
         for (final setting in settings) {
           _settings[setting.key] = setting;
@@ -59,12 +60,12 @@ class SettingService {
     }
   }
 
-  Future<void> reset(String tablePrefix) async {
-    await _settingRepository.deleteAllSettings(tablePrefix);
+  Future<void> reset() async {
+    await _settingRepository.deleteAllSettings(appTablePrefix);
     _settings.clear();
   }
 
-  Future<void> set(String tablePrefix, String key, String value) async {
+  Future<void> set(String key, String value) async {
     final newValue = value.trim();
     if (_settings.containsKey(key)) {
       final setting = _settings[key];
@@ -79,7 +80,7 @@ class SettingService {
           if (updatedSetting.value == newValue) {
             _settings[key] = updatedSetting;
           } else {
-            throw Exception('Unable to update setting of "$key"!');
+            throw Exception('Unable to update app setting of "$key"!');
           }
         } else {
           throw Exception('Setting of key "$key" not found!');
@@ -90,12 +91,25 @@ class SettingService {
           Setting(key: key, value: newValue, created: DateTime.now());
 
       final createdSetting =
-          await _settingRepository.createSetting(tablePrefix, setting);
+          await _settingRepository.createSetting(appTablePrefix, setting);
       if (createdSetting.id != null) {
         _settings[key] = createdSetting;
       } else {
-        throw Exception('Unable to create setting of "$key"!');
+        throw Exception('Unable to create app setting of "$key"!');
       }
     }
+  }
+
+  ThemeMode themeMode() {
+    final themeMode = get(themeModeKey);
+    return themeMode.value != undefined
+        ? themeMode.value == ThemeMode.light.name
+            ? ThemeMode.light
+            : ThemeMode.dark
+        : defaultThemeMode;
+  }
+
+  Future<void> updateThemeMode(ThemeMode theme) async {
+    await set(themeModeKey, theme.name);
   }
 }

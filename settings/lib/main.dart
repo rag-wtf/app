@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.router.dart';
+import 'package:settings/src/services/app_setting_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
@@ -21,6 +22,7 @@ class MainApp extends StatelessWidget {
       navigatorObservers: [
         StackedService.routeObserver,
       ],
+      themeMode: locator<AppSettingService>().themeMode(),
     );
   }
 }

@@ -1,14 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/services/app_setting_service.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:stacked/stacked.dart';
 
 class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
-  SettingsViewModel(this.prefix);
-  final String prefix;
+  SettingsViewModel(this.tablePrefix);
+  final String tablePrefix;
   final _isPanelExpanded = List.filled(4, true);
-  final SettingService _settingService = locator();
+  final _appSettingService = locator<AppSettingService>();
+  final _settingService = locator<SettingService>();
   bool isPanelExpanded(int index) => _isPanelExpanded[index];
 
   void setPanelExpanded(int index, {required bool isExpanded}) {
@@ -19,7 +22,8 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
 
   @override
   Future<void> futureToRun() async {
-    await _settingService.initialise(prefix);
+    await _appSettingService.initialise();
+    await _settingService.initialise(tablePrefix);
 
     final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
     if (dataIngestionApiUrl.id != null) {
@@ -36,7 +40,7 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
   Future<void> setDataIngestionApiUrl() async {
     if (hasDataIngestionApiUrl && !hasDataIngestionApiUrlValidationMessage) {
       await _settingService.set(
-        prefix,
+        tablePrefix,
         dataIngestionApiUrlKey,
         dataIngestionApiUrlValue!,
       );
@@ -47,10 +51,18 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
     if (hasEmbeddingsApiBatchSize &&
         !hasEmbeddingsApiBatchSizeValidationMessage) {
       await _settingService.set(
-        prefix,
+        tablePrefix,
         embeddingsApiBatchSizeKey,
         embeddingsApiBatchSizeValue!,
       );
     }
+  }
+
+  ThemeMode get themeMode => _appSettingService.themeMode();
+  void handleThemeModeChange({required bool useLightMode}) {
+    _appSettingService.updateThemeMode(
+      useLightMode ? ThemeMode.light : ThemeMode.dark,
+    );
+    notifyListeners();
   }
 }

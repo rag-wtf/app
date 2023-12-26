@@ -45,7 +45,7 @@ class StackedRouter extends _i1.RouterBase {
     _i3.SettingsView: (data) {
       final args = data.getArgs<SettingsViewArguments>(nullOk: false);
       return _i4.MaterialPageRoute<dynamic>(
-        builder: (context) => _i3.SettingsView(args.prefix, key: args.key),
+        builder: (context) => _i3.SettingsView(args.tablePrefix, key: args.key),
         settings: data,
       );
     },
@@ -60,28 +60,28 @@ class StackedRouter extends _i1.RouterBase {
 
 class SettingsViewArguments {
   const SettingsViewArguments({
-    required this.prefix,
+    required this.tablePrefix,
     this.key,
   });
 
-  final String prefix;
+  final String tablePrefix;
 
   final _i4.Key? key;
 
   @override
   String toString() {
-    return '{"prefix": "$prefix", "key": "$key"}';
+    return '{"tablePrefix": "$tablePrefix", "key": "$key"}';
   }
 
   @override
   bool operator ==(covariant SettingsViewArguments other) {
     if (identical(this, other)) return true;
-    return other.prefix == prefix && other.key == key;
+    return other.tablePrefix == tablePrefix && other.key == key;
   }
 
   @override
   int get hashCode {
-    return prefix.hashCode ^ key.hashCode;
+    return tablePrefix.hashCode ^ key.hashCode;
   }
 }
 
@@ -101,7 +101,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
   }
 
   Future<dynamic> navigateToSettingsView({
-    required String prefix,
+    required String tablePrefix,
     _i4.Key? key,
     int? routerId,
     bool preventDuplicates = true,
@@ -110,7 +110,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(prefix: prefix, key: key),
+        arguments: SettingsViewArguments(tablePrefix: tablePrefix, key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -132,7 +132,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
   }
 
   Future<dynamic> replaceWithSettingsView({
-    required String prefix,
+    required String tablePrefix,
     _i4.Key? key,
     int? routerId,
     bool preventDuplicates = true,
@@ -141,7 +141,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(prefix: prefix, key: key),
+        arguments: SettingsViewArguments(tablePrefix: tablePrefix, key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

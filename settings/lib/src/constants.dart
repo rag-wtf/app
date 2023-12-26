@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const dataIngestionApiUrlKey = 'DATA_INGESTION_API_URL';
 const chunkSizeKey = 'CHUNK_SIZE';
 const chunkOverlapKey = 'CHUNK_OVERLAP';
@@ -25,3 +27,7 @@ const defaultTablePrefix = 'main';
 const surrealEndpoint = 'indxdb://rag';
 const surrealNamespace = 'rag';
 const surrealDatabase = 'rag';
+
+const appTablePrefix = '__app';
+const defaultThemeMode = ThemeMode.system;
+const themeModeKey = 'THEME_MODE';

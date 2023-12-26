@@ -1,3 +1,4 @@
+import 'package:settings/src/services/app_setting_service.dart';
 import 'package:settings/src/services/database_service.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:settings/src/services/setting_service.dart';
@@ -16,6 +17,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   ],
   dependencies: [
     LazySingleton<NavigationService>(classType: NavigationService),
+    LazySingleton<AppSettingService>(classType: AppSettingService),
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
     Singleton(
