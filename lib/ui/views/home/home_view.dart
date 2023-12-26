@@ -144,7 +144,7 @@ class RightWidget extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            const SettingsView(prefix),
+            const SettingsView(defaultTablePrefix),
             RagConsole(
               endpoint: surrealEndpoint,
               ns: surrealNamespace,

@@ -19,22 +19,22 @@ Future<void> main() async {
   });
 
   tearDown(() async {
-    await repository.deleteAllSettings(prefix);
+    await repository.deleteAllSettings(defaultTablePrefix);
   });
 
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(await repository.isSchemaCreated(prefix), isFalse);
+      expect(await repository.isSchemaCreated(defaultTablePrefix), isFalse);
     });
 
     test('should create schema and return true', () async {
       // Arrange
-      if (!await repository.isSchemaCreated(prefix)) {
-        await repository.createSchema(prefix);
+      if (!await repository.isSchemaCreated(defaultTablePrefix)) {
+        await repository.createSchema(defaultTablePrefix);
       }
       // Assert
-      expect(await repository.isSchemaCreated(prefix), isTrue);
+      expect(await repository.isSchemaCreated(defaultTablePrefix), isTrue);
     });
   });
 
@@ -48,7 +48,8 @@ Future<void> main() async {
       );
 
       // Act
-      final result = await repository.createSetting(prefix, setting);
+      final result =
+          await repository.createSetting(defaultTablePrefix, setting);
 
       // Assert
       expect(result.key, equals('key1'));
@@ -69,13 +70,13 @@ Future<void> main() async {
           created: DateTime.now(),
         ).toJson(),
       ];
-      await db.delete('${prefix}_${Setting.tableName}');
+      await db.delete('${defaultTablePrefix}_${Setting.tableName}');
       await db.query(
-        'INSERT INTO ${prefix}_${Setting.tableName} ${jsonEncode(settings)}',
+        'INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}',
       );
 
       // Act
-      final result = await repository.getAllSettings(prefix);
+      final result = await repository.getAllSettings(defaultTablePrefix);
 
       // Assert
       expect(result, hasLength(settings.length));
@@ -90,7 +91,8 @@ Future<void> main() async {
         value: 'value1',
         created: DateTime.now(),
       );
-      final result = await repository.createSetting(prefix, setting);
+      final result =
+          await repository.createSetting(defaultTablePrefix, setting);
       final id = result.id!;
 
       // Act
@@ -117,11 +119,12 @@ Future<void> main() async {
         value: 'value1',
         created: DateTime.now(),
       );
-      final result = await repository.createSetting(prefix, setting);
+      final result =
+          await repository.createSetting(defaultTablePrefix, setting);
 
       // Act
       final getSettingByKey =
-          await repository.getSettingByKey(prefix, result.key);
+          await repository.getSettingByKey(defaultTablePrefix, result.key);
 
       // Assert
       expect(getSettingByKey?.key, equals(result.key));
@@ -132,7 +135,7 @@ Future<void> main() async {
       const key = 'key3';
 
       // Act & Assert
-      expect(await repository.getSettingByKey(prefix, key), isNull);
+      expect(await repository.getSettingByKey(defaultTablePrefix, key), isNull);
     });
   });
 
@@ -144,7 +147,8 @@ Future<void> main() async {
         value: 'value1',
         created: DateTime.now(),
       );
-      final created = await repository.createSetting(prefix, setting);
+      final created =
+          await repository.createSetting(defaultTablePrefix, setting);
 
       // Act
       const value1 = 'value one';
@@ -158,7 +162,7 @@ Future<void> main() async {
     test('should be null when the update setting is not found', () async {
       // Arrange
       final setting = Setting(
-        id: '${prefix}_${Setting.tableName}:1',
+        id: '${defaultTablePrefix}_${Setting.tableName}:1',
         key: 'key3',
         value: 'value3',
         created: DateTime.now(),
@@ -176,7 +180,8 @@ Future<void> main() async {
         value: 'value1',
         created: DateTime.now(),
       );
-      final created = await repository.createSetting(prefix, setting);
+      final created =
+          await repository.createSetting(defaultTablePrefix, setting);
 
       // Act
       final result = await repository.deleteSetting(created.id!);
@@ -187,7 +192,7 @@ Future<void> main() async {
 
     test('should be null when the delete setting is not found', () async {
       // Arrange
-      const id = '${prefix}_${Setting.tableName}:1';
+      const id = '${defaultTablePrefix}_${Setting.tableName}:1';
 
       // Act & Assert
       expect(await repository.deleteSetting(id), isNull);

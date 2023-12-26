@@ -43,6 +43,6 @@ class HomeViewModel extends FutureViewModel<void> {
 
   @override
   Future<void> futureToRun() async {
-    await _settingService.initialise(prefix);
+    await _settingService.initialise(defaultTablePrefix);
   }
 }

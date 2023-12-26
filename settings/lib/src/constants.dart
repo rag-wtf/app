@@ -20,7 +20,7 @@ const stopKey = 'STOP';
 const streamKey = 'STREAM';
 
 const undefined = 'undefined';
-const prefix = 'main';
+const defaultTablePrefix = 'main';
 
 const surrealEndpoint = 'indxdb://rag';
 const surrealNamespace = 'rag';
