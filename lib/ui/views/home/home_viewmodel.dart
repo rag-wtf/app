@@ -6,7 +6,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class HomeViewModel extends BaseViewModel {
+class HomeViewModel extends FutureViewModel<void> {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _settingService = locator<SettingService>();
@@ -39,5 +39,10 @@ class HomeViewModel extends BaseViewModel {
   String getSettingValue(String key, {Type? type}) {
     final setting = _settingService.get(key, type: type);
     return setting.value;
+  }
+
+  @override
+  Future<void> futureToRun() async {
+    await _settingService.initialise(prefix);
   }
 }
