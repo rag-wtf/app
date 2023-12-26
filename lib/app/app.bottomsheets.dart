@@ -4,9 +4,10 @@
 // StackedBottomsheetGenerator
 // **************************************************************************
 
-import 'package:rag/app/app.locator.dart';
-import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:stacked_services/stacked_services.dart';
+
+import 'app.locator.dart';
+import '../ui/bottom_sheets/notice/notice_sheet.dart';
 
 enum BottomSheetType {
   notice,
@@ -15,7 +16,7 @@ enum BottomSheetType {
 void setupBottomSheetUi() {
   final bottomsheetService = locator<BottomSheetService>();
 
-  final builders = <BottomSheetType, SheetBuilder>{
+  final Map<BottomSheetType, SheetBuilder> builders = {
     BottomSheetType.notice: (context, request, completer) =>
         NoticeSheet(request: request, completer: completer),
   };

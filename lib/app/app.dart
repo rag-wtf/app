@@ -22,7 +22,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
-    LazySingleton<DatabaseService>(
+    Singleton(
       classType: DatabaseService,
       asType: Surreal,
       resolveUsing: DatabaseService.getInstance,
