@@ -1,3 +1,5 @@
+import 'package:document/src/document.dart';
+import 'package:document/src/embedding.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'document_embedding.freezed.dart';
 part 'document_embedding.g.dart';
@@ -13,15 +15,15 @@ abstract class DocumentEmbedding with _$DocumentEmbedding {
   factory DocumentEmbedding.fromJson(Map<String, dynamic> json) =>
       _$DocumentEmbeddingFromJson(json);
 
-  static const _sqlSchema = '''
-DEFINE TABLE DocumentEmbedding SCHEMAFULL;
-DEFINE FIELD id ON DocumentEmbedding TYPE record;
-DEFINE FIELD in ON DocumentEmbedding TYPE record<Document>;
-DEFINE FIELD out ON DocumentEmbedding TYPE record<Embedding>;
-DEFINE INDEX documentEmbeddingUniqueIndex 
-    ON DocumentEmbedding 
+  static const tableName = 'document_embeddings';
+
+  static const sqlSchema = '''
+DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
+DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Document.tableName}>;
+DEFINE FIELD out ON {prefix}_$tableName TYPE record<{prefix}_${Embedding.tableName}>;
+DEFINE INDEX {prefix}_${tableName}_unique_index 
+    ON {prefix}_$tableName 
     FIELDS in, out UNIQUE;
 ''';
-
-  static String get sqlSchema => _sqlSchema;
 }

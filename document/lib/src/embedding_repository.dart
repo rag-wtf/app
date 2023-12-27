@@ -9,22 +9,23 @@ class EmbeddingRepository {
   });
   final Surreal db;
 
-  Future<bool> isSchemaCreated() async {
+  Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await db.query('INFO FOR DB'))! as List;
     final result = Map<String, dynamic>.from(results.first as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
-    return tables.containsKey('Embedding');
+    return tables.containsKey('${tablePrefix}_${Embedding.tableName}');
   }
 
-  Future<void> createSchema([
+  Future<void> createSchema(
+    String tablePrefix, [
     Transaction? txn,
   ]) async {
-    txn == null
-        ? await db.query(Embedding.sqlSchema)
-        : txn.query(Embedding.sqlSchema);
+    final sqlSchema = Embedding.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    txn == null ? await db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
   Future<Embedding> createEmbedding(
+    String tablePrefix,
     Embedding embedding, [
     Transaction? txn,
   ]) async {
@@ -35,7 +36,9 @@ class EmbeddingRepository {
       return embedding.copyWith(errors: validationErrors);
     }
 
-    final sql = 'CREATE ONLY Embedding CONTENT ${jsonEncode(payload)};';
+    final sql = '''
+CREATE ONLY ${tablePrefix}_${Embedding.tableName} 
+CONTENT ${jsonEncode(payload)};''';
     if (txn == null) {
       final result = await db.query(sql);
 
@@ -51,6 +54,7 @@ class EmbeddingRepository {
   }
 
   Future<List<Embedding>> createEmbeddings(
+    String tablePrefix,
     List<Embedding> embeddings, [
     Transaction? txn,
   ]) async {
@@ -68,7 +72,7 @@ class EmbeddingRepository {
       }
     }
 
-    const sql = r'INSERT INTO Embedding $payloads;';
+    final sql = 'INSERT INTO ${tablePrefix}_${Embedding.tableName} \$payloads;';
     final bindings = {'payloads': payloads};
 
     if (txn == null) {
@@ -89,8 +93,9 @@ class EmbeddingRepository {
     }
   }
 
-  Future<List<Embedding>> getAllEmbeddings() async {
-    final results = (await db.query('SELECT * FROM Embedding'))! as List;
+  Future<List<Embedding>> getAllEmbeddings(String tablePrefix) async {
+    final results = (await db
+        .query('SELECT * FROM ${tablePrefix}_${Embedding.tableName}'))! as List;
     return results
         .map(
           (result) => Embedding.fromJson(
@@ -153,12 +158,16 @@ FROM Embedding
 WHERE embedding <$k> $vector
 ORDER BY score DESC;''';
 */
-  Future<List<Embedding>> similaritySearch(List<double> vector, int k) async {
-    const sql = r'''
-SELECT *, vector::similarity::cosine(embedding, $vector) AS score
-FROM Embedding
+  Future<List<Embedding>> similaritySearch(
+    String tablePrefix,
+    List<double> vector,
+    int k,
+  ) async {
+    final sql = '''
+SELECT *, vector::similarity::cosine(embedding, \$vector) AS score
+FROM ${tablePrefix}_${Embedding.tableName}
 ORDER BY score DESC
-LIMIT $k;''';
+LIMIT \$k;''';
 
     final bindings = {
       'vector': vector,

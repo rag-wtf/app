@@ -9,22 +9,23 @@ class DocumentRepository {
   });
   final Surreal db;
 
-  Future<bool> isSchemaCreated() async {
+  Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await db.query('INFO FOR DB'))! as List;
     final result = Map<String, dynamic>.from(results.first as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
-    return tables.containsKey('Document');
+    return tables.containsKey('${tablePrefix}_${Document.tableName}');
   }
 
-  Future<void> createSchema([
+  Future<void> createSchema(
+    String tablePrefix, [
     Transaction? txn,
   ]) async {
-    txn == null
-        ? await db.query(Document.sqlSchema)
-        : txn.query(Document.sqlSchema);
+    final sqlSchema = Document.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    txn == null ? await db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
   Future<Document> createDocument(
+    String tablePrefix,
     Document document, [
     Transaction? txn,
   ]) async {
@@ -34,8 +35,8 @@ class DocumentRepository {
     if (!isValid) {
       return document.copyWith(errors: validationErrors);
     }
-
-    final sql = 'CREATE ONLY Document CONTENT ${jsonEncode(payload)};';
+    final fullTableName = '${tablePrefix}_${Document.tableName}';
+    final sql = 'CREATE ONLY $fullTableName CONTENT ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await db.query(sql);
 
@@ -52,8 +53,9 @@ class DocumentRepository {
     }
   }
 
-  Future<List<Document>> getAllDocuments() async {
-    final results = (await db.query('SELECT * FROM Document'))! as List;
+  Future<List<Document>> getAllDocuments(String tablePrefix) async {
+    final results = (await db
+        .query('SELECT * FROM ${tablePrefix}_${Document.tableName}'))! as List;
     return results
         .map(
           (result) => Document.fromJson(

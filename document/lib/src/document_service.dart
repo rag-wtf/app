@@ -7,6 +7,8 @@ import 'package:document/src/embedding_repository.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class DocumentService {
+  //final _log = getLogger('DocumentService');
+
   DocumentService({
     required this.db,
   }) {
@@ -20,34 +22,36 @@ class DocumentService {
   late EmbeddingRepository embeddingRepository;
   late DocumentEmbeddingRepository documentEmbeddingRepository;
 
-  Future<bool> isSchemaCreated() async {
+  Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await db.query('INFO FOR DB'))! as List;
     final result = Map<String, dynamic>.from(results.first as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
-    return tables.containsKey('Document') &&
-        tables.containsKey('Embedding') &&
-        tables.containsKey('DocumentEmbedding');
+    return tables.containsKey('${tablePrefix}_${Document.tableName}') &&
+        tables.containsKey('${tablePrefix}_${Embedding.tableName}') &&
+        tables.containsKey('${tablePrefix}_${DocumentEmbedding.tableName}');
   }
 
-  Future<void> createSchema([
+  Future<void> createSchema(
+    String tablePrefix, [
     Transaction? txn,
   ]) async {
     if (txn == null) {
       await db.transaction(
         (txn) async {
-          await documentRepository.createSchema(txn);
-          await embeddingRepository.createSchema(txn);
-          await documentEmbeddingRepository.createSchema(txn);
+          await documentRepository.createSchema(tablePrefix, txn);
+          await embeddingRepository.createSchema(tablePrefix, txn);
+          await documentEmbeddingRepository.createSchema(tablePrefix, txn);
         },
       );
     } else {
-      await documentRepository.createSchema(txn);
-      await embeddingRepository.createSchema(txn);
-      await documentEmbeddingRepository.createSchema(txn);
+      await documentRepository.createSchema(tablePrefix, txn);
+      await embeddingRepository.createSchema(tablePrefix, txn);
+      await documentEmbeddingRepository.createSchema(tablePrefix, txn);
     }
   }
 
   Future<Object?> createDocumentEmbeddings(
+    String tablePrefix,
     Document document,
     List<Embedding> embeddings, [
     Transaction? txn,
@@ -65,18 +69,24 @@ class DocumentService {
     if (txn == null) {
       return db.transaction(
         (txn) async {
-          await documentRepository.createDocument(document, txn);
-          await embeddingRepository.createEmbeddings(embeddings, txn);
+          await documentRepository.createDocument(tablePrefix, document, txn);
+          await embeddingRepository.createEmbeddings(
+            tablePrefix,
+            embeddings,
+            txn,
+          );
           await documentEmbeddingRepository.createDocumentEmbeddings(
+            tablePrefix,
             documentEmbeddings,
             txn,
           );
         },
       );
     } else {
-      await documentRepository.createDocument(document, txn);
-      await embeddingRepository.createEmbeddings(embeddings, txn);
+      await documentRepository.createDocument(tablePrefix, document, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings, txn);
       await documentEmbeddingRepository.createDocumentEmbeddings(
+        tablePrefix,
         documentEmbeddings,
         txn,
       );
@@ -84,7 +94,11 @@ class DocumentService {
     }
   }
 
-  Future<List<Embedding>> similaritySearch(List<double> vector, int k) async {
-    return embeddingRepository.similaritySearch(vector, k);
+  Future<List<Embedding>> similaritySearch(
+    String tablePrefix,
+    List<double> vector,
+    int k,
+  ) async {
+    return embeddingRepository.similaritySearch(tablePrefix, vector, k);
   }
 }

@@ -30,24 +30,24 @@ abstract class Document with _$Document {
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
 
-  static const _sqlSchema = '''
-DEFINE TABLE Document SCHEMAFULL;
-DEFINE FIELD id ON Document TYPE record;
-DEFINE FIELD compressedFileSize ON Document TYPE number;
-DEFINE FIELD content ON Document TYPE option<string>;
-DEFINE FIELD tokensCount ON Document TYPE number;
-DEFINE FIELD fileMimeType ON Document TYPE string;
-DEFINE FIELD contentMimeType ON Document TYPE string;
-DEFINE FIELD created ON Document TYPE datetime;
-DEFINE FIELD errorMessage ON Document TYPE option<string>;
-DEFINE FIELD file ON Document TYPE option<string>;
-DEFINE FIELD name ON Document TYPE string;
-DEFINE FIELD originFileSize ON Document TYPE number;
-DEFINE FIELD status ON Document TYPE string;
-DEFINE FIELD updated ON Document TYPE option<datetime>;
-''';
+  static const tableName = 'documents';
 
-  static String get sqlSchema => _sqlSchema;
+  static const sqlSchema = '''
+DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
+DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD compressedFileSize ON {prefix}_$tableName TYPE number;
+DEFINE FIELD content ON {prefix}_$tableName TYPE option<string>;
+DEFINE FIELD tokensCount ON {prefix}_$tableName TYPE number;
+DEFINE FIELD fileMimeType ON {prefix}_$tableName TYPE string;
+DEFINE FIELD contentMimeType ON {prefix}_$tableName TYPE string;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
+DEFINE FIELD errorMessage ON {prefix}_$tableName TYPE option<string>;
+DEFINE FIELD file ON {prefix}_$tableName TYPE option<string>;
+DEFINE FIELD name ON {prefix}_$tableName TYPE string;
+DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
+DEFINE FIELD status ON {prefix}_$tableName TYPE string;
+DEFINE FIELD updated ON {prefix}_$tableName TYPE option<datetime>;
+''';
 
   static const _jsonSchema = {
     r'$ref': '#/definitions/document',

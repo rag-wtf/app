@@ -1,3 +1,4 @@
+import 'package:document/src/document.dart';
 import 'package:document/src/document_embedding.dart';
 import 'package:document/src/embedding.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
@@ -8,29 +9,32 @@ class DocumentEmbeddingRepository {
   });
   final Surreal db;
 
-  Future<bool> isSchemaCreated() async {
+  Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await db.query('INFO FOR DB'))! as List;
     final result = Map<String, dynamic>.from(results.first as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
-    return tables.containsKey('DocumentEmbedding');
+    return tables.containsKey('${tablePrefix}_${DocumentEmbedding.tableName}');
   }
 
-  Future<void> createSchema([
+  Future<void> createSchema(
+    String tablePrefix, [
     Transaction? txn,
   ]) async {
-    txn == null
-        ? await db.query(DocumentEmbedding.sqlSchema)
-        : txn.query(DocumentEmbedding.sqlSchema);
+    final sqlSchema =
+        DocumentEmbedding.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    txn == null ? await db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
   Future<DocumentEmbedding> createDocumentEmbedding(
+    String tablePrefix,
     DocumentEmbedding documentEmbedding, [
     Transaction? txn,
   ]) async {
     final documentId = documentEmbedding.documentId;
     final embeddingId = documentEmbedding.embeddingId;
 
-    final sql = 'RELATE ONLY $documentId->DocumentEmbedding->$embeddingId;';
+    final sql = '''
+RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddingId;''';
     if (txn == null) {
       final result = await db.query(
         sql,
@@ -51,6 +55,7 @@ class DocumentEmbeddingRepository {
   }
 
   Future<List<DocumentEmbedding>> createDocumentEmbeddings(
+    String tablePrefix,
     List<DocumentEmbedding> documentEmbeddings, [
     Transaction? txn,
   ]) async {
@@ -58,9 +63,8 @@ class DocumentEmbeddingRepository {
     for (final documentEmbedding in documentEmbeddings) {
       final documentId = documentEmbedding.documentId;
       final embeddingId = documentEmbedding.embeddingId;
-      sqlBuffer.write(
-        'RELATE ONLY $documentId->DocumentEmbedding->$embeddingId;',
-      );
+      final fullTableName = '${tablePrefix}_${DocumentEmbedding.tableName}';
+      sqlBuffer.write('RELATE ONLY $documentId->$fullTableName->$embeddingId;');
     }
 
     if (txn == null) {
@@ -82,10 +86,17 @@ class DocumentEmbeddingRepository {
     }
   }
 
-  Future<List<Embedding>> getAllEmbeddingsOfDocument(String documentId) async {
+  Future<List<Embedding>> getAllEmbeddingsOfDocument(
+    String tablePrefix,
+    String documentId,
+  ) async {
+    final documentEmbeddingTableName =
+        '${tablePrefix}_${DocumentEmbedding.tableName}';
+    final documentTableName = '${tablePrefix}_${Document.tableName}';
     final sql = '''
-SELECT ->DocumentEmbedding->Embedding.* AS Embedding FROM Document 
-WHERE array::first(array::distinct(->DocumentEmbedding<-Document)) == $documentId;
+SELECT ->$documentEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
+AS Embedding FROM $documentTableName 
+WHERE array::first(array::distinct(->$documentEmbeddingTableName<-$documentTableName)) == $documentId;
 ''';
 
     final results = (await db.query(

@@ -1,9 +1,9 @@
 import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
-
 import 'test_data.dart';
 
 void main() {
@@ -24,31 +24,53 @@ void main() {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(await documentRepository.isSchemaCreated(), isFalse);
-      expect(await embeddingRepository.isSchemaCreated(), isFalse);
-      expect(await documentEmbeddingRepository.isSchemaCreated(), isFalse);
+      expect(
+        await documentRepository.isSchemaCreated(defaultTablePrefix),
+        isFalse,
+      );
+      expect(
+        await embeddingRepository.isSchemaCreated(defaultTablePrefix),
+        isFalse,
+      );
+      expect(
+        await documentEmbeddingRepository.isSchemaCreated(defaultTablePrefix),
+        isFalse,
+      );
     });
 
     test('should create schemas and return true', () async {
       // Act
       await db.transaction(
         (txn) async {
-          if (!await documentRepository.isSchemaCreated()) {
-            await documentRepository.createSchema(txn);
+          if (!await documentRepository.isSchemaCreated(defaultTablePrefix)) {
+            await documentRepository.createSchema(defaultTablePrefix, txn);
           }
-          if (!await embeddingRepository.isSchemaCreated()) {
-            await embeddingRepository.createSchema(txn);
+          if (!await embeddingRepository.isSchemaCreated(defaultTablePrefix)) {
+            await embeddingRepository.createSchema(defaultTablePrefix, txn);
           }
-          if (!await documentEmbeddingRepository.isSchemaCreated()) {
-            await documentEmbeddingRepository.createSchema(txn);
+          if (!await documentEmbeddingRepository
+              .isSchemaCreated(defaultTablePrefix)) {
+            await documentEmbeddingRepository.createSchema(
+              defaultTablePrefix,
+              txn,
+            );
           }
         },
       );
 
       // Assert
-      expect(await documentRepository.isSchemaCreated(), isTrue);
-      expect(await embeddingRepository.isSchemaCreated(), isTrue);
-      expect(await documentEmbeddingRepository.isSchemaCreated(), isTrue);
+      expect(
+        await documentRepository.isSchemaCreated(defaultTablePrefix),
+        isTrue,
+      );
+      expect(
+        await embeddingRepository.isSchemaCreated(defaultTablePrefix),
+        isTrue,
+      );
+      expect(
+        await documentEmbeddingRepository.isSchemaCreated(defaultTablePrefix),
+        isTrue,
+      );
     });
   });
 
@@ -56,7 +78,7 @@ void main() {
     // Arrange
     final ulid = Ulid();
     final document = Document(
-      id: 'Document:$ulid',
+      id: '${defaultTablePrefix}_${Document.tableName}:$ulid',
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -69,7 +91,7 @@ void main() {
       updated: DateTime.now(),
     );
     final embedding = Embedding(
-      id: 'Embedding:${Ulid()}',
+      id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
       content: 'apple',
       embedding: testData['apple']!,
       tokensCount: 4,
@@ -78,9 +100,18 @@ void main() {
     // Act
     final txnResults = await db.transaction(
       (txn) async {
-        await documentRepository.createDocument(document, txn);
-        await embeddingRepository.createEmbedding(embedding, txn);
+        await documentRepository.createDocument(
+          defaultTablePrefix,
+          document,
+          txn,
+        );
+        await embeddingRepository.createEmbedding(
+          defaultTablePrefix,
+          embedding,
+          txn,
+        );
         await documentEmbeddingRepository.createDocumentEmbedding(
+          defaultTablePrefix,
           DocumentEmbedding(
             documentId: document.id!,
             embeddingId: embedding.id!,
@@ -93,17 +124,20 @@ void main() {
     // Assert
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
-    expect(await db.select('DocumentEmbedding'), hasLength(1));
+    expect(
+      await db.select('${defaultTablePrefix}_${DocumentEmbedding.tableName}'),
+      hasLength(1),
+    );
 
     // Clean up
-    await db.delete('Document');
-    await db.delete('Embedding');
+    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
   });
 
   test('should create document embeddings', () async {
     // Arrange
     final document = Document(
-      id: 'Document:${Ulid()}',
+      id: '${defaultTablePrefix}_${Document.tableName}:${Ulid()}',
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -118,35 +152,35 @@ void main() {
 
     final embeddings = [
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
         tokensCount: 4,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
         tokensCount: 5,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
         tokensCount: 15,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
         tokensCount: 7,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -166,9 +200,18 @@ void main() {
     // Act
     final txnResults = await db.transaction(
       (txn) async {
-        await documentRepository.createDocument(document, txn);
-        await embeddingRepository.createEmbeddings(embeddings, txn);
+        await documentRepository.createDocument(
+          defaultTablePrefix,
+          document,
+          txn,
+        );
+        await embeddingRepository.createEmbeddings(
+          defaultTablePrefix,
+          embeddings,
+          txn,
+        );
         await documentEmbeddingRepository.createDocumentEmbeddings(
+          defaultTablePrefix,
           documentEmbeddings,
           txn,
         );
@@ -179,19 +222,19 @@ void main() {
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
-      await db.select('DocumentEmbedding'),
+      await db.select('${defaultTablePrefix}_${DocumentEmbedding.tableName}'),
       hasLength(documentEmbeddings.length),
     );
 
     // Clean up
-    await db.delete('Document');
-    await db.delete('Embedding');
+    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
   });
 
   test('should retrieve embeddings of given document Id', () async {
     // Arrange
     final document1 = Document(
-      id: 'Document:${Ulid()}',
+      id: '${defaultTablePrefix}_${Document.tableName}:${Ulid()}',
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -206,7 +249,7 @@ void main() {
 
     // Arrange
     final document2 = Document(
-      id: 'Document:${Ulid()}',
+      id: '${defaultTablePrefix}_${Document.tableName}:${Ulid()}',
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -221,14 +264,14 @@ void main() {
 
     final embeddings1 = [
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
         tokensCount: 4,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
@@ -237,21 +280,21 @@ void main() {
     ];
     final embeddings2 = [
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
         tokensCount: 15,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
         tokensCount: 7,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -281,15 +324,33 @@ void main() {
     // Act
     final txnResults = await db.transaction(
       (txn) async {
-        await documentRepository.createDocument(document1, txn);
-        await documentRepository.createDocument(document2, txn);
-        await embeddingRepository.createEmbeddings(embeddings1, txn);
-        await embeddingRepository.createEmbeddings(embeddings2, txn);
+        await documentRepository.createDocument(
+          defaultTablePrefix,
+          document1,
+          txn,
+        );
+        await documentRepository.createDocument(
+          defaultTablePrefix,
+          document2,
+          txn,
+        );
+        await embeddingRepository.createEmbeddings(
+          defaultTablePrefix,
+          embeddings1,
+          txn,
+        );
+        await embeddingRepository.createEmbeddings(
+          defaultTablePrefix,
+          embeddings2,
+          txn,
+        );
         await documentEmbeddingRepository.createDocumentEmbeddings(
+          defaultTablePrefix,
           documentEmbeddings1,
           txn,
         );
         await documentEmbeddingRepository.createDocumentEmbeddings(
+          defaultTablePrefix,
           documentEmbeddings2,
           txn,
         );
@@ -300,13 +361,15 @@ void main() {
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
-      await documentEmbeddingRepository
-          .getAllEmbeddingsOfDocument(document2.id!),
+      await documentEmbeddingRepository.getAllEmbeddingsOfDocument(
+        defaultTablePrefix,
+        document2.id!,
+      ),
       hasLength(documentEmbeddings2.length),
     );
 
     // Clean up
-    await db.delete('Document');
-    await db.delete('Embedding');
+    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
   });
 }

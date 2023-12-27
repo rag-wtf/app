@@ -23,12 +23,12 @@ abstract class Embedding with _$Embedding {
   factory Embedding.fromJson(Map<String, dynamic> json) =>
       _$EmbeddingFromJson(json);
 
-  static const _sqlSchema = '''
-DEFINE INDEX embeddingMtreeIndex ON Embedding 
+  static const tableName = 'embeddings';
+
+  static const sqlSchema = '''
+DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
 FIELDS embedding MTREE DIMENSION 384 DIST COSINE;
 ''';
-
-  static String get sqlSchema => _sqlSchema;
 
   static const _jsonSchema = {
     r'$ref': '#/definitions/embedding',

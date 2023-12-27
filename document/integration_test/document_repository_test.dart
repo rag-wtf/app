@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 void main() {
@@ -19,16 +20,16 @@ void main() {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(await repository.isSchemaCreated(), isFalse);
+      expect(await repository.isSchemaCreated(defaultTablePrefix), isFalse);
     });
 
     test('should create schema and return true', () async {
       // Arrange
-      if (!await repository.isSchemaCreated()) {
-        await repository.createSchema();
+      if (!await repository.isSchemaCreated(defaultTablePrefix)) {
+        await repository.createSchema(defaultTablePrefix);
       }
       // Assert
-      expect(await repository.isSchemaCreated(), isTrue);
+      expect(await repository.isSchemaCreated(defaultTablePrefix), isTrue);
     });
   });
 
@@ -49,7 +50,8 @@ void main() {
       );
 
       // Act
-      final result = await repository.createDocument(document);
+      final result =
+          await repository.createDocument(defaultTablePrefix, document);
 
       // Assert
       expect(result.id, isNotNull);
@@ -72,7 +74,8 @@ void main() {
       );
 
       // Act
-      final result = await repository.createDocument(document);
+      final result =
+          await repository.createDocument(defaultTablePrefix, document);
 
       // Assert
       expect(
@@ -112,11 +115,13 @@ void main() {
           'updated': '2022-01-01T13:00:00Z',
         },
       ];
-      await db.delete('Document');
-      await db.query('INSERT INTO Document ${jsonEncode(documents)}');
+      await db.delete('${defaultTablePrefix}_${Document.tableName}');
+      final sql = '''
+INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
+      await db.query(sql);
 
       // Act
-      final result = await repository.getAllDocuments();
+      final result = await repository.getAllDocuments(defaultTablePrefix);
 
       // Assert
       expect(result, hasLength(documents.length));
@@ -139,7 +144,8 @@ void main() {
         status: 'active',
         updated: DateTime.now(),
       );
-      final result = await repository.createDocument(document);
+      final result =
+          await repository.createDocument(defaultTablePrefix, document);
       final id = result.id!;
 
       // Act
@@ -157,7 +163,7 @@ void main() {
 
     test('should not found', () async {
       // Arrange
-      const id = 'Document:1';
+      const id = '${defaultTablePrefix}_${Document.tableName}:1';
 
       // Act & Assert
       expect(await repository.getDocumentById(id), isNull);
@@ -180,7 +186,8 @@ void main() {
         status: 'active',
         updated: DateTime.now(),
       );
-      final created = await repository.createDocument(document);
+      final created =
+          await repository.createDocument(defaultTablePrefix, document);
 
       // Act
       final updated =
@@ -193,7 +200,7 @@ void main() {
     test('should be null when the update document is not found', () async {
       // Arrange
       final document = Document(
-        id: 'Document:1',
+        id: '${defaultTablePrefix}_${Document.tableName}:1',
         compressedFileSize: 100,
         fileMimeType: 'text/plain',
         contentMimeType: 'text/plain',
@@ -228,7 +235,8 @@ void main() {
         status: 'active',
         updated: DateTime.now(),
       );
-      final created = await repository.createDocument(document);
+      final created =
+          await repository.createDocument(defaultTablePrefix, document);
 
       // Act
       final result = await repository.deleteDocument(created.id!);
@@ -239,7 +247,7 @@ void main() {
 
     test('should be null when the delete document is not found', () async {
       // Arrange
-      const id = 'Document:1';
+      const id = '${defaultTablePrefix}_${Document.tableName}:1';
 
       // Act & Assert
       expect(await repository.deleteDocument(id), isNull);

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 import 'test_data.dart';
@@ -21,16 +22,16 @@ void main() {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(await repository.isSchemaCreated(), isFalse);
+      expect(await repository.isSchemaCreated(defaultTablePrefix), isFalse);
     });
 
     test('should create schema and return true', () async {
       // Arrange
-      if (!await repository.isSchemaCreated()) {
-        await repository.createSchema();
+      if (!await repository.isSchemaCreated(defaultTablePrefix)) {
+        await repository.createSchema(defaultTablePrefix);
       }
       // Assert
-      expect(await repository.isSchemaCreated(), isTrue);
+      expect(await repository.isSchemaCreated(defaultTablePrefix), isTrue);
     });
   });
 
@@ -45,13 +46,14 @@ void main() {
       );
 
       // Act
-      final result = await repository.createEmbedding(embedding);
+      final result =
+          await repository.createEmbedding(defaultTablePrefix, embedding);
 
       // Assert
       expect(result.id, isNotNull);
 
       // Clean up
-      await db.delete('Embedding');
+      await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
     });
 
     test('should have validation errors', () async {
@@ -114,13 +116,14 @@ void main() {
       ];
 
       // Act
-      final result = await repository.createEmbeddings(embeddings);
+      final result =
+          await repository.createEmbeddings(defaultTablePrefix, embeddings);
 
       // Assert
       expect(result, hasLength(embeddings.length));
 
       // Clean up
-      await db.delete('Embedding');
+      await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
     });
 
     test('should have validation errors', () async {
@@ -134,6 +137,7 @@ void main() {
 
       // Act
       final result = await repository.createEmbeddings(
+        defaultTablePrefix,
         [embedding],
       );
 
@@ -164,11 +168,15 @@ void main() {
           tokensCount: 5,
         ).toJson(),
       ];
-      await db.delete('Embedding');
-      await db.query('INSERT INTO Embedding ${jsonEncode(embeddings)}');
+      const fullEmbeddingTableName =
+          '${defaultTablePrefix}_${Embedding.tableName}';
+      await db.delete(fullEmbeddingTableName);
+      await db.query(
+        'INSERT INTO $fullEmbeddingTableName ${jsonEncode(embeddings)}',
+      );
 
       // Act
-      final result = await repository.getAllEmbeddings();
+      final result = await repository.getAllEmbeddings(defaultTablePrefix);
 
       // Assert
       expect(result, hasLength(embeddings.length));
@@ -184,7 +192,8 @@ void main() {
         metadata: {'id': 'customId2'},
         tokensCount: 5,
       );
-      final result = await repository.createEmbedding(embedding);
+      final result =
+          await repository.createEmbedding(defaultTablePrefix, embedding);
       final id = result.id!;
 
       // Act
@@ -196,7 +205,7 @@ void main() {
 
     test('should not found', () async {
       // Arrange
-      const id = 'Embedding:1';
+      const id = '${defaultTablePrefix}_${Embedding.tableName}:1';
 
       // Act & Assert
       expect(await repository.getEmbeddingById(id), isNull);
@@ -212,7 +221,8 @@ void main() {
         metadata: {'id': 'customId2'},
         tokensCount: 5,
       );
-      final created = await repository.createEmbedding(embedding);
+      final created =
+          await repository.createEmbedding(defaultTablePrefix, embedding);
 
       // Act
       final updated =
@@ -225,7 +235,7 @@ void main() {
     test('should be null when the update embedding is not found', () async {
       // Arrange
       final embedding = Embedding(
-        id: 'Embedding:1',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:1',
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
@@ -245,7 +255,8 @@ void main() {
         metadata: {'id': 'customId2'},
         tokensCount: 5,
       );
-      final created = await repository.createEmbedding(embedding);
+      final created =
+          await repository.createEmbedding(defaultTablePrefix, embedding);
 
       // Act
       final result = await repository.deleteEmbedding(created.id!);
@@ -256,7 +267,7 @@ void main() {
 
     test('should be null when the delete embedding is not found', () async {
       // Arrange
-      const id = 'Embedding:1';
+      const id = '${defaultTablePrefix}_${Embedding.tableName}:1';
 
       // Act & Assert
       expect(await repository.deleteEmbedding(id), isNull);
@@ -266,7 +277,7 @@ void main() {
   group('similaritySearch', () {
     test('should retrieve appropriate embeddings', () async {
       // Clean up
-      await db.delete('Embedding');
+      await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
 
       // Arrange
       final embeddings = [
@@ -304,9 +315,17 @@ void main() {
       const k = 3;
 
       // Act
-      await repository.createEmbeddings(embeddings);
-      final result1 = await repository.similaritySearch(listAllNumbers, k);
-      final result2 = await repository.similaritySearch(listAllFruits, k);
+      await repository.createEmbeddings(defaultTablePrefix, embeddings);
+      final result1 = await repository.similaritySearch(
+        defaultTablePrefix,
+        listAllNumbers,
+        k,
+      );
+      final result2 = await repository.similaritySearch(
+        defaultTablePrefix,
+        listAllFruits,
+        k,
+      );
 
       // Assert
       expect(result1, hasLength(k));

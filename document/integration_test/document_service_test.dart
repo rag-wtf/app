@@ -1,6 +1,7 @@
 import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
 
@@ -20,24 +21,27 @@ void main() {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(await documentService.isSchemaCreated(), isFalse);
+      expect(
+        await documentService.isSchemaCreated(defaultTablePrefix),
+        isFalse,
+      );
     });
 
     test('should create schemas and return true', () async {
       // Act
-      if (!await documentService.isSchemaCreated()) {
-        await documentService.createSchema();
+      if (!await documentService.isSchemaCreated(defaultTablePrefix)) {
+        await documentService.createSchema(defaultTablePrefix);
       }
 
       // Assert
-      expect(await documentService.isSchemaCreated(), isTrue);
+      expect(await documentService.isSchemaCreated(defaultTablePrefix), isTrue);
     });
   });
 
   test('should create document embeddings', () async {
     // Arrange
     final document = Document(
-      id: 'Document:${Ulid()}',
+      id: '${defaultTablePrefix}_${Document.tableName}:${Ulid()}',
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -52,35 +56,35 @@ void main() {
 
     final embeddings = [
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
         tokensCount: 4,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
         tokensCount: 5,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
         tokensCount: 15,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
         tokensCount: 7,
       ),
       Embedding(
-        id: 'Embedding:${Ulid()}',
+        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -90,6 +94,7 @@ void main() {
 
     // Act
     final txnResults = await documentService.createDocumentEmbeddings(
+      defaultTablePrefix,
       document,
       embeddings,
     );
@@ -98,12 +103,12 @@ void main() {
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
-      await db.select('DocumentEmbedding'),
+      await db.select('${defaultTablePrefix}_${DocumentEmbedding.tableName}'),
       hasLength(embeddings.length),
     );
 
     // Clean up
-    await db.delete('Document');
-    await db.delete('Embedding');
+    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
   });
 }
