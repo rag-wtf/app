@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class BrightnessButton extends StatelessWidget {
   const BrightnessButton({
-    required this.handleThemeModeChange,
     super.key,
     this.showTooltipBelow = true,
   });
 
-  final void Function({required bool useLightMode}) handleThemeModeChange;
   final bool showTooltipBelow;
 
   @override
@@ -20,7 +19,9 @@ class BrightnessButton extends StatelessWidget {
         icon: isBright
             ? const Icon(Icons.dark_mode_outlined)
             : const Icon(Icons.light_mode_outlined),
-        onPressed: () => handleThemeModeChange(useLightMode: !isBright),
+        onPressed: () {
+          getThemeManager(context).toggleDarkLightTheme();
+        },
       ),
     );
   }

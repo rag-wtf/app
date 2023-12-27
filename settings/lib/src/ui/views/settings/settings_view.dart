@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:settings/src/ui/widgets/common/input_field.dart';
-import 'package:settings/src/ui/widgets/settings/brightness_button.dart';
 import 'package:settings/src/ui/widgets/settings/settings_expansion_panel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -49,14 +48,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        actions: [
-          BrightnessButton(
-            handleThemeModeChange: viewModel.handleThemeModeChange,
-            showTooltipBelow: false,
-          )
-        ],
-      ),
       body: SingleChildScrollView(
         child: ExpansionPanelList(
           children: [

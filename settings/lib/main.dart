@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.router.dart';
-import 'package:settings/src/services/app_setting_service.dart';
+import 'package:settings/src/constants.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
@@ -16,13 +16,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: appTitle,
       initialRoute: Routes.startupView,
       onGenerateRoute: StackedRouter().onGenerateRoute,
       navigatorKey: StackedService.navigatorKey,
       navigatorObservers: [
         StackedService.routeObserver,
       ],
-      themeMode: locator<AppSettingService>().themeMode(),
     );
   }
 }

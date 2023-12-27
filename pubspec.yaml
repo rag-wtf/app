@@ -20,6 +20,7 @@ dependencies:
     path: settings
   stacked: ^3.4.0
   stacked_services: ^1.1.0
+  stacked_themes: ^0.3.12
   surrealdb_wasm: ^0.7.0+3
 
 dev_dependencies:

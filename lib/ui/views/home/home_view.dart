@@ -1,6 +1,7 @@
 import 'package:file_upload/widgets/file_upload_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
+import 'package:rag/ui/widgets/common/brightness_button.dart';
 import 'package:rag_console/rag_console.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -21,7 +22,7 @@ class HomeView extends StackedView<HomeViewModel> {
       builder: (context, constraints) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('RAG.WTF'),
+            title: const Text(appTitle),
             leading: constraints.maxWidth < mediumScreenWidth
                 ? Builder(
                     builder: (context) => IconButton(
@@ -31,6 +32,9 @@ class HomeView extends StackedView<HomeViewModel> {
                   )
                 : null,
             actions: [
+              const BrightnessButton(
+                showTooltipBelow: false,
+              ),
               if (constraints.maxWidth < largeScreenWidth)
                 Builder(
                   builder: (context) => IconButton(

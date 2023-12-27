@@ -8,6 +8,7 @@ import 'package:rag/ui/views/startup/startup_view.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 @StackedApp(
@@ -43,21 +44,39 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+    return ThemeBuilder(
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          background: Colors.black87,
+          brightness: Brightness.dark,
+          secondary: Colors.lightBlue[700],
         ),
-        useMaterial3: true,
       ),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      initialRoute: Routes.startupView,
-      onGenerateRoute: StackedRouter().onGenerateRoute,
-      navigatorKey: StackedService.navigatorKey,
-      navigatorObservers: [
-        StackedService.routeObserver,
-      ],
+      lightTheme: ThemeData(
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          background: Colors.white70,
+          brightness: Brightness.light,
+          secondary: Colors.blue[700],
+        ),
+      ),
+      statusBarColorBuilder: (theme) => theme?.colorScheme.secondary,
+      navigationBarColorBuilder: (theme) => theme?.colorScheme.secondary,
+      builder: (context, regularTheme, darkTheme, themeMode) => MaterialApp(
+        title: appTitle,
+        theme: regularTheme,
+        darkTheme: darkTheme,
+        themeMode: themeMode,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        initialRoute: Routes.startupView,
+        onGenerateRoute: StackedRouter().onGenerateRoute,
+        navigatorKey: StackedService.navigatorKey,
+        navigatorObservers: [
+          StackedService.routeObserver,
+        ],
+      ),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/constants.dart';
-import 'package:settings/src/services/app_setting_service.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:stacked/stacked.dart';
@@ -10,7 +9,6 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
   SettingsViewModel(this.tablePrefix);
   final String tablePrefix;
   final _isPanelExpanded = List.filled(4, true);
-  final _appSettingService = locator<AppSettingService>();
   final _settingService = locator<SettingService>();
   bool isPanelExpanded(int index) => _isPanelExpanded[index];
 
@@ -22,7 +20,6 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
 
   @override
   Future<void> futureToRun() async {
-    await _appSettingService.initialise();
     await _settingService.initialise(tablePrefix);
 
     final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
@@ -56,13 +53,5 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
         embeddingsApiBatchSizeValue!,
       );
     }
-  }
-
-  ThemeMode get themeMode => _appSettingService.themeMode();
-  void handleThemeModeChange({required bool useLightMode}) {
-    _appSettingService.updateThemeMode(
-      useLightMode ? ThemeMode.light : ThemeMode.dark,
-    );
-    notifyListeners();
   }
 }

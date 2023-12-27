@@ -28,6 +28,7 @@ const surrealEndpoint = 'indxdb://rag';
 const surrealNamespace = 'rag';
 const surrealDatabase = 'rag';
 
+const appTitle = 'RAG.WTF';
 const appTablePrefix = '__app';
 const defaultThemeMode = ThemeMode.system;
 const themeModeKey = 'THEME_MODE';
