@@ -114,6 +114,10 @@ app.*.map.json
 !.idea/runConfigurations/
 
 chromedriver
+
+# Generated files
 **/*.g.dart
 **/*.freezed.dart
+**/app.*.dart
+**/*.form.dart
 lib/gen/
