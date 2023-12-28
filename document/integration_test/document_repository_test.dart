@@ -126,6 +126,102 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
       // Assert
       expect(result, hasLength(documents.length));
     });
+
+    test('should return documents by page', () async {
+      // Arrange
+      final documents = List.generate(
+        5,
+        (index) => {
+          'compressedFileSize': 100,
+          'fileMimeType': 'text/plain',
+          'contentMimeType': 'text/plain',
+          'tokensCount': 10,
+          'created': '2023-10-31T03:1$index:16.601Z',
+          'name': 'doc$index',
+          'originFileSize': 200,
+          'status': DocumentStatus.created.name,
+          'updated': '2023-10-31T03:1$index:16.601Z',
+        },
+      );
+      await db.delete('${defaultTablePrefix}_${Document.tableName}');
+      final sql = '''
+INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
+      await db.query(sql);
+
+      // Act
+      const pageSize = 2;
+      final page1 = await repository.getAllDocuments(
+        defaultTablePrefix,
+        page: 1,
+        pageSize: pageSize,
+        ascendingOrder: true,
+      );
+      final page2 = await repository.getAllDocuments(
+        defaultTablePrefix,
+        page: 2,
+        pageSize: pageSize,
+        ascendingOrder: true,
+      );
+      final page3 = await repository.getAllDocuments(
+        defaultTablePrefix,
+        page: 3,
+        pageSize: pageSize,
+        ascendingOrder: true,
+      );
+
+      // Assert
+      expect(page1, hasLength(pageSize));
+      expect(page1[0].name, equals('doc0'));
+      expect(page1[1].name, equals('doc1'));
+      expect(page2, hasLength(pageSize));
+      expect(page2[0].name, equals('doc2'));
+      expect(page2[1].name, equals('doc3'));
+      expect(page3, hasLength(1));
+      expect(page3[0].name, equals('doc4'));
+    });
+  });
+
+  group('getTotal', () {
+    test('should return 2', () async {
+      // Arrange
+      final documents = [
+        {
+          'compressedFileSize': 100,
+          'fileMimeType': 'text/plain',
+          'contentMimeType': 'text/plain',
+          'tokensCount': 10,
+          'created': '2023-10-31T03:19:16.601Z',
+          'errorMessage': '',
+          'name': 'Test Document 1',
+          'originFileSize': 200,
+          'status': DocumentStatus.created.name,
+          'updated': '2023-10-31T03:19:16.601Z',
+        },
+        {
+          'compressedFileSize': 150,
+          'fileMimeType': 'text/plain',
+          'contentMimeType': 'text/plain',
+          'tokensCount': 10,
+          'created': '2022-01-01T13:00:00Z',
+          'errorMessage': '',
+          'file': 'base64 encoded string',
+          'name': 'Test Document 2',
+          'originFileSize': 250,
+          'status': DocumentStatus.created.name,
+          'updated': '2022-01-01T13:00:00Z',
+        },
+      ];
+      await db.delete('${defaultTablePrefix}_${Document.tableName}');
+      final sql = '''
+INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
+      await db.query(sql);
+
+      // Act
+      final result = await repository.getTotal(defaultTablePrefix);
+
+      // Assert
+      expect(result, equals(documents.length));
+    });
   });
 
   group('getDocumentById', () {

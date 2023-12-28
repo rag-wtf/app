@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:archive/archive.dart';
 import 'package:document/src/app/app.locator.dart';
+import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_embedding.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
@@ -12,6 +16,8 @@ class DocumentService {
   final _documentRepository = locator<DocumentRepository>();
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
+  final _gzipEncoder = locator<GZipEncoder>();
+  final _gzipDecoder = locator<GZipDecoder>();
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await _db.query('INFO FOR DB'))! as List;
@@ -85,11 +91,78 @@ class DocumentService {
     }
   }
 
+  Future<Object?> createDocument(
+    String tablePrefix,
+    Document document, [
+    Transaction? txn,
+  ]) async {
+    final base64EncodedFile = await _compressFileToBase64(
+      document.byteData!.first,
+    );
+    final newDocument = document.copyWith(
+      compressedFileSize: base64EncodedFile.length,
+      file: base64EncodedFile,
+    );
+    if (txn == null) {
+      return _db.transaction(
+        (txn) async {
+          await _documentRepository.createDocument(
+            tablePrefix,
+            newDocument,
+            txn,
+          );
+        },
+      );
+    } else {
+      await _documentRepository.createDocument(
+        tablePrefix,
+        newDocument,
+        txn,
+      );
+      return null;
+    }
+  }
+
   Future<List<Embedding>> similaritySearch(
     String tablePrefix,
     List<double> vector,
     int k,
   ) async {
     return _embeddingRepository.similaritySearch(tablePrefix, vector, k);
+  }
+
+  Future<DocumentList> getDocumentList(
+    String tablePrefix, {
+    int? page,
+    int pageSize = defaultPageSize,
+    bool ascendingOrder = defaultAscendingOrder,
+  }) async {
+    final items = await _documentRepository.getAllDocuments(
+      tablePrefix,
+      page: page,
+      pageSize: pageSize,
+      ascendingOrder: ascendingOrder,
+    );
+    final total = await _documentRepository.getTotal(tablePrefix);
+    return DocumentList(items, total);
+  }
+
+  bool _isGzFile(List<int> fileBytes) {
+    return fileBytes[0] == 0x1f && fileBytes[1] == 0x8b;
+  }
+
+  Future<String> _compressFileToBase64(List<int> bytes) async {
+    if (_isGzFile(bytes)) {
+      return base64Encode(bytes);
+    } else {
+      return base64Encode(
+        _gzipEncoder.encode(bytes)!,
+      );
+    }
+  }
+
+  Future<List<int>> _decompressFileFromBase64(String file) async {
+    final bytes = base64Decode(file);
+    return _isGzFile(bytes) ? _gzipDecoder.decodeBytes(bytes) : bytes;
   }
 }

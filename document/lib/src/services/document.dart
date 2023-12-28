@@ -13,18 +13,20 @@ abstract class Document with _$Document {
     required String fileMimeType, // could be gzip file
     required String contentMimeType, // mime type of content of the gzip file
     @DateTimeJsonConverter() required DateTime created,
-    required String? errorMessage,
     required String name,
     required int originFileSize,
     required DocumentStatus status,
-    required int tokensCount,
+    @DateTimeJsonConverter() required DateTime updated,
+    String? errorMessage,
+    int? tokensCount,
     String? id,
     String? content,
     String? file,
     Object? metadata,
-    @DateTimeJsonConverter() DateTime? updated,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    List<List<int>>? byteData,
   }) = _Document;
 
   factory Document.fromJson(Map<String, dynamic> json) =>
@@ -46,7 +48,7 @@ DEFINE FIELD file ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD status ON {prefix}_$tableName TYPE string;
-DEFINE FIELD updated ON {prefix}_$tableName TYPE option<datetime>;
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
 ''';
 
   static const _jsonSchema = {
@@ -109,7 +111,7 @@ DEFINE FIELD updated ON {prefix}_$tableName TYPE option<datetime>;
           'name',
           'originFileSize',
           'status',
-          'tokensCount',
+          'updated',
         ],
         'additionalProperties': false,
       },
@@ -154,4 +156,10 @@ enum DocumentStatus {
   completed,
   failed,
   cancelled,
+}
+
+class DocumentList {
+  const DocumentList(this.items, this.total);
+  final List<Document> items;
+  final int total;
 }

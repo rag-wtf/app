@@ -1,3 +1,4 @@
+import 'package:archive/archive.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
@@ -20,6 +21,8 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
+    LazySingleton<GZipEncoder>(classType: GZipEncoder),
+    LazySingleton<GZipDecoder>(classType: GZipDecoder),
     LazySingleton<DocumentService>(classType: DocumentService),
     LazySingleton<DocumentRepository>(classType: DocumentRepository),
     LazySingleton<EmbeddingRepository>(classType: EmbeddingRepository),

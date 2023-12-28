@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:document/src/app/app.locator.dart';
+import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
@@ -51,9 +52,17 @@ class DocumentRepository {
     }
   }
 
-  Future<List<Document>> getAllDocuments(String tablePrefix) async {
-    final results = (await _db
-        .query('SELECT * FROM ${tablePrefix}_${Document.tableName}'))! as List;
+  Future<List<Document>> getAllDocuments(
+    String tablePrefix, {
+    int? page,
+    int pageSize = defaultPageSize,
+    bool ascendingOrder = defaultAscendingOrder,
+  }) async {
+    final sql = '''
+SELECT * FROM ${tablePrefix}_${Document.tableName} 
+ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
+${page == null ? ';' : ' LIMIT $pageSize START ${(page - 1) * pageSize};'}''';
+    final results = (await _db.query(sql))! as List;
     return results
         .map(
           (result) => Document.fromJson(
@@ -63,6 +72,13 @@ class DocumentRepository {
           ),
         )
         .toList();
+  }
+
+  Future<int> getTotal(String tablePrefix) async {
+    final sql =
+        'SELECT count() FROM ${tablePrefix}_${Document.tableName} GROUP ALL;';
+    final results = (await _db.query(sql))! as List;
+    return (results.first as Map)['count'] as int;
   }
 
   Future<Document?> getDocumentById(String id) async {

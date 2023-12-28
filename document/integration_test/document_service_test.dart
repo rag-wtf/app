@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:document/document.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -109,5 +111,63 @@ Future<void> main() async {
     // Clean up
     await db.delete('${defaultTablePrefix}_${Document.tableName}');
     await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
+  });
+
+  test('get document list with total', () async {
+    // Arrange
+    final documents = List.generate(
+      5,
+      (index) => {
+        'compressedFileSize': 100,
+        'fileMimeType': 'text/plain',
+        'contentMimeType': 'text/plain',
+        'tokensCount': 10,
+        'created': '2023-10-31T03:1$index:16.601Z',
+        'name': 'doc$index',
+        'originFileSize': 200,
+        'status': DocumentStatus.created.name,
+        'updated': '2023-10-31T03:1$index:16.601Z',
+      },
+    );
+    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    final sql = '''
+INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
+    await db.query(sql);
+
+    // Act
+    const pageSize = 2;
+    final page1 = await documentService.getDocumentList(
+      defaultTablePrefix,
+      page: 1,
+      pageSize: pageSize,
+    );
+    final page2 = await documentService.getDocumentList(
+      defaultTablePrefix,
+      page: 2,
+      pageSize: pageSize,
+    );
+    final page3 = await documentService.getDocumentList(
+      defaultTablePrefix,
+      page: 3,
+      pageSize: pageSize,
+    );
+
+    // Assert
+    expect(page1, hasLength(pageSize));
+    expect(page1.total, hasLength(documents.length));
+    expect(page1.items[0].name, equals('doc4'));
+    expect(page1.items[1].name, equals('doc3'));
+
+    expect(page2, hasLength(pageSize));
+    expect(page2.total, hasLength(documents.length));
+    expect(page2.items[0].name, equals('doc2'));
+    expect(page2.items[1].name, equals('doc1'));
+
+    expect(page3, hasLength(1));
+    expect(page3.total, hasLength(documents.length));
+    expect(page3.items[0].name, equals('doc0'));
+
+    // Clean up
+    await db.delete('${defaultTablePrefix}_${Document.tableName}');
   });
 }

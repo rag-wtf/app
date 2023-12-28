@@ -1,7 +1,9 @@
-const allowedExtensions = 'txt,pdf,html,md,ppt,pptx,doc,docx,epub,eml,gz';
+const allowedExtensions = 'txt,pdf,html,md,ppt,pptx,doc,docx,epub,eml';
 const unknownFileName = 'Unknown';
 const fileStreamExceptionMessage = 'Cannot read file from null stream!';
 const maximumFileSizeMessage = 'Max size per file is 10MB.';
 const uploadFileZoneMessage = 'Click or tap here to upload file';
 const uploadProgressSemanticsLabel = 'upload progress';
 const processProgressSemanticsLabel = 'process progress';
+const int defaultPageSize = 10;
+const bool defaultAscendingOrder = false;
