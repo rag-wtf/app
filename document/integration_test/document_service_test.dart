@@ -1,4 +1,5 @@
 import 'package:document/document.dart';
+import 'package:document/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
@@ -7,17 +8,15 @@ import 'package:ulid/ulid.dart';
 
 import 'test_data.dart';
 
-void main() {
+Future<void> main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  late DocumentService documentService;
-  final db = Surreal();
+  await setupLocator();
+  final db = locator<Surreal>();
+  final documentService = locator<DocumentService>();
 
   setUpAll(() async {
-    await db.connect('mem://');
-    await db.use(ns: 'test', db: 'test');
-    documentService = DocumentService(db: db);
+    await Future<void>.delayed(const Duration(seconds: 3));
   });
-
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
@@ -50,7 +49,7 @@ void main() {
       errorMessage: '',
       name: 'Test Document',
       originFileSize: 200,
-      status: 'active',
+      status: DocumentStatus.created,
       updated: DateTime.now(),
     );
 

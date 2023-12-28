@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:document/document.dart';
+import 'package:document/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
@@ -8,17 +9,15 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 import 'test_data.dart';
 
-void main() {
+Future<void> main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  late EmbeddingRepository repository;
-  final db = Surreal();
+  await setupLocator();
+  final db = locator<Surreal>();
+  final repository = locator<EmbeddingRepository>();
 
   setUpAll(() async {
-    await db.connect('mem://');
-    await db.use(ns: 'test', db: 'test');
-    repository = EmbeddingRepository(db: db);
+    await Future<void>.delayed(const Duration(seconds: 3));
   });
-
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert

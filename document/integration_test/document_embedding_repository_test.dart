@@ -1,4 +1,5 @@
 import 'package:document/document.dart';
+import 'package:document/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
@@ -6,21 +7,17 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
 import 'test_data.dart';
 
-void main() {
+Future<void> main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  late DocumentRepository documentRepository;
-  late EmbeddingRepository embeddingRepository;
-  late DocumentEmbeddingRepository documentEmbeddingRepository;
-  final db = Surreal();
+  await setupLocator();
+  final db = locator<Surreal>();
+  final documentRepository = locator<DocumentRepository>();
+  final embeddingRepository = locator<EmbeddingRepository>();
+  final documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
 
   setUpAll(() async {
-    await db.connect('mem://');
-    await db.use(ns: 'test', db: 'test');
-    documentRepository = DocumentRepository(db: db);
-    embeddingRepository = EmbeddingRepository(db: db);
-    documentEmbeddingRepository = DocumentEmbeddingRepository(db: db);
+    await Future<void>.delayed(const Duration(seconds: 3));
   });
-
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
@@ -87,7 +84,7 @@ void main() {
       errorMessage: '',
       name: 'Test Document',
       originFileSize: 200,
-      status: 'active',
+      status: DocumentStatus.created,
       updated: DateTime.now(),
     );
     final embedding = Embedding(
@@ -146,7 +143,7 @@ void main() {
       errorMessage: '',
       name: 'Test Document',
       originFileSize: 200,
-      status: 'active',
+      status: DocumentStatus.created,
       updated: DateTime.now(),
     );
 
@@ -243,7 +240,7 @@ void main() {
       errorMessage: '',
       name: 'Document 1',
       originFileSize: 200,
-      status: 'active',
+      status: DocumentStatus.created,
       updated: DateTime.now(),
     );
 
@@ -258,7 +255,7 @@ void main() {
       errorMessage: '',
       name: 'Document 2',
       originFileSize: 200,
-      status: 'active',
+      status: DocumentStatus.created,
       updated: DateTime.now(),
     );
 

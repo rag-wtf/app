@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 import 'package:document/document.dart';
+import 'package:document/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-void main() {
+Future<void> main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  late DocumentRepository repository;
-  final db = Surreal();
+  await setupLocator();
+  final db = locator<Surreal>();
+  final repository = locator<DocumentRepository>();
 
   setUpAll(() async {
-    await db.connect('mem://');
-    await db.use(ns: 'test', db: 'test');
-    repository = DocumentRepository(db: db);
+    await Future<void>.delayed(const Duration(seconds: 3));
   });
 
   group('isSchemaCreated', () {
@@ -45,7 +45,7 @@ void main() {
         errorMessage: '',
         name: 'Test Document',
         originFileSize: 200,
-        status: 'active',
+        status: DocumentStatus.created,
         updated: DateTime.now(),
       );
 
@@ -69,7 +69,7 @@ void main() {
         file: 'base64 encoded',
         name: 'Test Document',
         originFileSize: 200,
-        status: 'active',
+        status: DocumentStatus.created,
         updated: DateTime.now(),
       );
 
@@ -98,7 +98,7 @@ void main() {
           'errorMessage': '',
           'name': 'Test Document 1',
           'originFileSize': 200,
-          'status': 'active',
+          'status': DocumentStatus.created.name,
           'updated': '2023-10-31T03:19:16.601Z',
         },
         {
@@ -111,7 +111,7 @@ void main() {
           'file': 'base64 encoded string',
           'name': 'Test Document 2',
           'originFileSize': 250,
-          'status': 'inactive',
+          'status': DocumentStatus.created.name,
           'updated': '2022-01-01T13:00:00Z',
         },
       ];
@@ -141,7 +141,7 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
         file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
-        status: 'active',
+        status: DocumentStatus.created,
         updated: DateTime.now(),
       );
       final result =
@@ -183,18 +183,19 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
         file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
-        status: 'active',
+        status: DocumentStatus.created,
         updated: DateTime.now(),
       );
       final created =
           await repository.createDocument(defaultTablePrefix, document);
 
       // Act
-      final updated =
-          await repository.updateDocument(created.copyWith(status: 'inactive'));
+      final updated = await repository.updateDocument(
+        created.copyWith(status: DocumentStatus.pending),
+      );
 
       // Assert
-      expect(updated?.status, equals('inactive'));
+      expect(updated?.status, equals(DocumentStatus.pending));
     });
 
     test('should be null when the update document is not found', () async {
@@ -210,7 +211,7 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
         file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
-        status: 'active',
+        status: DocumentStatus.created,
         updated: DateTime.now(),
       );
 
@@ -232,7 +233,7 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
         file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
-        status: 'active',
+        status: DocumentStatus.created,
         updated: DateTime.now(),
       );
       final created =
