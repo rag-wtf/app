@@ -1,5 +1,5 @@
 name: document
-description: document module.
+description: document package.
 version: 0.1.0+1
 publish_to: none
 
@@ -8,6 +8,7 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  file_icon: ^1.0.0
   flutter:
     sdk: flutter
 
