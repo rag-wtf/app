@@ -4,45 +4,41 @@ import 'package:document/document.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
 
 import 'test_data.dart';
 
-Future<void> main() async {
+void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  await setupLocator();
   final db = locator<Surreal>();
   final documentService = locator<DocumentService>();
+  const tablePrefix = 'doc_service';
 
-  setUpAll(() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
-  });
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
       expect(
-        await documentService.isSchemaCreated(defaultTablePrefix),
+        await documentService.isSchemaCreated(tablePrefix),
         isFalse,
       );
     });
 
     test('should create schemas and return true', () async {
       // Act
-      if (!await documentService.isSchemaCreated(defaultTablePrefix)) {
-        await documentService.createSchema(defaultTablePrefix);
+      if (!await documentService.isSchemaCreated(tablePrefix)) {
+        await documentService.createSchema(tablePrefix);
       }
 
       // Assert
-      expect(await documentService.isSchemaCreated(defaultTablePrefix), isTrue);
+      expect(await documentService.isSchemaCreated(tablePrefix), isTrue);
     });
   });
 
   test('should create document embeddings', () async {
     // Arrange
     final document = Document(
-      id: '${defaultTablePrefix}_${Document.tableName}:${Ulid()}',
+      id: '${tablePrefix}_${Document.tableName}:${Ulid()}',
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -57,35 +53,35 @@ Future<void> main() async {
 
     final embeddings = [
       Embedding(
-        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
         tokensCount: 4,
       ),
       Embedding(
-        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
         tokensCount: 5,
       ),
       Embedding(
-        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
         tokensCount: 15,
       ),
       Embedding(
-        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
         tokensCount: 7,
       ),
       Embedding(
-        id: '${defaultTablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -95,7 +91,7 @@ Future<void> main() async {
 
     // Act
     final txnResults = await documentService.createDocumentEmbeddings(
-      defaultTablePrefix,
+      tablePrefix,
       document,
       embeddings,
     );
@@ -104,13 +100,13 @@ Future<void> main() async {
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
-      await db.select('${defaultTablePrefix}_${DocumentEmbedding.tableName}'),
+      await db.select('${tablePrefix}_${DocumentEmbedding.tableName}'),
       hasLength(embeddings.length),
     );
 
     // Clean up
-    await db.delete('${defaultTablePrefix}_${Document.tableName}');
-    await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
+    await db.delete('${tablePrefix}_${Document.tableName}');
+    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 
   test('get document list with total', () async {
@@ -129,45 +125,45 @@ Future<void> main() async {
         'updated': '2023-10-31T03:1$index:16.601Z',
       },
     );
-    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    await db.delete('${tablePrefix}_${Document.tableName}');
     final sql = '''
-INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
+INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
     await db.query(sql);
 
     // Act
     const pageSize = 2;
     final page1 = await documentService.getDocumentList(
-      defaultTablePrefix,
+      tablePrefix,
       page: 1,
       pageSize: pageSize,
     );
     final page2 = await documentService.getDocumentList(
-      defaultTablePrefix,
+      tablePrefix,
       page: 2,
       pageSize: pageSize,
     );
     final page3 = await documentService.getDocumentList(
-      defaultTablePrefix,
+      tablePrefix,
       page: 3,
       pageSize: pageSize,
     );
 
     // Assert
-    expect(page1, hasLength(pageSize));
-    expect(page1.total, hasLength(documents.length));
+    expect(page1.items, hasLength(pageSize));
+    expect(page1.total, equals(documents.length));
     expect(page1.items[0].name, equals('doc4'));
     expect(page1.items[1].name, equals('doc3'));
 
-    expect(page2, hasLength(pageSize));
-    expect(page2.total, hasLength(documents.length));
+    expect(page2.items, hasLength(pageSize));
+    expect(page2.total, equals(documents.length));
     expect(page2.items[0].name, equals('doc2'));
     expect(page2.items[1].name, equals('doc1'));
 
-    expect(page3, hasLength(1));
-    expect(page3.total, hasLength(documents.length));
+    expect(page3.items, hasLength(1));
+    expect(page3.total, equals(documents.length));
     expect(page3.items[0].name, equals('doc0'));
 
     // Clean up
-    await db.delete('${defaultTablePrefix}_${Document.tableName}');
+    await db.delete('${tablePrefix}_${Document.tableName}');
   });
 }

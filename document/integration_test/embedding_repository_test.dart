@@ -9,15 +9,11 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 import 'test_data.dart';
 
-Future<void> main() async {
+void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  await setupLocator();
   final db = locator<Surreal>();
   final repository = locator<EmbeddingRepository>();
 
-  setUpAll(() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
-  });
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
