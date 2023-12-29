@@ -12,10 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
 class DocumentListView extends StackedView<DocumentListViewModel> {
-  const DocumentListView(this.tablePrefix, {super.key});
+  const DocumentListView({super.key, this.tablePrefix = 'main'});
   final String tablePrefix;
 
   @override

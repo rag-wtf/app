@@ -104,14 +104,9 @@ class DocumentService {
       file: base64EncodedFile,
     );
     if (txn == null) {
-      return _db.transaction(
-        (txn) async {
-          await _documentRepository.createDocument(
-            tablePrefix,
-            newDocument,
-            txn,
-          );
-        },
+      return _documentRepository.createDocument(
+        tablePrefix,
+        newDocument,
       );
     } else {
       await _documentRepository.createDocument(
