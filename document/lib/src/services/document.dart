@@ -169,6 +169,7 @@ enum DocumentStatus {
   created,
   pending,
   uploading,
+  splitting,
   indexing,
   completed,
   failed,

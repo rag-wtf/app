@@ -26,6 +26,7 @@ class DocumentStatusWidget extends StatelessWidget {
       case DocumentStatus.created:
       case DocumentStatus.pending:
       case DocumentStatus.uploading:
+      case DocumentStatus.splitting:
       case DocumentStatus.indexing:
         textColor = Colors.grey;
     }

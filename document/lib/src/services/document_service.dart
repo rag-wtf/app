@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 import 'package:document/src/app/app.locator.dart';
-import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_embedding.dart';
 import 'package:document/src/services/document_embedding_repository.dart';

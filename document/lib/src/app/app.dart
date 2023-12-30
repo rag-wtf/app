@@ -1,4 +1,6 @@
 import 'package:archive/archive.dart';
+import 'package:dio/dio.dart';
+import 'package:document/src/services/api_service.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
@@ -31,6 +33,8 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DocumentEmbeddingRepository>(
       classType: DocumentEmbeddingRepository,
     ),
+    LazySingleton<Dio>(classType: Dio),
+    LazySingleton<ApiService>(classType: ApiService),
     Singleton(
       classType: DatabaseService,
       asType: Surreal,

@@ -1,18 +1,21 @@
 import 'package:document/src/services/document.dart';
 import 'package:document/src/ui/widgets/document_list/cancel_button_widget.dart';
+import 'package:document/src/ui/widgets/document_list/document_item_widgetmodel.dart';
 import 'package:document/src/ui/widgets/document_list/document_progress_indicator_widget.dart';
 import 'package:document/src/ui/widgets/document_list/document_status_widget.dart';
 
 import 'package:file_icon/file_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class DocumentItemWidget extends StatelessWidget {
+class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
   const DocumentItemWidget(this.item, {super.key});
   static int megaBytes = 1024 * 1024;
   final Document item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(
+      Object context, DocumentItemWidgetModel viewModel, Widget? child) {
     return Card(
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
       child: Stack(
@@ -55,7 +58,8 @@ class DocumentItemWidget extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: DocumentProgressIndicatorWidget(
-                                    item.status,
+                                    viewModel.documentStatus,
+                                    progress: viewModel.progress,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -71,9 +75,14 @@ class DocumentItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          //const CancelButtonWidget(),
+          if (viewModel.documentStatus == DocumentStatus.uploading)
+            CancelButtonWidget(viewModel.cancel),
         ],
       ),
     );
   }
+
+  @override
+  DocumentItemWidgetModel viewModelBuilder(BuildContext context) =>
+      DocumentItemWidgetModel(item);
 }
