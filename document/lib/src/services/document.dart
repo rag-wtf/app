@@ -11,18 +11,18 @@ abstract class Document with _$Document {
   const factory Document({
     required int compressedFileSize,
     required String fileMimeType, // could be gzip file
-    required String contentMimeType, // mime type of content of the gzip file
     @DateTimeJsonConverter() required DateTime created,
     required String name,
     required int originFileSize,
     required DocumentStatus status,
     @DateTimeJsonConverter() required DateTime updated,
-    String? errorMessage,
-    int? tokensCount,
     String? id,
     String? content,
+    String? contentMimeType, // mime type of content of the gzip file
     String? file,
+    int? tokensCount,
     Object? metadata,
+    String? errorMessage,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
     @JsonKey(includeFromJson: false, includeToJson: false)
@@ -39,9 +39,9 @@ DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD compressedFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD content ON {prefix}_$tableName TYPE option<string>;
-DEFINE FIELD tokensCount ON {prefix}_$tableName TYPE number;
+DEFINE FIELD tokensCount ON {prefix}_$tableName TYPE option<number>;
 DEFINE FIELD fileMimeType ON {prefix}_$tableName TYPE string;
-DEFINE FIELD contentMimeType ON {prefix}_$tableName TYPE string;
+DEFINE FIELD contentMimeType ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
 DEFINE FIELD errorMessage ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD file ON {prefix}_$tableName TYPE option<string>;
@@ -106,7 +106,6 @@ DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
         'required': [
           'compressedFileSize',
           'fileMimeType',
-          'contentMimeType',
           'created',
           'name',
           'originFileSize',

@@ -8,7 +8,7 @@ import 'package:stacked/stacked.dart';
 class DocumentListViewModel extends FutureViewModel<void> {
   DocumentListViewModel(this.tablePrefix);
   final String tablePrefix;
-  int _total = -1;
+  int _total = 0;
   final _items = <Document>[];
   List<Document> get items => _items;
   final _documentService = locator<DocumentService>();
@@ -16,6 +16,7 @@ class DocumentListViewModel extends FutureViewModel<void> {
 
   @override
   Future<void> futureToRun() async {
+    await Future<void>.delayed(const Duration(seconds: 3));
     _log.d('futureToRun() tablePrefix: $tablePrefix');
     final isSchemaCreated = await _documentService.isSchemaCreated(tablePrefix);
     _log.d('isSchemaCreated $isSchemaCreated');
@@ -23,39 +24,39 @@ class DocumentListViewModel extends FutureViewModel<void> {
     if (!isSchemaCreated) {
       _log.d('before createSchema()');
       await _documentService.createSchema(tablePrefix);
+      _log.d('after createSchema()');
     }
-
-    await test();
+    await fetchData();
   }
 
   bool get hasReachedMax {
-    final reachedMax = _total > -1 && items.length >= _total;
+    final reachedMax = items.length >= _total;
     _log.d(reachedMax);
     return reachedMax;
   }
 
-  Future<void> test() async {
-    _log.d('test()');
-  }
-
-  Future<void> onFetchData() async {
-    _log.d('onFetchData()');
+  Future<void> fetchData() async {
     final page = _items.length ~/ defaultPageSize;
     _log.d('page $page');
     final documentList = await _documentService.getDocumentList(
       tablePrefix,
       page: page,
+      pageSize: defaultPageSize,
     );
-    _items.addAll(documentList.items);
-    _total = documentList.total;
-    notifyListeners();
+    _log.d('documentList.total ${documentList.total}');
+    if (documentList.total > 0) {
+      _items.addAll(documentList.items);
+      _total = documentList.total;
+      notifyListeners();
+    }
   }
 
   Future<void> addItem(Document? document) async {
     if (document != null) {
       final createdDocument =
           await _documentService.createDocument(tablePrefix, document);
-      if (createdDocument != null) {
+      if (createdDocument.id != null) {
+        _items.insert(0, createdDocument);
         notifyListeners();
       }
     }

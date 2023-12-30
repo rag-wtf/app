@@ -147,19 +147,19 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
       const pageSize = 2;
       final page1 = await repository.getAllDocuments(
         defaultTablePrefix,
-        page: 1,
+        page: 0,
         pageSize: pageSize,
         ascendingOrder: true,
       );
       final page2 = await repository.getAllDocuments(
         defaultTablePrefix,
-        page: 2,
+        page: 1,
         pageSize: pageSize,
         ascendingOrder: true,
       );
       final page3 = await repository.getAllDocuments(
         defaultTablePrefix,
-        page: 3,
+        page: 2,
         pageSize: pageSize,
         ascendingOrder: true,
       );

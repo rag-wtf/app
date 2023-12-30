@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
 class DocumentListView extends StackedView<DocumentListViewModel> {
@@ -115,7 +114,6 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
     return Document(
       compressedFileSize: 0,
       fileMimeType: contentType!.mimeType,
-      contentMimeType: contentType.mimeType,
       created: DateTime.now(),
       name: fileName,
       originFileSize: file.size,

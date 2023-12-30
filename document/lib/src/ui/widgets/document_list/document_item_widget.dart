@@ -18,7 +18,7 @@ class DocumentItemWidget extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
             child: Row(
               children: [
                 FileIcon(

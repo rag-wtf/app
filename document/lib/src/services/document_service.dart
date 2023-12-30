@@ -91,11 +91,7 @@ class DocumentService {
     }
   }
 
-  Future<Object?> createDocument(
-    String tablePrefix,
-    Document document, [
-    Transaction? txn,
-  ]) async {
+  Future<Document> createDocument(String tablePrefix, Document document) async {
     final base64EncodedFile = await _compressFileToBase64(
       document.byteData!.first,
     );
@@ -103,19 +99,10 @@ class DocumentService {
       compressedFileSize: base64EncodedFile.length,
       file: base64EncodedFile,
     );
-    if (txn == null) {
-      return _documentRepository.createDocument(
-        tablePrefix,
-        newDocument,
-      );
-    } else {
-      await _documentRepository.createDocument(
-        tablePrefix,
-        newDocument,
-        txn,
-      );
-      return null;
-    }
+    return _documentRepository.createDocument(
+      tablePrefix,
+      newDocument,
+    );
   }
 
   Future<List<Embedding>> similaritySearch(
@@ -129,8 +116,8 @@ class DocumentService {
   Future<DocumentList> getDocumentList(
     String tablePrefix, {
     int? page,
-    int pageSize = defaultPageSize,
-    bool ascendingOrder = defaultAscendingOrder,
+    int pageSize = 20,
+    bool ascendingOrder = false,
   }) async {
     final items = await _documentRepository.getAllDocuments(
       tablePrefix,

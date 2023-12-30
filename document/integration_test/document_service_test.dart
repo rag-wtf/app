@@ -134,17 +134,17 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
     const pageSize = 2;
     final page1 = await documentService.getDocumentList(
       tablePrefix,
-      page: 1,
+      page: 0,
       pageSize: pageSize,
     );
     final page2 = await documentService.getDocumentList(
       tablePrefix,
-      page: 2,
+      page: 1,
       pageSize: pageSize,
     );
     final page3 = await documentService.getDocumentList(
       tablePrefix,
-      page: 3,
+      page: 2,
       pageSize: pageSize,
     );
 

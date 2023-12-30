@@ -55,13 +55,13 @@ class DocumentRepository {
   Future<List<Document>> getAllDocuments(
     String tablePrefix, {
     int? page,
-    int pageSize = defaultPageSize,
-    bool ascendingOrder = defaultAscendingOrder,
+    int pageSize = 20,
+    bool ascendingOrder = false,
   }) async {
     final sql = '''
 SELECT * FROM ${tablePrefix}_${Document.tableName} 
 ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
-${page == null ? ';' : ' LIMIT $pageSize START ${(page - 1) * pageSize};'}''';
+${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     final results = (await _db.query(sql))! as List;
     return results
         .map(

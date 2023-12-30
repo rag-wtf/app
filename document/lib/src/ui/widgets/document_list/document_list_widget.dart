@@ -12,8 +12,8 @@ class DocumentListWidget extends StatelessWidget {
     return InfiniteList(
       itemCount: viewModel.items.length,
       isLoading: viewModel.isBusy,
-      onFetchData: viewModel.onFetchData,
-      //hasReachedMax: viewModel.hasReachedMax,
+      onFetchData: viewModel.fetchData,
+      hasReachedMax: viewModel.hasReachedMax,
       itemBuilder: (context, index) {
         final item = viewModel.items[index];
         return DocumentItemWidget(item);
