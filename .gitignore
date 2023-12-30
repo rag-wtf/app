@@ -120,4 +120,5 @@ chromedriver
 **/*.freezed.dart
 **/app.*.dart
 **/*.form.dart
+**/*.mocks.dart
 lib/gen/
