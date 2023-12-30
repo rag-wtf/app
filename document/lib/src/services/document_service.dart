@@ -105,6 +105,29 @@ class DocumentService {
     );
   }
 
+  Future<Document?> getDocumentById(String id) async {
+    var document = await _documentRepository.getDocumentById(id);
+
+    if (document != null && document.file != null) {
+      document = document.copyWith(
+        byteData: [await _decompressFileFromBase64(document.file!)],
+      );
+    }
+    return document;
+  }
+
+  Future<String> convertByteDataToString(List<List<int>> byteData) async {
+    final buffer = StringBuffer();
+    await Stream.fromIterable(byteData)
+        .transform(
+          utf8.decoder,
+        )
+        .forEach(
+          buffer.write,
+        );
+    return buffer.toString();
+  }
+
   Future<List<Embedding>> similaritySearch(
     String tablePrefix,
     List<double> vector,

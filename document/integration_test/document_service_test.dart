@@ -166,4 +166,31 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
     // Clean up
     await db.delete('${tablePrefix}_${Document.tableName}');
   });
+
+  test('create document and get document by id', () async {
+    // Arrange
+    const str = 'Hello, World!';
+    final bytes = utf8.encode(str);
+    final document = Document(
+      compressedFileSize: 0,
+      fileMimeType: 'text/plain',
+      created: DateTime.now(),
+      name: 'test',
+      originFileSize: bytes.length,
+      status: DocumentStatus.created,
+      updated: DateTime.now(),
+      byteData: [bytes],
+    );
+
+    // Act
+    final createdDocument =
+        await documentService.createDocument(tablePrefix, document);
+    final retrievedDocument =
+        await documentService.getDocumentById(createdDocument.id!);
+    final content = await documentService
+        .convertByteDataToString(retrievedDocument!.byteData!);
+
+    // Assert
+    expect(content, equals(str));
+  });
 }

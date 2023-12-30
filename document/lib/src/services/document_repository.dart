@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:document/src/app/app.locator.dart';
-import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 

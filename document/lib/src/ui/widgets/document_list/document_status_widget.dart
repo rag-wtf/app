@@ -17,7 +17,7 @@ class DocumentStatusWidget extends StatelessWidget {
       case DocumentStatus.completed:
         textColor = Colors.green;
 
-      case DocumentStatus.cancelled:
+      case DocumentStatus.canceled:
         textColor = Colors.yellow;
 
       case DocumentStatus.failed:
