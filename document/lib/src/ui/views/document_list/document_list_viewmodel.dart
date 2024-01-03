@@ -3,6 +3,7 @@ import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_service.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
 class DocumentListViewModel extends FutureViewModel<void> {
@@ -12,12 +13,14 @@ class DocumentListViewModel extends FutureViewModel<void> {
   final _items = <Document>[];
   List<Document> get items => _items;
   final _documentService = locator<DocumentService>();
+  final _settingService = locator<SettingService>();
   final _log = getLogger('DocumentListViewModel');
 
   @override
   Future<void> futureToRun() async {
     await Future<void>.delayed(const Duration(seconds: 3));
     _log.d('futureToRun() tablePrefix: $tablePrefix');
+    await _settingService.initialise(tablePrefix);
     final isSchemaCreated = await _documentService.isSchemaCreated(tablePrefix);
     _log.d('isSchemaCreated $isSchemaCreated');
 
@@ -60,5 +63,9 @@ class DocumentListViewModel extends FutureViewModel<void> {
         notifyListeners();
       }
     }
+  }
+
+  void setItem(int index, Document document) {
+    _items[index] = document;
   }
 }

@@ -65,7 +65,13 @@ class DocumentService {
     if (txn == null) {
       return _db.transaction(
         (txn) async {
-          await _documentRepository.createDocument(tablePrefix, document, txn);
+          if (document.status == DocumentStatus.created) {
+            await _documentRepository.createDocument(
+              tablePrefix,
+              document,
+              txn,
+            );
+          }
           await _embeddingRepository.createEmbeddings(
             tablePrefix,
             embeddings,
@@ -79,7 +85,9 @@ class DocumentService {
         },
       );
     } else {
-      await _documentRepository.createDocument(tablePrefix, document, txn);
+      if (document.status == DocumentStatus.created) {
+        await _documentRepository.createDocument(tablePrefix, document, txn);
+      }
       await _embeddingRepository.createEmbeddings(tablePrefix, embeddings, txn);
       await _documentEmbeddingRepository.createDocumentEmbeddings(
         tablePrefix,

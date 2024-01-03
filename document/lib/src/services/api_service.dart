@@ -25,15 +25,23 @@ class ApiService {
       data: formData,
       cancelToken: widgetModel.cancelToken,
       onSendProgress: (int sent, int total) {
+        if (widgetModel.item.status == DocumentStatus.pending) {
+          widgetModel.setDocumentStatus(DocumentStatus.uploading);
+        }
         final progress = sent / total;
         widgetModel.progress = progress;
       },
       onReceiveProgress: (int count, int total) {
+        if (widgetModel.item.status == DocumentStatus.uploading) {
+          widgetModel.setDocumentStatus(DocumentStatus.splitting);
+        }
         final progress = count * 0.01;
         widgetModel.progress = progress;
       },
     ).then((response) {
       widgetModel.onUploadCompleted(response.data);
-    });
+    }).catchError(
+      widgetModel.onError,
+    );
   }
 }

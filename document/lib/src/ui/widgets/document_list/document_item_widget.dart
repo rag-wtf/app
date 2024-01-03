@@ -1,4 +1,6 @@
+import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
+import 'package:document/src/ui/views/document_list/document_list_viewmodel.dart';
 import 'package:document/src/ui/widgets/document_list/cancel_button_widget.dart';
 import 'package:document/src/ui/widgets/document_list/document_item_widgetmodel.dart';
 import 'package:document/src/ui/widgets/document_list/document_progress_indicator_widget.dart';
@@ -9,13 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
-  const DocumentItemWidget(this.item, {super.key});
+  DocumentItemWidget(
+    this._parentViewModel,
+    this._itemIndex, {
+    super.key,
+  });
   static int megaBytes = 1024 * 1024;
-  final Document item;
+  final DocumentListViewModel _parentViewModel;
+  final int _itemIndex;
+  final _log = getLogger('DocumentItemWidget');
 
   @override
   Widget builder(
-      Object context, DocumentItemWidgetModel viewModel, Widget? child) {
+    Object context,
+    DocumentItemWidgetModel viewModel,
+    Widget? child,
+  ) {
     return Card(
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
       child: Stack(
@@ -25,7 +36,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
             child: Row(
               children: [
                 FileIcon(
-                  item.name,
+                  viewModel.item.name,
                   size: 64,
                 ),
                 Expanded(
@@ -33,7 +44,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.name,
+                        viewModel.item.name,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -46,7 +57,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
                       Row(
                         children: [
                           Text(
-                            '${(item.originFileSize / megaBytes).toStringAsFixed(2)} MB',
+                            '${(viewModel.item.originFileSize / megaBytes).toStringAsFixed(2)} MB',
                             style: const TextStyle(
                               color: Colors.grey,
                             ),
@@ -58,12 +69,12 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
                               children: [
                                 Expanded(
                                   child: DocumentProgressIndicatorWidget(
-                                    viewModel.documentStatus,
+                                    viewModel.item.status,
                                     progress: viewModel.progress,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                DocumentStatusWidget(item: item),
+                                DocumentStatusWidget(item: viewModel.item),
                               ],
                             ),
                           ),
@@ -75,7 +86,8 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
               ],
             ),
           ),
-          if (viewModel.documentStatus == DocumentStatus.uploading)
+          if (viewModel.item.status == DocumentStatus.uploading ||
+              viewModel.item.status == DocumentStatus.indexing)
             CancelButtonWidget(viewModel.cancel),
         ],
       ),
@@ -83,6 +95,8 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
   }
 
   @override
-  DocumentItemWidgetModel viewModelBuilder(BuildContext context) =>
-      DocumentItemWidgetModel(item);
+  DocumentItemWidgetModel viewModelBuilder(BuildContext context) {
+    _log.d(_itemIndex);
+    return DocumentItemWidgetModel(_parentViewModel, _itemIndex);
+  }
 }

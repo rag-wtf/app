@@ -16,7 +16,11 @@ class DocumentListWidget extends StatelessWidget {
       hasReachedMax: viewModel.hasReachedMax,
       itemBuilder: (context, index) {
         final item = viewModel.items[index];
-        return DocumentItemWidget(item);
+        return DocumentItemWidget(
+          viewModel,
+          index,
+          key: ValueKey(item.id),
+        );
       },
     );
   }
