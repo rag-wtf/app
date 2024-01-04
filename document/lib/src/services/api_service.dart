@@ -24,22 +24,22 @@ class ApiService {
       url,
       data: formData,
       cancelToken: widgetModel.cancelToken,
-      onSendProgress: (int sent, int total) {
+      onSendProgress: (int sent, int total) async {
         if (widgetModel.item.status == DocumentStatus.pending) {
-          widgetModel.setDocumentStatus(DocumentStatus.uploading);
+          await widgetModel.updateDocumentStatus(DocumentStatus.uploading);
         }
         final progress = sent / total;
         widgetModel.progress = progress;
       },
-      onReceiveProgress: (int count, int total) {
+      onReceiveProgress: (int count, int total) async {
         if (widgetModel.item.status == DocumentStatus.uploading) {
-          widgetModel.setDocumentStatus(DocumentStatus.splitting);
+          await widgetModel.updateDocumentStatus(DocumentStatus.splitting);
         }
         final progress = count * 0.01;
         widgetModel.progress = progress;
       },
-    ).then((response) {
-      widgetModel.onUploadCompleted(response.data);
+    ).then((response) async {
+      await widgetModel.onUploadCompleted(response.data);
     }).catchError(
       widgetModel.onError,
     );

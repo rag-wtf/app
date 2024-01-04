@@ -35,7 +35,7 @@ void main() {
     });
   });
 
-  test('should create document embeddings', () async {
+  test('should update document and create embeddings', () async {
     // Arrange
     final document = Document(
       id: '${tablePrefix}_${Document.tableName}:${Ulid()}',
@@ -55,42 +55,52 @@ void main() {
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
         tokensCount: 4,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
         tokensCount: 5,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
-        embedding: testData['twenty']!,
+        embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
         tokensCount: 15,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
-        embedding: testData['two']!,
+        embedding: testData['two'],
         metadata: {'id': 'customId4'},
         tokensCount: 7,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
-        embedding: testData['banana']!,
+        embedding: testData['banana'],
         metadata: {'id': 'customId5'},
         tokensCount: 10,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       ),
     ];
 
     // Act
-    final txnResults = await documentService.createDocumentEmbeddings(
+    final txnResults = await documentService.updateDocumentAndCreateEmbeddings(
       tablePrefix,
       document,
       embeddings,

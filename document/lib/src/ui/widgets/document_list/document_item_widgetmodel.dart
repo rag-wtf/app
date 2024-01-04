@@ -7,9 +7,11 @@ import 'package:document/src/services/api_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
+import 'package:document/src/services/embedding.dart';
 import 'package:document/src/ui/views/document_list/document_list_viewmodel.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:ulid/ulid.dart';
 
 class DocumentItemWidgetModel extends FutureViewModel<void> {
   DocumentItemWidgetModel(this._parentViewModel, this._itemIndex);
@@ -28,7 +30,7 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
   @override
   Future<void> futureToRun() async {
     if (item.status == DocumentStatus.created) {
-      await setDocumentStatus(DocumentStatus.pending);
+      await updateDocumentStatus(DocumentStatus.pending);
     }
     if (item.status == DocumentStatus.pending) {
       _log.d(item.id);
@@ -50,7 +52,7 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
 
   CancelToken get cancelToken => _cancelToken;
 
-  Future<void> setDocumentStatus(DocumentStatus status) async {
+  Future<void> updateDocumentStatus(DocumentStatus status) async {
     _parentViewModel.setItem(
       _itemIndex,
       (await _documentRepository.updateDocument(
@@ -93,12 +95,46 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
         'content': await _documentService.convertByteDataToString(
           document!.byteData!,
         ),
+        'tokens_count': responseData?['tokens_count'],
       });
     }
-    //TODO: create embedding instances and store it.
-    final chunkedTexts = List<String>.from(
-      documentItems.map((item) => item['content']).toList(),
+
+    final now = DateTime.now();
+    final fullTableName =
+        '${_parentViewModel.tablePrefix}_${Embedding.tableName}';
+    final embeddings = List<Embedding>.from(
+      documentItems
+          .map(
+            (item) => Embedding(
+              id: '$fullTableName:${Ulid()}',
+              content: item['content'] as String,
+              metadata: item['metadata'],
+              tokensCount: item['tokens_count'] as int,
+              created: now,
+              updated: now,
+            ),
+          )
+          .toList(),
     );
+    final document = item.copyWith(
+      content: responseData?['content'] != null
+          ? responseData!['content'] as String
+          : null,
+      contentMimeType: responseData?['mime_type'] as String,
+      tokensCount: responseData?['tokens_count'] as int,
+      updated: now,
+    );
+    final txnResults = await _documentService.updateDocumentAndCreateEmbeddings(
+      _parentViewModel.tablePrefix,
+      document,
+      embeddings,
+    );
+    final results = List<List<dynamic>>.from(txnResults! as List);
+    assert(
+      results[1].length == embeddings.length,
+      'Length of the document embeddings result should equals to embeddings',
+    );
+    _parentViewModel.setItem(_itemIndex, document);
   }
 
   @override

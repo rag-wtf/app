@@ -92,7 +92,10 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
         : null;
   }
 
-  Future<Document?> updateDocument(Document document) async {
+  Future<Document?> updateDocument(
+    Document document, [
+    Transaction? txn,
+  ]) async {
     final payload = document.toJson();
     final validationErrors = Document.validate(payload);
     final isValid = validationErrors == null;
@@ -101,18 +104,21 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     }
     final id = payload.remove('id') as String;
     if (await _db.select(id) == null) return null;
+    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
+    if (txn == null) {
+      final result = await _db.query(sql);
 
-    final result = await _db.query(
-      'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
-    );
-
-    return Document.fromJson(
-      Map<String, dynamic>.from(
-        Document.toMap(
-          (result! as List).first,
-        ) as Map,
-      ),
-    );
+      return Document.fromJson(
+        Map<String, dynamic>.from(
+          Document.toMap(
+            (result! as List).first,
+          ) as Map,
+        ),
+      );
+    } else {
+      txn.query(sql);
+      return null;
+    }
   }
 
   Future<Document?> deleteDocument(String id) async {

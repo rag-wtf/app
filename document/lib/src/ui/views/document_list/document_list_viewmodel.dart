@@ -26,7 +26,7 @@ class DocumentListViewModel extends FutureViewModel<void> {
 
     if (!isSchemaCreated) {
       _log.d('before createSchema()');
-      await _documentService.createSchema(tablePrefix);
+      //await _documentService.createSchema(tablePrefix);
       _log.d('after createSchema()');
     }
     await fetchData();

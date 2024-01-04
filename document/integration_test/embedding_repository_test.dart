@@ -35,9 +35,11 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
         tokensCount: 4,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
 
       // Act
@@ -55,9 +57,11 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
         tokensCount: 4,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
 
       // Act
@@ -80,33 +84,43 @@ void main() {
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple']!,
+          embedding: testData['apple'],
           metadata: {'id': 'customId1'},
           tokensCount: 4,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'ten',
-          embedding: testData['ten']!,
+          embedding: testData['ten'],
           metadata: {'id': 'customId2'},
           tokensCount: 5,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'twenty',
-          embedding: testData['twenty']!,
+          embedding: testData['twenty'],
           metadata: {'id': 'customId3'},
           tokensCount: 15,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'two',
-          embedding: testData['two']!,
+          embedding: testData['two'],
           metadata: {'id': 'customId4'},
           tokensCount: 7,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'banana',
-          embedding: testData['banana']!,
+          embedding: testData['banana'],
           metadata: {'id': 'customId5'},
           tokensCount: 10,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
       ];
 
@@ -125,9 +139,11 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: '',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
         tokensCount: 4,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
 
       // Act
@@ -152,15 +168,19 @@ void main() {
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple']!,
+          embedding: testData['apple'],
           metadata: {'id': 'customId1'},
           tokensCount: 4,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ).toJson(),
         Embedding(
           content: 'ten',
-          embedding: testData['ten']!,
+          embedding: testData['ten'],
           metadata: {'id': 'customId2'},
           tokensCount: 5,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ).toJson(),
       ];
       const fullEmbeddingTableName =
@@ -183,9 +203,11 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
         tokensCount: 5,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
       final result =
           await repository.createEmbedding(defaultTablePrefix, embedding);
@@ -212,9 +234,11 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
         tokensCount: 5,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
       final created =
           await repository.createEmbedding(defaultTablePrefix, embedding);
@@ -232,9 +256,11 @@ void main() {
       final embedding = Embedding(
         id: '${defaultTablePrefix}_${Embedding.tableName}:1',
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
         tokensCount: 5,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateEmbedding(embedding), isNull);
@@ -246,9 +272,11 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
         tokensCount: 5,
+        created: DateTime.now(),
+        updated: DateTime.now(),
       );
       final created =
           await repository.createEmbedding(defaultTablePrefix, embedding);
@@ -278,33 +306,43 @@ void main() {
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple']!,
+          embedding: testData['apple'],
           metadata: {'id': 'customId1'},
           tokensCount: 4,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'ten',
-          embedding: testData['ten']!,
+          embedding: testData['ten'],
           metadata: {'id': 'customId2'},
           tokensCount: 5,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'twenty',
-          embedding: testData['twenty']!,
+          embedding: testData['twenty'],
           metadata: {'id': 'customId3'},
           tokensCount: 15,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'two',
-          embedding: testData['two']!,
+          embedding: testData['two'],
           metadata: {'id': 'customId4'},
           tokensCount: 7,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
         Embedding(
           content: 'banana',
-          embedding: testData['banana']!,
+          embedding: testData['banana'],
           metadata: {'id': 'customId5'},
           tokensCount: 10,
+          created: DateTime.now(),
+          updated: DateTime.now(),
         ),
       ];
       const k = 3;

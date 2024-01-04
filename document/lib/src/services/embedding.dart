@@ -10,11 +10,12 @@ part 'embedding.g.dart';
 abstract class Embedding with _$Embedding {
   const factory Embedding({
     required String content,
-    required List<double> embedding,
     required int tokensCount,
+    @DateTimeJsonConverter() required DateTime created,
+    @DateTimeJsonConverter() required DateTime updated,
+    List<double>? embedding,
     Object? metadata,
     String? id,
-    @DateTimeJsonConverter() DateTime? updated,
     @JsonKey(includeToJson: false) double? score,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
@@ -58,6 +59,10 @@ FIELDS embedding MTREE DIMENSION 384 DIST COSINE;
           'tokensCount': {
             'type': 'number',
           },
+          'created': {
+            'type': 'string',
+            'format': 'date-time',
+          },
           'updated': {
             'type': 'string',
             'format': 'date-time',
@@ -69,8 +74,9 @@ FIELDS embedding MTREE DIMENSION 384 DIST COSINE;
         },
         'required': [
           'content',
-          'embedding',
           'tokensCount',
+          'created',
+          'updated',
         ],
         'additionalProperties': false,
       },

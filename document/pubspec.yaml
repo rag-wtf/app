@@ -27,6 +27,7 @@ dependencies:
   stacked: ^3.4.0
   stacked_services: ^1.1.0
   surrealdb_wasm: ^0.7.0+3
+  ulid: ^2.0.0
   very_good_infinite_list: ^0.7.1
 
 dev_dependencies:
@@ -39,7 +40,6 @@ dev_dependencies:
   json_serializable: ^6.7.1
   mockito:
   stacked_generator: ^1.5.2
-  ulid: ^2.0.0
   very_good_analysis: ^5.1.0
 
 dependency_overrides:

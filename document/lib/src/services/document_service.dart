@@ -46,7 +46,7 @@ class DocumentService {
     }
   }
 
-  Future<Object?> createDocumentEmbeddings(
+  Future<Object?> updateDocumentAndCreateEmbeddings(
     String tablePrefix,
     Document document,
     List<Embedding> embeddings, [
@@ -65,13 +65,11 @@ class DocumentService {
     if (txn == null) {
       return _db.transaction(
         (txn) async {
-          if (document.status == DocumentStatus.created) {
-            await _documentRepository.createDocument(
-              tablePrefix,
-              document,
-              txn,
-            );
-          }
+          await _documentRepository.updateDocument(
+            document,
+            txn,
+          );
+
           await _embeddingRepository.createEmbeddings(
             tablePrefix,
             embeddings,
@@ -85,9 +83,7 @@ class DocumentService {
         },
       );
     } else {
-      if (document.status == DocumentStatus.created) {
-        await _documentRepository.createDocument(tablePrefix, document, txn);
-      }
+      await _documentRepository.updateDocument(document, txn);
       await _embeddingRepository.createEmbeddings(tablePrefix, embeddings, txn);
       await _documentEmbeddingRepository.createDocumentEmbeddings(
         tablePrefix,

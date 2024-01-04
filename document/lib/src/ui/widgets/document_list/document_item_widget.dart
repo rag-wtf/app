@@ -99,4 +99,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
     _log.d(_itemIndex);
     return DocumentItemWidgetModel(_parentViewModel, _itemIndex);
   }
+
+  //@override
+  //bool get createNewViewModelOnInsert => true;
 }
