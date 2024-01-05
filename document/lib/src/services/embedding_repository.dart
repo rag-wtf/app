@@ -117,7 +117,10 @@ CONTENT ${jsonEncode(payload)};''';
         : null;
   }
 
-  Future<Embedding?> updateEmbedding(Embedding embedding) async {
+  Future<Embedding?> updateEmbedding(
+    Embedding embedding, [
+    Transaction? txn,
+  ]) async {
     final payload = embedding.toJson();
     final validationErrors = Embedding.validate(payload);
     final isValid = validationErrors == null;
@@ -126,15 +129,19 @@ CONTENT ${jsonEncode(payload)};''';
     }
     final id = payload.remove('id') as String;
     if (await _db.select(id) == null) return null;
-    final result = await _db.query(
-      'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
-    );
 
-    return Embedding.fromJson(
-      Map<String, dynamic>.from(
-        (result! as List).first as Map,
-      ),
-    );
+    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
+    if (txn == null) {
+      final result = await _db.query(sql);
+      return Embedding.fromJson(
+        Map<String, dynamic>.from(
+          (result! as List).first as Map,
+        ),
+      );
+    } else {
+      txn.query(sql);
+      return null;
+    }
   }
 
   Future<Embedding?> deleteEmbedding(String id) async {

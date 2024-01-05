@@ -94,6 +94,45 @@ class DocumentService {
     }
   }
 
+  Future<Object?> updateEmbeddings(
+    String tablePrefix,
+    List<Embedding> embeddings,
+    List<List<double>> vectors, [
+    Transaction? txn,
+  ]) async {
+    assert(
+      embeddings.length == vectors.length,
+      'embeddings(${embeddings.length}) != vectors(${vectors.length})',
+    );
+    final now = DateTime.now();
+    if (txn == null) {
+      return _db.transaction(
+        (txn) async {
+          for (var i = 0; i < embeddings.length; i++) {
+            await _embeddingRepository.updateEmbedding(
+              embeddings[i].copyWith(
+                embedding: vectors[i],
+                updated: now,
+              ),
+              txn,
+            );
+          }
+        },
+      );
+    } else {
+      for (var i = 0; i < embeddings.length; i++) {
+        await _embeddingRepository.updateEmbedding(
+          embeddings[i].copyWith(
+            embedding: vectors[i],
+            updated: now,
+          ),
+          txn,
+        );
+      }
+      return null;
+    }
+  }
+
   Future<Document> createDocument(String tablePrefix, Document document) async {
     final base64EncodedFile = await _compressFileToBase64(
       document.byteData!.first,

@@ -8,6 +8,7 @@ import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/embedding.dart';
+import 'package:document/src/services/embedding_repository.dart';
 import 'package:document/src/ui/views/document_list/document_list_viewmodel.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -89,9 +90,13 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
 
   double get progress => _progress;
 
-  Future<void> onUploadCompleted(Map<String, dynamic>? responseData) async {
+  Future<void> onSplitCompleted(Map<String, dynamic>? responseData) async {
     _log.d('responseData $responseData');
+    final embeddings = await _splitted(responseData);
+    await indexing(embeddings);
+  }
 
+  Future<List<Embedding>> _splitted(Map<String, dynamic>? responseData) async {
     final documentItems =
         List<Map<String, dynamic>>.from(responseData?['items'] as List);
     if (documentItems.isEmpty) {
@@ -127,6 +132,8 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
           : null,
       contentMimeType: responseData?['mime_type'] as String,
       tokensCount: responseData?['tokens_count'] as int,
+      status: DocumentStatus.indexing,
+      splitted: now,
       updated: now,
     );
     final txnResults = await _documentService.updateDocumentAndCreateEmbeddings(
@@ -140,6 +147,30 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
       'Length of the document embeddings result should equals to embeddings',
     );
     _parentViewModel.setItem(_itemIndex, document);
+    notifyListeners();
+    return embeddings;
+  }
+
+  Future<void> indexing(List<Embedding> embeddings) async {
+    final chunkedTexts = embeddings
+        .map(
+          (embedding) => embedding.content,
+        )
+        .toList();
+    final vectors = await _apiService.index(
+      _settingService.get(embeddingsApiUrlKey).value,
+      _settingService.get(embeddingsApiKey).value,
+      chunkedTexts,
+    );
+
+    await _documentService.updateEmbeddings(
+      _parentViewModel.tablePrefix,
+      embeddings,
+      vectors,
+    );
+
+    await updateDocumentStatus(DocumentStatus.completed);
+    notifyListeners();
   }
 
   @override
