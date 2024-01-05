@@ -18,14 +18,13 @@ class DocumentStatusWidget extends StatelessWidget {
         textColor = Colors.green;
 
       case DocumentStatus.canceled:
-        textColor = Colors.yellow;
+        textColor = Colors.orange;
 
       case DocumentStatus.failed:
         textColor = Colors.red;
 
       case DocumentStatus.created:
       case DocumentStatus.pending:
-      case DocumentStatus.uploading:
       case DocumentStatus.splitting:
       case DocumentStatus.indexing:
         textColor = Colors.grey;

@@ -23,7 +23,7 @@ abstract class Document with _$Document {
     int? tokensCount,
     Object? metadata,
     String? errorMessage,
-    @DateTimeJsonConverter() DateTime? uploaded,
+    @DateTimeJsonConverter() DateTime? splitted,
     @DateTimeJsonConverter() DateTime? indexed,
     @DateTimeJsonConverter() DateTime? done, // completed/failed/canceled
     @JsonKey(includeFromJson: false, includeToJson: false)
@@ -52,7 +52,7 @@ DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD status ON {prefix}_$tableName TYPE string;
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
-DEFINE FIELD uploaded ON {prefix}_$tableName TYPE option<datetime>;
+DEFINE FIELD splitted ON {prefix}_$tableName TYPE option<datetime>;
 DEFINE FIELD indexed ON {prefix}_$tableName TYPE option<datetime>;
 DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
 ''';
@@ -108,7 +108,7 @@ DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
             'type': 'string',
             'format': 'date-time',
           },
-          'uploaded': {
+          'splitted': {
             'type': 'string',
             'format': 'date-time',
           },
@@ -168,7 +168,6 @@ DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
 enum DocumentStatus {
   created,
   pending,
-  uploading,
   splitting,
   indexing,
   completed,

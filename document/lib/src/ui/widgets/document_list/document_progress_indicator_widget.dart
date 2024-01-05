@@ -14,7 +14,7 @@ class DocumentProgressIndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget uploadProgressIndicator;
-    if (status == DocumentStatus.uploading) {
+    if (status == DocumentStatus.splitting) {
       uploadProgressIndicator = LinearProgressIndicator(
         value: progress,
         semanticsLabel: uploadProgressSemanticsLabel,

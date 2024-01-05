@@ -86,7 +86,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
               ],
             ),
           ),
-          if (viewModel.item.status == DocumentStatus.uploading ||
+          if (viewModel.item.status == DocumentStatus.splitting ||
               viewModel.item.status == DocumentStatus.indexing)
             CancelButtonWidget(viewModel.cancel),
         ],

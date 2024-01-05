@@ -38,9 +38,8 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
         _itemIndex,
         (await _documentService.getDocumentById(item.id!))!,
       );
-      _apiService.upload(
+      _apiService.split(
         _settingService.get(dataIngestionApiUrlKey).value,
-        item,
         this,
       );
     }
@@ -53,10 +52,14 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
   CancelToken get cancelToken => _cancelToken;
 
   Future<void> updateDocumentStatus(DocumentStatus status) async {
+    _log.d('item.name ${item.name}, status $status');
     _parentViewModel.setItem(
       _itemIndex,
       (await _documentRepository.updateDocument(
-        item.copyWith(status: status),
+        item.copyWith(
+          status: status,
+          updated: DateTime.now(),
+        ),
       ))!,
     );
     notifyListeners();
@@ -64,13 +67,15 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
 
   Future<void> handleError(String? errorMessage) async {
     _log.e(errorMessage);
+    final now = DateTime.now();
     _parentViewModel.setItem(
       _itemIndex,
       (await _documentRepository.updateDocument(
         item.copyWith(
           status: DocumentStatus.failed,
           errorMessage: errorMessage,
-          done: DateTime.now(),
+          done: now,
+          updated: now,
         ),
       ))!,
     );
@@ -144,15 +149,18 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
     // Handle the error in here
     if (error is DioException) {
       if (error.type == DioExceptionType.cancel) {
+        final now = DateTime.now();
         _parentViewModel.setItem(
           _itemIndex,
           (await _documentRepository.updateDocument(
             item.copyWith(
               status: DocumentStatus.canceled,
-              done: DateTime.now(),
+              done: now,
+              updated: now,
             ),
           ))!,
         );
+        notifyListeners();
       } else {
         await handleError(error.message);
       }
