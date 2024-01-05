@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/ui/widgets/document_list/document_item_widgetmodel.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  final dio = locator<Dio>();
-
   void upload(
-      String url, Document document, DocumentItemWidgetModel widgetModel) {
+    String url,
+    Document document,
+    DocumentItemWidgetModel widgetModel,
+  ) {
     final multipartFile = MultipartFile.fromStream(
       () => Stream.fromIterable(document.byteData!),
       document.byteData!.length,
@@ -20,6 +20,7 @@ class ApiService {
       'file': multipartFile,
     });
 
+    final dio = Dio();
     dio.post<Map<String, dynamic>>(
       url,
       data: formData,
