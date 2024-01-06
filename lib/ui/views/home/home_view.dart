@@ -1,4 +1,4 @@
-import 'package:file_upload/widgets/file_upload_widget.dart';
+import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 import 'package:rag/ui/widgets/common/brightness_button.dart';
@@ -186,10 +186,6 @@ class LeftWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FileUploadWidget(
-      dataIngestionApiUrl: viewModel.getSettingValue(dataIngestionApiUrlKey),
-      embeddingsApiUrl: viewModel.getSettingValue(embeddingsApiUrlKey),
-      embeddingsApiKey: viewModel.getSettingValue(embeddingsApiKey),
-    );
+    return const DocumentListView();
   }
 }

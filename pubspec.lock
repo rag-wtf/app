@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: "7b875fd4a20b165a3084bd2d210439b22ebc653f21cea4842729c0c30c82596b"
+      sha256: "22600aa1e926be775fa5fe7e6894e7fb3df9efda8891c73f70fb3262399a432d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.9"
+    version: "3.4.10"
   args:
     dependency: transitive
     description:
@@ -217,7 +217,7 @@ packages:
     source: hosted
     version: "5.4.0"
   document:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: document
       relative: true
@@ -267,17 +267,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: be325344c1f3070354a1d84a231a1ba75ea85d413774ec4bdf444c023342e030
+      sha256: "4e42aacde3b993c5947467ab640882c56947d9d27342a5b6f2895b23956954a6"
       url: "https://pub.dev"
     source: hosted
-    version: "5.5.0"
-  file_upload:
-    dependency: "direct main"
-    description:
-      path: file_upload
-      relative: true
-    source: path
-    version: "1.0.0+1"
+    version: "6.1.1"
   fixnum:
     dependency: transitive
     description:
@@ -712,14 +705,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
-  retry:
-    dependency: transitive
-    description:
-      name: retry
-      sha256: "822e118d5b3aafed083109c72d5f484c6dc66707885e07c0fbcb8b986bba7efc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.2"
   rfc_6901:
     dependency: transitive
     description:
@@ -996,6 +981,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  very_good_infinite_list:
+    dependency: transitive
+    description:
+      name: very_good_infinite_list
+      sha256: "6f5ad429edbce6084e1c600e56b26b1de8c6b138e8e8fc2de41b686166029aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.1"
   watcher:
     dependency: transitive
     description:

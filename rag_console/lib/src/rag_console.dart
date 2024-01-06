@@ -104,7 +104,7 @@ Example:
   Future<void> initFunction() async {
     await db.connect(widget.endpoint);
     await db.use(ns: widget.ns, db: widget.db);
-    documentService = DocumentService(db: db);
+    documentService = DocumentService();
     initMessages();
   }
 
@@ -197,7 +197,11 @@ Example:
     final responseData = await embed(input);
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
-    final embeddings = await documentService.similaritySearch(queryVector, 3);
+    final embeddings = await documentService.similaritySearch(
+      'main',
+      queryVector,
+      3,
+    );
     return embeddings;
   }
 

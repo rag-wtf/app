@@ -1,3 +1,6 @@
+import 'package:archive/archive.dart';
+import 'package:dio/dio.dart';
+import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/l10n.dart';
@@ -21,6 +24,18 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<BottomSheetService>(classType: BottomSheetService),
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
+    // document package
+    Factory(classType: Dio),
+    LazySingleton<DocumentApiService>(classType: DocumentApiService),
+    LazySingleton<GZipEncoder>(classType: GZipEncoder),
+    LazySingleton<GZipDecoder>(classType: GZipDecoder),
+    LazySingleton<DocumentService>(classType: DocumentService),
+    LazySingleton<DocumentRepository>(classType: DocumentRepository),
+    LazySingleton<EmbeddingRepository>(classType: EmbeddingRepository),
+    LazySingleton<DocumentEmbeddingRepository>(
+      classType: DocumentEmbeddingRepository,
+    ),
+    // settings package
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
     Singleton(
