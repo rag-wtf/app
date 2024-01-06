@@ -1,56 +1,29 @@
 import 'dart:convert';
 
-import 'package:archive/archive_io.dart';
-import 'package:console/console.dart';
+import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
-import 'package:flutter/widgets.dart';
-import 'package:rag_console/src/chat_message.dart';
+import 'package:rag_console/src/app/app.locator.dart';
+import 'package:rag_console/src/app/app.logger.dart';
+import 'package:rag_console/src/services/chat_message.dart';
+import 'package:settings/settings.dart';
+import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-class RagConsole extends StatefulWidget {
-  const RagConsole({
-    required this.endpoint,
-    required this.ns,
-    required this.db,
-    required this.embeddingsApiUrl,
-    required this.embeddingsApiKey,
-    required this.generationApiUrl,
-    required this.generationApiKey,
-    this.systemMessage =
-        'You are a very helpful and friendly assistant that will follow user instructions closely.',
-    this.promptTemplate = '''
-Answer the question based on the following information:
-{context}
-If the available information is insufficient or inadequate,
-just tell the user you don't know the answer.
+class RagConsoleViewModel extends FutureViewModel<void> {
+  RagConsoleViewModel(this.tablePrefix);
+  final String tablePrefix;
+  final _settingService = locator<SettingService>();
+  final _db = locator<Surreal>();
+  final _dio = locator<Dio>();
+  final _gzipEncoder = locator<GZipEncoder>();
+  final _messages = <ChatMessage>[];
+  final _documentService = locator<DocumentService>();
+  final _log = getLogger('RagConsoleViewModel');
 
-Question: {question}
+  String get embeddingsApiUrl => _settingService.get(embeddingsApiUrlKey).value;
+  String get generationApiUrl => _settingService.get(generationApiUrlKey).value;
 
-Answer: ''',
-    super.key,
-  });
-
-  final String endpoint;
-  final String ns;
-  final String db;
-  final String embeddingsApiUrl;
-  final String embeddingsApiKey;
-  final String generationApiUrl;
-  final String generationApiKey;
-  final String systemMessage;
-  final String promptTemplate;
-
-  @override
-  State<RagConsole> createState() => _RagConsoleState();
-}
-
-class _RagConsoleState extends State<RagConsole> {
-  final db = Surreal();
-  final dio = Dio();
-  final _gzipEncoder = GZipEncoder();
-  final messages = <ChatMessage>[];
-  late DocumentService documentService;
   static const helpMessageHint =
       'Type /h to see the list of supported commands.';
   static const helpMessage = '''
@@ -89,23 +62,19 @@ Example:
 /sql SELECT * FROM DocumentEmbedding;
 ''';
 
-  void initMessages([String? systemMessage]) {
-    messages
+  void _initMessages() {
+    final systemPrompt = _settingService.get(systemPromptKey).value != undefined
+        ? _settingService.get(systemPromptKey).value
+        : defaultSystemPrompt;
+    _messages
       ..clear()
       ..add(
         ChatMessage(
           role: Role.system,
-          content: systemMessage ?? widget.systemMessage,
+          content: systemPrompt,
           dateTime: DateTime.now(),
         ),
       );
-  }
-
-  Future<void> initFunction() async {
-    await db.connect(widget.endpoint);
-    await db.use(ns: widget.ns, db: widget.db);
-    documentService = DocumentService();
-    initMessages();
   }
 
   // gzip request
@@ -114,8 +83,16 @@ Example:
     return _gzipEncoder.encode(utf8.encode(request))!;
   }
 
+  @override
+  Future<void> futureToRun() async {
+    await Future<void>.delayed(const Duration(seconds: 3));
+    _log.d('futureToRun() tablePrefix: $tablePrefix');
+    await _settingService.initialise(tablePrefix);
+    _initMessages();
+  }
+
   dynamic getEmbeddingInput(String input) {
-    debugPrint('input #$input#');
+    _log.d('input #$input#');
     try {
       return jsonDecode(input);
     } catch (e) {
@@ -124,13 +101,14 @@ Example:
   }
 
   Future<Map<String, dynamic>?> embed(String input) async {
-    final response = await dio.post<Map<String, dynamic>>(
-      widget.embeddingsApiUrl,
+    final embeddingsApiKeyValue = _settingService.get(embeddingsApiKey).value;
+    final response = await _dio.post<Map<String, dynamic>>(
+      embeddingsApiUrl,
       options: Options(
         headers: {
           'Content-type': 'application/json',
-          if (widget.embeddingsApiKey.isNotEmpty)
-            'Authorization': 'Bearer ${widget.embeddingsApiKey}',
+          if (embeddingsApiKeyValue.isNotEmpty)
+            'Authorization': 'Bearer $embeddingsApiKeyValue',
         },
         requestEncoder: gzipEncoder,
       ),
@@ -142,22 +120,24 @@ Example:
   }
 
   Future<String> generate(String prompt, [String? input]) async {
-    messages.add(
+    _messages.add(
       ChatMessage(
         role: Role.user,
         content: prompt,
         dateTime: DateTime.now(),
       ),
     );
-    final messagesMap = messages.map((message) => message.toJson()).toList();
-    debugPrint(messagesMap.toString());
-    final response = await dio.post<Map<String, dynamic>>(
-      widget.generationApiUrl,
+    final messagesMap = _messages.map((message) => message.toJson()).toList();
+    _log.d(messagesMap);
+
+    final generationApiKeyValue = _settingService.get(generationApiKey).value;
+    final response = await _dio.post<Map<String, dynamic>>(
+      generationApiUrl,
       options: Options(
         headers: {
           'Content-type': 'application/json',
-          if (widget.generationApiKey.isNotEmpty)
-            'Authorization': 'Bearer ${widget.generationApiKey}',
+          if (generationApiKeyValue.isNotEmpty)
+            'Authorization': 'Bearer $generationApiKeyValue',
         },
       ),
       data: {
@@ -174,8 +154,8 @@ Example:
     final content = (message['content'] as String).trimLeft();
 
     if (input != null) {
-      final chatMessage = messages.removeLast();
-      messages.add(
+      final chatMessage = _messages.removeLast();
+      _messages.add(
         ChatMessage(
           role: Role.user,
           content: input,
@@ -183,7 +163,7 @@ Example:
         ),
       );
     }
-    messages.add(
+    _messages.add(
       ChatMessage(
         role: Role.assistant,
         content: content,
@@ -197,22 +177,25 @@ Example:
     final responseData = await embed(input);
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
-    final embeddings = await documentService.similaritySearch(
-      'main',
+    final k = int.parse(
+      _settingService.get(retrieveTopNResultsKey, type: int).value,
+    );
+    final embeddings = await _documentService.similaritySearch(
+      tablePrefix,
       queryVector,
-      3,
+      k,
     );
     return embeddings;
   }
 
-  Future<Object?> executeFunction(String value) async {
+  Future<Object?> execute(String value) async {
     final regex =
         RegExp(r'^/(\w+)'); // Matches the first word starting with "/"
     final match = regex.firstMatch(value);
 
     if (match != null) {
       final command = match.group(1);
-      debugPrint('command $command');
+      _log.d('command $command');
       switch (command) {
         case 'e':
           final input = value.substring(3);
@@ -225,7 +208,7 @@ Example:
           final input = value.substring(3);
           return generate(input);
         case 'c':
-          initMessages();
+          _initMessages();
           return 'Chat messages is cleared from the memory.';
         case 'rag':
           final input = value.substring(5);
@@ -233,13 +216,17 @@ Example:
           final context = embeddings.map((e) {
             return '${e.content} ${e.score} ${e.id}';
           }).join('\n');
-          final prompt = widget.promptTemplate
+          final promptTemplateSetting = _settingService.get(promptTemplateKey);
+          final promptTemplate = promptTemplateSetting.value != undefined
+              ? promptTemplateSetting.value
+              : defaultPromptTemplate;
+          final prompt = promptTemplate
               .replaceFirst('{context}', context)
               .replaceFirst('{question}', input);
           return generate(prompt, input);
         case 'sql':
           final query = value.substring(5);
-          return db.query(query);
+          return _db.query(query);
         case 'h':
           return helpMessage;
         default:
@@ -248,19 +235,5 @@ Example:
     } else {
       throw Exception(helpMessageHint);
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Console(
-      content: '''
-Connected to ${widget.endpoint}, ns: ${widget.ns}, db: ${widget.db}.
-embeddingsApiUrl: ${widget.embeddingsApiUrl}
-generationApiUrl: ${widget.generationApiUrl}
-$helpMessageHint
-''',
-      initFunction: initFunction,
-      executeFunction: executeFunction,
-    );
   }
 }

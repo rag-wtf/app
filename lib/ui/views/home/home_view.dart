@@ -146,18 +146,10 @@ class RightWidget extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const SettingsView(),
-            RagConsole(
-              endpoint: surrealEndpoint,
-              ns: surrealNamespace,
-              db: surrealDatabase,
-              embeddingsApiUrl: viewModel.getSettingValue(embeddingsApiUrlKey),
-              embeddingsApiKey: viewModel.getSettingValue(embeddingsApiKey),
-              generationApiUrl: viewModel.getSettingValue(generationApiUrlKey),
-              generationApiKey: viewModel.getSettingValue(generationApiKey),
-            ),
+            SettingsView(),
+            RagConsoleView(),
           ],
         ),
       ),

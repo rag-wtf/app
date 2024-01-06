@@ -1,5 +1,5 @@
 name: rag_console
-description: RAG Console.
+description: rag_console package.
 version: 0.1.0+1
 publish_to: none
 
@@ -8,16 +8,24 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
-  archive: ^3.4.5
+  archive: ^3.4.10
   console:
     path: ../console
-  dio: ^5.3.3
+  dio: ^5.4.0
   document:
     path: ../document
   flutter:
     sdk: flutter
+
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  json_schema: ^5.1.3
+  logger:
+  responsive_builder: ^0.7.0
+  settings:
+    path: ../settings
+  stacked: ^3.4.0
+  stacked_services: ^1.1.0
   surrealdb_wasm: ^0.7.0+3
 
 dev_dependencies:
@@ -25,8 +33,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.4.5
-  #  integration_test:
-  #    sdk: flutter
+  integration_test:
+    sdk: flutter
   json_serializable: ^6.7.1
-  mocktail: ^1.0.0
+  mockito:
+  stacked_generator: ^1.5.2
+  ulid: ^2.0.0
   very_good_analysis: ^5.1.0
+
+dependency_overrides:
+  meta: ^1.11.0

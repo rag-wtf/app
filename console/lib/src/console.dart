@@ -4,13 +4,13 @@ import 'package:flutter_console_widget/flutter_console.dart';
 class Console extends StatefulWidget {
   const Console({
     required this.content,
-    required this.initFunction,
     required this.executeFunction,
+    this.initFunction,
     super.key,
   });
   final String content;
-  final Function initFunction;
-  final Function executeFunction;
+  final Future<String?> Function()? initFunction;
+  final Future<Object?> Function(String value) executeFunction;
 
   @override
   State<Console> createState() => _ConsoleState();
@@ -74,7 +74,15 @@ class _ConsoleState extends State<Console> {
     super.initState();
     controller = FlutterConsoleController(consoleContent: widget.content);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await widget.initFunction();
+      if (widget.initFunction != null) {
+        final message = await widget.initFunction!();
+        if (message != null) {
+          controller.print(
+            message: message,
+            endline: true,
+          );
+        }
+      }
       echoLoop();
     });
   }
