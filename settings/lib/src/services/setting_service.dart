@@ -41,10 +41,17 @@ class SettingService {
 
   Future<void> initialise(String tablePrefix) async {
     if (Env.read(dataIngestionApiUrlKey) == null) {
+      String settings;
+      try {
+        // load from rag
+        settings =
+            await rootBundle.loadString('packages/settings/assets/settings');
+      } catch (_) {
+        // load in the package
+        settings = await rootBundle.loadString('settings');
+      }
       await Env.load(
-        EnvStringLoader(
-          await rootBundle.loadString('packages/settings/assets/settings'),
-        ),
+        EnvStringLoader(settings),
         'yG5~mhzE*;X&ZgF#]tQ,Ue',
       );
     }

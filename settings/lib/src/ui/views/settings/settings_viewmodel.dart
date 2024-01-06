@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting_service.dart';

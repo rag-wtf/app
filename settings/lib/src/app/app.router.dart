@@ -43,9 +43,12 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i3.SettingsView: (data) {
-      final args = data.getArgs<SettingsViewArguments>(nullOk: false);
+      final args = data.getArgs<SettingsViewArguments>(
+        orElse: () => const SettingsViewArguments(),
+      );
       return _i4.MaterialPageRoute<dynamic>(
-        builder: (context) => _i3.SettingsView(args.tablePrefix, key: args.key),
+        builder: (context) =>
+            _i3.SettingsView(key: args.key, tablePrefix: args.tablePrefix),
         settings: data,
       );
     },
@@ -60,28 +63,28 @@ class StackedRouter extends _i1.RouterBase {
 
 class SettingsViewArguments {
   const SettingsViewArguments({
-    required this.tablePrefix,
     this.key,
+    this.tablePrefix = 'main',
   });
-
-  final String tablePrefix;
 
   final _i4.Key? key;
 
+  final String tablePrefix;
+
   @override
   String toString() {
-    return '{"tablePrefix": "$tablePrefix", "key": "$key"}';
+    return '{"key": "$key", "tablePrefix": "$tablePrefix"}';
   }
 
   @override
   bool operator ==(covariant SettingsViewArguments other) {
     if (identical(this, other)) return true;
-    return other.tablePrefix == tablePrefix && other.key == key;
+    return other.key == key && other.tablePrefix == tablePrefix;
   }
 
   @override
   int get hashCode {
-    return tablePrefix.hashCode ^ key.hashCode;
+    return key.hashCode ^ tablePrefix.hashCode;
   }
 }
 
@@ -101,8 +104,8 @@ extension NavigatorStateExtension on _i5.NavigationService {
   }
 
   Future<dynamic> navigateToSettingsView({
-    required String tablePrefix,
     _i4.Key? key,
+    String tablePrefix = 'main',
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -110,7 +113,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(tablePrefix: tablePrefix, key: key),
+        arguments: SettingsViewArguments(key: key, tablePrefix: tablePrefix),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -132,8 +135,8 @@ extension NavigatorStateExtension on _i5.NavigationService {
   }
 
   Future<dynamic> replaceWithSettingsView({
-    required String tablePrefix,
     _i4.Key? key,
+    String tablePrefix = 'main',
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -141,7 +144,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(tablePrefix: tablePrefix, key: key),
+        arguments: SettingsViewArguments(key: key, tablePrefix: tablePrefix),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

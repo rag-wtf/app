@@ -37,7 +37,7 @@ import 'package:stacked/stacked_annotations.dart';
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
-  const SettingsView(this.tablePrefix, {super.key});
+  const SettingsView({super.key, this.tablePrefix = 'main'});
   final String tablePrefix;
 
   @override
