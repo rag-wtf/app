@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
-import 'package:document/src/services/api_service.dart';
+import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/embedding.dart';
-import 'package:document/src/services/embedding_repository.dart';
 import 'package:document/src/ui/views/document_list/document_list_viewmodel.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -20,8 +19,9 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
   final _cancelToken = CancelToken();
   final _documentService = locator<DocumentService>();
   final _documentRepository = locator<DocumentRepository>();
-  final _apiService = locator<ApiService>();
+  final _apiService = locator<DocumentApiService>();
   final _settingService = locator<SettingService>();
+  final _dio = locator<Dio>();
   final _log = getLogger('DocumentItemWidgetModel');
   final DocumentListViewModel _parentViewModel;
   final int _itemIndex;
@@ -40,6 +40,7 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
         (await _documentService.getDocumentById(item.id!))!,
       );
       _apiService.split(
+        _dio,
         _settingService.get(dataIngestionApiUrlKey).value,
         this,
       );
@@ -158,6 +159,7 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
         )
         .toList();
     final vectors = await _apiService.index(
+      _dio,
       _settingService.get(embeddingsApiUrlKey).value,
       _settingService.get(embeddingsApiKey).value,
       chunkedTexts,

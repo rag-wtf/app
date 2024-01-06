@@ -1,6 +1,6 @@
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
-import 'package:document/src/services/api_service.dart';
+import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
@@ -22,8 +22,8 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 // @stacked-route
   ],
   dependencies: [
-    Factory(classType: ApiService),
-    LazySingleton<Dio>(classType: Dio),
+    Factory(classType: Dio),
+    LazySingleton<DocumentApiService>(classType: DocumentApiService),
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),

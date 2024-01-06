@@ -9,12 +9,12 @@ import 'package:document/src/services/document.dart';
 import 'package:document/src/ui/widgets/document_list/document_item_widgetmodel.dart';
 import 'package:http_parser/http_parser.dart';
 
-class ApiService {
-  final _dio = locator<Dio>();
+class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
   final _log = getLogger('ApiService');
 
   void split(
+    Dio dio,
     String url,
     DocumentItemWidgetModel widgetModel,
   ) {
@@ -29,7 +29,7 @@ class ApiService {
       'file': multipartFile,
     });
 
-    _dio.post<Map<String, dynamic>>(
+    dio.post<Map<String, dynamic>>(
       url,
       data: formData,
       cancelToken: widgetModel.cancelToken,
@@ -59,6 +59,7 @@ class ApiService {
   }
 
   Future<List<List<double>>> index(
+    Dio dio,
     String apiUrl,
     String apiKey,
     List<String> chunkedTexts, {
@@ -79,7 +80,7 @@ class ApiService {
       final batch = chunkedTexts.sublist(start, min(end, chunkedTexts.length));
 
       // Send the batch and add the future to the list
-      final response = await _dio.post<Map<String, dynamic>>(
+      final response = await dio.post<Map<String, dynamic>>(
         apiUrl,
         options: Options(
           headers: {

@@ -1,4 +1,4 @@
-import 'package:document/src/services/api_service.dart';
+import 'package:document/src/services/document_api_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,7 +12,7 @@ final locator = StackedLocator.instance;
   [],
   customMocks: [
     MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
-    MockSpec<ApiService>(onMissingStub: OnMissingStub.returnDefault),
+    MockSpec<DocumentApiService>(onMissingStub: OnMissingStub.returnDefault),
 
 // @stacked-mock-spec
   ],
@@ -31,9 +31,9 @@ MockNavigationService getAndRegisterNavigationService() {
 }
 
 MockApiService getAndRegisterApiService() {
-  _removeRegistrationIfExists<ApiService>();
+  _removeRegistrationIfExists<DocumentApiService>();
   final service = MockApiService();
-  locator.registerSingleton<ApiService>(service);
+  locator.registerSingleton<DocumentApiService>(service);
   return service;
 }
 
