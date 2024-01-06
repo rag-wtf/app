@@ -30,9 +30,9 @@ MockNavigationService getAndRegisterNavigationService() {
   return service;
 }
 
-MockApiService getAndRegisterApiService() {
+MockDocumentApiService getAndRegisterApiService() {
   _removeRegistrationIfExists<DocumentApiService>();
-  final service = MockApiService();
+  final service = MockDocumentApiService();
   locator.registerSingleton<DocumentApiService>(service);
   return service;
 }
