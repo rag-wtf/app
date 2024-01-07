@@ -26,17 +26,6 @@ const streamKey = 'STREAM';
 
 const undefined = 'undefined';
 const defaultTablePrefix = 'main';
-const defaultSystemPrompt =
-    'You are a helpful assistant that will follow user instructions closely.';
-const defaultPromptTemplate = '''
-Answer the question based on the following information:
-{context}
-If the available information is insufficient or inadequate,
-just tell the user you don't know the answer.
-
-Question: {question}
-
-Answer: ''';
 
 const surrealEndpoint = 'indxdb://rag';
 const surrealNamespace = 'rag';

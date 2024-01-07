@@ -63,9 +63,7 @@ Example:
 ''';
 
   void _initMessages() {
-    final systemPrompt = _settingService.get(systemPromptKey).value != undefined
-        ? _settingService.get(systemPromptKey).value
-        : defaultSystemPrompt;
+    final systemPrompt = _settingService.get(systemPromptKey).value;
     _messages
       ..clear()
       ..add(
@@ -216,10 +214,7 @@ Example:
           final context = embeddings.map((e) {
             return '${e.content} ${e.score} ${e.id}';
           }).join('\n');
-          final promptTemplateSetting = _settingService.get(promptTemplateKey);
-          final promptTemplate = promptTemplateSetting.value != undefined
-              ? promptTemplateSetting.value
-              : defaultPromptTemplate;
+          final promptTemplate = _settingService.get(promptTemplateKey).value;
           final prompt = promptTemplate
               .replaceFirst('{context}', context)
               .replaceFirst('{question}', input);
