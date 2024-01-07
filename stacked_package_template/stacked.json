@@ -8,9 +8,9 @@
   "services_path": "src/services",
   "stacked_app_file_path": "src/app/app.dart",
   "test_helpers_file_path": "helpers/test_helpers.dart",
-  "test_services_path": "services",
-  "test_views_path": "viewmodels",
-  "test_widgets_path": "widget_models",
+  "test_services_path": "src/services",
+  "test_views_path": "src/viewmodels",
+  "test_widgets_path": "src/widgetmodels",
   "v1": false,
   "views_path": "src/ui/views",
   "widgets_path": "src/ui/widgets/common"
