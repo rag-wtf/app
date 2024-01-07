@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:settings/src/constants.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:settings/src/ui/widgets/common/input_field.dart';
@@ -10,11 +11,15 @@ import 'package:stacked/stacked_annotations.dart';
   fields: [
     FormTextField(
       name: 'dataIngestionApiUrl',
-      validator: SettingsValidators.validateUrl,
+      validator: SettingsValidators.validateDataIngestionApiUrl,
     ),
     FormTextField(name: 'chunkSize'),
     FormTextField(name: 'chunkOverlap'),
-    FormTextField(name: 'embeddingsApiUrl'),
+    FormTextField(name: 'embeddingsModel'),
+    FormTextField(
+      name: 'embeddingsApiUrl',
+      validator: SettingsValidators.validateEmbeddingsApiUrl,
+    ),
     FormTextField(name: 'embeddingsApiKey'),
     FormTextField(name: 'embeddingsDimension'),
     FormTextField(
@@ -24,7 +29,11 @@ import 'package:stacked/stacked_annotations.dart';
     FormTextField(name: 'similaritySearchType'),
     FormTextField(name: 'similaritySearchIndex'),
     FormTextField(name: 'retrieveTopNResults'),
-    FormTextField(name: 'generationApiUrl'),
+    FormTextField(name: 'generationModel'),
+    FormTextField(
+      name: 'generationApiUrl',
+      validator: SettingsValidators.validateGenerationApiUrl,
+    ),
     FormTextField(name: 'generationApiKey'),
     FormTextField(name: 'promptTemplate'),
     FormTextField(name: 'temperature'),
@@ -93,6 +102,16 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               headerText: 'embeddings',
               body: Column(
                 children: [
+                  ListTile(
+                    title: const Text('Model'),
+                    subtitle: InputField(
+                      prefixIcon: const Icon(Icons.model_training_outlined),
+                      hintText: 'text-embedding-ada-002',
+                      errorText: viewModel.embeddingsModelValidationMessage,
+                      controller: embeddingsModelController,
+                      textInputType: TextInputType.text,
+                    ),
+                  ),
                   ListTile(
                     title: const Text('API URL'),
                     subtitle: InputField(
@@ -169,6 +188,16 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               body: Column(
                 children: [
                   ListTile(
+                    title: const Text('Model'),
+                    subtitle: InputField(
+                      prefixIcon: const Icon(Icons.model_training_outlined),
+                      hintText: 'gpt-3.5-turbo',
+                      errorText: viewModel.generationModelValidationMessage,
+                      controller: generationModelController,
+                      textInputType: TextInputType.text,
+                    ),
+                  ),
+                  ListTile(
                     title: const Text('API URL'),
                     subtitle: InputField(
                       prefixIcon: const Icon(Icons.https_outlined),
@@ -221,9 +250,30 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   void onViewModelReady(SettingsViewModel viewModel) {
     syncFormWithViewModel(viewModel);
     dataIngestionApiUrlController.addListener(viewModel.setDataIngestionApiUrl);
-
+    chunkSizeController.addListener(viewModel.setChunkSize);
+    chunkOverlapController.addListener(viewModel.setChunkOverlap);
+    embeddingsModelController.addListener(viewModel.setEmbeddingsModel);
+    embeddingsApiUrlController.addListener(viewModel.setEmbeddingsApiUrl);
+    embeddingsApiKeyController.addListener(viewModel.setEmbeddingsApiKey);
+    embeddingsDimensionController.addListener(viewModel.setEmbeddingsDimension);
     embeddingsApiBatchSizeController
         .addListener(viewModel.setEmbeddingsApiBatchSize);
+    similaritySearchTypeController
+        .addListener(viewModel.setSimilaritySearchType);
+    similaritySearchIndexController
+        .addListener(viewModel.setSimilaritySearchIndex);
+    retrieveTopNResultsController.addListener(viewModel.setRetrieveTopNResults);
+    generationModelController.addListener(viewModel.setGenerationModel);
+    generationApiUrlController.addListener(viewModel.setGenerationApiUrl);
+    generationApiKeyController.addListener(viewModel.setGenerationApiKey);
+    promptTemplateController.addListener(viewModel.setPromptTemplate);
+    temperatureController.addListener(viewModel.setTemperature);
+    topPController.addListener(viewModel.setTopP);
+    repetitionPenaltyController.addListener(viewModel.setRepetitionPenalty);
+    topKController.addListener(viewModel.setTopK);
+    maxNewTokensController.addListener(viewModel.setMaxNewTokens);
+    stopController.addListener(viewModel.setStop);
+    streamController.addListener(viewModel.setStream);
   }
 
   @override
@@ -244,11 +294,34 @@ class SettingsValidators {
       return 'Enter a valid URL';
     } else if (!uri.isScheme('HTTPS')) {
       return 'The API URL must start with https.';
-    } else if (uri.path != '/ingest') {
-      return 'The API URL must end with /ingest.';
     }
 
     return null;
+  }
+
+  static String? _validateApiUriPath(String uriPath, String? value) {
+    final message = validateUrl(value);
+    if (message != null) {
+      return message;
+    } else {
+      final uri = Uri.tryParse(value!);
+      if (uri?.path != uriPath) {
+        return 'The API URL must be ended with $uriPath.';
+      }
+      return null;
+    }
+  }
+
+  static String? validateDataIngestionApiUrl(String? value) {
+    return _validateApiUriPath(dataIngestionApiUriPath, value);
+  }
+
+  static String? validateEmbeddingsApiUrl(String? value) {
+    return _validateApiUriPath(embeddingsApiUriPath, value);
+  }
+
+  static String? validateGenerationApiUrl(String? value) {
+    return _validateApiUriPath(generationApiUriPath, value);
   }
 
   static bool isPositiveInteger(String s) {

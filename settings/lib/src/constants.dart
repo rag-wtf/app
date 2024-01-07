@@ -25,8 +25,11 @@ const stopKey = 'STOP';
 const streamKey = 'STREAM';
 
 const undefined = 'undefined';
-const defaultTablePrefix = 'main';
+const dataIngestionApiUriPath = '/ingest';
+const embeddingsApiUriPath = '/embeddings';
+const generationApiUriPath = '/chat/completions';
 
+const defaultTablePrefix = 'main';
 const surrealEndpoint = 'indxdb://rag';
 const surrealNamespace = 'rag';
 const surrealDatabase = 'rag';
