@@ -21,17 +21,6 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
   Future<void> futureToRun() async {
     await _settingService.initialise(tablePrefix);
 
-    /* final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
-    if (dataIngestionApiUrl.id != null) {
-      dataIngestionApiUrlValue = dataIngestionApiUrl.value;
-    }
-
-    final embeddingsApiBatchSize =
-        _settingService.get(embeddingsApiBatchSizeKey, type: int);
-    if (embeddingsApiBatchSize.id != null) {
-      embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
-    }*/
-
     final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
     if (dataIngestionApiUrl.id != null) {
       dataIngestionApiUrlValue = dataIngestionApiUrl.value;

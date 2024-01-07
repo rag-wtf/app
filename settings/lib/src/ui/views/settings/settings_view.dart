@@ -64,35 +64,29 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               headerText: 'data indexing',
               body: Column(
                 children: [
-                  ListTile(
-                    title: const Text('API URL'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.https_outlined),
-                      hintText: 'https://www.example.com/ingest',
-                      errorText: viewModel.dataIngestionApiUrlValidationMessage,
-                      controller: dataIngestionApiUrlController,
-                      textInputType: TextInputType.url,
-                    ),
+                  InputField(
+                    labelText: 'API URL',
+                    prefixIcon: const Icon(Icons.https_outlined),
+                    hintText: 'https://www.example.com/ingest',
+                    errorText: viewModel.dataIngestionApiUrlValidationMessage,
+                    controller: dataIngestionApiUrlController,
+                    textInputType: TextInputType.url,
                   ),
-                  ListTile(
-                    title: const Text('Chunk Size'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.numbers_outlined),
-                      hintText: 'Number between 100 and 1000',
-                      errorText: viewModel.chunkSizeValidationMessage,
-                      controller: chunkSizeController,
-                      textInputType: TextInputType.number,
-                    ),
+                  InputField(
+                    labelText: 'Chunk Size',
+                    prefixIcon: const Icon(Icons.numbers_outlined),
+                    hintText: 'between 100 and 1000',
+                    errorText: viewModel.chunkSizeValidationMessage,
+                    controller: chunkSizeController,
+                    textInputType: TextInputType.number,
                   ),
-                  ListTile(
-                    title: const Text('Chunk Overlap'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.numbers_outlined),
-                      hintText: 'Number between 10 and 100',
-                      errorText: viewModel.chunkOverlapValidationMessage,
-                      controller: chunkOverlapController,
-                      textInputType: TextInputType.number,
-                    ),
+                  InputField(
+                    labelText: 'Chunk Overlap',
+                    prefixIcon: const Icon(Icons.numbers_outlined),
+                    hintText: 'between 10 and 100',
+                    errorText: viewModel.chunkOverlapValidationMessage,
+                    controller: chunkOverlapController,
+                    textInputType: TextInputType.number,
                   ),
                 ],
               ),
@@ -102,54 +96,45 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               headerText: 'embeddings',
               body: Column(
                 children: [
-                  ListTile(
-                    title: const Text('Model'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.model_training_outlined),
-                      hintText: 'text-embedding-ada-002',
-                      errorText: viewModel.embeddingsModelValidationMessage,
-                      controller: embeddingsModelController,
-                      textInputType: TextInputType.text,
-                    ),
+                  InputField(
+                    labelText: 'Model',
+                    prefixIcon: const Icon(Icons.model_training_outlined),
+                    hintText: 'text-embedding-ada-002',
+                    errorText: viewModel.embeddingsModelValidationMessage,
+                    controller: embeddingsModelController,
+                    textInputType: TextInputType.text,
                   ),
-                  ListTile(
-                    title: const Text('API URL'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.https_outlined),
-                      hintText: 'https://www.example.com/embeddings',
-                      errorText: viewModel.embeddingsApiUrlValidationMessage,
-                      controller: embeddingsApiUrlController,
-                      textInputType: TextInputType.url,
-                    ),
+                  InputField(
+                    labelText: 'API URL',
+                    prefixIcon: const Icon(Icons.https_outlined),
+                    hintText: 'https://api.openai.com/v1/embeddings',
+                    errorText: viewModel.embeddingsApiUrlValidationMessage,
+                    controller: embeddingsApiUrlController,
+                    textInputType: TextInputType.url,
                   ),
-                  ListTile(
-                    title: const Text('API Key'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.key_outlined),
-                      errorText: viewModel.embeddingsApiKeyValidationMessage,
-                      controller: embeddingsApiKeyController,
-                      textInputType: TextInputType.none,
-                    ),
+                  InputField(
+                    labelText: 'API Key',
+                    prefixIcon: const Icon(Icons.key_outlined),
+                    hintText: '*' * 32,
+                    errorText: viewModel.embeddingsApiKeyValidationMessage,
+                    controller: embeddingsApiKeyController,
+                    textInputType: TextInputType.none,
                   ),
-                  ListTile(
-                    title: const Text('Dimension'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.numbers_outlined),
-                      errorText: viewModel.embeddingsDimensionValidationMessage,
-                      controller: embeddingsDimensionController,
-                      textInputType: TextInputType.number,
-                    ),
+                  InputField(
+                    labelText: 'Dimension',
+                    prefixIcon: const Icon(Icons.numbers_outlined),
+                    errorText: viewModel.embeddingsDimensionValidationMessage,
+                    controller: embeddingsDimensionController,
+                    textInputType: TextInputType.number,
                   ),
-                  ListTile(
-                    title: const Text('Batch Size'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.numbers_outlined),
-                      hintText: 'Number between 10 and 500',
-                      errorText:
-                          viewModel.embeddingsApiBatchSizeValidationMessage,
-                      controller: embeddingsApiBatchSizeController,
-                      textInputType: TextInputType.number,
-                    ),
+                  InputField(
+                    labelText: 'Batch Size',
+                    prefixIcon: const Icon(Icons.numbers_outlined),
+                    hintText: 'between 10 and 500',
+                    errorText:
+                        viewModel.embeddingsApiBatchSizeValidationMessage,
+                    controller: embeddingsApiBatchSizeController,
+                    textInputType: TextInputType.number,
                   ),
                 ],
               ),
@@ -159,25 +144,20 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               headerText: 'Retrieval',
               body: Column(
                 children: [
-                  ListTile(
-                    title: const Text('Similarity Search'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.search_off_outlined),
-                      errorText:
-                          viewModel.similaritySearchTypeValidationMessage,
-                      controller: similaritySearchTypeController,
-                      textInputType: TextInputType.text,
-                    ),
+                  InputField(
+                    labelText: 'Similarity Search',
+                    prefixIcon: const Icon(Icons.search_off_outlined),
+                    errorText: viewModel.similaritySearchTypeValidationMessage,
+                    controller: similaritySearchTypeController,
+                    textInputType: TextInputType.text,
                   ),
-                  ListTile(
-                    title: const Text('Top N'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.numbers_outlined),
-                      hintText: 'Number between 1 and 30',
-                      errorText: viewModel.retrieveTopNResultsValidationMessage,
-                      controller: retrieveTopNResultsController,
-                      textInputType: TextInputType.number,
-                    ),
+                  InputField(
+                    labelText: 'Top N',
+                    prefixIcon: const Icon(Icons.numbers_outlined),
+                    hintText: 'between 1 and 30',
+                    errorText: viewModel.retrieveTopNResultsValidationMessage,
+                    controller: retrieveTopNResultsController,
+                    textInputType: TextInputType.number,
                   ),
                 ],
               ),
@@ -187,44 +167,37 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               headerText: 'generation',
               body: Column(
                 children: [
-                  ListTile(
-                    title: const Text('Model'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.model_training_outlined),
-                      hintText: 'gpt-3.5-turbo',
-                      errorText: viewModel.generationModelValidationMessage,
-                      controller: generationModelController,
-                      textInputType: TextInputType.text,
-                    ),
+                  InputField(
+                    labelText: 'Model',
+                    prefixIcon: const Icon(Icons.model_training_outlined),
+                    hintText: 'gpt-3.5-turbo',
+                    errorText: viewModel.generationModelValidationMessage,
+                    controller: generationModelController,
+                    textInputType: TextInputType.text,
                   ),
-                  ListTile(
-                    title: const Text('API URL'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.https_outlined),
-                      hintText: 'https://www.example.com/chat/completions',
-                      errorText: viewModel.generationApiUrlValidationMessage,
-                      controller: generationApiUrlController,
-                      textInputType: TextInputType.url,
-                    ),
+                  InputField(
+                    labelText: 'API URL',
+                    prefixIcon: const Icon(Icons.https_outlined),
+                    hintText: 'https://api.openai.com/v1/chat/completions',
+                    errorText: viewModel.generationApiUrlValidationMessage,
+                    controller: generationApiUrlController,
+                    textInputType: TextInputType.url,
                   ),
-                  ListTile(
-                    title: const Text('API Key'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.key_outlined),
-                      errorText: viewModel.generationApiKeyValidationMessage,
-                      controller: generationApiKeyController,
-                      textInputType: TextInputType.none,
-                    ),
+                  InputField(
+                    labelText: 'API Key',
+                    prefixIcon: const Icon(Icons.key_outlined),
+                    hintText: '*' * 32,
+                    errorText: viewModel.generationApiKeyValidationMessage,
+                    controller: generationApiKeyController,
+                    textInputType: TextInputType.none,
                   ),
-                  ListTile(
-                    title: const Text('Max New Tokens'),
-                    subtitle: InputField(
-                      prefixIcon: const Icon(Icons.numbers_outlined),
-                      hintText: 'Half of the context windows',
-                      errorText: viewModel.maxNewTokensValidationMessage,
-                      controller: maxNewTokensController,
-                      textInputType: TextInputType.number,
-                    ),
+                  InputField(
+                    labelText: 'Max New Tokens',
+                    prefixIcon: const Icon(Icons.numbers_outlined),
+                    hintText: 'Half of the context windows',
+                    errorText: viewModel.maxNewTokensValidationMessage,
+                    controller: maxNewTokensController,
+                    textInputType: TextInputType.number,
                   ),
                 ],
               ),
@@ -300,11 +273,15 @@ class SettingsValidators {
   }
 
   static String? _validateApiUriPath(String uriPath, String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
     final message = validateUrl(value);
     if (message != null) {
       return message;
     } else {
-      final uri = Uri.tryParse(value!);
+      final uri = Uri.tryParse(value);
       if (uri?.path != uriPath) {
         return 'The API URL must be ended with $uriPath.';
       }

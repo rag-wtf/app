@@ -8,6 +8,7 @@ class InputField extends StatelessWidget {
   const InputField({
     required this.controller,
     super.key,
+    this.labelText,
     this.errorText,
     this.hintText = '',
     this.inputFormatters,
@@ -15,13 +16,13 @@ class InputField extends StatelessWidget {
     this.prefixIcon,
   });
   final TextEditingController controller;
+  final String? labelText;
   final String? errorText;
   final String? hintText;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? textInputType;
   final Widget? prefixIcon;
-  static const Color kcMediumGrey = Color(0xFF222222);
-  static const Color kcLightGrey = Color(0xff989898);
+
   static const double kdDesktopMaxContentWidth = 1150;
   static final ktsBodyRegular = GoogleFonts.openSans(
     fontSize: 15,
@@ -29,50 +30,58 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: getValueForScreenType<double>(
-            context: context,
-            mobile: double.infinity,
-            tablet: kdDesktopMaxContentWidth * 0.3,
-            desktop: kdDesktopMaxContentWidth * 0.3,
-          ),
-          child: TextField(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /*SizedBox(
+            width: getValueForScreenType<double>(
+              context: context,
+              mobile: double.infinity,
+              tablet: kdDesktopMaxContentWidth * 0.3,
+              desktop: kdDesktopMaxContentWidth * 0.3,
+            ),
+            child:*/
+          TextField(
             controller: controller,
             decoration: InputDecoration(
+              label: labelText != null ? Text(labelText!) : null,
+              //alignLabelWithHint: false,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
               hintText: hintText,
               hintStyle: GoogleFonts.openSans(
-                color: kcLightGrey,
+                color: Colors.grey,
               ),
-              filled: true,
-              fillColor: kcMediumGrey,
+              //          filled: true,
+              //          fillColor: kcMediumGrey,
               prefixIcon: prefixIcon,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
+            obscureText: textInputType == TextInputType.none,
+            obscuringCharacter: '*',
             inputFormatters: inputFormatters,
             keyboardType: textInputType,
-            style: const TextStyle(color: Colors.white),
           ),
-        ),
-        if (errorText != null) ...[
-          const Gap(5),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Text(
-              errorText!,
-              style: ktsBodyRegular.copyWith(
-                color: Colors.red,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
+          //),
+          if (errorText != null) ...[
+            const Gap(5),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                errorText!,
+                style: ktsBodyRegular.copyWith(
+                  color: Colors.red,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
