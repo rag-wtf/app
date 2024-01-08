@@ -35,10 +35,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DocumentEmbeddingRepository>(
       classType: DocumentEmbeddingRepository,
     ),
-    Singleton(
+    InitializableSingleton(
       classType: DatabaseService,
       asType: Surreal,
-      resolveUsing: DatabaseService.getInstance,
     ),
 // @stacked-service
   ],

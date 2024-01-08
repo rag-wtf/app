@@ -47,5 +47,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => DocumentEmbeddingRepository());
   locator.registerLazySingleton(() => SettingService());
   locator.registerLazySingleton(() => SettingRepository());
-  locator.registerSingleton<Surreal>(DatabaseService.getInstance());
+  final databaseService = DatabaseService();
+  await databaseService.init();
+  locator.registerSingleton<Surreal>(databaseService);
 }

@@ -8,15 +8,12 @@ import 'package:stacked_package_template/src/services/model.dart';
 import 'package:stacked_package_template/src/services/model_repository.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-Future<void> main() async {
+void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  await setupLocator();
   final db = locator<Surreal>();
   final repository = locator<ModelRepository>();
 
-  setUpAll(() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
-  });
+  setUpAll(() async {});
 
   tearDown(() async {
     await repository.deleteAllModels(defaultTablePrefix);

@@ -18,10 +18,9 @@ import 'package:chat/src/ui/views/main/main_view.dart';
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
     LazySingleton<ConversationRepository>(classType: ConversationRepository),
-    Singleton(
+    InitializableSingleton(
       classType: DatabaseService,
       asType: Surreal,
-      resolveUsing: DatabaseService.getInstance,
     ),
 // @stacked-service
   ],

@@ -35,10 +35,9 @@ import 'package:rag_console/src/services/rag_console_api_service.dart';
 
     LazySingleton<RagConsoleApiService>(classType: RagConsoleApiService),
 
-    Singleton(
+    InitializableSingleton(
       classType: DatabaseService,
       asType: Surreal,
-      resolveUsing: DatabaseService.getInstance,
     ),
 // @stacked-service
   ],

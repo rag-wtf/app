@@ -38,10 +38,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     // settings package
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
-    Singleton(
+    InitializableSingleton(
       classType: DatabaseService,
       asType: Surreal,
-      resolveUsing: DatabaseService.getInstance,
     ),
 // @stacked-service
   ],

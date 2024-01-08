@@ -8,15 +8,12 @@ import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-Future<void> main() async {
+void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  await setupLocator();
   final db = locator<Surreal>();
   final repository = locator<SettingRepository>();
 
-  setUpAll(() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
-  });
+  setUpAll(() async {});
 
   tearDown(() async {
     await repository.deleteAllSettings(defaultTablePrefix);

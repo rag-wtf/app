@@ -1,7 +1,7 @@
-import 'package:settings/settings.dart';
-import 'package:stacked/stacked.dart';
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
+import 'package:settings/settings.dart';
+import 'package:stacked/stacked.dart';
 
 class MainViewModel extends FutureViewModel<void> {
   MainViewModel(this.tablePrefix);
@@ -12,7 +12,6 @@ class MainViewModel extends FutureViewModel<void> {
 
   @override
   Future<void> futureToRun() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
     _log.d('futureToRun() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
   }

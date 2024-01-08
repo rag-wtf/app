@@ -12,7 +12,6 @@ class MainViewModel extends FutureViewModel<void> {
 
   @override
   Future<void> futureToRun() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
     _log.d('futureToRun() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
   }

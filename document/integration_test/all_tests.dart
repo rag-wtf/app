@@ -8,7 +8,6 @@ import 'embedding_repository_test.dart' as embedding_repository;
 
 Future<void> main() async {
   await setupLocator();
-  await Future<void>.delayed(const Duration(seconds: 3));
   document_repository.main();
   embedding_repository.main();
   document_embedding_repository.main();
