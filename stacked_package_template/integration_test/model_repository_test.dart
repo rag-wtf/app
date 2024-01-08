@@ -44,6 +44,7 @@ Future<void> main() async {
       final model = Model(
         name: 'name1',
         created: DateTime.now(),
+        updated: DateTime.now(),
       );
 
       // Act
@@ -60,10 +61,12 @@ Future<void> main() async {
         Model(
           name: 'name1',
           created: DateTime.now(),
+          updated: DateTime.now(),
         ).toJson(),
         Model(
           name: 'name2',
           created: DateTime.now(),
+          updated: DateTime.now(),
         ).toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Model.tableName}');
@@ -85,6 +88,7 @@ Future<void> main() async {
       final model = Model(
         name: 'name1',
         created: DateTime.now(),
+        updated: DateTime.now(),
       );
       final result = await repository.createModel(defaultTablePrefix, model);
       final id = result.id!;
@@ -111,6 +115,7 @@ Future<void> main() async {
       final model = Model(
         name: 'name1',
         created: DateTime.now(),
+        updated: DateTime.now(),
       );
       final created = await repository.createModel(defaultTablePrefix, model);
 
@@ -129,6 +134,7 @@ Future<void> main() async {
         id: '${defaultTablePrefix}_${Model.tableName}:1',
         name: 'name1',
         created: DateTime.now(),
+        updated: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateModel(model), isNull);
@@ -141,6 +147,7 @@ Future<void> main() async {
       final model = Model(
         name: 'name1',
         created: DateTime.now(),
+        updated: DateTime.now(),
       );
       final created = await repository.createModel(defaultTablePrefix, model);
 
