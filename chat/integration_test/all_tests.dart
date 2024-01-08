@@ -1,5 +1,5 @@
-import 'model_repository_test.dart' as model_repository;
+import 'conversation_repository_test.dart' as conversation_repository;
 
 void main() {
-  model_repository.main();
+  conversation_repository.main();
 }
