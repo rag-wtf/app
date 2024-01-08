@@ -7,21 +7,21 @@ part 'model.g.dart';
 @freezed
 abstract class Model with _$Model {
   const factory Model({
-    @DateTimeJsonConverter() required DateTime created,
     required String name,
+    @DateTimeJsonConverter() required DateTime created,
+    @DateTimeJsonConverter() required DateTime updated,
     String? id,
-    @DateTimeJsonConverter() DateTime? updated,
   }) = _Model;
 
   factory Model.fromJson(Map<String, dynamic> json) => _$ModelFromJson(json);
 
-  static const tableName = 'sample';
+  static const tableName = 'models';
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
-DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
-DEFINE FIELD updated ON {prefix}_$tableName TYPE option<datetime>;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
 ''';
 }
