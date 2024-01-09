@@ -31,3 +31,9 @@ DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
 ''';
 //DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 }
+
+class ConversationList {
+  const ConversationList(this.items, this.total);
+  final List<Conversation> items;
+  final int total;
+}

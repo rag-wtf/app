@@ -53,9 +53,17 @@ CREATE ONLY ${tablePrefix}_${Conversation.tableName} CONTENT ${jsonEncode(payloa
     }
   }
 
-  Future<List<Conversation>> getAllConversations(String tablePrefix) async {
-    final results = (await _db.query(
-        'SELECT * FROM ${tablePrefix}_${Conversation.tableName}'))! as List;
+  Future<List<Conversation>> getAllConversations(
+    String tablePrefix, {
+    int? page,
+    int pageSize = 20,
+    bool ascendingOrder = false,
+  }) async {
+    final sql = '''
+SELECT * FROM ${tablePrefix}_${Conversation.tableName} 
+ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
+${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
+    final results = (await _db.query(sql))! as List;
     return results
         .map(
           (result) => Conversation.fromJson(
@@ -65,6 +73,13 @@ CREATE ONLY ${tablePrefix}_${Conversation.tableName} CONTENT ${jsonEncode(payloa
           ),
         )
         .toList();
+  }
+
+  Future<int> getTotal(String tablePrefix) async {
+    final sql =
+        'SELECT count() FROM ${tablePrefix}_${Conversation.tableName} GROUP ALL;';
+    final results = (await _db.query(sql))! as List;
+    return (results.first as Map)['count'] as int;
   }
 
   Future<Conversation?> getConversationById(String id) async {
