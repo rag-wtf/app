@@ -12,7 +12,7 @@ void main() {
   final messageRepository = locator<MessageRepository>();
   final conversationMessageRepository =
       locator<ConversationMessageRepository>();
-  const tablePrefix = 'doc_emb';
+  const tablePrefix = 'conv_message';
 
   group('isSchemaCreated', () {
     test('should return false', () async {
@@ -77,8 +77,9 @@ void main() {
     );
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-      userMessage: 'user message 1',
-      botMessage: 'bot message 1',
+      authorId: 'user:${Ulid()}',
+      text: 'user message 1',
+      type: MessageType.text,
       metadata: {'id': 'customId1'},
       created: DateTime.now(),
       updated: DateTime.now(),
@@ -140,16 +141,18 @@ void main() {
     final messages1 = [
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        userMessage: 'user message 1 of 1',
-        botMessage: 'bot message 1 of 1',
+        authorId: 'user:${Ulid()}',
+        text: 'user message 1 of 1',
+        type: MessageType.text,
         metadata: {'id': 'customId'},
         created: DateTime.now(),
         updated: DateTime.now(),
       ),
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        userMessage: 'user message 2 of 1',
-        botMessage: 'bot message 2 of 1',
+        authorId: 'user:${Ulid()}',
+        text: 'user message 2 of 1',
+        type: MessageType.text,
         metadata: {'id': 'customId'},
         created: DateTime.now(),
         updated: DateTime.now(),
@@ -158,16 +161,18 @@ void main() {
     final messages2 = [
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        userMessage: 'user message 1 of 2',
-        botMessage: 'bot message 1 of 2',
+        authorId: 'user:${Ulid()}',
+        text: 'user message 1 of 2',
+        type: MessageType.text,
         metadata: {'id': 'customId'},
         created: DateTime.now(),
         updated: DateTime.now(),
       ),
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        userMessage: 'user message 2 of 2',
-        botMessage: 'bot message 2 of 2',
+        authorId: 'user:${Ulid()}',
+        text: 'user message 2 of 2',
+        type: MessageType.text,
         metadata: {'id': 'customId'},
         created: DateTime.now(),
         updated: DateTime.now(),

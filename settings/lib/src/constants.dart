@@ -31,6 +31,7 @@ const embeddingsApiUriPath = '/embeddings';
 const generationApiUriPath = '/chat/completions';
 
 const defaultTablePrefix = 'main';
+const defaultAgentId = 'agent:1';
 const surrealEndpoint = 'indxdb://rag';
 const surrealNamespace = 'rag';
 const surrealDatabase = 'rag';

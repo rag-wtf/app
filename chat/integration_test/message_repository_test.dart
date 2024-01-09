@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:ulid/ulid.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,9 @@ void main() {
       // Arrange
       final metadata = {'id': 'customId1'};
       final message = Message(
-        userMessage: 'user message 1',
+        authorId: defaultAgentId,
+        text: 'agent message 1',
+        type: MessageType.text,
         metadata: metadata,
         created: DateTime.now(),
         updated: DateTime.now(),
@@ -49,6 +52,7 @@ void main() {
 
       // Assert
       expect(result.id, isNotNull);
+      expect(result.authorId, equals(defaultAgentId));
       expect(result.metadata, equals(metadata));
 
       // Clean up
@@ -59,12 +63,13 @@ void main() {
   group('getAllMessages', () {
     test('should return a list of messages', () async {
       // Arrange
-
+      final userId = 'user:${Ulid()}';
       final messages = List.generate(
         5,
         (index) => Message(
-          userMessage: 'user message $index',
-          botMessage: 'bot message $index',
+          authorId: userId,
+          text: 'user message $index',
+          type: MessageType.text,
           metadata: {'id': 'customId$index'},
           created: DateTime.now(),
           updated: DateTime.now(),
@@ -81,15 +86,18 @@ void main() {
 
       // Assert
       expect(result, hasLength(messages.length));
+      expect(result.first.authorId, equals(userId));
     });
   });
 
   group('getMessageById', () {
     test('should return a message by id', () async {
       // Arrange
+      final userId = 'user:${Ulid()}';
       final message = Message(
-        userMessage: 'user message 1',
-        botMessage: 'bot message 1',
+        authorId: userId,
+        text: 'user message 1',
+        type: MessageType.text,
         metadata: {'id': 'customId1'},
         created: DateTime.now(),
         updated: DateTime.now(),
@@ -118,8 +126,9 @@ void main() {
     test('should update message', () async {
       // Arrange
       final message = Message(
-        userMessage: 'user message 1',
-        botMessage: 'bot message 1',
+        authorId: 'user:${Ulid()}',
+        text: 'user message 1',
+        type: MessageType.text,
         metadata: {'id': 'customId1'},
         created: DateTime.now(),
         updated: DateTime.now(),
@@ -130,18 +139,19 @@ void main() {
       // Act
       const remark = 'remark1';
       final updated =
-          await repository.updateMessage(created.copyWith(remark: remark));
+          await repository.updateMessage(created.copyWith(text: remark));
 
       // Assert
-      expect(updated?.remark, equals(remark));
+      expect(updated?.text, equals(remark));
     });
 
     test('should be null when the update message is not found', () async {
       // Arrange
       final message = Message(
+        authorId: 'user:${Ulid()}',
         id: '${Message.tableName}:1',
-        userMessage: 'user message 1',
-        botMessage: 'bot message 1',
+        text: 'user message 1',
+        type: MessageType.text,
         metadata: {'id': 'customId1'},
         created: DateTime.now(),
         updated: DateTime.now(),
@@ -155,8 +165,9 @@ void main() {
     test('should delete message', () async {
       // Arrange
       final message = Message(
-        userMessage: 'user message 1',
-        botMessage: 'bot message 1',
+        authorId: 'user:${Ulid()}',
+        text: 'user message 1',
+        type: MessageType.text,
         metadata: {'id': 'customId1'},
         created: DateTime.now(),
         updated: DateTime.now(),

@@ -48,8 +48,9 @@ void main() {
     );
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-      userMessage: 'user message 1',
-      botMessage: 'bot message 1',
+      authorId: 'user:${Ulid()}',
+      text: 'user message 1',
+      type: MessageType.text,
       metadata: {'id': 'customId1'},
       created: DateTime.now(),
       updated: DateTime.now(),
