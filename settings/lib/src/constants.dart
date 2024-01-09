@@ -23,6 +23,7 @@ const topKKey = 'TOP_K';
 const maxNewTokensKey = 'MAX_NEW_TOKENS';
 const stopKey = 'STOP';
 const streamKey = 'STREAM';
+const userIdKey = 'USER_ID';
 
 const undefined = 'undefined';
 const dataIngestionApiUriPath = '/ingest';

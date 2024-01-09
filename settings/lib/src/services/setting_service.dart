@@ -5,6 +5,7 @@ import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
+import 'package:ulid/ulid.dart';
 
 class SettingService {
   final Map<String, Setting> _settings = {};
@@ -57,6 +58,19 @@ class SettingService {
     }
 
     if (_settings.isEmpty) {
+      // create user id if not found.
+      if (await _settingRepository.getSettingByKey(
+            tablePrefix,
+            userIdKey,
+          ) ==
+          null) {
+        final userId = Setting(
+          key: userIdKey,
+          value: Ulid().toString(),
+          created: DateTime.now(),
+        );
+        await _settingRepository.createSetting(tablePrefix, userId);
+      }
       final settings = await _settingRepository.getAllSettings(tablePrefix);
       if (settings.isNotEmpty) {
         for (final setting in settings) {
