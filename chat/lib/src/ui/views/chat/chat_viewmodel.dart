@@ -2,7 +2,9 @@ import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/conversation.dart';
+import 'package:chat/src/services/conversation_message_repository.dart';
 import 'package:chat/src/services/conversation_repository.dart';
+import 'package:chat/src/services/message.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
@@ -11,11 +13,16 @@ const int defaultPageSize = 10;
 class ChatViewModel extends FutureViewModel<void> {
   ChatViewModel(this.tablePrefix);
   final String tablePrefix;
-  int _total = 0;
-  final _items = <Conversation>[];
-  List<Conversation> get items => _items;
+  List<Conversation> get conversations => _conversations;
+  List<Message> get messages => _messages;
+  String get userId => _settingService.get(userIdKey).value;
+  int _totalConversations = 0;
+  final _conversations = <Conversation>[];
+  final _messages = <Message>[];
   final _chatService = locator<ChatService>();
   final _conversationRepository = locator<ConversationRepository>();
+  final _conversationMessageRepository =
+      locator<ConversationMessageRepository>();
   final _settingService = locator<SettingService>();
   final _log = getLogger('ChatViewModel');
   @override
@@ -29,17 +36,17 @@ class ChatViewModel extends FutureViewModel<void> {
       await _chatService.createSchema(tablePrefix);
       _log.d('after createSchema()');
     }
-    await fetchData();
+    await fetchConversations();
   }
 
-  bool get hasReachedMax {
-    final reachedMax = _items.length >= _total;
+  bool get hasReachedMaxConversation {
+    final reachedMax = _conversations.length >= _totalConversations;
     _log.d(reachedMax);
     return reachedMax;
   }
 
-  Future<void> fetchData() async {
-    final page = _items.length ~/ defaultPageSize;
+  Future<void> fetchConversations() async {
+    final page = _conversations.length ~/ defaultPageSize;
     _log.d('page $page');
     final conversationList = await _chatService.getConversationList(
       tablePrefix,
@@ -48,8 +55,21 @@ class ChatViewModel extends FutureViewModel<void> {
     );
     _log.d('conversationList.total ${conversationList.total}');
     if (conversationList.total > 0) {
-      _items.addAll(conversationList.items);
-      _total = conversationList.total;
+      _conversations.addAll(conversationList.items);
+      _totalConversations = conversationList.total;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchMessages(String conversationId) async {
+    final messages =
+        await _conversationMessageRepository.getAllMessagesOfConversation(
+      tablePrefix,
+      conversationId,
+    );
+
+    if (messages.isNotEmpty) {
+      _messages.addAll(messages);
       notifyListeners();
     }
   }
@@ -61,7 +81,7 @@ class ChatViewModel extends FutureViewModel<void> {
       conversation,
     );
     if (createdConversation.id != null) {
-      _items.insert(0, createdConversation);
+      _conversations.insert(0, createdConversation);
       notifyListeners();
     }
   }

@@ -14,12 +14,12 @@ class ConversationListView extends StackedView<ChatViewModel> {
     Widget? child,
   ) {
     return InfiniteList(
-      itemCount: viewModel.items.length,
+      itemCount: viewModel.conversations.length,
       isLoading: viewModel.isBusy,
-      onFetchData: viewModel.fetchData,
-      hasReachedMax: viewModel.hasReachedMax,
+      onFetchData: viewModel.fetchConversations,
+      hasReachedMax: viewModel.hasReachedMaxConversation,
       itemBuilder: (context, index) {
-        final item = viewModel.items[index];
+        final item = viewModel.conversations[index];
         return ListTile(
           title: Text(item.name),
           key: ValueKey(item.id),
@@ -27,6 +27,9 @@ class ConversationListView extends StackedView<ChatViewModel> {
       },
     );
   }
+
+  @override
+  bool get initialiseSpecialViewModelsOnce => true;
 
   @override
   ChatViewModel viewModelBuilder(
