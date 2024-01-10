@@ -7,8 +7,9 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
-  const ChatView({super.key, this.tablePrefix = 'main'});
+  const ChatView(this.chatViewModel, {super.key, this.tablePrefix = 'main'});
   final String tablePrefix;
+  final ChatViewModel chatViewModel;
 
   @override
   Widget builder(
@@ -17,17 +18,23 @@ class ChatView extends StackedView<ChatViewModel> {
     Widget? child,
   ) {
     return Chat(
-      messages: viewModel.messages
-          .map(
-            (message) => types.Message.fromJson(
-              message.toJson(),
-            ),
-          )
-          .toList(),
+      messages: viewModel.messages.map(
+        (message) {
+          final json = message.toJson();
+          json['author'] = types.User(
+            id: message.authorId,
+            role: message.authorId.startsWith('user')
+                ? types.Role.user
+                : types.Role.agent,
+          ).toJson();
+          return types.Message.fromJson(json);
+        },
+      ).toList(),
       onAttachmentPressed: _handleAttachmentPressed,
       onMessageTap: _handleMessageTap,
       onPreviewDataFetched: _handlePreviewDataFetched,
-      onSendPressed: _handleSendPressed,
+      onSendPressed: (partialText) =>
+          _handleSendPressed(viewModel, partialText),
       showUserAvatars: true,
       showUserNames: true,
       user: types.User(
@@ -45,13 +52,19 @@ class ChatView extends StackedView<ChatViewModel> {
   }
 
   @override
+  bool get disposeViewModel => false;
+
+  @override
   bool get initialiseSpecialViewModelsOnce => true;
+
+  @override
+  bool get fireOnViewModelReadyOnce => true;
 
   @override
   ChatViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      ChatViewModel(tablePrefix);
+      chatViewModel;
 
   void _handleAttachmentPressed() {}
 
@@ -59,5 +72,10 @@ class ChatView extends StackedView<ChatViewModel> {
 
   void _handlePreviewDataFetched(types.TextMessage p1, types.PreviewData p2) {}
 
-  void _handleSendPressed(types.PartialText p1) {}
+  Future<void> _handleSendPressed(
+    ChatViewModel viewModel,
+    types.PartialText partialText,
+  ) async {
+    await viewModel.addMessage(partialText.text);
+  }
 }

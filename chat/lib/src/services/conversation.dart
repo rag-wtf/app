@@ -7,9 +7,9 @@ part 'conversation.g.dart';
 @freezed
 abstract class Conversation with _$Conversation {
   const factory Conversation({
+    required String name,
     @DateTimeJsonConverter() required DateTime created,
     @DateTimeJsonConverter() required DateTime? updated,
-    required String name,
     String? id,
     bool? pinned,
     Object? metadata,

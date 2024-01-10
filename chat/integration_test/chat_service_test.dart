@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:chat/chat.dart';
 import 'package:chat/src/app/app.locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -107,7 +106,6 @@ INSERT INTO ${tablePrefix}_${Conversation.tableName} ${jsonEncode(conversations)
     // Assert
     expect(page1.items, hasLength(pageSize));
     expect(page1.total, equals(conversations.length));
-    print('page1 ${page1.items.map((e) => e.name)}');
     expect(page1.items[0].name, equals('conversation4'));
     expect(page1.items[1].name, equals('conversation3'));
 

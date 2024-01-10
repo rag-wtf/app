@@ -8,11 +8,11 @@ part 'message.g.dart';
 @freezed
 abstract class Message with _$Message {
   const factory Message({
-    @DateTimeJsonConverter() required DateTime created,
-    @DateTimeJsonConverter() required DateTime updated,
     required String authorId,
     required String text,
     required MessageType type,
+    @DateTimeJsonConverter() required DateTime created,
+    @DateTimeJsonConverter() required DateTime updated,
     int? pinned,
     String? id,
     Object? metadata,

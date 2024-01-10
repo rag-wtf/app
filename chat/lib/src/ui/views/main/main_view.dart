@@ -16,15 +16,15 @@ class MainView extends StackedView<MainViewModel> {
   ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: const Row(
+      body: Row(
         children: [
           Flexible(
             flex: 4,
-            child: ConversationListView(),
+            child: ConversationListView(viewModel.chatViewModel),
           ),
           Flexible(
             flex: 6,
-            child: ChatView(),
+            child: ChatView(viewModel.chatViewModel),
           ),
         ],
       ),

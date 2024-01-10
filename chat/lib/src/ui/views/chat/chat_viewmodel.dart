@@ -7,15 +7,17 @@ import 'package:chat/src/services/conversation_repository.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:ulid/ulid.dart';
 
 const int defaultPageSize = 10;
 
 class ChatViewModel extends FutureViewModel<void> {
   ChatViewModel(this.tablePrefix);
   final String tablePrefix;
-  List<Conversation> get conversations => _conversations;
-  List<Message> get messages => _messages;
+  List<Conversation> get conversations => _conversations.toList();
+  List<Message> get messages => _messages.toList();
   String get userId => _settingService.get(userIdKey).value;
+  int _conversationIndex = -1;
   int _totalConversations = 0;
   final _conversations = <Conversation>[];
   final _messages = <Message>[];
@@ -74,14 +76,34 @@ class ChatViewModel extends FutureViewModel<void> {
     }
   }
 
-  Future<void> addItem(Conversation conversation) async {
-    final createdConversation =
-        await _conversationRepository.createConversation(
+  Future<void> addMessage(String text) async {
+    final now = DateTime.now();
+    final conversation = Conversation(
+      id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
+      name: text,
+      created: now,
+      updated: now,
+    );
+    final message = Message(
+      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      authorId: 'user:$userId',
+      text: text,
+      type: MessageType.text,
+      created: now,
+      updated: now,
+    );
+    final txnResults = await _chatService.createConversationAndMessage(
       tablePrefix,
       conversation,
+      message,
     );
-    if (createdConversation.id != null) {
-      _conversations.insert(0, createdConversation);
+
+    final results = List<List<dynamic>>.from(txnResults! as List);
+    if (results.every(
+      (sublist) => sublist.isNotEmpty,
+    )) {
+      _conversations.insert(0, conversation);
+      _messages.insert(0, message);
       notifyListeners();
     }
   }

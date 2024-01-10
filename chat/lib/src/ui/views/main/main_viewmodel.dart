@@ -1,11 +1,13 @@
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
+import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
 class MainViewModel extends FutureViewModel<void> {
   MainViewModel(this.tablePrefix);
   final String tablePrefix;
+  ChatViewModel get chatViewModel => ChatViewModel(tablePrefix);
 
   final _settingService = locator<SettingService>();
   final _log = getLogger('MainViewModel');
