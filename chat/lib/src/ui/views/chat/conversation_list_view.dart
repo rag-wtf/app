@@ -39,6 +39,7 @@ class ConversationListView extends StackedView<ChatViewModel> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async => viewModel.addMessage(
+          viewModel.userId,
           'conversation ${viewModel.conversations.length}',
         ),
         child: const Icon(Icons.add),

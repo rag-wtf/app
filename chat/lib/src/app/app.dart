@@ -4,6 +4,7 @@ import 'package:chat/src/services/conversation_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
 import 'package:chat/src/ui/views/main/main_view.dart';
 import 'package:chat/src/ui/views/startup/startup_view.dart';
+import 'package:dio/dio.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -32,7 +33,8 @@ import 'package:chat/src/services/chat_api_service.dart';
       classType: DatabaseService,
       asType: Surreal,
     ),
-    LazySingleton(classType: ChatApiService),
+    LazySingleton<Dio>(classType: Dio),
+    LazySingleton<ChatApiService>(classType: ChatApiService),
 // @stacked-service
   ],
   logger: StackedLogger(),

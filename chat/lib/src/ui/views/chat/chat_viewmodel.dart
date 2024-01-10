@@ -1,11 +1,13 @@
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
+import 'package:chat/src/constants.dart';
+import 'package:chat/src/services/chat_api_service.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/conversation.dart';
 import 'package:chat/src/services/conversation_message_repository.dart';
 import 'package:chat/src/services/conversation_repository.dart';
 import 'package:chat/src/services/message.dart';
-import 'package:chat/src/services/message_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:ulid/ulid.dart';
@@ -17,7 +19,7 @@ class ChatViewModel extends FutureViewModel<void> {
   final String tablePrefix;
   List<Conversation> get conversations => _conversations.toList();
   List<Message> get messages => _messages.toList();
-  String get userId => _settingService.get(userIdKey).value;
+  String get userId => 'user:${_settingService.get(userIdKey).value}';
   int _conversationIndex = -1;
   int _totalConversations = 0;
   final _conversations = <Conversation>[];
@@ -26,11 +28,18 @@ class ChatViewModel extends FutureViewModel<void> {
   final _conversationRepository = locator<ConversationRepository>();
   final _conversationMessageRepository =
       locator<ConversationMessageRepository>();
+  final _dio = locator<Dio>();
+  final _chatApiService = locator<ChatApiService>();
   final _settingService = locator<SettingService>();
+  late String _generationApiUrl;
+  late String _generationApiKey;
   final _log = getLogger('ChatViewModel');
   @override
   Future<void> futureToRun() async {
     _log.d('futureToRun() tablePrefix: $tablePrefix');
+    _generationApiUrl = _settingService.get(generationApiUrlKey).value;
+    _generationApiKey = _settingService.get(generationApiKey).value;
+
     final isSchemaCreated = await _chatService.isSchemaCreated(tablePrefix);
     _log.d('isSchemaCreated $isSchemaCreated');
 
@@ -84,12 +93,12 @@ class ChatViewModel extends FutureViewModel<void> {
     _log.d('fetchMessages: _conversationIndex $_conversationIndex');
   }
 
-  Future<void> addMessage(String text) async {
+  Future<void> addMessage(String authorId, String text) async {
     final now = DateTime.now();
     _log.d('addMessage: _conversationIndex $_conversationIndex');
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-      authorId: 'user:$userId',
+      authorId: authorId,
       text: text,
       type: MessageType.text,
       created: now,
@@ -130,6 +139,19 @@ class ChatViewModel extends FutureViewModel<void> {
       }
       _messages.insert(0, message);
       notifyListeners();
+      if (authorId.startsWith('user')) {
+        await addMessage(
+          defaultAgentId,
+          await _chatApiService.generate(
+            _dio,
+            messages,
+            defaultChatWindow,
+            text,
+            _generationApiUrl,
+            _generationApiKey,
+          ),
+        );
+      }
     }
   }
 }

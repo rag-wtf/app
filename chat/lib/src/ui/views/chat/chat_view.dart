@@ -76,6 +76,6 @@ class ChatView extends StackedView<ChatViewModel> {
     ChatViewModel viewModel,
     types.PartialText partialText,
   ) async {
-    await viewModel.addMessage(partialText.text);
+    await viewModel.addMessage(viewModel.userId, partialText.text);
   }
 }
