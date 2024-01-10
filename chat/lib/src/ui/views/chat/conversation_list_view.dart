@@ -18,9 +18,9 @@ class ConversationListView extends StackedView<ChatViewModel> {
     ChatViewModel viewModel,
     Widget? child,
   ) {
-    debugPrint(
-      'viewModel.conversations.length ${viewModel.conversations.length}',
-    );
+    //debugPrint(
+    //  'view.conversations.length ${viewModel.conversations.length}',
+    //);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: InfiniteList(
@@ -33,6 +33,7 @@ class ConversationListView extends StackedView<ChatViewModel> {
           return ListTile(
             title: Text(item.name),
             key: ValueKey(item.id),
+            onTap: () => viewModel.fetchMessages(index),
           );
         },
       ),

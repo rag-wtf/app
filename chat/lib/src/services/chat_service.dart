@@ -94,6 +94,46 @@ class ChatService {
     }
   }
 
+  Future<Object?> createMessage(
+    String tablePrefix,
+    Conversation conversation,
+    Message message, [
+    Transaction? txn,
+  ]) async {
+    final conversationMessage = ConversationMessage(
+      conversationId: conversation.id!,
+      messageId: message.id!,
+    );
+    if (txn == null) {
+      return _db.transaction(
+        (txn) async {
+          await _messageRepository.createMessage(
+            tablePrefix,
+            message,
+            txn,
+          );
+          await _conversationMessageRepository.createConversationMessage(
+            tablePrefix,
+            conversationMessage,
+            txn,
+          );
+        },
+      );
+    } else {
+      await _messageRepository.createMessage(
+        tablePrefix,
+        message,
+        txn,
+      );
+      await _conversationMessageRepository.createConversationMessage(
+        tablePrefix,
+        conversationMessage,
+        txn,
+      );
+      return null;
+    }
+  }
+
   Future<ConversationList> getConversationList(
     String tablePrefix, {
     int? page,

@@ -5,6 +5,7 @@ import 'package:chat/src/services/conversation.dart';
 import 'package:chat/src/services/conversation_message_repository.dart';
 import 'package:chat/src/services/conversation_repository.dart';
 import 'package:chat/src/services/message.dart';
+import 'package:chat/src/services/message_repository.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:ulid/ulid.dart';
@@ -63,27 +64,29 @@ class ChatViewModel extends FutureViewModel<void> {
     }
   }
 
-  Future<void> fetchMessages(String conversationId) async {
+  Future<void> fetchMessages(int conversationIndex) async {
+    _conversationIndex = conversationIndex;
     final messages =
         await _conversationMessageRepository.getAllMessagesOfConversation(
       tablePrefix,
-      conversationId,
+      conversations[conversationIndex].id!,
     );
 
     if (messages.isNotEmpty) {
-      _messages.addAll(messages);
+      _messages
+        ..clear()
+        ..addAll(messages);
+      _log
+        ..d('fetchMessages: conversation.id ${conversations[conversationIndex].id}')
+        ..d('_messages.length ${_messages.length}');
       notifyListeners();
     }
+    _log.d('fetchMessages: _conversationIndex $_conversationIndex');
   }
 
   Future<void> addMessage(String text) async {
     final now = DateTime.now();
-    final conversation = Conversation(
-      id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
-      name: text,
-      created: now,
-      updated: now,
-    );
+    _log.d('addMessage: _conversationIndex $_conversationIndex');
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
       authorId: 'user:$userId',
@@ -92,17 +95,39 @@ class ChatViewModel extends FutureViewModel<void> {
       created: now,
       updated: now,
     );
-    final txnResults = await _chatService.createConversationAndMessage(
-      tablePrefix,
-      conversation,
-      message,
-    );
+    Conversation conversation;
+    Object? txnResults;
+    if (_conversationIndex == -1) {
+      conversation = Conversation(
+        id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
+        name: text,
+        created: now,
+        updated: now,
+      );
+      txnResults = await _chatService.createConversationAndMessage(
+        tablePrefix,
+        conversation,
+        message,
+      );
+    } else {
+      conversation = conversations[_conversationIndex];
+      _log.d(
+          'addMessage: conversation.id ${conversations[_conversationIndex].id}');
+      txnResults = await _chatService.createMessage(
+        tablePrefix,
+        conversation,
+        message,
+      );
+    }
 
     final results = List<List<dynamic>>.from(txnResults! as List);
     if (results.every(
       (sublist) => sublist.isNotEmpty,
     )) {
-      _conversations.insert(0, conversation);
+      if (_conversationIndex == -1) {
+        _conversations.insert(0, conversation);
+        _conversationIndex = 0;
+      }
       _messages.insert(0, message);
       notifyListeners();
     }
