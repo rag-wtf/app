@@ -92,7 +92,7 @@ class BodyWidget extends StatelessWidget {
             child: LeftWidget(viewModel),
           ),
           Flexible(
-            flex: 4,
+            flex: 6,
             child: CenterWidget(viewModel),
           ),
           Flexible(
@@ -109,7 +109,7 @@ class BodyWidget extends StatelessWidget {
             child: LeftWidget(viewModel),
           ),
           Flexible(
-            flex: 6,
+            flex: 8,
             child: CenterWidget(viewModel),
           ),
         ],
