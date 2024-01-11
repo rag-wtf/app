@@ -16,18 +16,20 @@ class MainView extends StackedView<MainViewModel> {
   ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Row(
-        children: [
-          Flexible(
-            flex: 4,
-            child: ConversationListView(viewModel.chatViewModel),
-          ),
-          Flexible(
-            flex: 6,
-            child: ChatView(viewModel.chatViewModel),
-          ),
-        ],
-      ),
+      body: viewModel.isBusy
+          ? const CircularProgressIndicator()
+          : Row(
+              children: [
+                Flexible(
+                  flex: 4,
+                  child: ConversationListView(viewModel.chatViewModel),
+                ),
+                Flexible(
+                  flex: 6,
+                  child: ChatView(viewModel.chatViewModel),
+                ),
+              ],
+            ),
     );
   }
 

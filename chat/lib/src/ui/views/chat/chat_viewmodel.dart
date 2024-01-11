@@ -31,14 +31,15 @@ class ChatViewModel extends FutureViewModel<void> {
   final _dio = locator<Dio>();
   final _chatApiService = locator<ChatApiService>();
   final _settingService = locator<SettingService>();
-  late String _generationApiUrl;
-  late String _generationApiKey;
+  String get _generationApiUrl =>
+      _settingService.get(generationApiUrlKey).value;
+  String get _generationApiKey => _settingService.get(generationApiKey).value;
+  String get _model => _settingService.get(generationModelKey).value;
+  String get _systemPrompt => _settingService.get(systemPromptKey).value;
   final _log = getLogger('ChatViewModel');
   @override
   Future<void> futureToRun() async {
     _log.d('futureToRun() tablePrefix: $tablePrefix');
-    _generationApiUrl = _settingService.get(generationApiUrlKey).value;
-    _generationApiKey = _settingService.get(generationApiKey).value;
 
     final isSchemaCreated = await _chatService.isSchemaCreated(tablePrefix);
     _log.d('isSchemaCreated $isSchemaCreated');
@@ -149,6 +150,8 @@ class ChatViewModel extends FutureViewModel<void> {
             text,
             _generationApiUrl,
             _generationApiKey,
+            _model,
+            _systemPrompt,
           ),
         );
       }

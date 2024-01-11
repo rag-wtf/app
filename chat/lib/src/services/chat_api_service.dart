@@ -15,7 +15,10 @@ class ChatApiService {
     String prompt,
     String generationApiUrl,
     String generationApiKey,
+    String model,
+    String systemPrompt,
   ) async {
+    final now = DateTime.now();
     final chatMessages = messages.length > 1
         ? messages
             .sublist(1, min(messages.length, chatWindow))
@@ -35,9 +38,19 @@ class ChatApiService {
         ChatMessage(
           role: Role.user,
           content: prompt,
-          dateTime: DateTime.now(),
+          dateTime: now,
         ),
       );
+    if (systemPrompt.isNotEmpty) {
+      chatMessages.insert(
+        0,
+        ChatMessage(
+          role: Role.system,
+          content: systemPrompt,
+          dateTime: now,
+        ),
+      );
+    }
     final messagesMap = chatMessages
         .map(
           (message) => message.toJson(),
@@ -55,6 +68,7 @@ class ChatApiService {
         },
       ),
       data: {
+        'model': model,
         'messages': messagesMap,
       },
     );

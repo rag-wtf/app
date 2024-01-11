@@ -51,12 +51,6 @@ class ConversationListView extends StackedView<ChatViewModel> {
   bool get disposeViewModel => false;
 
   @override
-  bool get initialiseSpecialViewModelsOnce => true;
-
-  @override
-  bool get fireOnViewModelReadyOnce => true;
-
-  @override
   ChatViewModel viewModelBuilder(
     BuildContext context,
   ) =>
