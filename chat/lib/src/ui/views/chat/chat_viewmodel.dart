@@ -10,6 +10,7 @@ import 'package:chat/src/services/message.dart';
 import 'package:dio/dio.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stopwordies/stopwordies.dart';
 import 'package:ulid/ulid.dart';
 
 const int defaultPageSize = 10;
@@ -86,15 +87,16 @@ class ChatViewModel extends FutureViewModel<void> {
       _messages
         ..clear()
         ..addAll(messages);
-      _log
-        ..d('fetchMessages: conversation.id ${conversations[conversationIndex].id}')
-        ..d('_messages.length ${_messages.length}');
+      _log.d('_messages.length ${_messages.length}');
       notifyListeners();
     }
     _log.d('fetchMessages: _conversationIndex $_conversationIndex');
   }
 
-  Future<void> addMessage(String authorId, String text) async {
+  Future<void> addMessage(
+    String authorId,
+    String text,
+  ) async {
     final now = DateTime.now();
     _log.d('addMessage: _conversationIndex $_conversationIndex');
     final message = Message(
@@ -110,7 +112,7 @@ class ChatViewModel extends FutureViewModel<void> {
     if (_conversationIndex == -1) {
       conversation = Conversation(
         id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
-        name: text,
+        name: defaultConversationName,
         created: now,
         updated: now,
       );
@@ -141,19 +143,64 @@ class ChatViewModel extends FutureViewModel<void> {
       _messages.insert(0, message);
       notifyListeners();
       if (authorId.startsWith('user')) {
+        final generatedText = await _chatApiService.generate(
+          _dio,
+          messages,
+          defaultChatWindow,
+          text,
+          _generationApiUrl,
+          _generationApiKey,
+          _model,
+          _systemPrompt,
+        );
         await addMessage(
           defaultAgentId,
-          await _chatApiService.generate(
-            _dio,
-            messages,
-            defaultChatWindow,
-            text,
-            _generationApiUrl,
-            _generationApiKey,
-            _model,
-            _systemPrompt,
+          generatedText,
+        );
+        await _updateConversationName(text, generatedText);
+      }
+    }
+  }
+
+  Future<void> _updateConversationName(
+    String userText,
+    String generatedText,
+  ) async {
+    if (_conversations[_conversationIndex].name == defaultConversationName) {
+      var generatedConversationName = await _chatApiService.generate(
+        _dio,
+        [],
+        defaultChatWindow,
+        '$summarizeInASentencePrompt$userText $generatedText',
+        _generationApiUrl,
+        _generationApiKey,
+        _model,
+        _systemPrompt,
+      );
+      final words = generatedConversationName.split(englishWordSeparator);
+      final stopWords = await StopWordies.getFor(locale: SWLocale.en);
+      final result = words
+          .where(
+            (item) => !stopWords.contains(item.toLowerCase()),
+          )
+          .toList();
+      if (result.isNotEmpty) {
+        if (result.length <= 10) {
+          generatedConversationName = result.join(englishWordSeparator);
+        } else {
+          generatedConversationName =
+              result.sublist(0, 10).join(englishWordSeparator);
+        }
+        final updatedConversation =
+            await _conversationRepository.updateConversation(
+          _conversations[_conversationIndex].copyWith(
+            name: generatedConversationName,
+            updated: DateTime.now(),
           ),
         );
+        if (updatedConversation != null) {
+          _conversations[_conversationIndex] = updatedConversation;
+        }
       }
     }
   }

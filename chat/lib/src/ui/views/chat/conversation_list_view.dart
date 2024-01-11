@@ -31,18 +31,11 @@ class ConversationListView extends StackedView<ChatViewModel> {
         itemBuilder: (context, index) {
           final item = viewModel.conversations[index];
           return ListTile(
-            title: Text(item.name),
+            title: Text(item.name, overflow: TextOverflow.ellipsis),
             key: ValueKey(item.id),
             onTap: () => viewModel.fetchMessages(index),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async => viewModel.addMessage(
-          viewModel.userId,
-          'conversation ${viewModel.conversations.length}',
-        ),
-        child: const Icon(Icons.add),
       ),
     );
   }

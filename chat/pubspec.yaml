@@ -21,6 +21,7 @@ dependencies:
     path: ../settings
   stacked: ^3.4.0
   stacked_services: ^1.1.0
+  stopwordies: ^1.0.1
   surrealdb_wasm: ^0.7.0+3
   ulid: ^2.0.0
   very_good_infinite_list: ^0.7.1
