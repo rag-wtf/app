@@ -30,8 +30,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.6
-  flutter_test:
-    sdk: flutter
+  flutter_test: ^2.0.0
   freezed: ^2.4.5
   integration_test:
     sdk: flutter
