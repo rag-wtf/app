@@ -7,9 +7,8 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
-  const ChatView(this.chatViewModel, {super.key, this.tablePrefix = 'main'});
+  const ChatView({super.key, this.tablePrefix = 'main'});
   final String tablePrefix;
-  final ChatViewModel chatViewModel;
 
   @override
   Widget builder(
@@ -58,7 +57,7 @@ class ChatView extends StackedView<ChatViewModel> {
   ChatViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      chatViewModel;
+      ChatViewModel(tablePrefix);
 
   void _handleAttachmentPressed() {}
 

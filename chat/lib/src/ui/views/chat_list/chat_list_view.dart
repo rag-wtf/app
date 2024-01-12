@@ -1,21 +1,19 @@
-import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
+import 'package:chat/src/ui/views/chat_list/chat_list_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
-class ChatListView extends StackedView<ChatViewModel> {
-  const ChatListView(
-    this.chatViewModel, {
+class ChatListView extends StackedView<ChatListViewModel> {
+  const ChatListView({
     super.key,
     this.tablePrefix = 'main',
   });
   final String tablePrefix;
-  final ChatViewModel chatViewModel;
 
   @override
   Widget builder(
     BuildContext context,
-    ChatViewModel viewModel,
+    ChatListViewModel viewModel,
     Widget? child,
   ) {
     //debugPrint(
@@ -41,11 +39,13 @@ class ChatListView extends StackedView<ChatViewModel> {
   }
 
   @override
-  bool get disposeViewModel => false;
-
-  @override
-  ChatViewModel viewModelBuilder(
+  ChatListViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      chatViewModel;
+      ChatListViewModel(tablePrefix);
+
+  @override
+  Future<void> onViewModelReady(ChatListViewModel viewModel) async {
+    await viewModel.fetchChats();
+  }
 }
