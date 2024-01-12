@@ -37,14 +37,14 @@ dart pub global activate very_good_cli
 To run all unit tests:
 
 ```sh
-very_good test --coverage
+flutter drive --driver=test_driver/integration_test.dart --target integration_test/all_tests.dart -d web-server --release --browser-name=chrome
 ```
 
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
 
 ```sh
 # Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
+very_good test --coverage
 
 # Open Coverage Report
 open coverage/index.html
