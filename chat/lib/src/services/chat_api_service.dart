@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:chat/src/app/app.logger.dart';
-import 'package:chat/src/services/chat_message.dart';
+import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:dio/dio.dart';
 
@@ -24,7 +24,7 @@ class ChatApiService {
             .sublist(1, min(messages.length, chatWindow))
             .reversed
             .map(
-              (message) => ChatMessage(
+              (message) => ChatApiMessage(
                 role: message.authorId.startsWith('user')
                     ? Role.user
                     : Role.assistant,
@@ -33,9 +33,9 @@ class ChatApiService {
               ),
             )
             .toList()
-        : <ChatMessage>[]
+        : <ChatApiMessage>[]
       ..add(
-        ChatMessage(
+        ChatApiMessage(
           role: Role.user,
           content: prompt,
           dateTime: now,
@@ -44,7 +44,7 @@ class ChatApiService {
     if (systemPrompt.isNotEmpty) {
       chatMessages.insert(
         0,
-        ChatMessage(
+        ChatApiMessage(
           role: Role.system,
           content: systemPrompt,
           dateTime: now,

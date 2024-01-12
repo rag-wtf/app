@@ -1,11 +1,11 @@
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/constants.dart';
+import 'package:chat/src/services/chat.dart';
 import 'package:chat/src/services/chat_api_service.dart';
+import 'package:chat/src/services/chat_message_repository.dart';
+import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/chat_service.dart';
-import 'package:chat/src/services/conversation.dart';
-import 'package:chat/src/services/conversation_message_repository.dart';
-import 'package:chat/src/services/conversation_repository.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:dio/dio.dart';
 import 'package:settings/settings.dart';
@@ -18,17 +18,16 @@ const int defaultPageSize = 10;
 class ChatViewModel extends FutureViewModel<void> {
   ChatViewModel(this.tablePrefix);
   final String tablePrefix;
-  List<Conversation> get conversations => _conversations.toList();
+  List<Chat> get chats => _chats.toList();
   List<Message> get messages => _messages.toList();
   String get userId => 'user:${_settingService.get(userIdKey).value}';
-  int _conversationIndex = -1;
-  int _totalConversations = 0;
-  final _conversations = <Conversation>[];
+  int _chatIndex = -1;
+  int _totalChats = 0;
+  final _chats = <Chat>[];
   final _messages = <Message>[];
   final _chatService = locator<ChatService>();
-  final _conversationRepository = locator<ConversationRepository>();
-  final _conversationMessageRepository =
-      locator<ConversationMessageRepository>();
+  final _chatRepository = locator<ChatRepository>();
+  final _chatMessageRepository = locator<ChatMessageRepository>();
   final _dio = locator<Dio>();
   final _chatApiService = locator<ChatApiService>();
   final _settingService = locator<SettingService>();
@@ -50,37 +49,36 @@ class ChatViewModel extends FutureViewModel<void> {
       await _chatService.createSchema(tablePrefix);
       _log.d('after createSchema()');
     }
-    await fetchConversations();
+    await fetchChats();
   }
 
-  bool get hasReachedMaxConversation {
-    final reachedMax = _conversations.length >= _totalConversations;
+  bool get hasReachedMaxChat {
+    final reachedMax = _chats.length >= _totalChats;
     _log.d(reachedMax);
     return reachedMax;
   }
 
-  Future<void> fetchConversations() async {
-    final page = _conversations.length ~/ defaultPageSize;
+  Future<void> fetchChats() async {
+    final page = _chats.length ~/ defaultPageSize;
     _log.d('page $page');
-    final conversationList = await _chatService.getConversationList(
+    final chatList = await _chatService.getChatList(
       tablePrefix,
       page: page,
       pageSize: defaultPageSize,
     );
-    _log.d('conversationList.total ${conversationList.total}');
-    if (conversationList.total > 0) {
-      _conversations.addAll(conversationList.items);
-      _totalConversations = conversationList.total;
+    _log.d('chatList.total ${chatList.total}');
+    if (chatList.total > 0) {
+      _chats.addAll(chatList.items);
+      _totalChats = chatList.total;
       notifyListeners();
     }
   }
 
-  Future<void> fetchMessages(int conversationIndex) async {
-    _conversationIndex = conversationIndex;
-    final messages =
-        await _conversationMessageRepository.getAllMessagesOfConversation(
+  Future<void> fetchMessages(int chatIndex) async {
+    _chatIndex = chatIndex;
+    final messages = await _chatMessageRepository.getAllMessagesOfChat(
       tablePrefix,
-      conversations[conversationIndex].id!,
+      chats[chatIndex].id!,
     );
 
     if (messages.isNotEmpty) {
@@ -90,7 +88,7 @@ class ChatViewModel extends FutureViewModel<void> {
       _log.d('_messages.length ${_messages.length}');
       notifyListeners();
     }
-    _log.d('fetchMessages: _conversationIndex $_conversationIndex');
+    _log.d('fetchMessages: _chatIndex $_chatIndex');
   }
 
   Future<void> addMessage(
@@ -98,7 +96,7 @@ class ChatViewModel extends FutureViewModel<void> {
     String text,
   ) async {
     final now = DateTime.now();
-    _log.d('addMessage: _conversationIndex $_conversationIndex');
+    _log.d('addMessage: _chatIndex $_chatIndex');
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
       authorId: authorId,
@@ -107,27 +105,26 @@ class ChatViewModel extends FutureViewModel<void> {
       created: now,
       updated: now,
     );
-    Conversation conversation;
+    Chat chat;
     Object? txnResults;
-    if (_conversationIndex == -1) {
-      conversation = Conversation(
-        id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
-        name: defaultConversationName,
+    if (_chatIndex == -1) {
+      chat = Chat(
+        id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+        name: defaultChatName,
         created: now,
         updated: now,
       );
-      txnResults = await _chatService.createConversationAndMessage(
+      txnResults = await _chatService.createChatAndMessage(
         tablePrefix,
-        conversation,
+        chat,
         message,
       );
     } else {
-      conversation = conversations[_conversationIndex];
-      _log.d(
-          'addMessage: conversation.id ${conversations[_conversationIndex].id}');
+      chat = chats[_chatIndex];
+      _log.d('addMessage: chat.id ${chats[_chatIndex].id}');
       txnResults = await _chatService.createMessage(
         tablePrefix,
-        conversation,
+        chat,
         message,
       );
     }
@@ -136,9 +133,9 @@ class ChatViewModel extends FutureViewModel<void> {
     if (results.every(
       (sublist) => sublist.isNotEmpty,
     )) {
-      if (_conversationIndex == -1) {
-        _conversations.insert(0, conversation);
-        _conversationIndex = 0;
+      if (_chatIndex == -1) {
+        _chats.insert(0, chat);
+        _chatIndex = 0;
       }
       _messages.insert(0, message);
       notifyListeners();
@@ -157,17 +154,17 @@ class ChatViewModel extends FutureViewModel<void> {
           defaultAgentId,
           generatedText,
         );
-        await _updateConversationName(text, generatedText);
+        await _updateChatName(text, generatedText);
       }
     }
   }
 
-  Future<void> _updateConversationName(
+  Future<void> _updateChatName(
     String userText,
     String generatedText,
   ) async {
-    if (_conversations[_conversationIndex].name == defaultConversationName) {
-      var generatedConversationName = await _chatApiService.generate(
+    if (_chats[_chatIndex].name == defaultChatName) {
+      var generatedChatName = await _chatApiService.generate(
         _dio,
         [],
         defaultChatWindow,
@@ -177,7 +174,7 @@ class ChatViewModel extends FutureViewModel<void> {
         _model,
         _systemPrompt,
       );
-      final words = generatedConversationName.split(englishWordSeparator);
+      final words = generatedChatName.split(englishWordSeparator);
       final stopWords = await StopWordies.getFor(locale: SWLocale.en);
       final result = words
           .where(
@@ -186,20 +183,18 @@ class ChatViewModel extends FutureViewModel<void> {
           .toList();
       if (result.isNotEmpty) {
         if (result.length <= 10) {
-          generatedConversationName = result.join(englishWordSeparator);
+          generatedChatName = result.join(englishWordSeparator);
         } else {
-          generatedConversationName =
-              result.sublist(0, 10).join(englishWordSeparator);
+          generatedChatName = result.sublist(0, 10).join(englishWordSeparator);
         }
-        final updatedConversation =
-            await _conversationRepository.updateConversation(
-          _conversations[_conversationIndex].copyWith(
-            name: generatedConversationName,
+        final updatedChat = await _chatRepository.updateChat(
+          _chats[_chatIndex].copyWith(
+            name: generatedChatName,
             updated: DateTime.now(),
           ),
         );
-        if (updatedConversation != null) {
-          _conversations[_conversationIndex] = updatedConversation;
+        if (updatedChat != null) {
+          _chats[_chatIndex] = updatedChat;
         }
       }
     }

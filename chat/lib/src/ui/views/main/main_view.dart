@@ -1,5 +1,5 @@
 import 'package:chat/src/ui/views/chat/chat_view.dart';
-import 'package:chat/src/ui/views/chat/conversation_list_view.dart';
+import 'package:chat/src/ui/views/chat_list/chat_list_view.dart';
 import 'package:chat/src/ui/views/main/main_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -22,7 +22,7 @@ class MainView extends StackedView<MainViewModel> {
               children: [
                 Flexible(
                   flex: 4,
-                  child: ConversationListView(viewModel.chatViewModel),
+                  child: ChatListView(viewModel.chatViewModel),
                 ),
                 Flexible(
                   flex: 6,

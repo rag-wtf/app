@@ -1,6 +1,6 @@
 import 'package:chat/src/services/chat_service.dart';
-import 'package:chat/src/services/conversation_message_repository.dart';
-import 'package:chat/src/services/conversation_repository.dart';
+import 'package:chat/src/services/chat_message_repository.dart';
+import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
 import 'package:chat/src/ui/views/main/main_view.dart';
 import 'package:chat/src/ui/views/startup/startup_view.dart';
@@ -22,9 +22,9 @@ import 'package:chat/src/services/chat_api_service.dart';
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
-    LazySingleton<ConversationRepository>(classType: ConversationRepository),
-    LazySingleton<ConversationMessageRepository>(
-      classType: ConversationMessageRepository,
+    LazySingleton<ChatRepository>(classType: ChatRepository),
+    LazySingleton<ChatMessageRepository>(
+      classType: ChatMessageRepository,
     ),
     LazySingleton<MessageRepository>(classType: MessageRepository),
     LazySingleton<ChatService>(classType: ChatService),

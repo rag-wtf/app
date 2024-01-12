@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
-class ConversationListView extends StackedView<ChatViewModel> {
-  const ConversationListView(
+class ChatListView extends StackedView<ChatViewModel> {
+  const ChatListView(
     this.chatViewModel, {
     super.key,
     this.tablePrefix = 'main',
@@ -19,17 +19,17 @@ class ConversationListView extends StackedView<ChatViewModel> {
     Widget? child,
   ) {
     //debugPrint(
-    //  'view.conversations.length ${viewModel.conversations.length}',
+    //  'view.chats.length ${viewModel.chats.length}',
     //);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: InfiniteList(
-        itemCount: viewModel.conversations.length,
+        itemCount: viewModel.chats.length,
         isLoading: viewModel.isBusy,
-        onFetchData: viewModel.fetchConversations,
-        hasReachedMax: viewModel.hasReachedMaxConversation,
+        onFetchData: viewModel.fetchChats,
+        hasReachedMax: viewModel.hasReachedMaxChat,
         itemBuilder: (context, index) {
-          final item = viewModel.conversations[index];
+          final item = viewModel.chats[index];
           return ListTile(
             title: Text(item.name, overflow: TextOverflow.ellipsis),
             key: ValueKey(item.id),

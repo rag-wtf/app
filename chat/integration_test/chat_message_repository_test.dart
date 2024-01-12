@@ -8,17 +8,16 @@ import 'package:ulid/ulid.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
-  final conversationRepository = locator<ConversationRepository>();
+  final chatRepository = locator<ChatRepository>();
   final messageRepository = locator<MessageRepository>();
-  final conversationMessageRepository =
-      locator<ConversationMessageRepository>();
+  final chatMessageRepository = locator<ChatMessageRepository>();
   const tablePrefix = 'conv_message';
 
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
       expect(
-        await conversationRepository.isSchemaCreated(tablePrefix),
+        await chatRepository.isSchemaCreated(tablePrefix),
         isFalse,
       );
       expect(
@@ -26,7 +25,7 @@ void main() {
         isFalse,
       );
       expect(
-        await conversationMessageRepository.isSchemaCreated(tablePrefix),
+        await chatMessageRepository.isSchemaCreated(tablePrefix),
         isFalse,
       );
     });
@@ -35,15 +34,14 @@ void main() {
       // Act
       await db.transaction(
         (txn) async {
-          if (!await conversationRepository.isSchemaCreated(tablePrefix)) {
-            await conversationRepository.createSchema(tablePrefix, txn);
+          if (!await chatRepository.isSchemaCreated(tablePrefix)) {
+            await chatRepository.createSchema(tablePrefix, txn);
           }
           if (!await messageRepository.isSchemaCreated(tablePrefix)) {
             await messageRepository.createSchema(tablePrefix, txn);
           }
-          if (!await conversationMessageRepository
-              .isSchemaCreated(tablePrefix)) {
-            await conversationMessageRepository.createSchema(
+          if (!await chatMessageRepository.isSchemaCreated(tablePrefix)) {
+            await chatMessageRepository.createSchema(
               tablePrefix,
               txn,
             );
@@ -53,7 +51,7 @@ void main() {
 
       // Assert
       expect(
-        await conversationRepository.isSchemaCreated(tablePrefix),
+        await chatRepository.isSchemaCreated(tablePrefix),
         isTrue,
       );
       expect(
@@ -61,17 +59,17 @@ void main() {
         isTrue,
       );
       expect(
-        await conversationMessageRepository.isSchemaCreated(tablePrefix),
+        await chatMessageRepository.isSchemaCreated(tablePrefix),
         isTrue,
       );
     });
   });
 
-  test('should create conversation message', () async {
+  test('should create chat message', () async {
     // Arrange
-    final conversation = Conversation(
-      id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
-      name: 'conversation 1',
+    final chat = Chat(
+      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      name: 'chat 1',
       created: DateTime.now(),
       updated: DateTime.now(),
     );
@@ -88,9 +86,9 @@ void main() {
     // Act
     final txnResults = await db.transaction(
       (txn) async {
-        await conversationRepository.createConversation(
+        await chatRepository.createChat(
           tablePrefix,
-          conversation,
+          chat,
           txn,
         );
         await messageRepository.createMessage(
@@ -98,10 +96,10 @@ void main() {
           message,
           txn,
         );
-        await conversationMessageRepository.createConversationMessage(
+        await chatMessageRepository.createChatMessage(
           tablePrefix,
-          ConversationMessage(
-            conversationId: conversation.id!,
+          ChatMessage(
+            chatId: chat.id!,
             messageId: message.id!,
           ),
           txn,
@@ -113,27 +111,27 @@ void main() {
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
-      await db.select('${tablePrefix}_${ConversationMessage.tableName}'),
+      await db.select('${tablePrefix}_${ChatMessage.tableName}'),
       hasLength(1),
     );
 
     // Clean up
-    await db.delete('${tablePrefix}_${Conversation.tableName}');
+    await db.delete('${tablePrefix}_${Chat.tableName}');
     await db.delete('${tablePrefix}_${Message.tableName}');
   });
 
-  test('should retrieve messages of given conversation Id', () async {
+  test('should retrieve messages of given chat Id', () async {
     // Arrange
-    final conversation1 = Conversation(
-      id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
-      name: 'conversation 1',
+    final chat1 = Chat(
+      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      name: 'chat 1',
       created: DateTime.now(),
       updated: DateTime.now(),
     );
 
-    final conversation2 = Conversation(
-      id: '${tablePrefix}_${Conversation.tableName}:${Ulid()}',
-      name: 'conversation 2',
+    final chat2 = Chat(
+      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      name: 'chat 2',
       created: DateTime.now(),
       updated: DateTime.now(),
     );
@@ -179,21 +177,21 @@ void main() {
       ),
     ];
 
-    final conversationMessages1 = <ConversationMessage>[];
+    final chatMessages1 = <ChatMessage>[];
     for (final message in messages1) {
-      conversationMessages1.add(
-        ConversationMessage(
-          conversationId: conversation1.id!,
+      chatMessages1.add(
+        ChatMessage(
+          chatId: chat1.id!,
           messageId: message.id!,
         ),
       );
     }
 
-    final conversationMessages2 = <ConversationMessage>[];
+    final chatMessages2 = <ChatMessage>[];
     for (final message in messages2) {
-      conversationMessages2.add(
-        ConversationMessage(
-          conversationId: conversation2.id!,
+      chatMessages2.add(
+        ChatMessage(
+          chatId: chat2.id!,
           messageId: message.id!,
         ),
       );
@@ -201,14 +199,14 @@ void main() {
     // Act
     final txnResults = await db.transaction(
       (txn) async {
-        await conversationRepository.createConversation(
+        await chatRepository.createChat(
           tablePrefix,
-          conversation1,
+          chat1,
           txn,
         );
-        await conversationRepository.createConversation(
+        await chatRepository.createChat(
           tablePrefix,
-          conversation2,
+          chat2,
           txn,
         );
         for (final message in messages1) {
@@ -225,14 +223,14 @@ void main() {
             txn,
           );
         }
-        await conversationMessageRepository.createConversationMessages(
+        await chatMessageRepository.createChatMessages(
           tablePrefix,
-          conversationMessages1,
+          chatMessages1,
           txn,
         );
-        await conversationMessageRepository.createConversationMessages(
+        await chatMessageRepository.createChatMessages(
           tablePrefix,
-          conversationMessages2,
+          chatMessages2,
           txn,
         );
       },
@@ -242,15 +240,15 @@ void main() {
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
-      await conversationMessageRepository.getAllMessagesOfConversation(
+      await chatMessageRepository.getAllMessagesOfChat(
         tablePrefix,
-        conversation2.id!,
+        chat2.id!,
       ),
-      hasLength(conversationMessages2.length),
+      hasLength(chatMessages2.length),
     );
 
     // Clean up
-    await db.delete('${tablePrefix}_${Conversation.tableName}');
+    await db.delete('${tablePrefix}_${Chat.tableName}');
     await db.delete('${tablePrefix}_${Message.tableName}');
   });
 }
