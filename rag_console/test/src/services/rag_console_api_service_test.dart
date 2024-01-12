@@ -3,7 +3,9 @@ import '../../helpers/test_helpers.dart';
 
 void main() {
   group('RagConsoleApiServiceTest -', () {
-    setUp(registerServices);
+    setUp(() {
+    registerServices();
+  });
     tearDown(locator.reset);
   });
 }
