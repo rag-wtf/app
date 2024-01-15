@@ -55,3 +55,9 @@ enum MessageType {
 enum Status { error, seen, sending, sent }
 
 enum Role { user, agent }
+
+class MessageList {
+  const MessageList(this.items, this.total);
+  final List<Message> items;
+  final int total;
+}

@@ -245,11 +245,12 @@ void main() {
     // Assert
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
+    final messageList = await chatMessageRepository.getAllMessagesOfChat(
+      tablePrefix,
+      chat2.id!,
+    );
     expect(
-      await chatMessageRepository.getAllMessagesOfChat(
-        tablePrefix,
-        chat2.id!,
-      ),
+      messageList.items,
       hasLength(chatMessages2.length),
     );
 
