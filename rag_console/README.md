@@ -8,30 +8,20 @@ A Very Good Project created by Very Good CLI.
 
 ## Installation 💻
 
-**❗ In order to start using Document you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
-
-Install via `flutter pub add`:
+To run all unit and widget tests:
 
 ```sh
-dart pub add document
+very_good test --coverage
 ```
 
----
-
-## Continuous Integration 🤖
-
-Document comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_workflows_link] for a strict set of analysis options used by our team. Code coverage is correctly formats, lints, and tests the code using [Very Good Workflows][very_good_workflows_link]. It enforces the appropriate analysis options and code coverage..
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
+To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
 
 ```sh
-dart pub global activate very_good_cli
+# Generate Coverage Report
+genhtml coverage/lcov.info -o coverage/
+
+# Open Coverage Report
+open coverage/index.html
 ```
 
 To run all unit tests:
