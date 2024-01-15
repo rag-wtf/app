@@ -20,6 +20,7 @@ jobs:
       - name: Generate Codes
         run: |
           chmod +x ./document/generate.sh && cd document && ./generate.sh && cd ..
+          chmod +x ./chat/generate.sh && cd chat && ./generate.sh && cd ..
           chmod +x ./rag_console/generate.sh && cd rag_console && ./generate.sh && cd ..
           chmod +x ./settings/generate.sh && cd settings && ./generate.sh && cd ..
 

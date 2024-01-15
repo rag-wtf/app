@@ -8,6 +8,11 @@
 
 import 'package:archive/src/gzip_decoder.dart';
 import 'package:archive/src/gzip_encoder.dart';
+import 'package:chat/src/services/chat_api_service.dart';
+import 'package:chat/src/services/chat_message_repository.dart';
+import 'package:chat/src/services/chat_repository.dart';
+import 'package:chat/src/services/chat_service.dart';
+import 'package:chat/src/services/message_repository.dart';
 import 'package:dio/src/dio.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
@@ -45,6 +50,11 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => DocumentRepository());
   locator.registerLazySingleton(() => EmbeddingRepository());
   locator.registerLazySingleton(() => DocumentEmbeddingRepository());
+  locator.registerLazySingleton(() => ChatRepository());
+  locator.registerLazySingleton(() => ChatMessageRepository());
+  locator.registerLazySingleton(() => MessageRepository());
+  locator.registerLazySingleton(() => ChatService());
+  locator.registerLazySingleton(() => ChatApiService());
   locator.registerLazySingleton(() => SettingService());
   locator.registerLazySingleton(() => SettingRepository());
   final databaseService = DatabaseService();
