@@ -29,9 +29,10 @@ class ChatService with ListenableServiceMixin {
   final _chatMessageRepository = locator<ChatMessageRepository>();
   List<Chat> get chats => _chats.toList();
   List<Message> get messages => _messages.toList();
-  String get userId => 'user:${_settingService.get(userIdKey).value}';
+  String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
   int _chatIndex = -1;
   int _totalChats = 0;
+  int _totalMessages = 0;
   final _chats = <Chat>[];
   final _messages = <Message>[];
 
@@ -184,6 +185,12 @@ class ChatService with ListenableServiceMixin {
     return reachedMax;
   }
 
+  bool get hasReachedMaxMessage {
+    final reachedMax = _messages.length >= _totalMessages;
+    _log.d(reachedMax);
+    return reachedMax;
+  }
+
   Future<void> fetchChats(String tablePrefix) async {
     final page = _chats.length ~/ defaultPageSize;
     _log.d('page $page');
@@ -200,26 +207,36 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  Future<void> fetchMessages(String tablePrefix, int chatIndex) async {
-    _chatIndex = chatIndex;
-    final messages = await _chatMessageRepository.getAllMessagesOfChat(
-      tablePrefix,
-      chats[chatIndex].id!,
-    );
-
-    if (messages.isNotEmpty) {
-      _messages
-        ..clear()
-        ..addAll(messages);
-      _log.d('_messages.length ${_messages.length}');
-      notifyListeners();
+  Future<void> fetchMessages(String tablePrefix, [int chatIndex = -1]) async {
+    if (chatIndex > -1) {
+      _chatIndex = chatIndex;
     }
-    _log.d('fetchMessages: _chatIndex $_chatIndex');
+
+    if (_chatIndex > -1) {
+      final page = _messages.length ~/ defaultPageSize;
+      final messageList = await _chatMessageRepository.getAllMessagesOfChat(
+        tablePrefix,
+        chats[_chatIndex].id!,
+        page: page,
+        pageSize: defaultPageSize,
+      );
+
+      if (messageList.total > 0) {
+        _messages
+          ..clear()
+          ..addAll(messageList.items);
+        _log.d('_messages.length ${_messages.length}');
+        _totalMessages = messageList.total;
+        notifyListeners();
+      }
+      _log.d('fetchMessages: _chatIndex $_chatIndex');
+    }
   }
 
   Future<void> addMessage(
     String tablePrefix,
     String authorId,
+    Role role,
     String text,
   ) async {
     final now = DateTime.now();
@@ -227,6 +244,7 @@ class ChatService with ListenableServiceMixin {
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
       authorId: authorId,
+      role: role,
       text: text,
       type: MessageType.text,
       created: now,
@@ -280,6 +298,7 @@ class ChatService with ListenableServiceMixin {
         await addMessage(
           tablePrefix,
           defaultAgentId,
+          Role.agent,
           generatedText,
         );
       } else {

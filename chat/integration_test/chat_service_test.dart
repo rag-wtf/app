@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:chat/chat.dart';
 import 'package:chat/src/app/app.locator.dart';
+import 'package:chat/src/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
@@ -47,7 +48,8 @@ void main() {
     );
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-      authorId: 'user:${Ulid()}',
+      authorId: '$userIdPrefix${Ulid()}',
+      role: Role.user,
       text: 'user message 1',
       type: MessageType.text,
       metadata: {'id': 'customId1'},

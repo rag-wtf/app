@@ -1,4 +1,5 @@
 import 'package:chat/src/app/app.locator.dart';
+import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat.dart';
 import 'package:chat/src/services/chat_message.dart';
 import 'package:chat/src/services/message.dart';
@@ -6,6 +7,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 class ChatMessageRepository {
   final _db = locator<Surreal>();
+  final _log = getLogger('ChatMessageRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await _db.query('INFO FOR DB'))! as List;
@@ -83,33 +85,41 @@ RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
     }
   }
 
-  Future<List<Message>> getAllMessagesOfChat(
+  Future<MessageList> getAllMessagesOfChat(
     String tablePrefix,
-    String chatId,
-  ) async {
+    String chatId, {
+    int? page,
+    int pageSize = 20,
+    bool ascendingOrder = false,
+  }) async {
     final chatMessageTableName = '${tablePrefix}_${ChatMessage.tableName}';
-    final chatTableName = '${tablePrefix}_${Chat.tableName}';
-    final messageTableName = '${tablePrefix}_${Message.tableName}';
     final sql = '''
-SELECT ->$chatMessageTableName->${tablePrefix}_${Message.tableName}.* 
-AS $messageTableName FROM $chatTableName 
-WHERE array::first(array::distinct(->$chatMessageTableName<-$chatTableName)) == $chatId;
+LET \$messages = (SELECT out AS id FROM $chatMessageTableName
+WHERE in = '$chatId');
+SELECT count() FROM \$messages.*.id GROUP ALL;
+SELECT * FROM \$messages.*.id
+ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
+${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}
 ''';
 
     final results = (await _db.query(
       sql,
     ))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
-    final messages = result[messageTableName] as List;
+    _log.d(results);
+    final total = ((results[1] as List).first as Map)['count'] as int;
+    final messages = results.last as List;
 
-    return messages
-        .map(
-          (result) => Message.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
+    return MessageList(
+      messages
+          .map(
+            (result) => Message.fromJson(
+              Map<String, dynamic>.from(
+                result as Map,
+              ),
             ),
-          ),
-        )
-        .toList();
+          )
+          .toList(),
+      total,
+    );
   }
 }

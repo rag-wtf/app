@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_api_message.dart';
-import 'package:chat/src/services/message.dart';
+import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:dio/dio.dart';
 
 class ChatApiService {
@@ -10,7 +10,7 @@ class ChatApiService {
 
   Future<String> generate(
     Dio dio,
-    List<Message> messages,
+    List<chat_message.Message> messages,
     int chatWindow,
     String prompt,
     String generationApiUrl,
@@ -25,7 +25,7 @@ class ChatApiService {
             .reversed
             .map(
               (message) => ChatApiMessage(
-                role: message.authorId.startsWith('user')
+                role: message.role == chat_message.Role.user
                     ? Role.user
                     : Role.assistant,
                 content: message.text,

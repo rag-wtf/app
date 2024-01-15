@@ -25,7 +25,7 @@ class ChatListView extends StackedView<ChatListViewModel> {
         itemCount: viewModel.chats.length,
         isLoading: viewModel.isBusy,
         onFetchData: viewModel.fetchChats,
-        hasReachedMax: viewModel.hasReachedMaxChat,
+        hasReachedMax: viewModel.hasReachedMax,
         itemBuilder: (context, index) {
           final item = viewModel.chats[index];
           return ListTile(

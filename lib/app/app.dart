@@ -1,4 +1,5 @@
 import 'package:archive/archive.dart';
+import 'package:chat/chat.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,16 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DocumentEmbeddingRepository>(
       classType: DocumentEmbeddingRepository,
     ),
+
+    // chat package
+    LazySingleton<ChatRepository>(classType: ChatRepository),
+    LazySingleton<ChatMessageRepository>(
+      classType: ChatMessageRepository,
+    ),
+    LazySingleton<MessageRepository>(classType: MessageRepository),
+    LazySingleton<ChatService>(classType: ChatService),
+    LazySingleton<ChatApiService>(classType: ChatApiService),
+
     // settings package
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),

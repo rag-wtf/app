@@ -15,12 +15,23 @@ class ChatViewModel extends ReactiveViewModel {
 
   String get userId => _chatService.userId;
 
+  bool get hasReachedMax => _chatService.hasReachedMaxMessage;
+
   List<Message> get messages => _chatService.messages;
 
   Future<void> addMessage(
     String authorId,
     String text,
   ) async {
-    await _chatService.addMessage(tablePrefix, authorId, text);
+    await _chatService.addMessage(
+      tablePrefix,
+      authorId,
+      Role.user,
+      text,
+    );
+  }
+
+  Future<void> fetchMessages() async {
+    await _chatService.fetchMessages(tablePrefix);
   }
 }

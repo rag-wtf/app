@@ -1,3 +1,4 @@
+import 'package:chat/chat.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
@@ -165,7 +166,7 @@ class CenterWidget extends StatelessWidget {
   final HomeViewModel viewModel;
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.green);
+    return ChatView();
   }
 }
 
@@ -178,6 +179,28 @@ class LeftWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DocumentListView();
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const TabBar(
+            tabs: [
+              Tab(
+                text: 'Documents',
+              ),
+              Tab(
+                text: 'Chats',
+              ),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            DocumentListView(),
+            ChatListView(),
+          ],
+        ),
+      ),
+    );
   }
 }
