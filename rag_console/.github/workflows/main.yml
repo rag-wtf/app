@@ -1,0 +1,58 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 2.5.3
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Format code
+        run: flutter format --set-exit-if-changed .
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Generate coverage report
+        run: genhtml coverage/lcov.info -o coverage/
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage/
+
+      - name: Publish coverage comment
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const coverageIndex = fs.readFileSync('coverage/index.html', 'utf8');
+            const comment = `Coverage Report:\n\n${coverageIndex}`;
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
