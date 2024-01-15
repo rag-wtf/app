@@ -200,8 +200,10 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  Future<void> fetchMessages(String tablePrefix, int chatIndex) async {
-    _chatIndex = chatIndex;
+  Future<void> fetchMessages(String tablePrefix, [int chatIndex = -1]) async {
+    if (chatIndex > -1) {
+      _chatIndex = chatIndex;
+    }
     final messages = await _chatMessageRepository.getAllMessagesOfChat(
       tablePrefix,
       chats[chatIndex].id!,
@@ -220,6 +222,7 @@ class ChatService with ListenableServiceMixin {
   Future<void> addMessage(
     String tablePrefix,
     String authorId,
+    Role role,
     String text,
   ) async {
     final now = DateTime.now();
@@ -227,6 +230,7 @@ class ChatService with ListenableServiceMixin {
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
       authorId: authorId,
+      role: role,
       text: text,
       type: MessageType.text,
       created: now,
@@ -280,6 +284,7 @@ class ChatService with ListenableServiceMixin {
         await addMessage(
           tablePrefix,
           defaultAgentId,
+          Role.agent,
           generatedText,
         );
       } else {
