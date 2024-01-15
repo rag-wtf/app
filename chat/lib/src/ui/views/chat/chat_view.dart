@@ -1,14 +1,16 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
+import 'package:chat/src/ui/widgets/message_widget.dart';
+import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:stacked/stacked.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
-  const ChatView({super.key, this.tablePrefix = 'main'});
+  ChatView({super.key, this.tablePrefix = 'main'});
   final String tablePrefix;
+  final _scrollController = ScrollController();
 
   @override
   Widget builder(
@@ -16,42 +18,51 @@ class ChatView extends StackedView<ChatViewModel> {
     ChatViewModel viewModel,
     Widget? child,
   ) {
-    return Chat(
-      messages: viewModel.messages.map(
-        (message) {
-          final json = message.toJson();
-          json['author'] = types.User(
-            id: message.authorId,
-            role: message.authorId.startsWith('user')
-                ? types.Role.user
-                : types.Role.agent,
-          ).toJson();
-          return types.Message.fromJson(json);
-        },
-      ).toList(),
-      onAttachmentPressed: _handleAttachmentPressed,
-      onMessageTap: _handleMessageTap,
-      onPreviewDataFetched: _handlePreviewDataFetched,
-      onSendPressed: (partialText) =>
-          _handleSendPressed(viewModel, partialText),
-      showUserAvatars: true,
-      showUserNames: true,
-      user: types.User(
-        id: viewModel.userId,
-      ),
-      theme: const DefaultChatTheme(
-        seenIcon: Text(
-          'read',
-          style: TextStyle(
-            fontSize: 10,
+    return Column(
+      children: [
+        Flexible(
+          child: InfiniteList(
+            scrollController: _scrollController,
+            itemCount: viewModel.messages.length,
+            isLoading: viewModel.isBusy,
+            onFetchData: viewModel.fetchMessages,
+            reverse: true,
+            hasReachedMax: viewModel.hasReachedMax,
+            itemBuilder: (context, index) {
+              return MessageWidget(viewModel.messages[index]);
+            },
           ),
         ),
-      ),
+        const SizedBox(
+          height: 5,
+        ),
+        MessageBar(
+          onSend: (text) => _onSend(viewModel, text),
+          actions: [
+            InkWell(
+              child: const Icon(
+                Icons.add,
+                color: Colors.black,
+                size: 24,
+              ),
+              onTap: () {},
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: InkWell(
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.green,
+                  size: 24,
+                ),
+                onTap: () {},
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
-
-  @override
-  bool get disposeViewModel => false;
 
   @override
   ChatViewModel viewModelBuilder(
@@ -59,16 +70,23 @@ class ChatView extends StackedView<ChatViewModel> {
   ) =>
       ChatViewModel(tablePrefix);
 
-  void _handleAttachmentPressed() {}
+  @override
+  void onDispose(ChatViewModel viewModel) {
+    _scrollController.dispose();
+  }
 
-  void _handleMessageTap(BuildContext context, types.Message p1) {}
+  Future<void> _onSend(ChatViewModel viewModel, String text) async {
+    _scrollToBottom();
+    await viewModel.addMessage(viewModel.userId, text);
+  }
 
-  void _handlePreviewDataFetched(types.TextMessage p1, types.PreviewData p2) {}
-
-  Future<void> _handleSendPressed(
-    ChatViewModel viewModel,
-    types.PartialText partialText,
-  ) async {
-    await viewModel.addMessage(viewModel.userId, partialText.text);
+  void _scrollToBottom() {
+    // Autoscroll to the top after message sent
+    // (top is bottom when reverse=True in the infinite list)
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.easeOut,
+    );
   }
 }

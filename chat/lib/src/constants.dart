@@ -4,3 +4,5 @@ const String defaultChatName = 'Untitled chat';
 const String summarizeInASentencePrompt =
     'Summarize the following text in 10 words:\n';
 const String englishWordSeparator = ' ';
+const defaultAgentId = 'agent:1';
+const userIdPrefix = 'user:';

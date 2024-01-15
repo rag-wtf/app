@@ -8,14 +8,16 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  avatar_brick: ^0.2.0
+  chat_bubbles: ^1.5.0
   dio: ^5.4.0
   flutter:
     sdk: flutter
-  flutter_chat_ui: ^1.6.10
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
   json_schema: ^5.1.3
   logger:
+  markdown_widget: ^2.3.2+3
   responsive_builder: ^0.7.0
   settings:
     path: ../settings

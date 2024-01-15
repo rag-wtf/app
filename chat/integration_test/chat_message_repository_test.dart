@@ -1,5 +1,6 @@
 import 'package:chat/chat.dart';
 import 'package:chat/src/app/app.locator.dart';
+import 'package:chat/src/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
@@ -75,7 +76,8 @@ void main() {
     );
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-      authorId: 'user:${Ulid()}',
+      authorId: '$userIdPrefix${Ulid()}',
+      role: Role.user,
       text: 'user message 1',
       type: MessageType.text,
       metadata: {'id': 'customId1'},
@@ -139,7 +141,8 @@ void main() {
     final messages1 = [
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        authorId: 'user:${Ulid()}',
+        authorId: '$userIdPrefix${Ulid()}',
+        role: Role.user,
         text: 'user message 1 of 1',
         type: MessageType.text,
         metadata: {'id': 'customId'},
@@ -148,7 +151,8 @@ void main() {
       ),
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        authorId: 'user:${Ulid()}',
+        authorId: '$userIdPrefix${Ulid()}',
+        role: Role.user,
         text: 'user message 2 of 1',
         type: MessageType.text,
         metadata: {'id': 'customId'},
@@ -159,7 +163,8 @@ void main() {
     final messages2 = [
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        authorId: 'user:${Ulid()}',
+        authorId: '$userIdPrefix${Ulid()}',
+        role: Role.user,
         text: 'user message 1 of 2',
         type: MessageType.text,
         metadata: {'id': 'customId'},
@@ -168,7 +173,8 @@ void main() {
       ),
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
-        authorId: 'user:${Ulid()}',
+        authorId: '$userIdPrefix${Ulid()}',
+        role: Role.user,
         text: 'user message 2 of 2',
         type: MessageType.text,
         metadata: {'id': 'customId'},
@@ -239,11 +245,12 @@ void main() {
     // Assert
     final results = List<List<dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
+    final messageList = await chatMessageRepository.getAllMessagesOfChat(
+      tablePrefix,
+      chat2.id!,
+    );
     expect(
-      await chatMessageRepository.getAllMessagesOfChat(
-        tablePrefix,
-        chat2.id!,
-      ),
+      messageList.items,
       hasLength(chatMessages2.length),
     );
 

@@ -9,6 +9,7 @@ part 'message.g.dart';
 abstract class Message with _$Message {
   const factory Message({
     required String authorId,
+    required Role role,
     required String text,
     required MessageType type,
     @DateTimeJsonConverter() required DateTime created,
@@ -28,6 +29,7 @@ abstract class Message with _$Message {
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD authorId ON {prefix}_$tableName TYPE record;
+DEFINE FIELD role ON {prefix}_$tableName TYPE string;
 DEFINE FIELD text ON {prefix}_$tableName TYPE string;
 DEFINE FIELD type ON {prefix}_$tableName TYPE string;
 DEFINE FIELD status ON {prefix}_$tableName TYPE option<string>;
@@ -51,3 +53,11 @@ enum MessageType {
 
 /// All possible statuses message can have.
 enum Status { error, seen, sending, sent }
+
+enum Role { user, agent }
+
+class MessageList {
+  const MessageList(this.items, this.total);
+  final List<Message> items;
+  final int total;
+}

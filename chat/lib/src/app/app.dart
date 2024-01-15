@@ -29,12 +29,14 @@ import 'package:chat/src/services/chat_api_service.dart';
     LazySingleton<MessageRepository>(classType: MessageRepository),
     LazySingleton<ChatService>(classType: ChatService),
 
+    LazySingleton<Dio>(classType: Dio),
+    LazySingleton<ChatApiService>(classType: ChatApiService),
+
     InitializableSingleton(
       classType: DatabaseService,
       asType: Surreal,
     ),
-    LazySingleton<Dio>(classType: Dio),
-    LazySingleton<ChatApiService>(classType: ChatApiService),
+
 // @stacked-service
   ],
   logger: StackedLogger(),
