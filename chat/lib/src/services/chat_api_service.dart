@@ -108,7 +108,7 @@ class ChatApiService {
       if (choice['finish_reason'] == 'stop') {
         return;
       }
-      final delta = Map<String, String>.from(choice['delta'] as Map);
+      final delta = Map<String, dynamic>.from(choice['delta'] as Map);
       final content = delta['content'];
     });
   }
