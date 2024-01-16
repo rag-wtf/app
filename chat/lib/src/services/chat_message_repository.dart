@@ -106,7 +106,9 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}
       sql,
     ))! as List;
     _log.d(results);
-    final total = ((results[1] as List).first as Map)['count'] as int;
+    final totalList = results[1] as List;
+    final total =
+        totalList.isNotEmpty ? (totalList.first as Map)['count'] as int : 0;
     final messages = results.last as List;
 
     return MessageList(
