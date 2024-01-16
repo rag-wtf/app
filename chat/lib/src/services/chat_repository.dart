@@ -78,7 +78,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     final sql =
         'SELECT count() FROM ${tablePrefix}_${Chat.tableName} GROUP ALL;';
     final results = (await _db.query(sql))! as List;
-    return (results.first as Map)['count'] as int;
+    return results.isNotEmpty ? (results.first as Map)['count'] as int : 0;
   }
 
   Future<Chat?> getChatById(String id) async {
