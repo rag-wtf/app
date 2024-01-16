@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_api_message.dart';
@@ -18,6 +21,111 @@ class ChatApiService {
     String model,
     String systemPrompt,
   ) async {
+    final response = await dio.post<Map<String, dynamic>>(
+      generationApiUrl,
+      options: Options(
+        headers: {
+          'Content-type': 'application/json',
+          if (generationApiKey.isNotEmpty)
+            'Authorization': 'Bearer $generationApiKey',
+        },
+      ),
+      data: {
+        'model': model,
+        'messages': _getMessages(
+          messages,
+          chatWindow,
+          prompt,
+          systemPrompt,
+        ),
+      },
+    );
+    final responseData = response.data;
+    final choice = Map<String, dynamic>.from(
+      (responseData?['choices'] as List).first as Map,
+    );
+    final message = Map<String, dynamic>.from(
+      choice['message'] as Map,
+    );
+    final content = (message['content'] as String).trimLeft();
+
+    return content;
+  }
+
+  Future<void> generateStream(
+    Dio dio,
+    List<chat_message.Message> messages,
+    int chatWindow,
+    String prompt,
+    String generationApiUrl,
+    String generationApiKey,
+    String model,
+    String systemPrompt,
+  ) async {
+    final response = await dio.post<ResponseBody>(
+      generationApiUrl,
+      options: Options(
+        headers: {
+          'Accept': 'text/event-stream',
+          'Content-Type': 'application/json',
+          if (generationApiKey.isNotEmpty)
+            'Authorization': 'Bearer $generationApiKey',
+        },
+        responseType: ResponseType.stream,
+      ),
+      data: {
+        'model': model,
+        'messages': _getMessages(
+          messages,
+          chatWindow,
+          prompt,
+          systemPrompt,
+        ),
+        'stream': true,
+      },
+    );
+    if (response.data == null) {
+      throw Exception('Response data is null');
+    }
+
+    response.data?.stream
+        .transform(_uint8Transformer)
+        .transform(const Utf8Decoder())
+        .transform(const LineSplitter())
+        .listen((dataLine) {
+      if (dataLine.isEmpty ||
+              dataLine == 'data: [DONE]' ||
+              dataLine == 'null' ||
+              dataLine.startsWith(': ping') // modal_llama-cpp-python
+          ) {
+        return;
+      }
+      final map = dataLine.replaceAll('data: ', '');
+
+      final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
+      final choices = List<dynamic>.from(data['choices'] as List);
+      final choice = Map<String, dynamic>.from(choices[0] as Map);
+      if (choice['finish_reason'] == 'stop') {
+        return;
+      }
+      final delta = Map<String, String>.from(choice['delta'] as Map);
+      final content = delta['content'];
+    });
+  }
+
+  final StreamTransformer<Uint8List, List<int>> _uint8Transformer =
+      StreamTransformer.fromHandlers(
+    handleData: (data, sink) {
+      sink.add(List<int>.from(data));
+    },
+  );
+
+  List<Map<String, dynamic>> _getMessages(
+    List<chat_message.Message> messages,
+    int chatWindow,
+    String prompt,
+    String systemPrompt,
+  ) {
     final now = DateTime.now();
     final chatMessages = messages.length > 1
         ? messages
@@ -57,30 +165,6 @@ class ChatApiService {
         )
         .toList();
     _log.d(messagesMap);
-
-    final response = await dio.post<Map<String, dynamic>>(
-      generationApiUrl,
-      options: Options(
-        headers: {
-          'Content-type': 'application/json',
-          if (generationApiKey.isNotEmpty)
-            'Authorization': 'Bearer $generationApiKey',
-        },
-      ),
-      data: {
-        'model': model,
-        'messages': messagesMap,
-      },
-    );
-    final responseData = response.data;
-    final choice = Map<String, dynamic>.from(
-      (responseData?['choices'] as List).first as Map,
-    );
-    final message = Map<String, dynamic>.from(
-      choice['message'] as Map,
-    );
-    final content = (message['content'] as String).trimLeft();
-
-    return content;
+    return messagesMap;
   }
 }

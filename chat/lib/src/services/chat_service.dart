@@ -285,6 +285,16 @@ class ChatService with ListenableServiceMixin {
       _messages.insert(0, message);
       notifyListeners();
       if (authorId.startsWith('user')) {
+        _chatApiService.generateStream(
+          Dio(),
+          messages,
+          defaultChatWindow,
+          text,
+          _generationApiUrl,
+          _generationApiKey,
+          _model,
+          _systemPrompt,
+        );
         final generatedText = await _chatApiService.generate(
           _dio,
           messages,
