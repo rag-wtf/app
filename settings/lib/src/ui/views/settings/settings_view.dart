@@ -57,12 +57,12 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: viewModel.isBusy
-          ? const CircularProgressIndicator()
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: ExpansionPanelList(
                 children: [
                   SettingsExpansionPanel(
-                    headerText: 'data indexing',
+                    headerText: 'splitting',
                     body: Column(
                       children: [
                         InputField(
@@ -95,7 +95,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     isExpanded: viewModel.isPanelExpanded(0),
                   ).build(context),
                   SettingsExpansionPanel(
-                    headerText: 'embeddings',
+                    headerText: 'indexing',
                     body: Column(
                       children: [
                         InputField(
@@ -228,6 +228,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                   );
                 },
                 expandedHeaderPadding: EdgeInsets.zero,
+                elevation: 0,
+                materialGapSize: 0,
               ),
             ),
     );

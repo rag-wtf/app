@@ -136,14 +136,6 @@ packages:
       relative: true
     source: path
     version: "0.1.0+1"
-  chat_bubbles:
-    dependency: transitive
-    description:
-      name: chat_bubbles
-      sha256: "16b4d0f575fbd80ef7a687d6e63c56c23137c660f6de7884507c55e255ef2920"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -932,14 +924,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.12"
-  stopwordies:
-    dependency: transitive
-    description:
-      name: stopwordies
-      sha256: c91cd99fbfed0f8d6e11fbeba08bca50a54a4fd72cce83e2a7f3ea3135086512
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   stream_channel:
     dependency: transitive
     description:
