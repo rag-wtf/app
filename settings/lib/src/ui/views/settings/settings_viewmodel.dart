@@ -11,14 +11,16 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
   final _settingService = locator<SettingService>();
   bool isPanelExpanded(int index) => _isPanelExpanded[index];
 
+  bool get stream =>
+      bool.parse(_settingService.get(streamKey, type: bool).value);
+
   void setPanelExpanded(int index, {required bool isExpanded}) {
     _isPanelExpanded[index] = isExpanded;
 
     notifyListeners();
   }
 
-  @override
-  Future<void> futureToRun() async {
+  Future<void> _initialise() async {
     await _settingService.initialise(tablePrefix);
 
     final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
@@ -128,11 +130,6 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
     final stop = _settingService.get(stopKey);
     if (stop.id != null) {
       stopValue = stop.value;
-    }
-
-    final stream = _settingService.get(streamKey, type: bool);
-    if (stream.id != null) {
-      streamValue = stream.value;
     }
   }
 
@@ -356,13 +353,18 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
     }
   }
 
-  Future<void> setStream() async {
-    if (streamValue != null && !hasStreamValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        streamKey,
-        streamValue!,
-      );
-    }
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> setStream(bool value) async {
+    await _settingService.set(
+      tablePrefix,
+      streamKey,
+      value.toString(),
+    );
+    notifyListeners();
+  }
+
+  @override
+  Future<void> futureToRun() async {
+    await _initialise();
   }
 }

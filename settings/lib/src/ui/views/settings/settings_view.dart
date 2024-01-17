@@ -42,7 +42,6 @@ import 'package:stacked/stacked_annotations.dart';
     FormTextField(name: 'topK'),
     FormTextField(name: 'maxNewTokens'),
     FormTextField(name: 'stop'),
-    FormTextField(name: 'stream'),
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
@@ -57,159 +56,180 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: ExpansionPanelList(
-          children: [
-            SettingsExpansionPanel(
-              headerText: 'data indexing',
-              body: Column(
+      body: viewModel.isBusy
+          ? const CircularProgressIndicator()
+          : SingleChildScrollView(
+              child: ExpansionPanelList(
                 children: [
-                  InputField(
-                    labelText: 'API URL',
-                    prefixIcon: const Icon(Icons.https_outlined),
-                    hintText: 'https://www.example.com/ingest',
-                    errorText: viewModel.dataIngestionApiUrlValidationMessage,
-                    controller: dataIngestionApiUrlController,
-                    textInputType: TextInputType.url,
-                  ),
-                  InputField(
-                    labelText: 'Chunk Size',
-                    prefixIcon: const Icon(Icons.numbers_outlined),
-                    hintText: 'between 100 and 1000',
-                    errorText: viewModel.chunkSizeValidationMessage,
-                    controller: chunkSizeController,
-                    textInputType: TextInputType.number,
-                  ),
-                  InputField(
-                    labelText: 'Chunk Overlap',
-                    prefixIcon: const Icon(Icons.numbers_outlined),
-                    hintText: 'between 10 and 100',
-                    errorText: viewModel.chunkOverlapValidationMessage,
-                    controller: chunkOverlapController,
-                    textInputType: TextInputType.number,
-                  ),
+                  SettingsExpansionPanel(
+                    headerText: 'data indexing',
+                    body: Column(
+                      children: [
+                        InputField(
+                          labelText: 'API URL',
+                          prefixIcon: const Icon(Icons.https_outlined),
+                          hintText: 'https://www.example.com/ingest',
+                          errorText:
+                              viewModel.dataIngestionApiUrlValidationMessage,
+                          controller: dataIngestionApiUrlController,
+                          textInputType: TextInputType.url,
+                        ),
+                        InputField(
+                          labelText: 'Chunk Size',
+                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          hintText: 'between 100 and 1000',
+                          errorText: viewModel.chunkSizeValidationMessage,
+                          controller: chunkSizeController,
+                          textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          labelText: 'Chunk Overlap',
+                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          hintText: 'between 10 and 100',
+                          errorText: viewModel.chunkOverlapValidationMessage,
+                          controller: chunkOverlapController,
+                          textInputType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                    isExpanded: viewModel.isPanelExpanded(0),
+                  ).build(context),
+                  SettingsExpansionPanel(
+                    headerText: 'embeddings',
+                    body: Column(
+                      children: [
+                        InputField(
+                          labelText: 'Model',
+                          prefixIcon: const Icon(Icons.model_training_outlined),
+                          hintText: 'text-embedding-ada-002',
+                          errorText: viewModel.embeddingsModelValidationMessage,
+                          controller: embeddingsModelController,
+                          textInputType: TextInputType.text,
+                        ),
+                        InputField(
+                          labelText: 'API URL',
+                          prefixIcon: const Icon(Icons.https_outlined),
+                          hintText: 'https://api.openai.com/v1/embeddings',
+                          errorText:
+                              viewModel.embeddingsApiUrlValidationMessage,
+                          controller: embeddingsApiUrlController,
+                          textInputType: TextInputType.url,
+                        ),
+                        InputField(
+                          labelText: 'API Key',
+                          prefixIcon: const Icon(Icons.key_outlined),
+                          hintText: '*' * 32,
+                          errorText:
+                              viewModel.embeddingsApiKeyValidationMessage,
+                          controller: embeddingsApiKeyController,
+                          textInputType: TextInputType.none,
+                        ),
+                        InputField(
+                          labelText: 'Dimension',
+                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          errorText:
+                              viewModel.embeddingsDimensionValidationMessage,
+                          controller: embeddingsDimensionController,
+                          textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          labelText: 'Batch Size',
+                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          hintText: 'between 10 and 500',
+                          errorText:
+                              viewModel.embeddingsApiBatchSizeValidationMessage,
+                          controller: embeddingsApiBatchSizeController,
+                          textInputType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                    isExpanded: viewModel.isPanelExpanded(1),
+                  ).build(context),
+                  SettingsExpansionPanel(
+                    headerText: 'Retrieval',
+                    body: Column(
+                      children: [
+                        InputField(
+                          labelText: 'Similarity Search',
+                          prefixIcon: const Icon(Icons.search_off_outlined),
+                          errorText:
+                              viewModel.similaritySearchTypeValidationMessage,
+                          controller: similaritySearchTypeController,
+                          textInputType: TextInputType.text,
+                        ),
+                        InputField(
+                          labelText: 'Top N',
+                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          hintText: 'between 1 and 30',
+                          errorText:
+                              viewModel.retrieveTopNResultsValidationMessage,
+                          controller: retrieveTopNResultsController,
+                          textInputType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                    isExpanded: viewModel.isPanelExpanded(2),
+                  ).build(context),
+                  SettingsExpansionPanel(
+                    headerText: 'generation',
+                    body: Column(
+                      children: [
+                        InputField(
+                          labelText: 'Model',
+                          prefixIcon: const Icon(Icons.model_training_outlined),
+                          hintText: 'gpt-3.5-turbo',
+                          errorText: viewModel.generationModelValidationMessage,
+                          controller: generationModelController,
+                          textInputType: TextInputType.text,
+                        ),
+                        InputField(
+                          labelText: 'API URL',
+                          prefixIcon: const Icon(Icons.https_outlined),
+                          hintText:
+                              'https://api.openai.com/v1/chat/completions',
+                          errorText:
+                              viewModel.generationApiUrlValidationMessage,
+                          controller: generationApiUrlController,
+                          textInputType: TextInputType.url,
+                        ),
+                        InputField(
+                          labelText: 'API Key',
+                          prefixIcon: const Icon(Icons.key_outlined),
+                          hintText: '*' * 32,
+                          errorText:
+                              viewModel.generationApiKeyValidationMessage,
+                          controller: generationApiKeyController,
+                          textInputType: TextInputType.none,
+                        ),
+                        InputField(
+                          labelText: 'Max New Tokens',
+                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          hintText: 'Half of the context windows',
+                          errorText: viewModel.maxNewTokensValidationMessage,
+                          controller: maxNewTokensController,
+                          textInputType: TextInputType.number,
+                        ),
+                        SwitchListTile(
+                          title: const Text('Streaming'),
+                          value: viewModel.stream,
+                          onChanged: (value) async {
+                            await viewModel.setStream(value);
+                          },
+                        ),
+                      ],
+                    ),
+                    isExpanded: viewModel.isPanelExpanded(3),
+                  ).build(context),
                 ],
+                expansionCallback: (panelIndex, isExpanded) {
+                  viewModel.setPanelExpanded(
+                    panelIndex,
+                    isExpanded: isExpanded,
+                  );
+                },
+                expandedHeaderPadding: EdgeInsets.zero,
               ),
-              isExpanded: viewModel.isPanelExpanded(0),
-            ).build(context),
-            SettingsExpansionPanel(
-              headerText: 'embeddings',
-              body: Column(
-                children: [
-                  InputField(
-                    labelText: 'Model',
-                    prefixIcon: const Icon(Icons.model_training_outlined),
-                    hintText: 'text-embedding-ada-002',
-                    errorText: viewModel.embeddingsModelValidationMessage,
-                    controller: embeddingsModelController,
-                    textInputType: TextInputType.text,
-                  ),
-                  InputField(
-                    labelText: 'API URL',
-                    prefixIcon: const Icon(Icons.https_outlined),
-                    hintText: 'https://api.openai.com/v1/embeddings',
-                    errorText: viewModel.embeddingsApiUrlValidationMessage,
-                    controller: embeddingsApiUrlController,
-                    textInputType: TextInputType.url,
-                  ),
-                  InputField(
-                    labelText: 'API Key',
-                    prefixIcon: const Icon(Icons.key_outlined),
-                    hintText: '*' * 32,
-                    errorText: viewModel.embeddingsApiKeyValidationMessage,
-                    controller: embeddingsApiKeyController,
-                    textInputType: TextInputType.none,
-                  ),
-                  InputField(
-                    labelText: 'Dimension',
-                    prefixIcon: const Icon(Icons.numbers_outlined),
-                    errorText: viewModel.embeddingsDimensionValidationMessage,
-                    controller: embeddingsDimensionController,
-                    textInputType: TextInputType.number,
-                  ),
-                  InputField(
-                    labelText: 'Batch Size',
-                    prefixIcon: const Icon(Icons.numbers_outlined),
-                    hintText: 'between 10 and 500',
-                    errorText:
-                        viewModel.embeddingsApiBatchSizeValidationMessage,
-                    controller: embeddingsApiBatchSizeController,
-                    textInputType: TextInputType.number,
-                  ),
-                ],
-              ),
-              isExpanded: viewModel.isPanelExpanded(1),
-            ).build(context),
-            SettingsExpansionPanel(
-              headerText: 'Retrieval',
-              body: Column(
-                children: [
-                  InputField(
-                    labelText: 'Similarity Search',
-                    prefixIcon: const Icon(Icons.search_off_outlined),
-                    errorText: viewModel.similaritySearchTypeValidationMessage,
-                    controller: similaritySearchTypeController,
-                    textInputType: TextInputType.text,
-                  ),
-                  InputField(
-                    labelText: 'Top N',
-                    prefixIcon: const Icon(Icons.numbers_outlined),
-                    hintText: 'between 1 and 30',
-                    errorText: viewModel.retrieveTopNResultsValidationMessage,
-                    controller: retrieveTopNResultsController,
-                    textInputType: TextInputType.number,
-                  ),
-                ],
-              ),
-              isExpanded: viewModel.isPanelExpanded(2),
-            ).build(context),
-            SettingsExpansionPanel(
-              headerText: 'generation',
-              body: Column(
-                children: [
-                  InputField(
-                    labelText: 'Model',
-                    prefixIcon: const Icon(Icons.model_training_outlined),
-                    hintText: 'gpt-3.5-turbo',
-                    errorText: viewModel.generationModelValidationMessage,
-                    controller: generationModelController,
-                    textInputType: TextInputType.text,
-                  ),
-                  InputField(
-                    labelText: 'API URL',
-                    prefixIcon: const Icon(Icons.https_outlined),
-                    hintText: 'https://api.openai.com/v1/chat/completions',
-                    errorText: viewModel.generationApiUrlValidationMessage,
-                    controller: generationApiUrlController,
-                    textInputType: TextInputType.url,
-                  ),
-                  InputField(
-                    labelText: 'API Key',
-                    prefixIcon: const Icon(Icons.key_outlined),
-                    hintText: '*' * 32,
-                    errorText: viewModel.generationApiKeyValidationMessage,
-                    controller: generationApiKeyController,
-                    textInputType: TextInputType.none,
-                  ),
-                  InputField(
-                    labelText: 'Max New Tokens',
-                    prefixIcon: const Icon(Icons.numbers_outlined),
-                    hintText: 'Half of the context windows',
-                    errorText: viewModel.maxNewTokensValidationMessage,
-                    controller: maxNewTokensController,
-                    textInputType: TextInputType.number,
-                  ),
-                ],
-              ),
-              isExpanded: viewModel.isPanelExpanded(3),
-            ).build(context),
-          ],
-          expansionCallback: (panelIndex, isExpanded) {
-            viewModel.setPanelExpanded(panelIndex, isExpanded: isExpanded);
-          },
-          expandedHeaderPadding: EdgeInsets.zero,
-        ),
-      ),
+            ),
     );
   }
 
@@ -220,7 +240,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
       SettingsViewModel(tablePrefix);
 
   @override
-  void onViewModelReady(SettingsViewModel viewModel) {
+  Future<void> onViewModelReady(SettingsViewModel viewModel) async {
     syncFormWithViewModel(viewModel);
     dataIngestionApiUrlController.addListener(viewModel.setDataIngestionApiUrl);
     chunkSizeController.addListener(viewModel.setChunkSize);
@@ -246,7 +266,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     topKController.addListener(viewModel.setTopK);
     maxNewTokensController.addListener(viewModel.setMaxNewTokens);
     stopController.addListener(viewModel.setStop);
-    streamController.addListener(viewModel.setStream);
   }
 
   @override
