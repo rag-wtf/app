@@ -40,7 +40,7 @@ To run all unit tests:
 very_good test --coverage
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+
 
 ```sh
 # Generate Coverage Report
