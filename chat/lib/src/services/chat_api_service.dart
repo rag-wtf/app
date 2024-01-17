@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:chat/src/app/app.logger.dart';
+import 'package:chat/src/constants.dart';
 import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:dio/dio.dart';
@@ -94,19 +95,22 @@ class ChatApiService {
         .transform(const Utf8Decoder())
         .transform(const LineSplitter())
         .listen((dataLine) {
+      _log.d('dataLine $dataLine');
       if (dataLine.isEmpty ||
-              dataLine == 'data: [DONE]' ||
-              dataLine == 'null' ||
               dataLine.startsWith(': ping') // modal_llama-cpp-python
           ) {
         return;
+      } else if (dataLine == 'data: [DONE]') {
+        onResponse(stopToken);
       }
       final map = dataLine.replaceAll('data: ', '');
 
       final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
       final choices = List<dynamic>.from(data['choices'] as List);
       final choice = Map<String, dynamic>.from(choices[0] as Map);
-      if (choice['finish_reason'] == 'stop') {
+      if (choice['finish_reason'] != null) {
+        _log.d('finish_reason ${choice['finish_reason']}');
+        onResponse(stopToken);
         return;
       }
       final delta = Map<String, dynamic>.from(choice['delta'] as Map);

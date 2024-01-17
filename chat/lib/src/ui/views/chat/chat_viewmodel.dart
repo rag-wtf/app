@@ -19,7 +19,7 @@ class ChatViewModel extends ReactiveViewModel {
 
   List<Message> get messages => _chatService.messages;
 
-  bool get isGenerating => _chatService.isGenerating;
+  bool get isGenerating => _chatService.isGeneratingMessage;
 
   Future<void> addMessage(
     String authorId,

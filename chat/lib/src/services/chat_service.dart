@@ -17,7 +17,7 @@ import 'package:ulid/ulid.dart';
 
 class ChatService with ListenableServiceMixin {
   ChatService() {
-    listenToReactiveValues([_chats, _messages, isGenerating]);
+    listenToReactiveValues([_chats, _messages, isGeneratingMessage]);
   }
 
   final _db = locator<Surreal>();
@@ -29,7 +29,7 @@ class ChatService with ListenableServiceMixin {
   final _chatMessageRepository = locator<ChatMessageRepository>();
   List<Chat> get chats => _chats.toList();
   List<Message> get messages => _messages.toList();
-  bool isGenerating = false;
+  bool isGeneratingMessage = false;
   String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
   int _chatIndex = -1;
   int _totalChats = 0;
@@ -234,16 +234,52 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  void _onResponse(String content) {}
+  Future<void> _onMessageTextResponse(String content) async {
+    if (content == stopToken) {
+      isGeneratingMessage = false;
+      var tablePrefix = _messages.first.id!;
+      tablePrefix = tablePrefix.substring(0, tablePrefix.indexOf('_'));
+      await _addMessageWithChat(tablePrefix, _messages.first);
+    } else {
+      if (_messages.first.type == MessageType.loading) {
+        _messages.first = _messages.first.copyWith(
+          type: MessageType.text,
+          text: content,
+          updated: DateTime.now(),
+        );
+      } else {
+        _messages.first = _messages.first.copyWith(
+          text: _messages.first.text + content,
+          updated: DateTime.now(),
+        );
+      }
+    }
+    notifyListeners();
+  }
 
-  void _addLoadingMessage() {
-    isGenerating = true;
+  Future<void> _onChatNameResponse(String content) async {
+    _log.d('_chatIndex $_chatIndex');
+    final chat = _chats[_chatIndex];
+    if (content == stopToken) {
+      await _chatRepository.updateChat(chat);
+    } else {
+      _chats[_chatIndex] = chat.copyWith(
+        name: chat.name != defaultChatName ? chat.name + content : content,
+        updated: DateTime.now(),
+      );
+      notifyListeners();
+    }
+  }
+
+  void _addLoadingMessage(String tablePrefix) {
+    isGeneratingMessage = true;
     final now = DateTime.now();
     _messages.insert(
       0,
       Message(
-        authorId: '',
-        role: Role.user,
+        id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+        authorId: defaultAgentId,
+        role: Role.agent,
         text: '',
         type: MessageType.loading,
         created: now,
@@ -251,6 +287,38 @@ class ChatService with ListenableServiceMixin {
       ),
     );
     notifyListeners();
+  }
+
+  Future<bool> _addMessageWithChat(String tablePrefix, Message message) async {
+    final chat = _chats[_chatIndex];
+    _log.d('addMessage: chat.id ${_chats[_chatIndex].id}');
+    final txnResults = await createMessage(
+      tablePrefix,
+      chat,
+      message,
+    );
+    final results = List<List<dynamic>>.from(txnResults! as List);
+    final isTxnSucess = results.every(
+      (sublist) => sublist.isNotEmpty,
+    );
+    if (isTxnSucess) {
+      if (chat.name == defaultChatName) {
+        await _chatApiService.generateStream(
+          _dio,
+          [],
+          defaultChatWindow,
+          '$summarizeInASentencePrompt${_messages.first.text}',
+          _generationApiUrl,
+          _generationApiKey,
+          _model,
+          _systemPrompt,
+          _onChatNameResponse,
+        );
+      }
+    } else {
+      throw Exception('Unable to create message.');
+    }
+    return isTxnSucess;
   }
 
   Future<bool> _addMessage(
@@ -270,17 +338,16 @@ class ChatService with ListenableServiceMixin {
       created: now,
       updated: now,
     );
-    Chat chat;
-    Object? txnResults;
+
     bool isTxnSucess;
     if (_chatIndex == -1) {
-      chat = Chat(
+      final chat = Chat(
         id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
         name: defaultChatName,
         created: now,
         updated: now,
       );
-      txnResults = await createChatAndMessage(
+      final txnResults = await createChatAndMessage(
         tablePrefix,
         chat,
         message,
@@ -289,31 +356,17 @@ class ChatService with ListenableServiceMixin {
       isTxnSucess = results.every(
         (sublist) => sublist.isNotEmpty,
       );
-      if (!isTxnSucess) {
+      if (isTxnSucess) {
+        _chats.insert(0, chat);
+        _chatIndex = 0;
+      } else {
         throw Exception('Unable to create chat and message.');
       }
     } else {
-      chat = chats[_chatIndex];
-      _log.d('addMessage: chat.id ${chats[_chatIndex].id}');
-      txnResults = await createMessage(
-        tablePrefix,
-        chat,
-        message,
-      );
-      final results = List<List<dynamic>>.from(txnResults! as List);
-      isTxnSucess = results.every(
-        (sublist) => sublist.isNotEmpty,
-      );
-      if (!isTxnSucess) {
-        throw Exception('Unable to create message.');
-      }
+      isTxnSucess = await _addMessageWithChat(tablePrefix, message);
     }
 
     if (isTxnSucess) {
-      if (_chatIndex == -1) {
-        _chats.insert(0, chat);
-        _chatIndex = 0;
-      }
       if (role == Role.user) {
         _messages.insert(0, message);
       } else {
@@ -333,9 +386,11 @@ class ChatService with ListenableServiceMixin {
     final isSuccess = await _addMessage(tablePrefix, authorId, role, text);
     if (isSuccess) {
       if (role == Role.user) {
-        //final isStreaming = bool.parse(_settingService.get(streamKey).value);
-
-        /* if (isStreaming) {
+        final isStreaming = bool.parse(
+          _settingService.get(streamKey, type: bool).value,
+        );
+        _addLoadingMessage(tablePrefix);
+        if (isStreaming) {
           await _chatApiService.generateStream(
             _dio,
             messages,
@@ -345,28 +400,27 @@ class ChatService with ListenableServiceMixin {
             _generationApiKey,
             _model,
             _systemPrompt,
-            _onResponse,
+            _onMessageTextResponse,
           );
-        } else { */
-        _addLoadingMessage();
-        final generatedText = await _chatApiService.generate(
-          _dio,
-          messages,
-          defaultChatWindow,
-          text,
-          _generationApiUrl,
-          _generationApiKey,
-          _model,
-          _systemPrompt,
-        );
-        isGenerating = false;
-        await addMessage(
-          tablePrefix,
-          defaultAgentId,
-          Role.agent,
-          generatedText,
-        );
-        //}
+        } else {
+          final generatedText = await _chatApiService.generate(
+            _dio,
+            messages,
+            defaultChatWindow,
+            text,
+            _generationApiUrl,
+            _generationApiKey,
+            _model,
+            _systemPrompt,
+          );
+          isGeneratingMessage = false;
+          await addMessage(
+            tablePrefix,
+            defaultAgentId,
+            Role.agent,
+            generatedText,
+          );
+        }
       } else {
         await _updateChatName(text);
       }
