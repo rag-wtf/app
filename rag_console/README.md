@@ -34,7 +34,7 @@ For first time users, install the [very_good_cli][very_good_cli_link]:
 dart pub global activate very_good_cli
 ```
 
-To run all unit tests:
+# Run all unit tests and generate coverage report
 
 ```sh
 very_good test --coverage
@@ -45,6 +45,8 @@ To view the generated coverage report you can use [lcov](https://github.com/linu
 ```sh
 # Generate Coverage Report
 genhtml coverage/lcov.info -o coverage/
+
+# Open coverage report in browser
 
 # Open Coverage Report
 open coverage/index.html
