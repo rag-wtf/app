@@ -48,7 +48,8 @@ enum MessageType {
   system,
   text,
   unsupported,
-  video
+  video,
+  loading,
 }
 
 /// All possible statuses message can have.

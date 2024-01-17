@@ -19,27 +19,31 @@ class MessageWidget extends StatelessWidget {
         children: [
           if (message.role == Role.user)
             const AvatarBrick(
+              size: Size(32, 32),
               backgroundColor: Colors.black26,
               icon: Icon(
                 Icons.person_rounded,
-                size: 32,
+                size: 24,
                 color: Colors.white,
               ),
             )
           else
             const AvatarBrick(
+              size: Size(32, 32),
               backgroundColor: Colors.black26,
               icon: Icon(
                 Icons.computer_rounded,
-                size: 32,
+                size: 24,
                 color: Colors.white,
               ),
             ),
           const SizedBox(
             width: 5,
           ), // Add spacing between the leading widget and title
-
-          Expanded(child: buildMarkdown(context)),
+          if (message.type == MessageType.loading)
+            const CircularProgressIndicator()
+          else
+            Expanded(child: buildMarkdown(context)),
         ],
       ),
     );

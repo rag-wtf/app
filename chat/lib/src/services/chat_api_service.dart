@@ -61,6 +61,7 @@ class ChatApiService {
     String generationApiKey,
     String model,
     String systemPrompt,
+    void Function(String) onResponse,
   ) async {
     final response = await dio.post<ResponseBody>(
       generationApiUrl,
@@ -109,7 +110,8 @@ class ChatApiService {
         return;
       }
       final delta = Map<String, dynamic>.from(choice['delta'] as Map);
-      final content = delta['content'];
+      final content = delta['content'] as String;
+      onResponse(content);
     });
   }
 

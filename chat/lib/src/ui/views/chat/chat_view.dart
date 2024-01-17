@@ -1,8 +1,9 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
+import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
-import 'package:chat_bubbles/message_bars/message_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
@@ -37,6 +38,7 @@ class ChatView extends StackedView<ChatViewModel> {
           height: 5,
         ),
         MessageBar(
+          sendButtonEnabled: !viewModel.isGenerating,
           onSend: (text) => _onSend(viewModel, text),
           actions: [
             InkWell(
