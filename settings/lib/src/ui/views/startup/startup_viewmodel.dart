@@ -1,6 +1,5 @@
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.router.dart';
-import 'package:settings/src/constants.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:stacked_services/stacked_services.dart';

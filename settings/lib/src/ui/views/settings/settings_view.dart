@@ -303,7 +303,7 @@ class SettingsValidators {
       return message;
     } else {
       final uri = Uri.tryParse(value);
-      if (uri!.path.endsWith(uriPath)) {
+      if (!uri!.path.endsWith(uriPath)) {
         return 'The API URL must be ended with $uriPath.';
       }
       return null;

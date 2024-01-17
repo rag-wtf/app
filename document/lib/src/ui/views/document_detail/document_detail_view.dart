@@ -1,10 +1,9 @@
+import 'package:document/src/ui/views/document_detail/document_detail_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'document_detail_viewmodel.dart';
-
 class DocumentDetailView extends StackedView<DocumentDetailViewModel> {
-  const DocumentDetailView({Key? key}) : super(key: key);
+  const DocumentDetailView({super.key});
 
   @override
   Widget builder(
@@ -15,7 +14,7 @@ class DocumentDetailView extends StackedView<DocumentDetailViewModel> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
-        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+        padding: const EdgeInsets.only(left: 25, right: 25),
       ),
     );
   }

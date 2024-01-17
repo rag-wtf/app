@@ -1,7 +1,7 @@
-import 'package:rag_console/src/ui/common/ui_helpers.dart';
-import 'package:rag_console/src/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:rag_console/src/ui/common/ui_helpers.dart';
+import 'package:rag_console/src/ui/views/startup/startup_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class StartupView extends StackedView<StartupViewModel> {
