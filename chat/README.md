@@ -13,6 +13,12 @@ A Very Good Project created by Very Good CLI.
 Install via `flutter pub add`:
 
 ```sh
+```sh
+# Running Tests \ud83e\udd2a
+
+To run all unit tests:
+
+```sh
 dart pub add chat
 ```
 
@@ -44,10 +50,10 @@ To view the generated coverage report you can use [lcov](https://github.com/linu
 
 ```sh
 # Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
 
-# Open Coverage Report
-open coverage/index.html
+
+
+
 ```
 
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
