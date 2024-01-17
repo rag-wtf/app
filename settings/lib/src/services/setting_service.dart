@@ -30,6 +30,8 @@ class SettingService {
       value = Env.read<int>(key).toString();
     } else if (type == double) {
       value = Env.read<double>(key).toString();
+    } else if (type == bool) {
+      value = Env.read<bool>(key).toString();
     } else {
       value = Env.read<String>(key) ?? undefined;
     }
