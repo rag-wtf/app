@@ -40,16 +40,10 @@ dart pub global activate very_good_cli
 very_good test --coverage
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+
 
 ```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
 
-# Open coverage report in browser
-
-# Open Coverage Report
-open coverage/index.html
 ```
 
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
