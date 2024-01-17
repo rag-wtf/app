@@ -747,14 +747,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  stopwordies:
-    dependency: "direct main"
-    description:
-      name: stopwordies
-      sha256: c91cd99fbfed0f8d6e11fbeba08bca50a54a4fd72cce83e2a7f3ea3135086512
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   stream_channel:
     dependency: transitive
     description:

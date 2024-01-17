@@ -11,7 +11,6 @@ import 'package:chat/src/services/message_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stopwordies/stopwordies.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
 
@@ -431,7 +430,7 @@ class ChatService with ListenableServiceMixin {
     String generatedText,
   ) async {
     if (_chats[_chatIndex].name == defaultChatName) {
-      var generatedChatName = await _chatApiService.generate(
+      final generatedChatName = await _chatApiService.generate(
         _dio,
         [],
         defaultChatWindow,
@@ -441,19 +440,8 @@ class ChatService with ListenableServiceMixin {
         _model,
         _systemPrompt,
       );
-      final words = generatedChatName.split(englishWordSeparator);
-      final stopWords = await StopWordies.getFor(locale: SWLocale.en);
-      final result = words
-          .where(
-            (item) => !stopWords.contains(item.toLowerCase()),
-          )
-          .toList();
-      if (result.isNotEmpty) {
-        if (result.length <= 10) {
-          generatedChatName = result.join(englishWordSeparator);
-        } else {
-          generatedChatName = result.sublist(0, 10).join(englishWordSeparator);
-        }
+
+      if (generatedChatName.isNotEmpty) {
         final updatedChat = await _chatRepository.updateChat(
           _chats[_chatIndex].copyWith(
             name: generatedChatName,
