@@ -13,7 +13,7 @@ A Very Good Project created by Very Good CLI.
 Install via `flutter pub add`:
 
 ```sh
-dart pub add console
+very_good test --coverage
 ```
 
 ---
@@ -40,14 +40,10 @@ To run all unit tests:
 very_good test --coverage
 ```
 
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
+
 
 ```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
 
-# Open Coverage Report
-open coverage/index.html
 ```
 
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
