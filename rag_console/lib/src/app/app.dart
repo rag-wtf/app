@@ -1,13 +1,13 @@
 import 'package:archive/archive_io.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
+import 'package:rag_console/src/services/rag_console_api_service.dart';
 import 'package:rag_console/src/ui/views/rag_console/rag_console_view.dart';
 import 'package:rag_console/src/ui/views/startup/startup_view.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
-import 'package:rag_console/src/services/rag_console_api_service.dart';
 // @stacked-import
 
 @StackedApp(

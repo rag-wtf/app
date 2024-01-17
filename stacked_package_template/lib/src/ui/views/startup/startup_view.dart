@@ -1,8 +1,8 @@
-import 'package:stacked_package_template/src/ui/common/ui_helpers.dart';
-import 'package:stacked_package_template/src/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_package_template/src/ui/common/ui_helpers.dart';
+import 'package:stacked_package_template/src/ui/views/startup/startup_viewmodel.dart';
 
 class StartupView extends StackedView<StartupViewModel> {
   const StartupView({super.key});
