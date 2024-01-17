@@ -43,6 +43,8 @@ very_good test --coverage
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
 
 ```sh
+# Check Test Step and Code Coverage Enforcement
+Verify that the test step runs and code coverage is enforced. If not, investigate and resolve any issues.
 # Generate Coverage Report
 genhtml coverage/lcov.info -o coverage/
 
