@@ -1,8 +1,8 @@
+import 'package:chat/src/services/chat_api_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'package:chat/src/services/chat_api_service.dart';
 // @stacked-import
 import 'test_helpers.mocks.dart';
 

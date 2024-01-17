@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:stacked_package_template/src/app/app.locator.dart';
 import 'package:stacked_package_template/src/app/app.router.dart';
-import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
