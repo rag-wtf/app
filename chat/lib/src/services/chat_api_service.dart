@@ -53,7 +53,7 @@ class ChatApiService {
     return content;
   }
 
-  Future<void> generateStream(
+  void generateStream(
     Dio dio,
     List<chat_message.Message> messages,
     int chatWindow,
@@ -63,8 +63,8 @@ class ChatApiService {
     String model,
     String systemPrompt,
     void Function(String) onResponse,
-  ) async {
-    final response = await dio.post<ResponseBody>(
+  ) {
+    final response = dio.post<ResponseBody>(
       generationApiUrl,
       options: Options(
         headers: {
@@ -86,36 +86,38 @@ class ChatApiService {
         'stream': true,
       },
     );
-    if (response.data == null) {
-      throw Exception('Response data is null');
-    }
 
-    response.data?.stream
-        .transform(_uint8Transformer)
-        .transform(const Utf8Decoder())
-        .transform(const LineSplitter())
-        .listen((dataLine) {
-      _log.d('dataLine $dataLine');
-      if (dataLine.isEmpty ||
-              dataLine.startsWith(': ping') // modal_llama-cpp-python
-          ) {
-        return;
-      } else if (dataLine == 'data: [DONE]') {
-        onResponse(stopToken);
-      }
-      final map = dataLine.replaceAll('data: ', '');
+    response.asStream().listen((event) {
+      event.data?.stream
+          .transform(_uint8Transformer)
+          .transform(const Utf8Decoder())
+          .transform(const LineSplitter())
+          .listen((dataLine) {
+        _log.d('dataLine $dataLine');
+        if (dataLine.isEmpty ||
+                dataLine.startsWith(': ping') // modal_llama-cpp-python
+            ) {
+          return;
+        } else if (dataLine == 'data: [DONE]') {
+          onResponse(stopToken);
+        }
+        final map = dataLine.replaceAll('data: ', '');
 
-      final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
-      final choices = List<dynamic>.from(data['choices'] as List);
-      final choice = Map<String, dynamic>.from(choices[0] as Map);
-      if (choice['finish_reason'] != null) {
-        _log.d('finish_reason ${choice['finish_reason']}');
-        onResponse(stopToken);
-        return;
-      }
-      final delta = Map<String, dynamic>.from(choice['delta'] as Map);
-      final content = delta['content'] as String;
-      onResponse(content);
+        final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
+        final choices = List<dynamic>.from(data['choices'] as List);
+        final choice = Map<String, dynamic>.from(choices[0] as Map);
+        if (choice['finish_reason'] != null) {
+          _log.d('finish_reason ${choice['finish_reason']}');
+          onResponse(stopToken);
+          return;
+        }
+        final delta = Map<String, dynamic>.from(choice['delta'] as Map);
+        final content = delta['content'] as String;
+        onResponse(content);
+      });
+    }).onError((dynamic error) {
+      _log.e(error);
+      throw Exception(error);
     });
   }
 
