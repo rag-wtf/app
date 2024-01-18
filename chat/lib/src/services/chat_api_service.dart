@@ -53,7 +53,7 @@ class ChatApiService {
     return content;
   }
 
-  Future<void> generateStream(
+  Stream<String> generateStream(
     Dio dio,
     List<chat_message.Message> messages,
     int chatWindow,
@@ -61,9 +61,11 @@ class ChatApiService {
     String generationApiUrl,
     String generationApiKey,
     String model,
-    String systemPrompt,
-    void Function(String) onResponse,
-  ) async {
+    String systemPrompt, {
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async* {
     final response = await dio.post<ResponseBody>(
       generationApiUrl,
       options: Options(
@@ -85,39 +87,39 @@ class ChatApiService {
         ),
         'stream': true,
       },
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
     );
     if (response.data == null) {
       throw Exception('Response data is null');
     }
-
-    response.data?.stream
+    yield* response.data!.stream
         .transform(_uint8Transformer)
         .transform(const Utf8Decoder())
         .transform(const LineSplitter())
-        .listen((dataLine) {
-      _log.d('dataLine $dataLine');
-      if (dataLine.isEmpty ||
-              dataLine.startsWith(': ping') // modal_llama-cpp-python
-          ) {
-        return;
-      } else if (dataLine == 'data: [DONE]') {
-        onResponse(stopToken);
-      }
-      final map = dataLine.replaceAll('data: ', '');
-
-      final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
-      final choices = List<dynamic>.from(data['choices'] as List);
-      final choice = Map<String, dynamic>.from(choices[0] as Map);
-      if (choice['finish_reason'] != null) {
-        _log.d('finish_reason ${choice['finish_reason']}');
-        onResponse(stopToken);
-        return;
-      }
-      final delta = Map<String, dynamic>.from(choice['delta'] as Map);
-      final content = delta['content'] as String;
-      onResponse(content);
-    });
+        .transform(_contentTransformer);
   }
+
+  final StreamTransformer<String, String> _contentTransformer =
+      StreamTransformer.fromHandlers(
+    handleData: (dataLine, sink) {
+      print('dataLine $dataLine');
+      if (dataLine.isNotEmpty &&
+          !dataLine.startsWith(': ping') && // modal_llama-cpp-python
+          dataLine != 'data: [DONE]') {
+        final map = dataLine.replaceAll('data: ', '');
+        final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
+        final choices = List<dynamic>.from(data['choices'] as List);
+        final choice = Map<String, dynamic>.from(choices[0] as Map);
+        if (choice['finish_reason'] == null) {
+          final delta = Map<String, dynamic>.from(choice['delta'] as Map);
+          final content = delta['content'] as String;
+          sink.add(content);
+        }
+      }
+    },
+  );
 
   final StreamTransformer<Uint8List, List<int>> _uint8Transformer =
       StreamTransformer.fromHandlers(
