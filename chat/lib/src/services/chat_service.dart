@@ -233,41 +233,42 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  Future<void> _onMessageTextResponse(String content) async {
-    if (content == stopToken) {
-      isGeneratingMessage = false;
-      var tablePrefix = _messages.first.id!;
-      tablePrefix = tablePrefix.substring(0, tablePrefix.indexOf('_'));
-      await _addMessageWithChat(tablePrefix, _messages.first);
+  void _onMessageTextResponse(String content) {
+    if (_messages.first.type == MessageType.loading) {
+      _messages.first = _messages.first.copyWith(
+        type: MessageType.text,
+        text: content,
+        updated: DateTime.now(),
+      );
     } else {
-      if (_messages.first.type == MessageType.loading) {
-        _messages.first = _messages.first.copyWith(
-          type: MessageType.text,
-          text: content,
-          updated: DateTime.now(),
-        );
-      } else {
-        _messages.first = _messages.first.copyWith(
-          text: _messages.first.text + content,
-          updated: DateTime.now(),
-        );
-      }
+      _messages.first = _messages.first.copyWith(
+        text: _messages.first.text + content,
+        updated: DateTime.now(),
+      );
     }
     notifyListeners();
   }
 
-  Future<void> _onChatNameResponse(String content) async {
-    _log.d('_chatIndex $_chatIndex');
+  Future<void> _onMessageTextResponseCompleted() async {
+    isGeneratingMessage = false;
+    var tablePrefix = _messages.first.id!;
+    tablePrefix = tablePrefix.substring(0, tablePrefix.indexOf('_'));
+    await _addMessageWithChat(tablePrefix, _messages.first);
+    notifyListeners();
+  }
+
+  void _onChatNameResponse(String content) {
     final chat = _chats[_chatIndex];
-    if (content == stopToken) {
-      await _chatRepository.updateChat(chat);
-    } else {
-      _chats[_chatIndex] = chat.copyWith(
-        name: chat.name != defaultChatName ? chat.name + content : content,
-        updated: DateTime.now(),
-      );
-      notifyListeners();
-    }
+    _chats[_chatIndex] = chat.copyWith(
+      name: chat.name != defaultChatName ? chat.name + content : content,
+      updated: DateTime.now(),
+    );
+    notifyListeners();
+  }
+
+  Future<void> _onChatNameResponseCompleted() async {
+    final chat = _chats[_chatIndex];
+    await _chatRepository.updateChat(chat);
   }
 
   void _addLoadingMessage(String tablePrefix) {
@@ -302,7 +303,7 @@ class ChatService with ListenableServiceMixin {
     );
     if (isTxnSucess) {
       if (chat.name == defaultChatName) {
-        await _chatApiService.generateStream(
+        final responseStream = _chatApiService.generateStream(
           _dio,
           [],
           defaultChatWindow,
@@ -311,8 +312,11 @@ class ChatService with ListenableServiceMixin {
           _generationApiKey,
           _model,
           _systemPrompt,
-          _onChatNameResponse,
         );
+        await for (final content in responseStream) {
+          _onChatNameResponse(content);
+        }
+        await _onChatNameResponseCompleted();
       }
     } else {
       throw Exception('Unable to create message.');
@@ -390,7 +394,7 @@ class ChatService with ListenableServiceMixin {
         );
         _addLoadingMessage(tablePrefix);
         if (isStreaming) {
-          await _chatApiService.generateStream(
+          final responseStream = _chatApiService.generateStream(
             _dio,
             messages,
             defaultChatWindow,
@@ -399,8 +403,11 @@ class ChatService with ListenableServiceMixin {
             _generationApiKey,
             _model,
             _systemPrompt,
-            _onMessageTextResponse,
           );
+          await for (final content in responseStream) {
+            _onMessageTextResponse(content);
+          }
+          await _onMessageTextResponseCompleted();
         } else {
           final generatedText = await _chatApiService.generate(
             _dio,
