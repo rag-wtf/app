@@ -177,7 +177,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'Model',
                           prefixIcon: const Icon(Icons.model_training_outlined),
-                          hintText: 'gpt-3.5-turbo',
+                          hintText: 'gpt-3.5-turbo-1106',
                           errorText: viewModel.generationModelValidationMessage,
                           controller: generationModelController,
                           textInputType: TextInputType.text,
