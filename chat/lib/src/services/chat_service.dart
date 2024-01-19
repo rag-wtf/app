@@ -19,6 +19,19 @@ class ChatService with ListenableServiceMixin {
     listenToReactiveValues([_chats, _messages, isGeneratingMessage]);
   }
 
+  bool isGeneratingMessage = false;
+  List<Chat> get chats => _chats.toList();
+  List<Message> get messages => _messages.toList();
+  bool get _isStreaming => bool.parse(
+        _settingService.get(streamKey, type: bool).value,
+      );
+  String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
+  String get _generationApiUrl =>
+      _settingService.get(generationApiUrlKey).value;
+  String get _generationApiKey => _settingService.get(generationApiKey).value;
+  String get _model => _settingService.get(generationModelKey).value;
+  String get _systemPrompt => _settingService.get(systemPromptKey).value;
+
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();
   final _chatApiService = locator<ChatApiService>();
@@ -26,21 +39,11 @@ class ChatService with ListenableServiceMixin {
   final _chatRepository = locator<ChatRepository>();
   final _messageRepository = locator<MessageRepository>();
   final _chatMessageRepository = locator<ChatMessageRepository>();
-  List<Chat> get chats => _chats.toList();
-  List<Message> get messages => _messages.toList();
-  bool isGeneratingMessage = false;
-  String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
+  final _chats = <Chat>[];
+  final _messages = <Message>[];
   int _chatIndex = -1;
   int _totalChats = 0;
   int _totalMessages = 0;
-  final _chats = <Chat>[];
-  final _messages = <Message>[];
-
-  String get _generationApiUrl =>
-      _settingService.get(generationApiUrlKey).value;
-  String get _generationApiKey => _settingService.get(generationApiKey).value;
-  String get _model => _settingService.get(generationModelKey).value;
-  String get _systemPrompt => _settingService.get(systemPromptKey).value;
   final _log = getLogger('ChatService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
@@ -311,7 +314,7 @@ class ChatService with ListenableServiceMixin {
           _generationApiUrl,
           _generationApiKey,
           _model,
-          _systemPrompt,
+          chatNameSummarizerSystemPrompt,
         );
         await for (final content in responseStream) {
           _onChatNameResponse(content);
@@ -389,21 +392,9 @@ class ChatService with ListenableServiceMixin {
     final isSuccess = await _addMessage(tablePrefix, authorId, role, text);
     if (isSuccess) {
       if (role == Role.user) {
-        final isStreaming = bool.parse(
-          _settingService.get(streamKey, type: bool).value,
-        );
         _addLoadingMessage(tablePrefix);
-        if (isStreaming) {
-          final responseStream = _chatApiService.generateStream(
-            _dio,
-            messages,
-            defaultChatWindow,
-            text,
-            _generationApiUrl,
-            _generationApiKey,
-            _model,
-            _systemPrompt,
-          );
+        if (_isStreaming) {
+          final responseStream = generateMessageText();
           await for (final content in responseStream) {
             _onMessageTextResponse(content);
           }
@@ -433,6 +424,19 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
+  Stream<String> generateMessageText() async* {
+    yield* _chatApiService.generateStream(
+      _dio,
+      messages,
+      defaultChatWindow,
+      messages[1].text, // messages[0] is a loading message
+      _generationApiUrl,
+      _generationApiKey,
+      _model,
+      _systemPrompt,
+    );
+  }
+
   Future<void> _updateChatName(
     String generatedText,
   ) async {
@@ -445,7 +449,7 @@ class ChatService with ListenableServiceMixin {
         _generationApiUrl,
         _generationApiKey,
         _model,
-        _systemPrompt,
+        chatNameSummarizerSystemPrompt,
       );
 
       if (generatedChatName.isNotEmpty) {

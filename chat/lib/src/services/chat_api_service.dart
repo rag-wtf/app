@@ -104,7 +104,6 @@ class ChatApiService {
   final StreamTransformer<String, String> _contentTransformer =
       StreamTransformer.fromHandlers(
     handleData: (dataLine, sink) {
-      print('dataLine $dataLine');
       if (dataLine.isNotEmpty &&
           !dataLine.startsWith(': ping') && // modal_llama-cpp-python
           dataLine != 'data: [DONE]') {
@@ -135,9 +134,11 @@ class ChatApiService {
     String systemPrompt,
   ) {
     final now = DateTime.now();
+    // 0 is loading message
+    // 1 is current user message which will be formatted with prompt template
     final chatMessages = messages.length > 1
         ? messages
-            .sublist(1, min(messages.length, chatWindow))
+            .sublist(2, min(messages.length, chatWindow))
             .reversed
             .map(
               (message) => ChatApiMessage(
@@ -151,6 +152,7 @@ class ChatApiService {
             .toList()
         : <ChatApiMessage>[]
       ..add(
+        // added back message[1] with formatted prompt template
         ChatApiMessage(
           role: Role.user,
           content: prompt,

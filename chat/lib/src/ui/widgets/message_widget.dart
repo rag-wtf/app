@@ -1,8 +1,7 @@
 import 'package:avatar_brick/avatar_brick.dart';
 import 'package:chat/src/services/message.dart';
-import 'package:chat/src/ui/widgets/code_wrapper.dart';
+import 'package:chat/src/ui/widgets/markdown_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:markdown_widget/markdown_widget.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget(this.message, {super.key});
@@ -22,7 +21,7 @@ class MessageWidget extends StatelessWidget {
               size: Size(32, 32),
               backgroundColor: Colors.black26,
               icon: Icon(
-                Icons.person_rounded,
+                Icons.person_2_outlined,
                 size: 24,
                 color: Colors.white,
               ),
@@ -32,7 +31,7 @@ class MessageWidget extends StatelessWidget {
               size: Size(32, 32),
               backgroundColor: Colors.black26,
               icon: Icon(
-                Icons.computer_rounded,
+                Icons.chat_bubble_outline_rounded,
                 size: 24,
                 color: Colors.white,
               ),
@@ -47,25 +46,7 @@ class MessageWidget extends StatelessWidget {
               child: CircularProgressIndicator(),
             )
           else
-            Expanded(child: buildMarkdown(context)),
-        ],
-      ),
-    );
-  }
-
-  Widget buildMarkdown(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final config =
-        isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
-    const codeWrapper = CodeWrapperWidget.new;
-    return MarkdownBlock(
-      data: message.text,
-      config: config.copy(
-        configs: [
-          if (isDark)
-            PreConfig.darkConfig.copy(wrapper: codeWrapper)
-          else
-            const PreConfig().copy(wrapper: codeWrapper),
+            Expanded(child: MarkdownWidget(message.text)),
         ],
       ),
     );
