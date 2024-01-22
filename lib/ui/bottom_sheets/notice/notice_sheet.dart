@@ -11,8 +11,8 @@ class NoticeSheet extends StackedView<NoticeSheetModel> {
     required this.request,
     super.key,
   });
-  final void Function(SheetResponse) completer;
-  final SheetRequest request;
+  final void Function(SheetResponse<dynamic>) completer;
+  final SheetRequest<dynamic> request;
 
   @override
   Widget builder(
