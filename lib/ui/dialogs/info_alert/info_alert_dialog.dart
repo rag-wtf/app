@@ -13,11 +13,11 @@ class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
     required this.completer,
     super.key,
   });
-  final DialogRequest request;
-  final Function(DialogResponse) completer;
+  final DialogRequest<Map<String, dynamic>> request;
+  final Function(DialogResponse<Map<String, dynamic>>) completer;
 
   @override
-  Widget builder(
+  Widget builder<BuildContext context>(
     BuildContext context,
     InfoAlertDialogModel viewModel,
     Widget? child,
