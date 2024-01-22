@@ -53,6 +53,17 @@ class ChatApiService {
     return content;
   }
 
+  /*Stream<String> fakeStream() async* {
+    final words =
+        'A powerful HTTP networking package for Dart/Flutter, supports Global configuration, Interceptors, FormData, Request cancellation, File uploading/downloading, Timeout, Custom adapters, Transformers, etc.'
+            .split(' ');
+
+    for (final word in words) {
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      yield '$word ';
+    }
+  }*/
+
   Stream<String> generateStream(
     Dio dio,
     List<chat_message.Message> messages,
@@ -70,7 +81,6 @@ class ChatApiService {
       generationApiUrl,
       options: Options(
         headers: {
-          'Accept': 'text/event-stream',
           'Content-Type': 'application/json',
           if (generationApiKey.isNotEmpty)
             'Authorization': 'Bearer $generationApiKey',
