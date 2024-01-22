@@ -1,3 +1,4 @@
+import 'package:avatar_brick/avatar_brick.dart';
 import 'package:flutter/material.dart';
 
 /// Modified Message Bar from https://pub.dev/packages/chat_bubbles
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 ///
 /// # STRINGS
 /// [replyingTo] is the string to tag the replying message
-/// [messageBarHitText] is the string to show as message bar hint
+/// [messageBarHintText] is the string to show as message bar hint
 ///
 /// # WIDGETS
 /// [actions] are the additional leading action buttons like camera
@@ -47,7 +48,7 @@ class MessageBar extends StatelessWidget {
     this.messageBarColor = const Color(0xffF4F4F5),
     this.sendButtonColor = Colors.blue,
     this.sendButtonEnabled = true,
-    this.messageBarHitText = 'Type your message here',
+    this.messageBarHintText = 'Type your message here',
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.onTextChanged,
     this.onTapCloseReply,
@@ -60,7 +61,7 @@ class MessageBar extends StatelessWidget {
   final Color replyIconColor;
   final Color replyCloseColor;
   final Color messageBarColor;
-  final String messageBarHitText;
+  final String messageBarHintText;
   final TextStyle messageBarHintStyle;
   final Color sendButtonColor;
   final bool sendButtonEnabled;
@@ -131,11 +132,17 @@ class MessageBar extends StatelessWidget {
                     controller: _textController,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
-                    minLines: 1,
-                    maxLines: 3,
-                    onChanged: onTextChanged,
+                    minLines: 3,
+                    maxLines: 5,
+                    onChanged: (String value) {
+                      if (value.contains('\n')) {
+                        // User pressed Enter key
+                        _send();
+                      }
+                      onTextChanged?.call(value);
+                    },
                     decoration: InputDecoration(
-                      hintText: messageBarHitText,
+                      hintText: messageBarHintText,
                       hintMaxLines: 1,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -145,14 +152,14 @@ class MessageBar extends StatelessWidget {
                       fillColor: Colors.white,
                       filled: true,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(16),
                         borderSide: const BorderSide(
                           color: Colors.white,
                           width: 0.2,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(16),
                         borderSide: const BorderSide(
                           color: Colors.black26,
                           width: 0.2,
@@ -165,22 +172,17 @@ class MessageBar extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 16),
                   child: sendButtonEnabled
                       ? InkWell(
+                          onTap: _send,
                           child: Icon(
                             Icons.send,
                             color: sendButtonColor,
                             size: 24,
                           ),
-                          onTap: () {
-                            if (_textController.text.trim() != '') {
-                              onSend(_textController.text.trim());
-                              _textController.text = '';
-                            }
-                          },
                         )
-                      : Icon(
-                          Icons.timelapse,
-                          color: sendButtonColor,
-                          size: 24,
+                      : const AvatarBrick(
+                          isLoading: true,
+                          size: Size(32, 32),
+                          backgroundColor: Colors.transparent,
                         ),
                 ),
               ],
@@ -189,5 +191,13 @@ class MessageBar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _send() {
+    final text = _textController.text.trim();
+    if (text.isNotEmpty) {
+      onSend(text);
+      _textController.text = '';
+    }
   }
 }
