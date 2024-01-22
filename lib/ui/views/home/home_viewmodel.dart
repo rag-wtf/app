@@ -21,7 +21,7 @@ class HomeViewModel extends FutureViewModel<void> {
   }
 
   void showDialog() {
-    _dialogService.showCustomDialog(
+    _dialogService.showCustomDialog<Map<String, dynamic>(
       variant: DialogType.infoAlert,
       title: 'Stacked Rocks!',
       description: 'Give stacked $_counter stars on Github',
