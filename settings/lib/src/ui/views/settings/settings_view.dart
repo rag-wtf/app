@@ -54,6 +54,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     SettingsViewModel viewModel,
     Widget? child,
   ) {
+    final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: viewModel.isBusy
@@ -62,12 +63,15 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               child: ExpansionPanelList(
                 children: [
                   SettingsExpansionPanel(
-                    headerText: 'splitting',
+                    headerText: 'Splitting',
                     body: Column(
                       children: [
                         InputField(
                           labelText: 'API URL',
-                          prefixIcon: const Icon(Icons.https_outlined),
+                          prefixIcon: Icon(
+                            Icons.https_outlined,
+                            color: iconColor,
+                          ),
                           hintText: 'https://www.example.com/ingest',
                           errorText:
                               viewModel.dataIngestionApiUrlValidationMessage,
@@ -76,16 +80,22 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'Chunk Size',
-                          prefixIcon: const Icon(Icons.numbers_outlined),
-                          hintText: 'between 100 and 1000',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '100 to 1000',
                           errorText: viewModel.chunkSizeValidationMessage,
                           controller: chunkSizeController,
                           textInputType: TextInputType.number,
                         ),
                         InputField(
                           labelText: 'Chunk Overlap',
-                          prefixIcon: const Icon(Icons.numbers_outlined),
-                          hintText: 'between 10 and 100',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '10 to 100',
                           errorText: viewModel.chunkOverlapValidationMessage,
                           controller: chunkOverlapController,
                           textInputType: TextInputType.number,
@@ -95,12 +105,15 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     isExpanded: viewModel.isPanelExpanded(0),
                   ).build(context),
                   SettingsExpansionPanel(
-                    headerText: 'indexing',
+                    headerText: 'Indexing',
                     body: Column(
                       children: [
                         InputField(
                           labelText: 'Model',
-                          prefixIcon: const Icon(Icons.model_training_outlined),
+                          prefixIcon: Icon(
+                            Icons.model_training_outlined,
+                            color: iconColor,
+                          ),
                           hintText: 'text-embedding-ada-002',
                           errorText: viewModel.embeddingsModelValidationMessage,
                           controller: embeddingsModelController,
@@ -108,7 +121,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'API URL',
-                          prefixIcon: const Icon(Icons.https_outlined),
+                          prefixIcon: Icon(
+                            Icons.https_outlined,
+                            color: iconColor,
+                          ),
                           hintText: 'https://api.openai.com/v1/embeddings',
                           errorText:
                               viewModel.embeddingsApiUrlValidationMessage,
@@ -117,7 +133,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'API Key',
-                          prefixIcon: const Icon(Icons.key_outlined),
+                          prefixIcon: Icon(
+                            Icons.key_outlined,
+                            color: iconColor,
+                          ),
                           hintText: '*' * 32,
                           errorText:
                               viewModel.embeddingsApiKeyValidationMessage,
@@ -125,8 +144,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.none,
                         ),
                         InputField(
-                          labelText: 'Dimension',
-                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          labelText: 'Dimensions',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
                           errorText:
                               viewModel.embeddingsDimensionValidationMessage,
                           controller: embeddingsDimensionController,
@@ -134,8 +156,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'Batch Size',
-                          prefixIcon: const Icon(Icons.numbers_outlined),
-                          hintText: 'between 10 and 500',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '10 to 500',
                           errorText:
                               viewModel.embeddingsApiBatchSizeValidationMessage,
                           controller: embeddingsApiBatchSizeController,
@@ -151,7 +176,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                       children: [
                         InputField(
                           labelText: 'Similarity Search',
-                          prefixIcon: const Icon(Icons.search_off_outlined),
+                          prefixIcon: Icon(
+                            Icons.search_outlined,
+                            color: iconColor,
+                          ),
                           errorText:
                               viewModel.similaritySearchTypeValidationMessage,
                           controller: similaritySearchTypeController,
@@ -159,8 +187,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'Top N',
-                          prefixIcon: const Icon(Icons.numbers_outlined),
-                          hintText: 'between 1 and 30',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '1 to 30',
                           errorText:
                               viewModel.retrieveTopNResultsValidationMessage,
                           controller: retrieveTopNResultsController,
@@ -171,12 +202,15 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     isExpanded: viewModel.isPanelExpanded(2),
                   ).build(context),
                   SettingsExpansionPanel(
-                    headerText: 'generation',
+                    headerText: 'Generation',
                     body: Column(
                       children: [
                         InputField(
                           labelText: 'Model',
-                          prefixIcon: const Icon(Icons.model_training_outlined),
+                          prefixIcon: Icon(
+                            Icons.model_training_outlined,
+                            color: iconColor,
+                          ),
                           hintText: 'gpt-3.5-turbo-1106',
                           errorText: viewModel.generationModelValidationMessage,
                           controller: generationModelController,
@@ -184,7 +218,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'API URL',
-                          prefixIcon: const Icon(Icons.https_outlined),
+                          prefixIcon: Icon(
+                            Icons.https_outlined,
+                            color: iconColor,
+                          ),
                           hintText:
                               'https://api.openai.com/v1/chat/completions',
                           errorText:
@@ -194,7 +231,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'API Key',
-                          prefixIcon: const Icon(Icons.key_outlined),
+                          prefixIcon: Icon(
+                            Icons.key_outlined,
+                            color: iconColor,
+                          ),
                           hintText: '*' * 32,
                           errorText:
                               viewModel.generationApiKeyValidationMessage,
@@ -203,14 +243,20 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           labelText: 'Max New Tokens',
-                          prefixIcon: const Icon(Icons.numbers_outlined),
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
                           hintText: 'Half of the context windows',
                           errorText: viewModel.maxNewTokensValidationMessage,
                           controller: maxNewTokensController,
                           textInputType: TextInputType.number,
                         ),
                         SwitchListTile(
-                          title: const Text('Streaming'),
+                          title: Text(
+                            'Streaming',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                           value: viewModel.stream,
                           onChanged: (value) async {
                             await viewModel.setStream(value);

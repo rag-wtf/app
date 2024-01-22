@@ -29,7 +29,11 @@ class ChatListView extends StackedView<ChatListViewModel> {
         itemBuilder: (context, index) {
           final item = viewModel.chats[index];
           return ListTile(
-            title: Text(item.name, overflow: TextOverflow.ellipsis),
+            title: Text(
+              item.name,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             key: ValueKey(item.id),
             onTap: () => viewModel.fetchMessages(index),
           );

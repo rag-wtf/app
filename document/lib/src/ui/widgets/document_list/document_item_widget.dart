@@ -23,11 +23,12 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
 
   @override
   Widget builder(
-    Object context,
+    BuildContext context,
     DocumentItemWidgetModel viewModel,
     Widget? child,
   ) {
     return Card(
+      color: Theme.of(context).colorScheme.background,
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
       child: Stack(
         children: [

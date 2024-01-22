@@ -14,7 +14,10 @@ class SettingsExpansionPanel {
     return ExpansionPanel(
       headerBuilder: (BuildContext context, bool isExpanded) {
         return ListTile(
-          title: Text(headerText.toUpperCase()),
+          title: Text(
+            headerText,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         );
       },
       body: body,

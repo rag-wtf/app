@@ -45,7 +45,12 @@ class InputField extends StatelessWidget {
           TextField(
             controller: controller,
             decoration: InputDecoration(
-              label: labelText != null ? Text(labelText!) : null,
+              label: labelText != null
+                  ? Text(
+                      labelText!,
+                      style: Theme.of(context).textTheme.labelSmall,
+                    )
+                  : null,
               //alignLabelWithHint: false,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               hintText: hintText,
