@@ -6,5 +6,7 @@ const String chatNameSummarizerSystemPrompt =
 const String summarizeInASentencePrompt =
     'Summarize the following text in one short sentence:\n';
 const String englishWordSeparator = ' ';
-const defaultAgentId = 'agent:1';
-const userIdPrefix = 'user:';
+const String defaultAgentId = 'agent:1';
+const String userIdPrefix = 'user:';
+const String contextPlaceholder = '{context}';
+const String instructionPlaceholder = '{instruction}';

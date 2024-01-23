@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:archive/archive.dart';
+import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
-import 'package:chat/src/constants.dart';
+
 import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:dio/dio.dart';
 
 class ChatApiService {
+  final _gzipEncoder = locator<GZipEncoder>();
   final _log = getLogger('ChatApiService');
 
   Future<String> generate(
@@ -186,5 +189,41 @@ class ChatApiService {
         .toList();
     _log.d(messagesMap);
     return messagesMap;
+  }
+
+  dynamic getEmbeddingInput(String input) {
+    try {
+      return jsonDecode(input);
+    } catch (e) {
+      return input;
+    }
+  }
+
+  List<int> _gzipEncoderFunction(String request, RequestOptions options) {
+    options.headers.putIfAbsent('Content-Encoding', () => 'gzip');
+    return _gzipEncoder.encode(utf8.encode(request))!;
+  }
+
+  Future<Map<String, dynamic>?> embed(
+    Dio dio,
+    String embeddingsApiUrl,
+    String embeddingsApiKey,
+    String input,
+  ) async {
+    final response = await dio.post<Map<String, dynamic>>(
+      embeddingsApiUrl,
+      options: Options(
+        headers: {
+          'Content-type': 'application/json',
+          if (embeddingsApiKey.isNotEmpty)
+            'Authorization': 'Bearer $embeddingsApiKey',
+        },
+        requestEncoder: _gzipEncoderFunction,
+      ),
+      data: {
+        'input': getEmbeddingInput(input),
+      },
+    );
+    return response.data;
   }
 }

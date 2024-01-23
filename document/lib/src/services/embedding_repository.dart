@@ -192,4 +192,11 @@ LIMIT \$k;''';
         )
         .toList();
   }
+
+  Future<int> getTotal(String tablePrefix) async {
+    final sql =
+        'SELECT count() FROM ${tablePrefix}_${Embedding.tableName} GROUP ALL;';
+    final results = (await _db.query(sql))! as List;
+    return results.isEmpty ? 0 : (results.first as Map)['count'] as int;
+  }
 }

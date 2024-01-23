@@ -9,6 +9,7 @@ import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:chat/src/services/message_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:document/document.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
@@ -31,14 +32,24 @@ class ChatService with ListenableServiceMixin {
   String get _generationApiKey => _settingService.get(generationApiKey).value;
   String get _model => _settingService.get(generationModelKey).value;
   String get _systemPrompt => _settingService.get(systemPromptKey).value;
+  String get _embeddingsApiUrl =>
+      _settingService.get(embeddingsApiUrlKey).value;
+  String get _embeddingsApiKey => _settingService.get(embeddingsApiKey).value;
+  int get _k => int.parse(
+        _settingService.get(retrieveTopNResultsKey, type: int).value,
+      );
+  String get _promptTemplate => _settingService.get(promptTemplateKey).value;
 
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();
   final _chatApiService = locator<ChatApiService>();
   final _settingService = locator<SettingService>();
+  final _documentService = locator<DocumentService>();
   final _chatRepository = locator<ChatRepository>();
   final _messageRepository = locator<MessageRepository>();
   final _chatMessageRepository = locator<ChatMessageRepository>();
+  final _embeddingRepository = locator<EmbeddingRepository>();
+
   final _chats = <Chat>[];
   final _messages = <Message>[];
   int _chatIndex = -1;
@@ -394,24 +405,11 @@ class ChatService with ListenableServiceMixin {
     final isSuccess = await _addMessage(tablePrefix, authorId, role, text);
     if (isSuccess) {
       if (role == Role.user) {
-        _addLoadingMessage(tablePrefix);
+        _addLoadingMessage(tablePrefix); // messages[0] status is sending
         if (_isStreaming) {
-          final responseStream = generateMessageText();
-          await for (final content in responseStream) {
-            _onMessageTextResponse(content);
-          }
-          await _onMessageTextResponseCompleted();
+          await _rag(tablePrefix, text);
         } else {
-          final generatedText = await _chatApiService.generate(
-            _dio,
-            messages,
-            defaultChatWindow,
-            text,
-            _generationApiUrl,
-            _generationApiKey,
-            _model,
-            _systemPrompt,
-          );
+          final generatedText = await _rag(tablePrefix, text);
           isGeneratingMessage = false;
           await addMessage(
             tablePrefix,
@@ -426,12 +424,12 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  Stream<String> generateMessageText() async* {
+  Stream<String> generateMessageText(String prompt) async* {
     yield* _chatApiService.generateStream(
       _dio,
       messages,
       defaultChatWindow,
-      messages[1].text, // messages[0] is a loading message
+      prompt,
       _generationApiUrl,
       _generationApiKey,
       _model,
@@ -466,6 +464,62 @@ class ChatService with ListenableServiceMixin {
           notifyListeners();
         }
       }
+    }
+  }
+
+  Future<List<Embedding>> _retrieve(
+    String tablePrefix,
+    String input,
+  ) async {
+    if (await _embeddingRepository.getTotal(tablePrefix) == 0) {
+      return List.empty();
+    }
+    final responseData = await _chatApiService.embed(
+      _dio,
+      _embeddingsApiUrl,
+      _embeddingsApiKey,
+      input,
+    );
+    final embedding = (responseData?['data'] as List).first as Map;
+    final queryVector = List<double>.from(embedding['embedding'] as List);
+    final embeddings = await _documentService.similaritySearch(
+      tablePrefix,
+      queryVector,
+      _k,
+    );
+    return embeddings;
+  }
+
+  Future<String> _rag(String tablePrefix, String input) async {
+    final embeddings = await _retrieve(tablePrefix, input);
+    final context = embeddings.map((e) {
+      return '${e.content} ${e.score} ${e.id}';
+    }).join('\n');
+
+    final prompt = context.isNotEmpty
+        ? _promptTemplate
+            .replaceFirst(contextPlaceholder, context)
+            .replaceFirst(instructionPlaceholder, input)
+        : input;
+    if (_isStreaming) {
+      final responseStream = generateMessageText(prompt);
+      await for (final content in responseStream) {
+        _onMessageTextResponse(content);
+      }
+      await _onMessageTextResponseCompleted();
+      return '';
+    } else {
+      final generatedText = await _chatApiService.generate(
+        _dio,
+        messages,
+        defaultChatWindow,
+        prompt,
+        _generationApiUrl,
+        _generationApiKey,
+        _model,
+        _systemPrompt,
+      );
+      return generatedText;
     }
   }
 }
