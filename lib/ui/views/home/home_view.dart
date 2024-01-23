@@ -46,10 +46,7 @@ class HomeView extends StackedView<HomeViewModel> {
             ],
           ),
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: BodyWidget(viewModel, constraints.maxWidth),
-            ),
+            child: BodyWidget(viewModel, constraints.maxWidth),
           ),
           drawer: constraints.maxWidth < mediumScreenWidth
               ? Drawer(
@@ -116,9 +113,7 @@ class BodyWidget extends StatelessWidget {
         ],
       );
     } else {
-      return Center(
-        child: CenterWidget(viewModel),
-      );
+      return CenterWidget(viewModel);
     }
   }
 }
