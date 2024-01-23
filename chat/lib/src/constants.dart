@@ -8,4 +8,3 @@ const String summarizeInASentencePrompt =
 const String englishWordSeparator = ' ';
 const defaultAgentId = 'agent:1';
 const userIdPrefix = 'user:';
-const stopToken = '</s>';
