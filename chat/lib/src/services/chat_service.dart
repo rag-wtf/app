@@ -365,6 +365,7 @@ class ChatService with ListenableServiceMixin {
       if (isTxnSucess) {
         _chats.insert(0, chat);
         _chatIndex = 0;
+        _totalChats += 1;
       } else {
         throw Exception('Unable to create chat and message.');
       }
