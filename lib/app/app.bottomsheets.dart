@@ -1,5 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+import 'package:flutter/material.dart';
+
+import 'app.bottomsheets.dart' as bottomSheets;
+
+import 'app.locator.dart';
+import '../ui/bottom_sheets/notice/notice_sheet.dart';
+
 // **************************************************************************
 // StackedBottomsheetGenerator
 // **************************************************************************
