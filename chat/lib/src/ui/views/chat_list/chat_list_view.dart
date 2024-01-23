@@ -52,9 +52,4 @@ class ChatListView extends StackedView<ChatListViewModel> {
     BuildContext context,
   ) =>
       ChatListViewModel(tablePrefix);
-
-  @override
-  Future<void> onViewModelReady(ChatListViewModel viewModel) async {
-    await viewModel.fetchChats();
-  }
 }

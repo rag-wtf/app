@@ -42,8 +42,8 @@ class ChatService with ListenableServiceMixin {
   final _chats = <Chat>[];
   final _messages = <Message>[];
   int _chatIndex = -1;
-  int _totalChats = 0;
-  int _totalMessages = 0;
+  int _totalChats = -1;
+  int _totalMessages = -1;
   final _log = getLogger('ChatService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
@@ -183,7 +183,7 @@ class ChatService with ListenableServiceMixin {
   }
 
   bool get hasReachedMaxChat {
-    final reachedMax = _chats.length >= _totalChats;
+    final reachedMax = _totalChats > -1 && _chats.length >= _totalChats;
     _log.d(reachedMax);
     return reachedMax;
   }
