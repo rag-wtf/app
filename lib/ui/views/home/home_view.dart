@@ -10,67 +10,78 @@ import 'package:stacked/stacked.dart';
 const largeScreenWidth = 800.0;
 const mediumScreenWidth = 600.0;
 
-class HomeView extends StackedView<HomeViewModel> {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
-  Widget builder(
-    BuildContext context,
-    HomeViewModel viewModel,
-    Widget? child,
-  ) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text(appTitle),
-            leading: constraints.maxWidth < mediumScreenWidth
-                ? Builder(
-                    builder: (context) => IconButton(
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                      icon: const Icon(Icons.menu_open),
-                    ),
-                  )
-                : null,
-            actions: [
-              const BrightnessButton(
-                showTooltipBelow: false,
-              ),
-              if (constraints.maxWidth < largeScreenWidth)
-                Builder(
-                  builder: (context) => IconButton(
-                    onPressed: () => Scaffold.of(context).openEndDrawer(),
-                    icon: const Icon(Icons.settings),
-                  ),
-                ),
-            ],
-          ),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: BodyWidget(viewModel, constraints.maxWidth),
-            ),
-          ),
-          drawer: constraints.maxWidth < mediumScreenWidth
-              ? Drawer(
-                  child: LeftWidget(viewModel),
-                )
-              : null,
-          endDrawer: constraints.maxWidth < largeScreenWidth
-              ? Drawer(
-                  child: RightWidget(viewModel),
-                )
-              : null,
-        );
-      },
-    );
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void closeDrawer() {
+    if (scaffoldKey.currentState!.isDrawerOpen) {
+      scaffoldKey.currentState!.closeDrawer();
+    }
   }
 
   @override
-  HomeViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      HomeViewModel();
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<HomeViewModel>.reactive(
+      builder: (context, viewModel, child) => LayoutBuilder(
+        builder: (context, constraints) {
+          return Scaffold(
+            key: scaffoldKey,
+            appBar: AppBar(
+              title: const Text(appTitle),
+              leading: constraints.maxWidth < mediumScreenWidth
+                  ? Builder(
+                      builder: (context) => IconButton(
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                        icon: const Icon(Icons.menu_open),
+                      ),
+                    )
+                  : null,
+              actions: [
+                const BrightnessButton(
+                  showTooltipBelow: false,
+                ),
+                if (constraints.maxWidth < largeScreenWidth)
+                  Builder(
+                    builder: (context) => IconButton(
+                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                      icon: const Icon(Icons.settings),
+                    ),
+                  ),
+              ],
+            ),
+            body: SafeArea(
+              child: BodyWidget(
+                viewModel,
+                constraints.maxWidth,
+                closeDrawerFunction: closeDrawer,
+              ),
+            ),
+            drawer: constraints.maxWidth < mediumScreenWidth
+                ? Drawer(
+                    child: LeftWidget(
+                      viewModel,
+                      closeDrawerFunction: closeDrawer,
+                    ),
+                  )
+                : null,
+            endDrawer: constraints.maxWidth < largeScreenWidth
+                ? Drawer(
+                    child: RightWidget(viewModel),
+                  )
+                : null,
+          );
+        },
+      ),
+      viewModelBuilder: HomeViewModel.new,
+    );
+  }
 }
 
 class BodyWidget extends StatelessWidget {
@@ -78,10 +89,12 @@ class BodyWidget extends StatelessWidget {
     this.viewModel,
     this.maxWidth, {
     super.key,
+    this.closeDrawerFunction,
   });
 
   final double maxWidth;
   final HomeViewModel viewModel;
+  final void Function()? closeDrawerFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +103,10 @@ class BodyWidget extends StatelessWidget {
         children: [
           Flexible(
             flex: 3,
-            child: LeftWidget(viewModel),
+            child: LeftWidget(
+              viewModel,
+              closeDrawerFunction: closeDrawerFunction,
+            ),
           ),
           Flexible(
             flex: 6,
@@ -107,7 +123,10 @@ class BodyWidget extends StatelessWidget {
         children: [
           Flexible(
             flex: 4,
-            child: LeftWidget(viewModel),
+            child: LeftWidget(
+              viewModel,
+              closeDrawerFunction: closeDrawerFunction,
+            ),
           ),
           Flexible(
             flex: 8,
@@ -116,9 +135,7 @@ class BodyWidget extends StatelessWidget {
         ],
       );
     } else {
-      return Center(
-        child: CenterWidget(viewModel),
-      );
+      return CenterWidget(viewModel);
     }
   }
 }
@@ -174,8 +191,11 @@ class LeftWidget extends StatelessWidget {
   const LeftWidget(
     this.viewModel, {
     super.key,
+    this.closeDrawerFunction,
   });
+
   final HomeViewModel viewModel;
+  final void Function()? closeDrawerFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -194,10 +214,10 @@ class LeftWidget extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            DocumentListView(),
-            ChatListView(),
+            const DocumentListView(),
+            ChatListView(closeDrawerFunction: closeDrawerFunction),
           ],
         ),
       ),
