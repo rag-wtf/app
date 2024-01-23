@@ -7,8 +7,10 @@ class ChatListView extends StackedView<ChatListViewModel> {
   const ChatListView({
     super.key,
     this.tablePrefix = 'main',
+    this.closeDrawerFunction,
   });
   final String tablePrefix;
+  final void Function()? closeDrawerFunction;
 
   @override
   Widget builder(
@@ -35,7 +37,10 @@ class ChatListView extends StackedView<ChatListViewModel> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             key: ValueKey(item.id),
-            onTap: () => viewModel.fetchMessages(index),
+            onTap: () {
+              viewModel.fetchMessages(index);
+              closeDrawerFunction?.call();
+            },
           );
         },
       ),
