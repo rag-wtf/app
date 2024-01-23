@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:chat/src/services/date_time_json_converter.dart';
+import 'package:document/document.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'message.freezed.dart';
 part 'message.g.dart';
@@ -18,6 +19,8 @@ abstract class Message with _$Message {
     String? id,
     Object? metadata,
     Status? status,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    List<Embedding>? embeddings,
   }) = _Message;
 
   factory Message.fromJson(Map<String, dynamic> json) =>
@@ -49,7 +52,6 @@ enum MessageType {
   text,
   unsupported,
   video,
-  loading,
 }
 
 /// All possible statuses message can have.

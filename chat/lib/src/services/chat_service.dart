@@ -237,10 +237,10 @@ class ChatService with ListenableServiceMixin {
   }
 
   void _onMessageTextResponse(String content) {
-    if (_messages.first.type == MessageType.loading) {
+    if (_messages.first.status == Status.sending) {
       _messages.first = _messages.first.copyWith(
-        type: MessageType.text,
         text: content,
+        status: Status.sent,
         updated: DateTime.now(),
       );
     } else {
@@ -263,7 +263,7 @@ class ChatService with ListenableServiceMixin {
   void _onChatNameResponse(String content) {
     final chat = _chats[_chatIndex];
     _chats[_chatIndex] = chat.copyWith(
-      name: chat.name != defaultChatName ? chat.name + content : content,
+      name: chat.name != newChatName ? chat.name + content : content,
       updated: DateTime.now(),
     );
     notifyListeners();
@@ -284,7 +284,8 @@ class ChatService with ListenableServiceMixin {
         authorId: defaultAgentId,
         role: Role.agent,
         text: '',
-        type: MessageType.loading,
+        type: MessageType.text,
+        status: Status.sending,
         created: now,
         updated: now,
       ),
@@ -305,7 +306,7 @@ class ChatService with ListenableServiceMixin {
       (sublist) => sublist.isNotEmpty,
     );
     if (isTxnSucess) {
-      if (chat.name == defaultChatName) {
+      if (chat.name == newChatName) {
         final responseStream = _chatApiService.generateStream(
           _dio,
           [],
@@ -349,7 +350,7 @@ class ChatService with ListenableServiceMixin {
     if (_chatIndex == -1) {
       final chat = Chat(
         id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
-        name: defaultChatName,
+        name: newChatName,
         created: now,
         updated: now,
       );
@@ -441,7 +442,7 @@ class ChatService with ListenableServiceMixin {
   Future<void> _updateChatName(
     String generatedText,
   ) async {
-    if (_chats[_chatIndex].name == defaultChatName) {
+    if (_chats[_chatIndex].name == newChatName) {
       final generatedChatName = await _chatApiService.generate(
         _dio,
         [],

@@ -43,7 +43,7 @@ class MessageWidget extends StatelessWidget {
           const SizedBox(
             width: 8,
           ), // Add spacing between the leading widget and title
-          if (message.type == MessageType.loading)
+          if (message.status == Status.sending)
             const SizedBox(
               width: 12,
               height: 12,
