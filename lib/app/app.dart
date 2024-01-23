@@ -3,6 +3,11 @@ import 'package:chat/chat.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
+import 'package:archive/archive.dart';
+import 'package:chat/chat.dart';
+import 'package:dio/dio.dart';
+import 'package:document/document.dart';
+import 'package:settings/settings.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/l10n.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
@@ -65,7 +70,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   ],
 )
 class App extends StatelessWidget {
-  const App({super.key});
+  App({Key key}) : super.key = key;
 
   @override
   Widget build(BuildContext context) {
