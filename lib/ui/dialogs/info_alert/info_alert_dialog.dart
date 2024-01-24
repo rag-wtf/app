@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/dialogs/info_alert/info_alert_dialog_model.dart';
-import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked/stacked.dart' show DialogRequest, DialogResponse;
+import 'package:stacked_services/stacked_services.dart' show DialogService;
 
 const double _graphicSize = 60;
 
@@ -13,8 +13,8 @@ class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
     required this.completer,
     super.key,
   });
-  final DialogRequest request;
-  final Function(DialogResponse) completer;
+  final DialogRequest<dynamic> request;
+  final Function(DialogResponse<dynamic>) completer;
 
   @override
   Widget builder(
