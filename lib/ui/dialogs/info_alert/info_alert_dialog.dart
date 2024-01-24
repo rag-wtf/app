@@ -13,7 +13,7 @@ class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
     required this.completer,
     super.key,
   });
-  final DialogRequest request;
+  final Function(DialogResponse<dynamic>) completer;
   final Function(DialogResponse) completer;
 
   @override
@@ -106,5 +106,5 @@ class InfoAlertDialog extends StackedView<InfoAlertDialogModel> {
 
   @override
   InfoAlertDialogModel viewModelBuilder(BuildContext context) =>
-      InfoAlertDialogModel();
+      InfoAlertDialogModel<dynamic>();
 }
