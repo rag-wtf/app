@@ -13,9 +13,9 @@ class ChatViewModel extends ReactiveViewModel {
   static const _dummyText =
       'A powerful HTTP networking package for Dart/Flutter, supports Global configuration, Interceptors, FormData, Request cancellation, File uploading/downloading, Timeout, Custom adapters, Transformers, etc.';
   final embeddings = List.generate(
-    3,
+    5,
     (index) => Embedding(
-      content: 'Message ${index + 1}: $_dummyText',
+      content: '__Message ${index + 1}__: $_dummyText',
       tokensCount: 10,
       created: DateTime.now(),
       updated: DateTime.now(),

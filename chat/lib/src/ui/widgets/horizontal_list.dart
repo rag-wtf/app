@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chat/src/ui/widgets/markdown_widget.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_indicator/scroll_indicator.dart';
@@ -24,7 +25,7 @@ class HorizontalList extends StatelessWidget {
           ),
           Container(
             color: Colors.transparent,
-            height: 85,
+            height: 80,
             // REF: https://docs.flutter.dev/release/breaking-changes/default-scroll-behavior-drag#copy-and-modify-existing-scrollbehavior
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
@@ -39,14 +40,19 @@ class HorizontalList extends StatelessWidget {
                 itemCount: embeddings!.length,
                 itemBuilder: (BuildContext content, int index) {
                   return Container(
-                    margin: const EdgeInsets.all(itemMargin),
-                    padding: const EdgeInsets.all(itemPadding),
+                    margin: const EdgeInsets.symmetric(horizontal: itemMargin),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: itemPadding),
                     width: itemWidth,
-                    child: Text(
-                      embeddings![index].content,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                      softWrap: true,
+                    child: OverflowBox(
+                      alignment: Alignment.topLeft,
+                      maxHeight: double.infinity,
+                      maxWidth: itemWidth,
+                      child: MarkdownWidget(
+                        embeddings![index].content,
+                        selectable: false,
+                        textStyle: const TextStyle(inherit: false, fontSize: 2),
+                      ),
                     ),
                   );
                 },
@@ -56,19 +62,26 @@ class HorizontalList extends StatelessWidget {
           LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               if (constraints.maxWidth < itemWidth * embeddings!.length) {
-                return ScrollIndicator(
-                  scrollController: _scrollController,
-                  width: 30,
-                  height: 5,
-                  indicatorWidth: 10,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[300],
-                  ),
-                  indicatorDecoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                return Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ScrollIndicator(
+                      scrollController: _scrollController,
+                      width: 30,
+                      height: 5,
+                      indicatorWidth: 10,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[300],
+                      ),
+                      indicatorDecoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ],
                 );
               } else {
                 return const SizedBox.shrink();
