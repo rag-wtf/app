@@ -7,7 +7,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 class NoticeSheet extends StackedView<NoticeSheetModel> {
   const NoticeSheet({
-    required this.completer,
+    required this.completer, // adding explicit type argument to SheetResponse
     required this.request,
     super.key,
   });
