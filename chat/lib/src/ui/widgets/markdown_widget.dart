@@ -7,11 +7,11 @@ class MarkdownWidget extends StatelessWidget {
     this.data, {
     super.key,
     this.selectable = true,
-    this.textStyle,
+    this.textStyle = const TextStyle(fontSize: 16),
   });
   final String data;
   final bool selectable;
-  final TextStyle? textStyle;
+  final TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class MarkdownWidget extends StatelessWidget {
     final config =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
     const codeWrapper = CodeWrapperWidget.new;
+
     return MarkdownBlock(
       selectable: selectable,
       data: data,
@@ -27,13 +28,10 @@ class MarkdownWidget extends StatelessWidget {
           if (isDark)
             PreConfig.darkConfig.copy(
               wrapper: codeWrapper,
-              textStyle: textStyle,
             )
           else
-            const PreConfig().copy(
-              wrapper: codeWrapper,
-              textStyle: textStyle,
-            ),
+            const PreConfig().copy(wrapper: codeWrapper),
+          PConfig(textStyle: textStyle),
         ],
       ),
     );

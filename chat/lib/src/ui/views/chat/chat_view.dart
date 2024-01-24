@@ -22,7 +22,6 @@ class ChatView extends StackedView<ChatViewModel> {
   ) {
     return Column(
       children: [
-        //HorizontalList(viewModel.embeddings),
         Flexible(
           child: InfiniteList(
             scrollController: _scrollController,
