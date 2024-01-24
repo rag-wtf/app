@@ -78,7 +78,6 @@ MockDialogService getAndRegisterDialogService() {
 }
 
 // @stacked-mock-create
-
 void _removeRegistrationIfExists<T extends Object>() {
   if (locator.isRegistered<T>()) {
     locator.unregister<T>();
