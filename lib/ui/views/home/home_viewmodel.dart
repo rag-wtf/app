@@ -3,7 +3,8 @@ import 'package:rag/app/app.dialogs.dart';
 import 'package:rag/app/app.locator.dart';
 import 'package:rag/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart' show SheetResponse;
+import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_services/stacked_services.dart' show DialogResponse;
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart' show SheetResponse, SheetRequest;
 
