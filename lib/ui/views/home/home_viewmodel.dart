@@ -2,7 +2,8 @@ import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
 import 'package:rag/app/app.locator.dart';
 import 'package:rag/ui/common/app_strings.dart';
-import 'package:settings/settings.dart';
+import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart' show SheetResponse;
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart' show SheetResponse, SheetRequest;
 
@@ -13,7 +14,6 @@ class HomeViewModel extends FutureViewModel<void> {
   final _settingService = locator<SettingService>();
 
   String get counterLabel => 'Counter is: $_counter';
-
  int _counter = 0;
   Future<void> futureToRun() async {
 
