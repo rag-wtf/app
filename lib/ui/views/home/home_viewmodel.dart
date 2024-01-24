@@ -9,11 +9,13 @@ import 'package:stacked_services/stacked_services.dart' show SheetResponse, Shee
 class HomeViewModel extends FutureViewModel<void> {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
+    await Future.delayed(Duration.zero);
   final _settingService = locator<SettingService>();
 
   String get counterLabel => 'Counter is: $_counter';
 
-  int _counter = 0;
+ int _counter = 0;
+  Future<void> futureToRun() async {
 
   void incrementCounter() {
     _counter++;
@@ -29,7 +31,7 @@ class HomeViewModel extends FutureViewModel<void> {
   }
 
   void showBottomSheet() {\n  final bottomSheetService = locator<BottomSheetService>();() {
-    _bottomSheetService.showCustomSheet(
+    _bottomSheetService.showCustomSheet<SheetRequest>(
       variant: BottomSheetType.notice,
       title: ksHomeBottomSheetTitle,
       description: ksHomeBottomSheetDescription,
