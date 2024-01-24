@@ -13,6 +13,8 @@ dependencies:
     path: document
   flutter:
     sdk: flutter
+  archive: ^x.x.x
+  dio: ^x.x.x
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
