@@ -3,7 +3,7 @@ import 'package:rag/ui/bottom_sheets/notice/notice_sheet_model.dart';
 import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_services/stacked_services.dart' show SheetResponse, SheetRequest;
 
 class NoticeSheet extends StackedView<NoticeSheetModel> {
   const NoticeSheet({
@@ -11,8 +11,8 @@ class NoticeSheet extends StackedView<NoticeSheetModel> {
     required this.request,
     super.key,
   });
-  final void Function(SheetResponse) completer;
-  final SheetRequest request;
+  final void Function(SheetResponse<dynamic>) completer;
+  final SheetRequest<dynamic> request;
 
   @override
   Widget builder(
