@@ -14,7 +14,7 @@ class HomeViewModel extends FutureViewModel<void> {
     await Future.delayed(Duration.zero);
   final _settingService = locator<SettingService>();
 
-  String get counterLabel => 'Counter is: $_counter';
+
  int _counter = 0;
   Future<void> futureToRun() async {
 
