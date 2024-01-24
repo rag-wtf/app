@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
+import 'package:chat/src/ui/widgets/horizontal_list.dart';
 import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
 

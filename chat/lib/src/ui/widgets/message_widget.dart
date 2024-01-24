@@ -1,5 +1,6 @@
 import 'package:avatar_brick/avatar_brick.dart';
 import 'package:chat/src/services/message.dart';
+import 'package:chat/src/ui/widgets/horizontal_list.dart';
 import 'package:chat/src/ui/widgets/markdown_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -47,13 +48,18 @@ class MessageWidget extends StatelessWidget {
             const SizedBox(
               width: 12,
               height: 12,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(strokeWidth: 2),
             )
           else
             Expanded(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: MarkdownWidget(message.text),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: MarkdownWidget(message.text),
+                  ),
+                  HorizontalList(message.embeddings),
+                ],
               ),
             ),
         ],
