@@ -21,6 +21,7 @@ dependencies:
   logger:
   markdown_widget: ^2.3.2+3
   responsive_builder: ^0.7.0
+  scroll_indicator: ^0.0.3
   settings:
     path: ../settings
   stacked: ^3.4.0

@@ -702,6 +702,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  scroll_indicator:
+    dependency: "direct main"
+    description:
+      name: scroll_indicator
+      sha256: "44fd107735c4200a00082476e9f4bdb3ed1746a53707a5b9dc81a2750ef09fa6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   scroll_to_index:
     dependency: transitive
     description:
