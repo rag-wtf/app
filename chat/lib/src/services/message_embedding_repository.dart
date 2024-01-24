@@ -100,17 +100,21 @@ WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableNa
     final results = (await _db.query(
       sql,
     ))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
-    final embeddings = result['Embedding'] as List;
+    if (results.isNotEmpty) {
+      final result = Map<String, dynamic>.from(results.first as Map);
+      final embeddings = result['Embedding'] as List;
 
-    return embeddings
-        .map(
-          (result) => Embedding.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
+      return embeddings
+          .map(
+            (result) => Embedding.fromJson(
+              Map<String, dynamic>.from(
+                result as Map,
+              ),
             ),
-          ),
-        )
-        .toList();
+          )
+          .toList();
+    } else {
+      return List.empty();
+    }
   }
 }

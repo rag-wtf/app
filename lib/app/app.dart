@@ -43,6 +43,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       classType: ChatMessageRepository,
     ),
     LazySingleton<MessageRepository>(classType: MessageRepository),
+    LazySingleton<MessageEmbeddingRepository>(
+      classType: MessageEmbeddingRepository,
+    ),
     LazySingleton<ChatService>(classType: ChatService),
     LazySingleton<ChatApiService>(classType: ChatApiService),
 

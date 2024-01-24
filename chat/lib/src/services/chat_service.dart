@@ -7,6 +7,8 @@ import 'package:chat/src/services/chat_message.dart';
 import 'package:chat/src/services/chat_message_repository.dart';
 import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/message.dart';
+import 'package:chat/src/services/message_embedding.dart';
+import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
@@ -49,6 +51,7 @@ class ChatService with ListenableServiceMixin {
   final _messageRepository = locator<MessageRepository>();
   final _chatMessageRepository = locator<ChatMessageRepository>();
   final _embeddingRepository = locator<EmbeddingRepository>();
+  final _messageEmbeddingRepository = locator<MessageEmbeddingRepository>();
 
   final _chats = <Chat>[];
   final _messages = <Message>[];
@@ -147,6 +150,18 @@ class ChatService with ListenableServiceMixin {
       chatId: chat.id!,
       messageId: message.id!,
     );
+    List<MessageEmbedding>? messageEmbeddings;
+    if (message.embeddings != null && message.embeddings!.isNotEmpty) {
+      messageEmbeddings = message.embeddings!
+          .map(
+            (embedding) => MessageEmbedding(
+              messageId: message.id!,
+              embeddingId: embedding.id!,
+            ),
+          )
+          .toList();
+    }
+
     if (txn == null) {
       return _db.transaction(
         (txn) async {
@@ -160,6 +175,14 @@ class ChatService with ListenableServiceMixin {
             chatMessage,
             txn,
           );
+
+          if (messageEmbeddings != null) {
+            await _messageEmbeddingRepository.createMessageEmbeddings(
+              tablePrefix,
+              messageEmbeddings,
+              txn,
+            );
+          }
         },
       );
     } else {
@@ -173,6 +196,13 @@ class ChatService with ListenableServiceMixin {
         chatMessage,
         txn,
       );
+      if (messageEmbeddings != null) {
+        await _messageEmbeddingRepository.createMessageEmbeddings(
+          tablePrefix,
+          messageEmbeddings,
+          txn,
+        );
+      }
       return null;
     }
   }
@@ -236,9 +266,25 @@ class ChatService with ListenableServiceMixin {
       );
 
       if (messageList.total > 0) {
+        final messagesWithEmbeddings = <Message>[];
+        for (final message in messageList.items) {
+          if (message.role == Role.agent) {
+            messagesWithEmbeddings.add(
+              message.copyWith(
+                embeddings:
+                    await _messageEmbeddingRepository.getAllEmbeddingsOfMessage(
+                  tablePrefix,
+                  message.id!,
+                ),
+              ),
+            );
+          } else {
+            messagesWithEmbeddings.add(message);
+          }
+        }
         _messages
           ..clear()
-          ..addAll(messageList.items);
+          ..addAll(messagesWithEmbeddings);
         _log.d('_messages.length ${_messages.length}');
         _totalMessages = messageList.total;
         notifyListeners();
@@ -492,15 +538,19 @@ class ChatService with ListenableServiceMixin {
 
   Future<String> _rag(String tablePrefix, String input) async {
     final embeddings = await _retrieve(tablePrefix, input);
-    final context = embeddings.map((e) {
-      return '${e.content} ${e.score} ${e.id}';
-    }).join('\n');
+    String prompt;
+    if (embeddings.isNotEmpty) {
+      final context = embeddings.map((e) {
+        return '${e.content} ${e.score} ${e.id}';
+      }).join('\n');
+      prompt = _promptTemplate
+          .replaceFirst(contextPlaceholder, context)
+          .replaceFirst(instructionPlaceholder, input);
+      _messages.first = _messages.first.copyWith(embeddings: embeddings);
+    } else {
+      prompt = input;
+    }
 
-    final prompt = context.isNotEmpty
-        ? _promptTemplate
-            .replaceFirst(contextPlaceholder, context)
-            .replaceFirst(instructionPlaceholder, input)
-        : input;
     if (_isStreaming) {
       final responseStream = generateMessageText(prompt);
       await for (final content in responseStream) {

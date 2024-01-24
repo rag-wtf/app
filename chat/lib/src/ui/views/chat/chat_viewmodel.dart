@@ -2,6 +2,7 @@ import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/message.dart';
+import 'package:document/document.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatViewModel extends ReactiveViewModel {
@@ -9,6 +10,17 @@ class ChatViewModel extends ReactiveViewModel {
   final String tablePrefix;
   final _chatService = locator<ChatService>();
   final _log = getLogger('ChatViewModel');
+  static const _dummyText =
+      'A powerful HTTP networking package for Dart/Flutter, supports Global configuration, Interceptors, FormData, Request cancellation, File uploading/downloading, Timeout, Custom adapters, Transformers, etc.';
+  final embeddings = List.generate(
+    3,
+    (index) => Embedding(
+      content: 'Message ${index + 1}: $_dummyText',
+      tokensCount: 10,
+      created: DateTime.now(),
+      updated: DateTime.now(),
+    ),
+  );
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_chatService];
