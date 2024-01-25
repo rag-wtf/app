@@ -9,7 +9,7 @@ import 'package:stacked_services/stacked_services.dart';
 class HomeViewModel extends FutureViewModel<void> {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
-  final _settingService = locator<SettingService>();
+  final _settingService = locator<SettingService with value getter>();
 
   String get counterLabel => 'Counter is: $_counter';
 
