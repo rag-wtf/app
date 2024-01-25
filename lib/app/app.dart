@@ -1,6 +1,8 @@
 import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:chat/chat.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_flutter_transformer/dio_flutter_transformer.dart;
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/app/app.router.dart';
