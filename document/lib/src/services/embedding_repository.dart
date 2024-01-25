@@ -199,4 +199,8 @@ LIMIT \$k;''';
     final results = (await _db.query(sql))! as List;
     return results.isEmpty ? 0 : (results.first as Map)['count'] as int;
   }
+
+  Future<void> deleteAllEmbeddings(String tablePrefix) async {
+    await _db.delete('${tablePrefix}_${Embedding.tableName}');
+  }
 }

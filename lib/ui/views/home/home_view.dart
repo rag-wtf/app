@@ -149,28 +149,67 @@ class RightWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const TabBar(
-            tabs: [
-              Tab(
-                text: 'Settings',
+    return Column(
+      children: [
+        Expanded(
+          child: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const TabBar(
+                  tabs: [
+                    Tab(
+                      text: 'Settings',
+                    ),
+                    Tab(
+                      text: 'Console',
+                    ),
+                  ],
+                ),
               ),
-              Tab(
-                text: 'Console',
+              body: const TabBarView(
+                children: [
+                  SettingsView(),
+                  RagConsoleView(),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-        body: const TabBarView(
+        ExpansionTile(
+          title: Text(
+            'Reset Data',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          childrenPadding: const EdgeInsets.all(24),
           children: [
-            SettingsView(),
-            RagConsoleView(),
+            const Center(child: Text('Permanently delete all data?')),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: viewModel.isSettingsDataExcludedFromDeletion,
+                  onChanged: (value) =>
+                      viewModel.isSettingsDataExcludedFromDeletion = value!,
+                ),
+                const Text('Excludes settings data'),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: viewModel.deleteAllData,
+              icon: const Icon(Icons.delete_forever_outlined),
+              label: const Text('Delete'),
+            ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
