@@ -38,8 +38,9 @@ class HorizontalList extends StatelessWidget {
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: embeddings!.length,
-                itemBuilder: (BuildContext content, int index) {
+                itemBuilder: (BuildContext context, int index) {
                   return Container(
+                    key: ValueKey(embeddings![index].id),
                     margin: index == 0
                         ? const EdgeInsets.only(right: itemMargin)
                         : const EdgeInsets.symmetric(horizontal: itemMargin),
