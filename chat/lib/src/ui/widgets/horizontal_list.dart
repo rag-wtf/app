@@ -43,16 +43,21 @@ class HorizontalList extends StatelessWidget {
                     margin: index == 0
                         ? const EdgeInsets.only(right: itemMargin)
                         : const EdgeInsets.symmetric(horizontal: itemMargin),
-                    padding: index == 0
-                        ? const EdgeInsets.only(right: itemPadding)
-                        : const EdgeInsets.symmetric(horizontal: itemPadding),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: itemPadding),
                     width: itemWidth,
-                    child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      child: MarkdownWidget(
-                        embeddings![index].content,
-                        selectable: false,
-                        textStyle: const TextStyle(fontSize: 12),
+                    color: Theme.of(context).colorScheme.background,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        scrollbars: false,
+                        physics: const NeverScrollableScrollPhysics(),
+                      ),
+                      child: SingleChildScrollView(
+                        child: MarkdownWidget(
+                          embeddings![index].content,
+                          selectable: false,
+                          textStyle: const TextStyle(fontSize: 12),
+                        ),
                       ),
                     ),
                   );
