@@ -42,13 +42,16 @@ class ChatView extends StackedView<ChatViewModel> {
           sendButtonEnabled: !viewModel.isGenerating,
           onSend: (text) => _onSend(viewModel, text),
           actions: [
-            InkWell(
-              child: const Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 24,
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: InkWell(
+                child: const Icon(
+                  Icons.add_comment_sharp,
+                  color: Colors.black,
+                  size: 24,
+                ),
+                onTap: () {},
               ),
-              onTap: () {},
             ),
           ],
         ),
