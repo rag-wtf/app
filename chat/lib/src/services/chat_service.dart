@@ -89,6 +89,13 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
+  void newChat() {
+    _messages.clear();
+    _chatIndex = -1;
+    _totalMessages = -1;
+    notifyListeners();
+  }
+
   Future<Object?> createChatAndMessage(
     String tablePrefix,
     Chat chat,

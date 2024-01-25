@@ -37,4 +37,8 @@ class ChatViewModel extends ReactiveViewModel {
   Future<void> fetchMessages() async {
     await _chatService.fetchMessages(tablePrefix);
   }
+
+  void newChat() {
+    _chatService.newChat();
+  }
 }
