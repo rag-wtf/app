@@ -8,6 +8,7 @@ class MessageWidget extends StatelessWidget {
   const MessageWidget(this.message, {super.key});
 
   final Message message;
+  static const avatarPadding = EdgeInsets.only(top: 8);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class MessageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: avatarPadding,
             child: message.role == Role.user
                 ? const AvatarBrick(
                     size: Size(32, 32),
@@ -45,8 +46,8 @@ class MessageWidget extends StatelessWidget {
             width: 8,
           ), // Add spacing between the leading widget and title
           if (message.status == Status.sending)
-            const Align(
-              alignment: Alignment.centerLeft,
+            const Padding(
+              padding: avatarPadding,
               child: SizedBox(
                 width: 8,
                 height: 8,
