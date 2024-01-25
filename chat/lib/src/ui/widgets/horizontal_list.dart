@@ -39,26 +39,20 @@ class HorizontalList extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: embeddings!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ConstrainedBox(
-                    key: ValueKey(embeddings![index].id),
-                    constraints: const BoxConstraints(maxHeight: 95),
-                    child: Container(
-                      margin: index == 0
-                          ? const EdgeInsets.only(right: itemMargin)
-                          : const EdgeInsets.symmetric(horizontal: itemMargin),
-                      padding: index == 0
-                          ? const EdgeInsets.only(right: itemPadding)
-                          : const EdgeInsets.symmetric(horizontal: itemPadding),
-                      width: itemWidth,
-                      child: OverflowBox(
-                        alignment: Alignment.topLeft,
-                        maxHeight: 95,
-                        maxWidth: itemWidth,
-                        child: MarkdownWidget(
-                          embeddings![index].content,
-                          selectable: false,
-                          textStyle: const TextStyle(fontSize: 12),
-                        ),
+                  return Container(
+                    margin: index == 0
+                        ? const EdgeInsets.only(right: itemMargin)
+                        : const EdgeInsets.symmetric(horizontal: itemMargin),
+                    padding: index == 0
+                        ? const EdgeInsets.only(right: itemPadding)
+                        : const EdgeInsets.symmetric(horizontal: itemPadding),
+                    width: itemWidth,
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: MarkdownWidget(
+                        embeddings![index].content,
+                        selectable: false,
+                        textStyle: const TextStyle(fontSize: 12),
                       ),
                     ),
                   );
@@ -71,21 +65,21 @@ class HorizontalList extends StatelessWidget {
               if (constraints.maxWidth < itemWidth * embeddings!.length) {
                 return Column(
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ScrollIndicator(
-                      scrollController: _scrollController,
-                      width: 30,
-                      height: 5,
-                      indicatorWidth: 10,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[300],
-                      ),
-                      indicatorDecoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: ScrollIndicator(
+                        scrollController: _scrollController,
+                        width: 30,
+                        height: 5,
+                        indicatorWidth: 10,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[300],
+                        ),
+                        indicatorDecoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ],

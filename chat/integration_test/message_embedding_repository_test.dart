@@ -15,6 +15,7 @@ void main() {
   final embeddingRepository = locator<EmbeddingRepository>();
   final messageEmbeddingRepository = locator<MessageEmbeddingRepository>();
   const tablePrefix = 'msg_emb';
+  const defaultSearchType = 'COSINE';
 
   group('isSchemaCreated', () {
     test('should return false', () async {
@@ -107,6 +108,8 @@ void main() {
           MessageEmbedding(
             messageId: message.id!,
             embeddingId: embedding.id!,
+            score: 0,
+            searchType: defaultSearchType,
           ),
           txn,
         );
@@ -192,6 +195,8 @@ void main() {
         MessageEmbedding(
           messageId: message.id!,
           embeddingId: embedding.id!,
+          score: 0,
+          searchType: defaultSearchType,
         ),
       );
     }
@@ -308,6 +313,8 @@ void main() {
         MessageEmbedding(
           messageId: message1.id!,
           embeddingId: embedding.id!,
+          score: 0,
+          searchType: defaultSearchType,
         ),
       );
     }
@@ -318,6 +325,8 @@ void main() {
         MessageEmbedding(
           messageId: message2.id!,
           embeddingId: embedding.id!,
+          score: 0,
+          searchType: defaultSearchType,
         ),
       );
     }

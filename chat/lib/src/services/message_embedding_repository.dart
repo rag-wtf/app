@@ -32,7 +32,9 @@ class MessageEmbeddingRepository {
     final embeddingId = messageEmbedding.embeddingId;
 
     final sql = '''
-RELATE ONLY $messageId->${tablePrefix}_${MessageEmbedding.tableName}->$embeddingId;''';
+RELATE ONLY $messageId->${tablePrefix}_${MessageEmbedding.tableName}->$embeddingId
+SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.score};
+''';
     if (txn == null) {
       final result = await _db.query(
         sql,
@@ -62,7 +64,10 @@ RELATE ONLY $messageId->${tablePrefix}_${MessageEmbedding.tableName}->$embedding
       final messageId = messageEmbedding.messageId;
       final embeddingId = messageEmbedding.embeddingId;
       final fullTableName = '${tablePrefix}_${MessageEmbedding.tableName}';
-      sqlBuffer.write('RELATE ONLY $messageId->$fullTableName->$embeddingId;');
+      sqlBuffer.write('''
+RELATE ONLY $messageId->$fullTableName->$embeddingId
+SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.score};
+''');
     }
 
     if (txn == null) {
