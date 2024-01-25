@@ -1,7 +1,6 @@
 import 'package:archive/archive.dart';
-import 'package:chat/chat.dart';
 import 'package:dio/dio.dart';
-import 'package:document/document.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/l10n.dart';
@@ -28,7 +27,10 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     // document package
     Factory(classType: Dio),
     LazySingleton<DocumentApiService>(classType: DocumentApiService),
-    LazySingleton<GZipEncoder>(classType: GZipEncoder),
+    LazySingleton<GZipEncoder>(classType: GZipEncoder,
+    // new dependencies
+    LazySingleton<ArchivePackage>(classType: ArchivePackage),
+    LazySingleton<Dio>(classType: Dio),),
     LazySingleton<GZipDecoder>(classType: GZipDecoder),
     LazySingleton<DocumentService>(classType: DocumentService),
     LazySingleton<DocumentRepository>(classType: DocumentRepository),
