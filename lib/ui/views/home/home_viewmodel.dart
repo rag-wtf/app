@@ -29,7 +29,7 @@ class HomeViewModel extends FutureViewModel<void> {
   }
 
   void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
+    _bottomSheetService.showCustomSheet<dynamic, dynamic><dynamic, dynamic>(
       variant: BottomSheetType.notice,
       title: ksHomeBottomSheetTitle,
       description: ksHomeBottomSheetDescription,
