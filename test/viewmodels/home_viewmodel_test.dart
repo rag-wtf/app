@@ -28,7 +28,7 @@ void main() {
         final bottomSheetService = getAndRegisterBottomSheetService();
 
         final model = getModel();
-        model.showBottomSheet();
+        model..showBottomSheet();
         verify(
           bottomSheetService.showCustomSheet(
             variant: BottomSheetType.notice,
