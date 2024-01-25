@@ -41,6 +41,7 @@ class ChatService with ListenableServiceMixin {
         _settingService.get(retrieveTopNResultsKey, type: int).value,
       );
   String get _promptTemplate => _settingService.get(promptTemplateKey).value;
+  String get _searchType => _settingService.get(similaritySearchTypeKey).value;
 
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();
@@ -157,6 +158,8 @@ class ChatService with ListenableServiceMixin {
             (embedding) => MessageEmbedding(
               messageId: message.id!,
               embeddingId: embedding.id!,
+              score: embedding.score!,
+              searchType: _searchType,
             ),
           )
           .toList();
