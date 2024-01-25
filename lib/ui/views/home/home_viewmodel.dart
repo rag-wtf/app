@@ -21,7 +21,7 @@ class HomeViewModel extends FutureViewModel<void> {
   }
 
   void showDialog() {
-    _dialogService.showCustomDialog(
+    _dialogService.showCustomDialog<String>(
       variant: DialogType.infoAlert,
       title: 'Stacked Rocks!',
       description: 'Give stacked $_counter stars on Github',
@@ -29,7 +29,7 @@ class HomeViewModel extends FutureViewModel<void> {
   }
 
   void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
+    _bottomSheetService.showCustomSheet<String>(
       variant: BottomSheetType.notice,
       title: ksHomeBottomSheetTitle,
       description: ksHomeBottomSheetDescription,
