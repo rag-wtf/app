@@ -23,43 +23,45 @@ class HorizontalList extends StatelessWidget {
             'Sources:',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          Container(
-            color: Colors.transparent,
-            height: 95,
-            // REF: https://docs.flutter.dev/release/breaking-changes/default-scroll-behavior-drag#copy-and-modify-existing-scrollbehavior
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(
-                dragDevices: {
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.mouse,
-                },
-              ),
-              child: ListView.builder(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                itemCount: embeddings!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    key: ValueKey(embeddings![index].id),
-                    margin: index == 0
-                        ? const EdgeInsets.only(right: itemMargin)
-                        : const EdgeInsets.symmetric(horizontal: itemMargin),
-                    padding: index == 0
-                        ? const EdgeInsets.only(right: itemPadding)
-                        : const EdgeInsets.symmetric(horizontal: itemPadding),
-                    width: itemWidth,
-                    child: OverflowBox(
-                      alignment: Alignment.topLeft,
-                      maxHeight: double.infinity,
-                      maxWidth: itemWidth,
-                      child: MarkdownWidget(
-                        embeddings![index].content,
-                        selectable: false,
-                        textStyle: const TextStyle(fontSize: 12),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 95),
+            child: ColoredBox(
+              color: Colors.transparent,
+              // REF: https://docs.flutter.dev/release/breaking-changes/default-scroll-behavior-drag#copy-and-modify-existing-scrollbehavior
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  dragDevices: {
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.mouse,
+                  },
+                ),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: embeddings!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      key: ValueKey(embeddings![index].id),
+                      margin: index == 0
+                          ? const EdgeInsets.only(right: itemMargin)
+                          : const EdgeInsets.symmetric(horizontal: itemMargin),
+                      padding: index == 0
+                          ? const EdgeInsets.only(right: itemPadding)
+                          : const EdgeInsets.symmetric(horizontal: itemPadding),
+                      width: itemWidth,
+                      child: OverflowBox(
+                        alignment: Alignment.topLeft,
+                        maxHeight: double.infinity,
+                        maxWidth: itemWidth,
+                        child: MarkdownWidget(
+                          embeddings![index].content,
+                          selectable: false,
+                          textStyle: const TextStyle(fontSize: 12),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
