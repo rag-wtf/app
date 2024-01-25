@@ -45,10 +45,13 @@ class MessageWidget extends StatelessWidget {
             width: 8,
           ), // Add spacing between the leading widget and title
           if (message.status == Status.sending)
-            const SizedBox(
-              width: 12,
-              height: 12,
-              child: CircularProgressIndicator(strokeWidth: 2),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                width: 8,
+                height: 8,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
             )
           else
             Expanded(

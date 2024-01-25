@@ -50,17 +50,6 @@ class ChatView extends StackedView<ChatViewModel> {
               ),
               onTap: () {},
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8),
-              child: InkWell(
-                child: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.green,
-                  size: 24,
-                ),
-                onTap: () {},
-              ),
-            ),
           ],
         ),
       ],
