@@ -7,6 +7,8 @@ environment:
   sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
+  archive: 
+  dio: 
   chat:
     path: chat
   document:
@@ -14,6 +16,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
+  archive: ^2.0.13
+  dio: ^4.0.0
     sdk: flutter
   intl: ^0.18.1
   rag_console:
