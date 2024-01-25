@@ -52,7 +52,7 @@ class HorizontalList extends StatelessWidget {
                       width: itemWidth,
                       child: OverflowBox(
                         alignment: Alignment.topLeft,
-                        maxHeight: double.infinity,
+                        maxHeight: 95,
                         maxWidth: itemWidth,
                         child: MarkdownWidget(
                           embeddings![index].content,
