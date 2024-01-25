@@ -132,4 +132,8 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
           )
         : null;
   }
+
+  Future<void> deleteAllDocuments(String tablePrefix) async {
+    await _db.delete('${tablePrefix}_${Document.tableName}');
+  }
 }
