@@ -18,7 +18,7 @@ void setupDialogUi() {
 
   final Map<DialogType, DialogBuilder> builders = {
     DialogType.infoAlert: (context, request, completer) =>
-        InfoAlertDialog(request: request, completer: completer),
+        InfoAlertDialog<SheetRequest, SheetResponse>(request: request, completer: completer),
   };
 
   dialogService.registerCustomDialogBuilders(builders);
