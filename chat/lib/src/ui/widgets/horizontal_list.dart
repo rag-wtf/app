@@ -25,7 +25,7 @@ class HorizontalList extends StatelessWidget {
           ),
           Container(
             color: Colors.transparent,
-            height: 80,
+            height: 95,
             // REF: https://docs.flutter.dev/release/breaking-changes/default-scroll-behavior-drag#copy-and-modify-existing-scrollbehavior
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
@@ -38,11 +38,15 @@ class HorizontalList extends StatelessWidget {
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: embeddings!.length,
-                itemBuilder: (BuildContext content, int index) {
+                itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: itemMargin),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: itemPadding),
+                    key: ValueKey(embeddings![index].id),
+                    margin: index == 0
+                        ? const EdgeInsets.only(right: itemMargin)
+                        : const EdgeInsets.symmetric(horizontal: itemMargin),
+                    padding: index == 0
+                        ? const EdgeInsets.only(right: itemPadding)
+                        : const EdgeInsets.symmetric(horizontal: itemPadding),
                     width: itemWidth,
                     child: OverflowBox(
                       alignment: Alignment.topLeft,
@@ -51,7 +55,7 @@ class HorizontalList extends StatelessWidget {
                       child: MarkdownWidget(
                         embeddings![index].content,
                         selectable: false,
-                        textStyle: const TextStyle(inherit: false, fontSize: 2),
+                        textStyle: const TextStyle(fontSize: 12),
                       ),
                     ),
                   );

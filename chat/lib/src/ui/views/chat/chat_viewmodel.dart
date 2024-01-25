@@ -10,17 +10,6 @@ class ChatViewModel extends ReactiveViewModel {
   final String tablePrefix;
   final _chatService = locator<ChatService>();
   final _log = getLogger('ChatViewModel');
-  static const _dummyText =
-      'A powerful HTTP networking package for Dart/Flutter, supports Global configuration, Interceptors, FormData, Request cancellation, File uploading/downloading, Timeout, Custom adapters, Transformers, etc.';
-  final embeddings = List.generate(
-    5,
-    (index) => Embedding(
-      content: '__Message ${index + 1}__: $_dummyText',
-      tokensCount: 10,
-      created: DateTime.now(),
-      updated: DateTime.now(),
-    ),
-  );
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_chatService];
