@@ -96,6 +96,12 @@ class ChatService with ListenableServiceMixin {
     notifyListeners();
   }
 
+  void initialise() {
+    _chats.clear();
+    _totalChats = -1;
+    newChat();
+  }
+
   Future<Object?> createChatAndMessage(
     String tablePrefix,
     Chat chat,
@@ -342,7 +348,6 @@ class ChatService with ListenableServiceMixin {
   }
 
   void _addLoadingMessage(String tablePrefix) {
-    isGeneratingMessage = true;
     final now = DateTime.now();
     _messages.insert(
       0,
@@ -431,6 +436,7 @@ class ChatService with ListenableServiceMixin {
         (sublist) => sublist.isNotEmpty,
       );
       if (isTxnSucess) {
+        _log.d('message ${message.authorId} ${message.id}');
         _chats.insert(0, chat);
         _chatIndex = 0;
         _totalChats += 1;
@@ -461,6 +467,7 @@ class ChatService with ListenableServiceMixin {
     final isSuccess = await _addMessage(tablePrefix, authorId, role, text);
     if (isSuccess) {
       if (role == Role.user) {
+        isGeneratingMessage = true;
         _addLoadingMessage(tablePrefix); // messages[0] status is sending
         if (_isStreaming) {
           await _rag(tablePrefix, text);

@@ -9,6 +9,7 @@ environment:
 dependencies:
   chat:
     path: chat
+  confirm_dialog: ^1.0.3
   document:
     path: document
   flutter:

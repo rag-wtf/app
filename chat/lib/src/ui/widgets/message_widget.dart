@@ -47,7 +47,7 @@ class MessageWidget extends StatelessWidget {
           ), // Add spacing between the leading widget and title
           if (message.status == Status.sending)
             const Padding(
-              padding: EdgeInsets.only(top: avatarPadding + 7.0),
+              padding: EdgeInsets.only(top: avatarPadding + 5.0),
               child: SizedBox(
                 width: 8,
                 height: 8,

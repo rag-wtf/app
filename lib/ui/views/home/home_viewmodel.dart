@@ -20,7 +20,9 @@ class HomeViewModel extends FutureViewModel<void> {
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _chatRepository = locator<ChatRepository>();
   final _messageRepository = locator<MessageRepository>();
-
+  final _chatService = locator<ChatService>();
+  int get totalChats => _totalChats;
+  late int _totalChats;
   bool _isSettingsDataExcludedFromDeletion = true;
   bool get isSettingsDataExcludedFromDeletion =>
       _isSettingsDataExcludedFromDeletion;
@@ -62,6 +64,7 @@ class HomeViewModel extends FutureViewModel<void> {
   @override
   Future<void> futureToRun() async {
     await _settingService.initialise(tablePrefix);
+    _totalChats = await _chatRepository.getTotal(tablePrefix);
   }
 
   Future<void> deleteAllData() async {
@@ -73,6 +76,8 @@ class HomeViewModel extends FutureViewModel<void> {
     await _embeddingRepository.deleteAllEmbeddings(tablePrefix);
     await _chatRepository.deleteAllChats(tablePrefix);
     await _messageRepository.deleteAllMessages(tablePrefix);
+    _chatService.initialise();
+
     notifyListeners();
   }
 }

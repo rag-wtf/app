@@ -2,7 +2,6 @@ import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/message.dart';
-import 'package:document/document.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatViewModel extends ReactiveViewModel {

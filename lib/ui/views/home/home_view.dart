@@ -1,7 +1,9 @@
 import 'package:chat/chat.dart';
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
+import 'package:rag/ui/widgets/clear_data_widget.dart';
 import 'package:rag/ui/widgets/common/brightness_button.dart';
 import 'package:rag_console/rag_console.dart';
 import 'package:settings/settings.dart';
@@ -17,8 +19,22 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView>
+    with SingleTickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late TabController _leftWidgetTabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _leftWidgetTabController = TabController(vsync: this, length: 2);
+  }
+
+  @override
+  void dispose() {
+    _leftWidgetTabController.dispose();
+    super.dispose();
+  }
 
   void closeDrawer() {
     if (scaffoldKey.currentState!.isDrawerOpen) {
@@ -29,56 +45,68 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-      builder: (context, viewModel, child) => LayoutBuilder(
-        builder: (context, constraints) {
-          return Scaffold(
-            key: scaffoldKey,
-            appBar: AppBar(
-              title: const Text(appTitle),
-              leading: constraints.maxWidth < mediumScreenWidth
-                  ? Builder(
+      builder: (context, viewModel, child) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (viewModel.totalChats > 0) {
+            _leftWidgetTabController.animateTo(1);
+          }
+        });
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return Scaffold(
+              key: scaffoldKey,
+              appBar: AppBar(
+                title: const Text(appTitle),
+                leading: constraints.maxWidth < mediumScreenWidth
+                    ? Builder(
+                        builder: (context) => IconButton(
+                          onPressed: () => Scaffold.of(context).openDrawer(),
+                          icon: const Icon(Icons.menu_open),
+                        ),
+                      )
+                    : null,
+                actions: [
+                  const BrightnessButton(
+                    showTooltipBelow: false,
+                  ),
+                  if (constraints.maxWidth < largeScreenWidth)
+                    Builder(
                       builder: (context) => IconButton(
-                        onPressed: () => Scaffold.of(context).openDrawer(),
-                        icon: const Icon(Icons.menu_open),
+                        onPressed: () => Scaffold.of(context).openEndDrawer(),
+                        icon: const Icon(Icons.settings),
+                      ),
+                    ),
+                ],
+              ),
+              body: SafeArea(
+                child: BodyWidget(
+                  viewModel,
+                  constraints.maxWidth,
+                  closeDrawer,
+                  _leftWidgetTabController,
+                ),
+              ),
+              drawer: constraints.maxWidth < mediumScreenWidth
+                  ? Drawer(
+                      child: LeftWidget(
+                        viewModel,
+                        closeDrawer,
+                        _leftWidgetTabController,
                       ),
                     )
                   : null,
-              actions: [
-                const BrightnessButton(
-                  showTooltipBelow: false,
-                ),
-                if (constraints.maxWidth < largeScreenWidth)
-                  Builder(
-                    builder: (context) => IconButton(
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
-                      icon: const Icon(Icons.settings),
-                    ),
-                  ),
-              ],
-            ),
-            body: SafeArea(
-              child: BodyWidget(
-                viewModel,
-                constraints.maxWidth,
-                closeDrawerFunction: closeDrawer,
-              ),
-            ),
-            drawer: constraints.maxWidth < mediumScreenWidth
-                ? Drawer(
-                    child: LeftWidget(
-                      viewModel,
-                      closeDrawerFunction: closeDrawer,
-                    ),
-                  )
-                : null,
-            endDrawer: constraints.maxWidth < largeScreenWidth
-                ? Drawer(
-                    child: RightWidget(viewModel),
-                  )
-                : null,
-          );
-        },
-      ),
+              endDrawer: constraints.maxWidth < largeScreenWidth
+                  ? Drawer(
+                      child: RightWidget(
+                        viewModel,
+                        _leftWidgetTabController,
+                      ),
+                    )
+                  : null,
+            );
+          },
+        );
+      },
       viewModelBuilder: HomeViewModel.new,
     );
   }
@@ -87,14 +115,16 @@ class _HomeViewState extends State<HomeView> {
 class BodyWidget extends StatelessWidget {
   const BodyWidget(
     this.viewModel,
-    this.maxWidth, {
-    super.key,
+    this.maxWidth,
     this.closeDrawerFunction,
+    this.leftWidgetTabController, {
+    super.key,
   });
 
   final double maxWidth;
   final HomeViewModel viewModel;
   final void Function()? closeDrawerFunction;
+  final TabController leftWidgetTabController;
 
   @override
   Widget build(BuildContext context) {
@@ -105,16 +135,20 @@ class BodyWidget extends StatelessWidget {
             flex: 3,
             child: LeftWidget(
               viewModel,
-              closeDrawerFunction: closeDrawerFunction,
+              closeDrawerFunction,
+              leftWidgetTabController,
             ),
           ),
           Flexible(
             flex: 6,
-            child: CenterWidget(viewModel),
+            child: CenterWidget(viewModel, leftWidgetTabController),
           ),
           Flexible(
             flex: 3,
-            child: RightWidget(viewModel),
+            child: RightWidget(
+              viewModel,
+              leftWidgetTabController,
+            ),
           ),
         ],
       );
@@ -125,27 +159,30 @@ class BodyWidget extends StatelessWidget {
             flex: 4,
             child: LeftWidget(
               viewModel,
-              closeDrawerFunction: closeDrawerFunction,
+              closeDrawerFunction,
+              leftWidgetTabController,
             ),
           ),
           Flexible(
             flex: 8,
-            child: CenterWidget(viewModel),
+            child: CenterWidget(viewModel, leftWidgetTabController),
           ),
         ],
       );
     } else {
-      return CenterWidget(viewModel);
+      return CenterWidget(viewModel, leftWidgetTabController);
     }
   }
 }
 
 class RightWidget extends StatelessWidget {
   const RightWidget(
-    this.viewModel, {
+    this.viewModel,
+    this.leftWidgetTabController, {
     super.key,
   });
   final HomeViewModel viewModel;
+  final TabController leftWidgetTabController;
 
   @override
   Widget build(BuildContext context) {
@@ -176,39 +213,7 @@ class RightWidget extends StatelessWidget {
             ),
           ),
         ),
-        ExpansionTile(
-          title: Text(
-            'Reset Data',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          childrenPadding: const EdgeInsets.all(24),
-          children: [
-            const Center(child: Text('Permanently delete all data?')),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Checkbox(
-                  value: viewModel.isSettingsDataExcludedFromDeletion,
-                  onChanged: (value) =>
-                      viewModel.isSettingsDataExcludedFromDeletion = value!,
-                ),
-                const Text('Excludes settings data'),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FilledButton.icon(
-              style: FilledButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: viewModel.deleteAllData,
-              icon: const Icon(Icons.delete_forever_outlined),
-              label: const Text('Delete'),
-            ),
-          ],
-        ),
+        ClearDataWidget(viewModel, leftWidgetTabController),
       ],
     );
   }
@@ -216,49 +221,55 @@ class RightWidget extends StatelessWidget {
 
 class CenterWidget extends StatelessWidget {
   const CenterWidget(
-    this.viewModel, {
+    this.viewModel,
+    this.leftWidgetTabController, {
     super.key,
   });
   final HomeViewModel viewModel;
+  final TabController leftWidgetTabController;
+
   @override
   Widget build(BuildContext context) {
-    return ChatView();
+    return ChatView(
+      leftWidgetTabController: leftWidgetTabController,
+    );
   }
 }
 
 class LeftWidget extends StatelessWidget {
   const LeftWidget(
-    this.viewModel, {
-    super.key,
+    this.viewModel,
     this.closeDrawerFunction,
+    this.leftWidgetTabController, {
+    super.key,
   });
 
   final HomeViewModel viewModel;
   final void Function()? closeDrawerFunction;
+  final TabController leftWidgetTabController;
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const TabBar(
-            tabs: [
-              Tab(
-                text: 'Documents',
-              ),
-              Tab(
-                text: 'Chats',
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            const DocumentListView(),
-            ChatListView(closeDrawerFunction: closeDrawerFunction),
+    return Scaffold(
+      appBar: AppBar(
+        title: TabBar(
+          controller: leftWidgetTabController,
+          tabs: const [
+            Tab(
+              text: 'Documents',
+            ),
+            Tab(
+              text: 'Chats',
+            ),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: leftWidgetTabController,
+        children: [
+          const DocumentListView(),
+          ChatListView(closeDrawerFunction: closeDrawerFunction),
+        ],
       ),
     );
   }

@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
-import 'package:chat/src/ui/widgets/horizontal_list.dart';
 import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
 
@@ -10,9 +9,14 @@ import 'package:stacked/stacked.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
-  ChatView({super.key, this.tablePrefix = 'main'});
+  ChatView({
+    super.key,
+    this.tablePrefix = 'main',
+    this.leftWidgetTabController,
+  });
   final String tablePrefix;
   final _scrollController = ScrollController();
+  final TabController? leftWidgetTabController;
 
   @override
   Widget builder(
@@ -73,6 +77,7 @@ class ChatView extends StackedView<ChatViewModel> {
   Future<void> _onSend(ChatViewModel viewModel, String text) async {
     _scrollToBottom();
     await viewModel.addMessage(viewModel.userId, text);
+    leftWidgetTabController?.animateTo(1);
   }
 
   void _scrollToBottom() {

@@ -18,9 +18,6 @@ class ChatListView extends StackedView<ChatListViewModel> {
     ChatListViewModel viewModel,
     Widget? child,
   ) {
-    //debugPrint(
-    //  'view.chats.length ${viewModel.chats.length}',
-    //);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: InfiniteList(
