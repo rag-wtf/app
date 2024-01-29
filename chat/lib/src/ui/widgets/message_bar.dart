@@ -47,7 +47,7 @@ class MessageBar extends StatelessWidget {
     this.replyCloseColor = Colors.black12,
     this.messageBarColor = const Color(0xffF4F4F5),
     this.sendButtonColor = Colors.blue,
-    this.sendButtonEnabled = true,
+    this.isSendButtonBusy = false,
     this.messageBarHintText = 'Type your message here',
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.onTextChanged,
@@ -64,7 +64,7 @@ class MessageBar extends StatelessWidget {
   final String messageBarHintText;
   final TextStyle messageBarHintStyle;
   final Color sendButtonColor;
-  final bool sendButtonEnabled;
+  final bool isSendButtonBusy;
   final void Function(String)? onTextChanged;
   final void Function(String) onSend;
   final void Function()? onTapCloseReply;
@@ -122,9 +122,10 @@ class MessageBar extends StatelessWidget {
             color: messageBarColor,
             padding: const EdgeInsets.symmetric(
               vertical: 8,
-              horizontal: 16,
+              horizontal: 8,
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ...actions,
                 Expanded(
@@ -165,25 +166,25 @@ class MessageBar extends StatelessWidget {
                           width: 0.2,
                         ),
                       ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom: 40),
+                        child: isSendButtonBusy
+                            ? const AvatarBrick(
+                                isLoading: true,
+                                size: Size(32, 32),
+                                backgroundColor: Colors.transparent,
+                              )
+                            : InkWell(
+                                onTap: _send,
+                                child: Icon(
+                                  Icons.send,
+                                  color: sendButtonColor,
+                                  size: 24,
+                                ),
+                              ),
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: sendButtonEnabled
-                      ? InkWell(
-                          onTap: _send,
-                          child: Icon(
-                            Icons.send,
-                            color: sendButtonColor,
-                            size: 24,
-                          ),
-                        )
-                      : const AvatarBrick(
-                          isLoading: true,
-                          size: Size(32, 32),
-                          backgroundColor: Colors.transparent,
-                        ),
                 ),
               ],
             ),
@@ -193,9 +194,9 @@ class MessageBar extends StatelessWidget {
     );
   }
 
-  void _send() {
+  Future<void> _send() async {
     final text = _textController.text.trim();
-    if (text.isNotEmpty) {
+    if (text.isNotEmpty && !isSendButtonBusy) {
       onSend(text);
       _textController.text = '';
     }

@@ -43,16 +43,17 @@ class ChatView extends StackedView<ChatViewModel> {
           height: 5,
         ),
         MessageBar(
-          sendButtonEnabled: !viewModel.isGenerating,
-          onSend: (text) => _onSend(viewModel, text),
+          isSendButtonBusy: viewModel.isGenerating,
+          sendButtonColor: Colors.lightBlue,
+          onSend: (text) async => _onSend(viewModel, text),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8),
+              padding: const EdgeInsets.only(right: 8, top: 8),
               child: InkWell(
                 onTap: viewModel.newChat,
                 child: const Icon(
                   Icons.add,
-                  color: Colors.black,
+                  color: Colors.lightBlue,
                   size: 24,
                 ),
               ),
@@ -75,9 +76,9 @@ class ChatView extends StackedView<ChatViewModel> {
   }
 
   Future<void> _onSend(ChatViewModel viewModel, String text) async {
+    leftWidgetTabController?.animateTo(1);
     _scrollToBottom();
     await viewModel.addMessage(viewModel.userId, text);
-    leftWidgetTabController?.animateTo(1);
   }
 
   void _scrollToBottom() {

@@ -90,6 +90,7 @@ class ChatService with ListenableServiceMixin {
   }
 
   void newChat() {
+    isGeneratingMessage = false;
     _messages.clear();
     _chatIndex = -1;
     _totalMessages = -1;
@@ -252,18 +253,21 @@ class ChatService with ListenableServiceMixin {
   }
 
   Future<void> fetchChats(String tablePrefix) async {
-    final page = _chats.length ~/ defaultPageSize;
-    _log.d('page $page');
-    final chatList = await getChatList(
-      tablePrefix,
-      page: page,
-      pageSize: defaultPageSize,
-    );
-    _log.d('chatList.total ${chatList.total}');
-    if (chatList.total > 0) {
-      _chats.addAll(chatList.items);
-      _totalChats = chatList.total;
-      notifyListeners();
+    if (_totalChats == -1 || // first time loading
+        _chats.length < _totalChats) {
+      final page = _chats.length ~/ defaultPageSize;
+      _log.d('page $page');
+      final chatList = await getChatList(
+        tablePrefix,
+        page: page,
+        pageSize: defaultPageSize,
+      );
+      _log.d('chatList.total ${chatList.total}');
+      if (chatList.total > 0) {
+        _chats.addAll(chatList.items);
+        _totalChats = chatList.total;
+        notifyListeners();
+      }
     }
   }
 
@@ -436,7 +440,7 @@ class ChatService with ListenableServiceMixin {
         (sublist) => sublist.isNotEmpty,
       );
       if (isTxnSucess) {
-        _log.d('message ${message.authorId} ${message.id}');
+        _log.d('message ${message.authorId} _chats.length ${_chats.length}}');
         _chats.insert(0, chat);
         _chatIndex = 0;
         _totalChats += 1;
