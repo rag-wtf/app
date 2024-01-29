@@ -15,10 +15,10 @@ void main() {
     tearDown(locator.reset);
 
     group('incrementCounter -', () {
-      test('When called once should return  Counter is: 1', () {
+      test('When called, should increment the counter by 1', () {
         final model = getModel();
         model.incrementCounter();
-        expect(model.counterLabel, 'Counter is: 1');
+        expect(model.counterLabel, 'Counter is: 2');
       });
     });
 
