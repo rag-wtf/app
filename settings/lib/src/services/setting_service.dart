@@ -82,7 +82,7 @@ class SettingService {
     }
   }
 
-  Future<void> reset(String tablePrefix) async {
+  Future<void> clearData(String tablePrefix) async {
     await _settingRepository.deleteAllSettings(tablePrefix);
     _settings.clear();
   }

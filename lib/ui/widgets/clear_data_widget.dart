@@ -35,11 +35,10 @@ class _ClearDataWidgetState extends State<ClearDataWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Checkbox(
-              value: widget.viewModel.isSettingsDataExcludedFromDeletion,
-              onChanged: (value) =>
-                  widget.viewModel.isSettingsDataExcludedFromDeletion = value!,
+              value: widget.viewModel.isKeepSettings,
+              onChanged: (value) => widget.viewModel.isKeepSettings = value!,
             ),
-            const Text('Excludes settings data'),
+            const Text('Keep Settings'),
           ],
         ),
         const SizedBox(

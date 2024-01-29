@@ -15,19 +15,16 @@ class HomeViewModel extends FutureViewModel<void> {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _settingService = locator<SettingService>();
-  final _settingRepository = locator<SettingRepository>();
-  final _documentRepository = locator<DocumentRepository>();
-  final _embeddingRepository = locator<EmbeddingRepository>();
+  final _documentService = locator<DocumentService>();
   final _chatRepository = locator<ChatRepository>();
   final _messageRepository = locator<MessageRepository>();
   final _chatService = locator<ChatService>();
   int get totalChats => _totalChats;
   late int _totalChats;
-  bool _isSettingsDataExcludedFromDeletion = true;
-  bool get isSettingsDataExcludedFromDeletion =>
-      _isSettingsDataExcludedFromDeletion;
-  set isSettingsDataExcludedFromDeletion(bool value) {
-    _isSettingsDataExcludedFromDeletion = value;
+  bool _isKeepSettings = true;
+  bool get isKeepSettings => _isKeepSettings;
+  set isKeepSettings(bool value) {
+    _isKeepSettings = value;
     notifyListeners();
   }
 
@@ -68,16 +65,10 @@ class HomeViewModel extends FutureViewModel<void> {
   }
 
   Future<void> deleteAllData() async {
-    if (!isSettingsDataExcludedFromDeletion) {
-      await _settingRepository.deleteAllSettings(tablePrefix);
-      await _settingService.initialise(tablePrefix);
+    if (!isKeepSettings) {
+      await _settingService.clearData(tablePrefix);
     }
-    await _documentRepository.deleteAllDocuments(tablePrefix);
-    await _embeddingRepository.deleteAllEmbeddings(tablePrefix);
-    await _chatRepository.deleteAllChats(tablePrefix);
-    await _messageRepository.deleteAllMessages(tablePrefix);
-    _chatService.initialise();
-
-    notifyListeners();
+    await _documentService.clearData(tablePrefix);
+    await _chatService.clearData(tablePrefix);
   }
 }

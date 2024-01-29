@@ -1,24 +1,25 @@
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
-import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
-class DocumentListViewModel extends FutureViewModel<void> {
+class DocumentListViewModel extends ReactiveViewModel {
   DocumentListViewModel(this.tablePrefix);
   final String tablePrefix;
-  int _total = 0;
-  final _items = <Document>[];
-  List<Document> get items => _items;
+
   final _documentService = locator<DocumentService>();
   final _settingService = locator<SettingService>();
   final _log = getLogger('DocumentListViewModel');
 
+  List<Document> get items => _documentService.items;
+
   @override
-  Future<void> futureToRun() async {
-    _log.d('futureToRun() tablePrefix: $tablePrefix');
+  List<ListenableServiceMixin> get listenableServices => [_documentService];
+
+  Future<void> initialise() async {
+    _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
     final isSchemaCreated = await _documentService.isSchemaCreated(tablePrefix);
     _log.d('isSchemaCreated $isSchemaCreated');
@@ -28,43 +29,19 @@ class DocumentListViewModel extends FutureViewModel<void> {
       //await _documentService.createSchema(tablePrefix);
       _log.d('after createSchema()');
     }
-    await fetchData();
   }
 
-  bool get hasReachedMax {
-    final reachedMax = items.length >= _total;
-    _log.d(reachedMax);
-    return reachedMax;
-  }
+  bool get hasReachedMax => _documentService.hasReachedMax;
 
   Future<void> fetchData() async {
-    final page = _items.length ~/ defaultPageSize;
-    _log.d('page $page');
-    final documentList = await _documentService.getDocumentList(
-      tablePrefix,
-      page: page,
-      pageSize: defaultPageSize,
-    );
-    _log.d('documentList.total ${documentList.total}');
-    if (documentList.total > 0) {
-      _items.addAll(documentList.items);
-      _total = documentList.total;
-      notifyListeners();
-    }
+    await _documentService.fetchData(tablePrefix);
   }
 
   Future<void> addItem(Document? document) async {
-    if (document != null) {
-      final createdDocument =
-          await _documentService.createDocument(tablePrefix, document);
-      if (createdDocument.id != null) {
-        _items.insert(0, createdDocument);
-        notifyListeners();
-      }
-    }
+    await _documentService.addItem(tablePrefix, document);
   }
 
   void setItem(int index, Document document) {
-    _items[index] = document;
+    _documentService.setItem(index, document);
   }
 }

@@ -2,21 +2,33 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 import 'package:document/src/app/app.locator.dart';
+import 'package:document/src/app/app.logger.dart';
+import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_embedding.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
+import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-class DocumentService {
+class DocumentService with ListenableServiceMixin {
+  DocumentService() {
+    listenToReactiveValues([_items]);
+  }
   final _db = locator<Surreal>();
   final _documentRepository = locator<DocumentRepository>();
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
+
+  int _total = -1;
+  final _items = <Document>[];
+  List<Document> get items => _items.toList();
+
+  final _log = getLogger('DocumentService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = (await _db.query('INFO FOR DB'))! as List;
@@ -44,6 +56,50 @@ class DocumentService {
       await _embeddingRepository.createSchema(tablePrefix, txn);
       await _documentEmbeddingRepository.createSchema(tablePrefix, txn);
     }
+  }
+
+  bool get hasReachedMax {
+    final reachedMax = _total > -1 && _items.length >= _total;
+    _log.d(reachedMax);
+    return reachedMax;
+  }
+
+  Future<void> fetchData(String tablePrefix) async {
+    final page = _items.length ~/ defaultPageSize;
+    _log.d('page $page');
+    final documentList = await getDocumentList(
+      tablePrefix,
+      page: page,
+      pageSize: defaultPageSize,
+    );
+    _log.d('documentList.total ${documentList.total}');
+    if (documentList.total > 0 && documentList.total > _items.length) {
+      _items.addAll(documentList.items);
+      _total = documentList.total;
+      notifyListeners();
+    }
+  }
+
+  Future<void> addItem(String tablePrefix, Document? document) async {
+    if (document != null) {
+      final createdDocument = await createDocument(tablePrefix, document);
+      if (createdDocument.id != null) {
+        _items.insert(0, createdDocument);
+        notifyListeners();
+      }
+    }
+  }
+
+  void setItem(int index, Document document) {
+    _items[index] = document;
+  }
+
+  Future<void> clearData(String tablePrefix) async {
+    _total = -1;
+    _items.clear();
+    await _documentRepository.deleteAllDocuments(tablePrefix);
+    await _embeddingRepository.deleteAllEmbeddings(tablePrefix);
+    notifyListeners();
   }
 
   Future<Object?> updateDocumentAndCreateEmbeddings(

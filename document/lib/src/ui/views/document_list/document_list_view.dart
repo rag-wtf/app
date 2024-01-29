@@ -68,6 +68,11 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   ) =>
       DocumentListViewModel(tablePrefix);
 
+  @override
+  Future<void> onViewModelReady(DocumentListViewModel viewModel) async {
+    await viewModel.initialise();
+  }
+
   Future<Document?> pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
