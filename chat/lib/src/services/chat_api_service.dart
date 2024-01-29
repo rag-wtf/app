@@ -9,6 +9,7 @@ import 'package:chat/src/app/app.logger.dart';
 
 import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
+import 'package:chat/src/services/sse_transformer.dart';
 import 'package:dio/dio.dart';
 
 class ChatApiService {
@@ -111,12 +112,14 @@ class ChatApiService {
         .transform(_uint8Transformer)
         .transform(const Utf8Decoder())
         .transform(const LineSplitter())
+        .transform(const SseTransformer())
         .transform(_contentTransformer);
   }
 
-  final StreamTransformer<String, String> _contentTransformer =
+  final StreamTransformer<SseMessage, String> _contentTransformer =
       StreamTransformer.fromHandlers(
-    handleData: (dataLine, sink) {
+    handleData: (message, sink) {
+      final dataLine = message.data;
       if (dataLine.isNotEmpty &&
           !dataLine.startsWith(': ping') && // modal_llama-cpp-python
           dataLine != 'data: [DONE]') {
