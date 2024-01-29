@@ -38,7 +38,7 @@ abstract class Document with _$Document {
   static const tableName = 'documents';
 
   static const sqlSchema = '''
-DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
+DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD compressedFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD content ON {prefix}_$tableName TYPE option<string>;

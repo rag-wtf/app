@@ -97,7 +97,9 @@ class ChatService with ListenableServiceMixin {
     notifyListeners();
   }
 
-  void initialise() {
+  Future<void> clearData(String tablePrefix) async {
+    await _chatRepository.deleteAllChats(tablePrefix);
+    await _messageRepository.deleteAllMessages(tablePrefix);
     _chats.clear();
     _totalChats = -1;
     newChat();
@@ -253,21 +255,18 @@ class ChatService with ListenableServiceMixin {
   }
 
   Future<void> fetchChats(String tablePrefix) async {
-    if (_totalChats == -1 || // first time loading
-        _chats.length < _totalChats) {
-      final page = _chats.length ~/ defaultPageSize;
-      _log.d('page $page');
-      final chatList = await getChatList(
-        tablePrefix,
-        page: page,
-        pageSize: defaultPageSize,
-      );
-      _log.d('chatList.total ${chatList.total}');
-      if (chatList.total > 0) {
-        _chats.addAll(chatList.items);
-        _totalChats = chatList.total;
-        notifyListeners();
-      }
+    final page = _chats.length ~/ defaultPageSize;
+    _log.d('page $page');
+    final chatList = await getChatList(
+      tablePrefix,
+      page: page,
+      pageSize: defaultPageSize,
+    );
+    _log.d('chatList.total ${chatList.total}');
+    if (chatList.total > 0 && chatList.total > _chats.length) {
+      _chats.addAll(chatList.items);
+      _totalChats = chatList.total;
+      notifyListeners();
     }
   }
 
