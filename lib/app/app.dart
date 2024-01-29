@@ -1,4 +1,5 @@
 import 'package:archive/archive.dart';
+import 'package:rag/ui/common/app_strings.dart;"
 import 'package:chat/chat.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
@@ -13,7 +14,8 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_wasm/surrealdb_wasm.dart;
+import 'package:archive/archive.dart';"
 
 @StackedApp(
   routes: [
@@ -27,6 +29,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<NavigationService>(classType: NavigationService),
     // document package
     Factory(classType: Dio),
+Factory(classType: Archive),
     LazySingleton<DocumentApiService>(classType: DocumentApiService),
     LazySingleton<GZipEncoder>(classType: GZipEncoder),
     LazySingleton<GZipDecoder>(classType: GZipDecoder),
@@ -56,9 +59,15 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       classType: DatabaseService,
       asType: Surreal,
     ),
+    InitializableSingleton(
+      classType: DatabaseService,
+      asType: Archive,
+    ),
 // @stacked-service
   ],
   bottomsheets: [
+    StackedBottomsheet(classType: NoticeSheet),
+    StackedBottomsheet(classType: AppStrings),: [
     StackedBottomsheet(classType: NoticeSheet),
     // @stacked-bottom-sheet
   ],
