@@ -5,7 +5,6 @@ import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/embedding_repository.dart';
-import 'package:document/src/ui/views/document_detail/document_detail_view.dart';
 import 'package:document/src/ui/views/document_list/document_list_view.dart';
 import 'package:document/src/ui/views/startup/startup_view.dart';
 import 'package:settings/settings.dart';
@@ -18,7 +17,6 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   routes: [
     MaterialRoute(page: StartupView),
     MaterialRoute(page: DocumentListView),
-    MaterialRoute(page: DocumentDetailView),
 // @stacked-route
   ],
   dependencies: [
