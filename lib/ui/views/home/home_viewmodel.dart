@@ -54,7 +54,7 @@ class HomeViewModel extends BaseViewModel {
 
   String getSettingValue(String key, {Type? type}) {
     final setting = _settingService.get(key, type: type);
-    return setting.value;
+    return setting.getValue();
   }
 
   Future<void> initialise() async {
