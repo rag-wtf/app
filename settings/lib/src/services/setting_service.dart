@@ -5,11 +5,16 @@ import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
+import 'package:stacked/stacked.dart';
 import 'package:ulid/ulid.dart';
 
-class SettingService {
+class SettingService with ListenableServiceMixin {
+  SettingService() {
+    listenToReactiveValues([_settings]);
+  }
   final Map<String, Setting> _settings = {};
   final _settingRepository = locator<SettingRepository>();
+  void Function()? clearFormValuesFunction;
   final _log = getLogger('SettingService');
 
   Setting get(String key, {Type? type}) {
@@ -85,6 +90,9 @@ class SettingService {
   Future<void> clearData(String tablePrefix) async {
     await _settingRepository.deleteAllSettings(tablePrefix);
     _settings.clear();
+    await initialise(tablePrefix);
+    clearFormValuesFunction?.call();
+    notifyListeners();
   }
 
   Future<void> set(String tablePrefix, String key, String value) async {
@@ -101,6 +109,7 @@ class SettingService {
         if (updatedSetting != null) {
           if (updatedSetting.value == newValue) {
             _settings[key] = updatedSetting;
+            notifyListeners();
           } else {
             throw Exception('Unable to update setting of "$key"!');
           }
@@ -116,6 +125,7 @@ class SettingService {
           await _settingRepository.createSetting(tablePrefix, setting);
       if (createdSetting.id != null) {
         _settings[key] = createdSetting;
+        notifyListeners();
       } else {
         throw Exception('Unable to create setting of "$key"!');
       }

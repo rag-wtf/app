@@ -211,7 +211,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.model_training_outlined,
                             color: iconColor,
                           ),
-                          hintText: 'gpt-3.5-turbo-1106',
+                          hintText: 'gpt-3.5-turbo',
                           errorText: viewModel.generationModelValidationMessage,
                           controller: generationModelController,
                           textInputType: TextInputType.text,
@@ -290,6 +290,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   @override
   Future<void> onViewModelReady(SettingsViewModel viewModel) async {
     syncFormWithViewModel(viewModel);
+    await viewModel.initialise();
     dataIngestionApiUrlController.addListener(viewModel.setDataIngestionApiUrl);
     chunkSizeController.addListener(viewModel.setChunkSize);
     chunkOverlapController.addListener(viewModel.setChunkOverlap);

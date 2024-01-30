@@ -4,11 +4,15 @@ import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:stacked/stacked.dart';
 
-class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
+class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   SettingsViewModel(this.tablePrefix);
   final String tablePrefix;
   final _isPanelExpanded = List.filled(4, true);
   final _settingService = locator<SettingService>();
+
+  @override
+  List<ListenableServiceMixin> get listenableServices => [_settingService];
+
   bool isPanelExpanded(int index) => _isPanelExpanded[index];
 
   bool get stream =>
@@ -20,9 +24,10 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
     notifyListeners();
   }
 
-  Future<void> _initialise() async {
+  Future<void> initialise() async {
+    setBusy(true);
     await _settingService.initialise(tablePrefix);
-
+    _settingService.clearFormValuesFunction = clearFormValues;
     final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
     if (dataIngestionApiUrl.id != null) {
       dataIngestionApiUrlValue = dataIngestionApiUrl.value;
@@ -131,6 +136,32 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
     if (stop.id != null) {
       stopValue = stop.value;
     }
+    setBusy(false);
+  }
+
+  void clearFormValues() {
+    const empty = '';
+    dataIngestionApiUrlValue = empty;
+    chunkSizeValue = empty;
+    chunkOverlapValue = empty;
+    embeddingsModelValue = empty;
+    embeddingsApiUrlValue = empty;
+    embeddingsApiKeyValue = empty;
+    embeddingsDimensionValue = empty;
+    embeddingsApiBatchSizeValue = empty;
+    similaritySearchTypeValue = empty;
+    similaritySearchIndexValue = empty;
+    retrieveTopNResultsValue = empty;
+    generationModelValue = empty;
+    generationApiUrlValue = empty;
+    generationApiKeyValue = empty;
+    promptTemplateValue = empty;
+    temperatureValue = empty;
+    topPValue = empty;
+    repetitionPenaltyValue = empty;
+    topKValue = empty;
+    maxNewTokensValue = empty;
+    stopValue = empty;
   }
 
   Future<void> setDataIngestionApiUrl() async {
@@ -360,11 +391,5 @@ class SettingsViewModel extends FutureViewModel<void> with FormStateHelper {
       streamKey,
       value.toString(),
     );
-    notifyListeners();
-  }
-
-  @override
-  Future<void> futureToRun() async {
-    await _initialise();
   }
 }
