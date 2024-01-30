@@ -10,6 +10,6 @@ class StartupViewModel extends BaseViewModel {
   Future<void> runStartupLogic() async {
     // This is where you can make decisions on where your app should navigate when
     // you have custom startup logic
-    await _navigationService.replaceWithHomeView();
+    await _navigationService.replaceWithHomeView(); // Make decisions on app navigation
   }
 }
