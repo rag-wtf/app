@@ -174,7 +174,6 @@ class DocumentItemWidgetModel extends BaseViewModel {
     notifyListeners();
   }
 
-  @override
   // ignore: prefer_void_to_null
   FutureOr<Null> onError(dynamic error) async {
     _log.e(error);
