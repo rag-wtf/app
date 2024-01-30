@@ -108,6 +108,7 @@ class _HomeViewState extends State<HomeView>
         );
       },
       viewModelBuilder: HomeViewModel.new,
+      onViewModelReady: (viewModel) => viewModel.initialise(),
     );
   }
 }

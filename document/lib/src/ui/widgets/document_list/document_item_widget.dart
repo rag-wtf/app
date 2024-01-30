@@ -101,6 +101,8 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
     return DocumentItemWidgetModel(_parentViewModel, _itemIndex);
   }
 
-  //@override
-  //bool get createNewViewModelOnInsert => true;
+  @override
+  Future<void> onViewModelReady(DocumentItemWidgetModel viewModel) async {
+    await viewModel.initialise();
+  }
 }

@@ -8,7 +8,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class HomeViewModel extends FutureViewModel<void> {
+class HomeViewModel extends BaseViewModel {
   HomeViewModel({this.tablePrefix = defaultTablePrefix});
   final String tablePrefix;
 
@@ -17,7 +17,6 @@ class HomeViewModel extends FutureViewModel<void> {
   final _settingService = locator<SettingService>();
   final _documentService = locator<DocumentService>();
   final _chatRepository = locator<ChatRepository>();
-  final _messageRepository = locator<MessageRepository>();
   final _chatService = locator<ChatService>();
   int get totalChats => _totalChats;
   late int _totalChats;
@@ -58,8 +57,7 @@ class HomeViewModel extends FutureViewModel<void> {
     return setting.value;
   }
 
-  @override
-  Future<void> futureToRun() async {
+  Future<void> initialise() async {
     await _settingService.initialise(tablePrefix);
     _totalChats = await _chatRepository.getTotal(tablePrefix);
   }

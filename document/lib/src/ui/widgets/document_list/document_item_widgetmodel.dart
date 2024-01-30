@@ -13,7 +13,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:ulid/ulid.dart';
 
-class DocumentItemWidgetModel extends FutureViewModel<void> {
+class DocumentItemWidgetModel extends BaseViewModel {
   DocumentItemWidgetModel(this._parentViewModel, this._itemIndex);
   double _progress = 0;
   final _cancelToken = CancelToken();
@@ -28,8 +28,7 @@ class DocumentItemWidgetModel extends FutureViewModel<void> {
 
   Document get item => _parentViewModel.items[_itemIndex];
 
-  @override
-  Future<void> futureToRun() async {
+  Future<void> initialise() async {
     if (item.status == DocumentStatus.created) {
       await updateDocumentStatus(DocumentStatus.pending);
     }

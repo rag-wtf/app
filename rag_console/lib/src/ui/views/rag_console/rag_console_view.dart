@@ -33,4 +33,9 @@ ${RagConsoleViewModel.helpMessageHint}
     BuildContext context,
   ) =>
       RagConsoleViewModel(tablePrefix);
+
+  @override
+  Future<void> onViewModelReady(RagConsoleViewModel viewModel) async {
+    await viewModel.initialise();
+  }
 }

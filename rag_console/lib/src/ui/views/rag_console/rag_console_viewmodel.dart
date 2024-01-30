@@ -10,7 +10,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
-class RagConsoleViewModel extends FutureViewModel<void> {
+class RagConsoleViewModel extends BaseViewModel {
   RagConsoleViewModel(this.tablePrefix);
   final String tablePrefix;
   final _settingService = locator<SettingService>();
@@ -81,9 +81,8 @@ Example:
     return _gzipEncoder.encode(utf8.encode(request))!;
   }
 
-  @override
-  Future<void> futureToRun() async {
-    _log.d('futureToRun() tablePrefix: $tablePrefix');
+  Future<void> initialise() async {
+    _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
     _initMessages();
   }

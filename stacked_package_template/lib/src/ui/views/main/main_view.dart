@@ -26,4 +26,9 @@ class MainView extends StackedView<MainViewModel> {
     BuildContext context,
   ) =>
       MainViewModel(tablePrefix);
+
+  @override
+  Future<void> onViewModelReady(MainViewModel viewModel) async {
+    await viewModel.initialise();
+  }
 }
