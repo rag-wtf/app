@@ -42,32 +42,45 @@ class InputField extends StatelessWidget {
               desktop: kdDesktopMaxContentWidth * 0.3,
             ),
             child:*/
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              label: labelText != null
-                  ? Text(
-                      labelText!,
-                      style: Theme.of(context).textTheme.labelSmall,
-                    )
-                  : null,
-              //alignLabelWithHint: false,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: hintText,
-              hintStyle: GoogleFonts.openSans(
-                color: Colors.grey,
-              ),
-              //          filled: true,
-              //          fillColor: kcMediumGrey,
-              prefixIcon: prefixIcon,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+          Focus(
+            child: Builder(
+              builder: (context) {
+                return TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    label: labelText != null
+                        ? Text(
+                            labelText!,
+                            style: Theme.of(context).textTheme.labelSmall,
+                          )
+                        : null,
+                    //alignLabelWithHint: false,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: hintText,
+                    hintStyle: GoogleFonts.openSans(
+                      color: Colors.grey,
+                    ),
+                    //          filled: true,
+                    //          fillColor: kcMediumGrey,
+                    prefixIcon: prefixIcon,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon:
+                        Focus.of(context).hasFocus && controller.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.cancel),
+                                onPressed: controller.clear,
+                              )
+                            : null,
+                  ),
+                  obscureText: textInputType == TextInputType.none,
+                  obscuringCharacter: '*',
+                  inputFormatters: inputFormatters,
+                  keyboardType: textInputType,
+                );
+              },
             ),
-            obscureText: textInputType == TextInputType.none,
-            obscuringCharacter: '*',
-            inputFormatters: inputFormatters,
-            keyboardType: textInputType,
           ),
           //),
           if (errorText != null) ...[
