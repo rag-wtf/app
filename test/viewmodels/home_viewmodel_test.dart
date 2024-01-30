@@ -25,12 +25,12 @@ void main() {
     group('showBottomSheet -', () {
       test('When called, should show custom bottom sheet using notice variant',
           () {
-        final bottomSheetService = getAndRegisterBottomSheetService<Variant, Title, Description>()();
+        final bottomSheetService = getAndRegisterBottomSheetService<Variant, Title, Description>()
 
         final model = getModel();
         model.showBottomSheet();
         verify(
-          bottomSheetService.showCustomSheet(
+          bottomSheetService.showCustomSheet<Variant, Title, Description>(
             variant: BottomSheetType.notice,
             title: ksHomeBottomSheetTitle,
             description: ksHomeBottomSheetDescription,
