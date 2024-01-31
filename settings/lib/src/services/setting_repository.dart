@@ -8,8 +8,8 @@ class SettingRepository {
   final _db = locator<Surreal>();
 
   Future<bool> isSchemaCreated(String prefix) async {
-    final results = (await _db.query('INFO FOR DB'))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
+    final results = await _db.query('INFO FOR DB');
+    final result = Map<String, dynamic>.from(results! as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${prefix}_${Setting.tableName}');
   }
@@ -35,7 +35,7 @@ CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
 
       return Setting.fromJson(
         Map<String, dynamic>.from(
-          (result! as List).first as Map,
+          result! as Map,
         ),
       );
     } else {
@@ -97,7 +97,7 @@ LIMIT 1
 
     return Setting.fromJson(
       Map<String, dynamic>.from(
-        (result! as List).first as Map,
+        result! as Map,
       ),
     );
   }

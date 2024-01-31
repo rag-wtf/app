@@ -24,7 +24,8 @@ dependencies:
   stacked: ^3.4.0
   stacked_services: ^1.1.0
   stacked_themes: ^0.3.12
-  surrealdb_wasm: ^0.7.0+3
+  surrealdb_wasm: #^0.7.0+3
+    path: ../surrealdb_wasm
 
 dev_dependencies:
   analyzer: ^6.3.0
@@ -38,6 +39,7 @@ dev_dependencies:
   very_good_analysis: ^5.1.0
 
 dependency_overrides:
+  js: ^0.7.0
   meta: ^1.11.0
 
 flutter:

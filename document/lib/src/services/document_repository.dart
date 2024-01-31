@@ -8,8 +8,8 @@ class DocumentRepository {
   final _db = locator<Surreal>();
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
-    final results = (await _db.query('INFO FOR DB'))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
+    final results = await _db.query('INFO FOR DB');
+    final result = Map<String, dynamic>.from(results! as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${tablePrefix}_${Document.tableName}');
   }
@@ -41,7 +41,7 @@ class DocumentRepository {
       return Document.fromJson(
         Map<String, dynamic>.from(
           Document.toMap(
-            (result! as List).first,
+            result! as Map,
           ) as Map,
         ),
       );
@@ -111,7 +111,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
       return Document.fromJson(
         Map<String, dynamic>.from(
           Document.toMap(
-            (result! as List).first,
+            result! as Map,
           ) as Map,
         ),
       );

@@ -28,7 +28,7 @@ abstract class Embedding with _$Embedding {
 
   static const sqlSchema = '''
 DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
-FIELDS embedding MTREE DIMENSION 384 DIST COSINE;
+FIELDS embedding MTREE DIMENSION 384;
 ''';
 
   static const _jsonSchema = {

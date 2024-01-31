@@ -64,7 +64,7 @@ void main() {
     );
 
     // Assert
-    final results = List<List<dynamic>>.from(txnResults! as List);
+    final results = List<Map>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
       await db.select('${tablePrefix}_${ChatMessage.tableName}'),

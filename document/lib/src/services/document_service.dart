@@ -39,8 +39,8 @@ class DocumentService with ListenableServiceMixin {
   final _log = getLogger('DocumentService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
-    final results = (await _db.query('INFO FOR DB'))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
+    final results = await _db.query('INFO FOR DB');
+    final result = Map<String, dynamic>.from(results! as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${tablePrefix}_${Document.tableName}') &&
         tables.containsKey('${tablePrefix}_${Embedding.tableName}') &&
@@ -400,7 +400,7 @@ class DocumentService with ListenableServiceMixin {
       document,
       embeddings,
     );
-    final results = List<List<dynamic>>.from(txnResults! as List);
+    final results = List<Map>.from(txnResults! as List);
     assert(
       results[1].length == embeddings.length,
       'Length of the document embeddings result should equals to embeddings',

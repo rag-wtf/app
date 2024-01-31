@@ -8,8 +8,8 @@ class EmbeddingRepository {
   final _db = locator<Surreal>();
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
-    final results = (await _db.query('INFO FOR DB'))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
+    final results = await _db.query('INFO FOR DB');
+    final result = Map<String, dynamic>.from(results! as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${tablePrefix}_${Embedding.tableName}');
   }
@@ -42,7 +42,7 @@ CONTENT ${jsonEncode(payload)};''';
 
       return Embedding.fromJson(
         Map<String, dynamic>.from(
-          (result! as List).first as Map,
+          result! as Map,
         ),
       );
     } else {
@@ -135,7 +135,7 @@ CONTENT ${jsonEncode(payload)};''';
       final result = await _db.query(sql);
       return Embedding.fromJson(
         Map<String, dynamic>.from(
-          (result! as List).first as Map,
+          result! as Map,
         ),
       );
     } else {

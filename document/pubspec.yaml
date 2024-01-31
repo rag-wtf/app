@@ -26,7 +26,8 @@ dependencies:
     path: ../settings
   stacked: ^3.4.0
   stacked_services: ^1.1.0
-  surrealdb_wasm: ^0.7.0+3
+  surrealdb_wasm: #^0.7.0+3
+    path: ../../surrealdb_wasm
   ulid: ^2.0.0
   very_good_infinite_list: ^0.7.1
 
@@ -43,4 +44,5 @@ dev_dependencies:
   very_good_analysis: ^5.1.0
 
 dependency_overrides:
+  js: ^0.7.0
   meta: ^1.11.0

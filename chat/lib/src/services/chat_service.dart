@@ -62,8 +62,8 @@ class ChatService with ListenableServiceMixin {
   final _log = getLogger('ChatService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
-    final results = (await _db.query('INFO FOR DB'))! as List;
-    final result = Map<String, dynamic>.from(results.first as Map);
+    final results = await _db.query('INFO FOR DB');
+    final result = Map<String, dynamic>.from(results! as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${tablePrefix}_${Chat.tableName}') &&
         tables.containsKey('${tablePrefix}_${Message.tableName}') &&
@@ -376,7 +376,7 @@ class ChatService with ListenableServiceMixin {
       chat,
       message,
     );
-    final results = List<List<dynamic>>.from(txnResults! as List);
+    final results = List<Map>.from(txnResults! as List);
     final isTxnSucess = results.every(
       (sublist) => sublist.isNotEmpty,
     );
@@ -434,7 +434,7 @@ class ChatService with ListenableServiceMixin {
         chat,
         message,
       );
-      final results = List<List<dynamic>>.from(txnResults! as List);
+      final results = List<Map>.from(txnResults! as List);
       isTxnSucess = results.every(
         (sublist) => sublist.isNotEmpty,
       );
