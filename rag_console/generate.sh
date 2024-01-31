@@ -1,1 +1,2 @@
-dart run build_runner build --delete-conflicting-outputs
+mkdir -p rag_console
+cp document/generate.sh rag_console/generate.sh
