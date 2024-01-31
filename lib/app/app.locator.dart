@@ -43,7 +43,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
-  locator.registerFactory(() => Dio());
+  locator.registerLazySingleton(() => Dio());
   locator.registerLazySingleton(() => DocumentApiService());
   locator.registerLazySingleton(() => GZipEncoder());
   locator.registerLazySingleton(() => GZipDecoder());
