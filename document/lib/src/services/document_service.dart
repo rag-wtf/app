@@ -1,32 +1,40 @@
 import 'dart:convert';
 
 import 'package:archive/archive.dart';
+import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/constants.dart';
 import 'package:document/src/services/document.dart';
+import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
+import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:ulid/ulid.dart';
 
 class DocumentService with ListenableServiceMixin {
   DocumentService() {
     listenToReactiveValues([_items]);
   }
+  final _dio = locator<Dio>();
   final _db = locator<Surreal>();
   final _documentRepository = locator<DocumentRepository>();
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
+  final _apiService = locator<DocumentApiService>();
+  final _settingService = locator<SettingService>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
 
   int _total = -1;
-  final _items = <Document>[];
-  List<Document> get items => _items.toList();
+  final _items = <DocumentItem>[];
+  List<DocumentItem> get items => _items.toList();
 
   final _log = getLogger('DocumentService');
 
@@ -74,7 +82,13 @@ class DocumentService with ListenableServiceMixin {
     );
     _log.d('documentList.total ${documentList.total}');
     if (documentList.total > 0 && documentList.total > _items.length) {
-      _items.addAll(documentList.items);
+      _items.addAll(
+        documentList.items
+            .map(
+              (item) => DocumentItem(tablePrefix, item),
+            )
+            .toList(),
+      );
       _total = documentList.total;
       notifyListeners();
     }
@@ -84,14 +98,17 @@ class DocumentService with ListenableServiceMixin {
     if (document != null) {
       final createdDocument = await createDocument(tablePrefix, document);
       if (createdDocument.id != null) {
-        _items.insert(0, createdDocument);
+        final documentItem = DocumentItem(
+          tablePrefix,
+          createdDocument,
+          0,
+          CancelToken(),
+        );
+        _items.insert(0, documentItem);
         notifyListeners();
+        await _split(documentItem);
       }
     }
-  }
-
-  void setItem(int index, Document document) {
-    _items[index] = document;
   }
 
   Future<void> clearData(String tablePrefix) async {
@@ -267,5 +284,178 @@ class DocumentService with ListenableServiceMixin {
   Future<List<int>> _decompressFileFromBase64(String file) async {
     final bytes = base64Decode(file);
     return _isGzFile(bytes) ? _gzipDecoder.decodeBytes(bytes) : bytes;
+  }
+
+  //--- Document Item ---//
+  Future<void> _split(DocumentItem documentItem) async {
+    if (documentItem.item.status == DocumentStatus.created) {
+      await _updateDocumentStatus(documentItem, DocumentStatus.pending);
+    }
+    if (documentItem.item.status == DocumentStatus.pending) {
+      _log.d(documentItem.item.id);
+      documentItem.item = (await getDocumentById(documentItem.item.id!))!;
+      await _apiService.split(
+        _dio,
+        _settingService.get(dataIngestionApiUrlKey).value,
+        documentItem,
+        _updateDocumentStatus,
+        _onProgress,
+        _onSplitCompleted,
+        _onError,
+      );
+    }
+  }
+
+  Future<void> _updateDocumentStatus(
+    DocumentItem documentItem,
+    DocumentStatus status,
+  ) async {
+    _log.d('item.name ${documentItem.item.name}, status $status');
+    documentItem.item = (await _documentRepository.updateDocument(
+      documentItem.item.copyWith(
+        status: status,
+        updated: DateTime.now(),
+      ),
+    ))!;
+    notifyListeners();
+  }
+
+  Future<void> _handleError(
+    DocumentItem documentItem,
+    String? errorMessage,
+  ) async {
+    _log.e(errorMessage);
+    final now = DateTime.now();
+    documentItem.item = (await _documentRepository.updateDocument(
+      documentItem.item.copyWith(
+        status: DocumentStatus.failed,
+        errorMessage: errorMessage,
+        done: now,
+        updated: now,
+      ),
+    ))!;
+    notifyListeners();
+  }
+
+  void _onProgress(
+    DocumentItem documentItem,
+    double progress,
+  ) {
+    documentItem.progress = progress;
+    notifyListeners();
+  }
+
+  Future<void> _onSplitCompleted(
+    DocumentItem documentItem,
+    Map<String, dynamic>? responseData,
+  ) async {
+    _log.d('responseData $responseData');
+    final embeddings = await _splitted(documentItem, responseData);
+    await _indexing(documentItem, embeddings);
+  }
+
+  Future<List<Embedding>> _splitted(
+    DocumentItem documentItem,
+    Map<String, dynamic>? responseData,
+  ) async {
+    final documentItems =
+        List<Map<String, dynamic>>.from(responseData?['items'] as List);
+    if (documentItems.isEmpty) {
+      final document = await getDocumentById(documentItem.item.id!);
+      documentItems.add({
+        'content': await convertByteDataToString(
+          document!.byteData!,
+        ),
+      });
+    }
+
+    final now = DateTime.now();
+    final fullTableName = '${documentItem.tablePrefix}_${Embedding.tableName}';
+    final embeddings = List<Embedding>.from(
+      documentItems
+          .map(
+            (item) => Embedding(
+              id: '$fullTableName:${Ulid()}',
+              content: item['content'] as String,
+              metadata: item['metadata'],
+              tokensCount: item['tokens_count'] as int,
+              created: now,
+              updated: now,
+            ),
+          )
+          .toList(),
+    );
+    final document = documentItem.item.copyWith(
+      content: responseData?['content'] != null
+          ? responseData!['content'] as String
+          : null,
+      contentMimeType: responseData?['mime_type'] as String,
+      tokensCount: responseData?['tokens_count'] as int,
+      status: DocumentStatus.indexing,
+      splitted: now,
+      updated: now,
+    );
+    final txnResults = await updateDocumentAndCreateEmbeddings(
+      documentItem.tablePrefix,
+      document,
+      embeddings,
+    );
+    final results = List<List<dynamic>>.from(txnResults! as List);
+    assert(
+      results[1].length == embeddings.length,
+      'Length of the document embeddings result should equals to embeddings',
+    );
+    documentItem.item = document;
+    notifyListeners();
+    return embeddings;
+  }
+
+  Future<void> _indexing(
+    DocumentItem documentItem,
+    List<Embedding> embeddings,
+  ) async {
+    final chunkedTexts = embeddings
+        .map(
+          (embedding) => embedding.content,
+        )
+        .toList();
+    final vectors = await _apiService.index(
+      _dio,
+      _settingService.get(embeddingsApiUrlKey).value,
+      _settingService.get(embeddingsApiKey).value,
+      chunkedTexts,
+    );
+
+    await updateEmbeddings(
+      documentItem.tablePrefix,
+      embeddings,
+      vectors,
+    );
+
+    await _updateDocumentStatus(documentItem, DocumentStatus.completed);
+  }
+
+  // ignore: prefer_void_to_null
+  Future<Null> _onError(DocumentItem documentItem, dynamic error) async {
+    _log.e(error);
+    // Handle the error in here
+    if (error is DioException) {
+      if (error.type == DioExceptionType.cancel) {
+        final now = DateTime.now();
+        documentItem.item = (await _documentRepository.updateDocument(
+          documentItem.item.copyWith(
+            status: DocumentStatus.canceled,
+            done: now,
+            updated: now,
+          ),
+        ))!;
+
+        notifyListeners();
+      } else {
+        await _handleError(documentItem, error.message);
+      }
+    } else {
+      await _handleError(documentItem, error.toString());
+    }
   }
 }

@@ -1,8 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class CancelButtonWidget extends StatelessWidget {
-  const CancelButtonWidget(this.cancel, {super.key});
-  final void Function() cancel;
+  const CancelButtonWidget(this.cancelToken, {super.key});
+  final CancelToken cancelToken;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +11,7 @@ class CancelButtonWidget extends StatelessWidget {
       alignment: Alignment.topRight,
       child: IconButton(
         icon: const Icon(Icons.cancel),
-        onPressed: cancel,
+        onPressed: cancelToken.cancel,
       ),
     );
   }
