@@ -1,6 +1,7 @@
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
+import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -13,7 +14,7 @@ class DocumentListViewModel extends ReactiveViewModel {
   final _settingService = locator<SettingService>();
   final _log = getLogger('DocumentListViewModel');
 
-  List<Document> get items => _documentService.items;
+  List<DocumentItem> get items => _documentService.items;
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_documentService];
@@ -39,9 +40,5 @@ class DocumentListViewModel extends ReactiveViewModel {
 
   Future<void> addItem(Document? document) async {
     await _documentService.addItem(tablePrefix, document);
-  }
-
-  void setItem(int index, Document document) {
-    _documentService.setItem(index, document);
   }
 }

@@ -15,11 +15,10 @@ class DocumentListWidget extends StatelessWidget {
       onFetchData: viewModel.fetchData,
       hasReachedMax: viewModel.hasReachedMax,
       itemBuilder: (context, index) {
-        final item = viewModel.items[index];
+        final documentItem = viewModel.items[index];
         return DocumentItemWidget(
-          viewModel,
-          index,
-          key: ValueKey(item.id),
+          documentItem,
+          key: ValueKey(documentItem.item.id),
         );
       },
     );

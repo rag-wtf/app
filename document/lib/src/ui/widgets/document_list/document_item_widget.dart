@@ -1,32 +1,22 @@
-import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
-import 'package:document/src/ui/views/document_list/document_list_viewmodel.dart';
+import 'package:document/src/services/document_item.dart';
 import 'package:document/src/ui/widgets/document_list/cancel_button_widget.dart';
-import 'package:document/src/ui/widgets/document_list/document_item_widgetmodel.dart';
 import 'package:document/src/ui/widgets/document_list/document_progress_indicator_widget.dart';
 import 'package:document/src/ui/widgets/document_list/document_status_widget.dart';
 
 import 'package:file_icon/file_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 
-class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
-  DocumentItemWidget(
-    this._parentViewModel,
-    this._itemIndex, {
+class DocumentItemWidget extends StatelessWidget {
+  const DocumentItemWidget(
+    this.documentItem, {
     super.key,
   });
-  static int megaBytes = 1024 * 1024;
-  final DocumentListViewModel _parentViewModel;
-  final int _itemIndex;
-  final _log = getLogger('DocumentItemWidget');
+  final DocumentItem documentItem;
+  static const int megaBytes = 1024 * 1024;
 
   @override
-  Widget builder(
-    BuildContext context,
-    DocumentItemWidgetModel viewModel,
-    Widget? child,
-  ) {
+  Widget build(BuildContext context) {
     return Card(
       color: Theme.of(context).colorScheme.background,
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -37,7 +27,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
             child: Row(
               children: [
                 FileIcon(
-                  viewModel.item.name,
+                  documentItem.item.name,
                   size: 64,
                 ),
                 Expanded(
@@ -45,7 +35,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        viewModel.item.name,
+                        documentItem.item.name,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -58,7 +48,7 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
                       Row(
                         children: [
                           Text(
-                            '${(viewModel.item.originFileSize / megaBytes).toStringAsFixed(2)} MB',
+                            '${(documentItem.item.originFileSize / megaBytes).toStringAsFixed(2)} MB',
                             style: const TextStyle(
                               color: Colors.grey,
                             ),
@@ -70,12 +60,12 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
                               children: [
                                 Expanded(
                                   child: DocumentProgressIndicatorWidget(
-                                    viewModel.item.status,
-                                    progress: viewModel.progress,
+                                    documentItem.item.status,
+                                    progress: documentItem.progress,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                DocumentStatusWidget(item: viewModel.item),
+                                DocumentStatusWidget(item: documentItem.item),
                               ],
                             ),
                           ),
@@ -87,21 +77,11 @@ class DocumentItemWidget extends StackedView<DocumentItemWidgetModel> {
               ],
             ),
           ),
-          if (viewModel.item.status == DocumentStatus.splitting)
-            CancelButtonWidget(viewModel.cancel),
+          if (documentItem.item.status == DocumentStatus.splitting &&
+              documentItem.cancelToken != null)
+            CancelButtonWidget(documentItem.cancelToken!),
         ],
       ),
     );
-  }
-
-  @override
-  DocumentItemWidgetModel viewModelBuilder(BuildContext context) {
-    _log.d(_itemIndex);
-    return DocumentItemWidgetModel(_parentViewModel, _itemIndex);
-  }
-
-  @override
-  Future<void> onViewModelReady(DocumentItemWidgetModel viewModel) async {
-    await viewModel.initialise();
   }
 }

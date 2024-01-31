@@ -6,41 +6,56 @@ import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
-import 'package:document/src/ui/widgets/document_list/document_item_widgetmodel.dart';
+import 'package:document/src/services/document_item.dart';
 import 'package:http_parser/http_parser.dart';
 
 class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
-  final _log = getLogger('ApiService');
 
-  void split(
+  final _log = getLogger('DocumentApiService');
+
+  Future<void> split(
     Dio dio,
     String url,
-    DocumentItemWidgetModel widgetModel,
-  ) {
+    DocumentItem documentItem,
+    Future<void> Function(
+      DocumentItem documentItem,
+      DocumentStatus status,
+    ) onUpdateDocumentStatus,
+    void Function(
+      DocumentItem documentItem,
+      double progress,
+    ) onProgress,
+    Future<void> Function(
+      DocumentItem documentItem,
+      Map<String, dynamic>? responseData,
+    ) onSplitCompleted,
+    // ignore: prefer_void_to_null
+    Future<Null> Function(DocumentItem documentItem, dynamic error) onError,
+  ) async {
     final multipartFile = MultipartFile.fromStream(
-      () => Stream.fromIterable(widgetModel.item.byteData!),
-      widgetModel.item.byteData!.length,
-      filename: widgetModel.item.name,
-      contentType: MediaType.parse(widgetModel.item.fileMimeType),
+      () => Stream.fromIterable(documentItem.item.byteData!),
+      documentItem.item.byteData!.length,
+      filename: documentItem.item.name,
+      contentType: MediaType.parse(documentItem.item.fileMimeType),
     );
 
     final formData = FormData.fromMap({
       'file': multipartFile,
     });
 
-    dio.post<Map<String, dynamic>>(
+    await dio.post<Map<String, dynamic>>(
       url,
       data: formData,
-      cancelToken: widgetModel.cancelToken,
+      cancelToken: documentItem.cancelToken,
       onSendProgress: (int sent, int total) async {
-        if (widgetModel.item.status == DocumentStatus.pending) {
+        if (documentItem.item.status == DocumentStatus.pending) {
           _log.d('updateDocumentStatus(DocumentStatus.splitting)');
-          await widgetModel.updateDocumentStatus(DocumentStatus.splitting);
+          await onUpdateDocumentStatus(documentItem, DocumentStatus.splitting);
         }
 
         final progress = sent / total;
-        widgetModel.progress = progress;
+        onProgress(documentItem, progress);
       },
       onReceiveProgress: (int count, int total) async {
         /* The same code above works but not the following code?
@@ -49,12 +64,12 @@ class DocumentApiService {
         }
         */
         final progress = count * 0.01;
-        widgetModel.progress = progress;
+        onProgress(documentItem, progress);
       },
     ).then((response) async {
-      await widgetModel.onSplitCompleted(response.data);
+      await onSplitCompleted(documentItem, response.data);
     }).catchError(
-      widgetModel.onError,
+      (dynamic error) => onError(documentItem, error),
     );
   }
 
