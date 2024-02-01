@@ -38,10 +38,9 @@ void main() {
   group('createSetting', () {
     test('should create setting', () async {
       // Arrange
-      final setting = Setting(
+      const setting = Setting(
         key: 'key1',
         value: 'value1',
-        created: DateTime.now(),
       );
 
       // Act
@@ -56,15 +55,13 @@ void main() {
     test('should return a list of settings', () async {
       // Arrange
       final settings = [
-        Setting(
+        const Setting(
           key: 'key1',
           value: 'value1',
-          created: DateTime.now(),
         ).toJson(),
-        Setting(
+        const Setting(
           key: 'key2',
           value: 'value2',
-          created: DateTime.now(),
         ).toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Setting.tableName}');
@@ -83,10 +80,9 @@ void main() {
   group('getSettingById', () {
     test('should return a setting by id', () async {
       // Arrange
-      final setting = Setting(
+      const setting = Setting(
         key: 'key1',
         value: 'value1',
-        created: DateTime.now(),
       );
       final result =
           await repository.createSetting(defaultTablePrefix, setting);
@@ -111,10 +107,9 @@ void main() {
   group('getSettingByKey', () {
     test('should return a setting by key', () async {
       // Arrange
-      final setting = Setting(
+      const setting = Setting(
         key: 'key1',
         value: 'value1',
-        created: DateTime.now(),
       );
       final result =
           await repository.createSetting(defaultTablePrefix, setting);
@@ -139,10 +134,9 @@ void main() {
   group('updateSetting', () {
     test('should update setting', () async {
       // Arrange
-      final setting = Setting(
+      const setting = Setting(
         key: 'key1',
         value: 'value1',
-        created: DateTime.now(),
       );
       final created =
           await repository.createSetting(defaultTablePrefix, setting);
@@ -158,11 +152,10 @@ void main() {
 
     test('should be null when the update setting is not found', () async {
       // Arrange
-      final setting = Setting(
+      const setting = Setting(
         id: '${defaultTablePrefix}_${Setting.tableName}:1',
         key: 'key3',
         value: 'value3',
-        created: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateSetting(setting), isNull);
@@ -172,10 +165,9 @@ void main() {
   group('deleteSetting', () {
     test('should delete setting', () async {
       // Arrange
-      final setting = Setting(
+      const setting = Setting(
         key: 'key1',
         value: 'value1',
-        created: DateTime.now(),
       );
       final created =
           await repository.createSetting(defaultTablePrefix, setting);
