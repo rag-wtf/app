@@ -8,9 +8,9 @@ part 'model.g.dart';
 abstract class Model with _$Model {
   const factory Model({
     required String name,
-    @DateTimeJsonConverter() required DateTime created,
-    @DateTimeJsonConverter() required DateTime updated,
     String? id,
+    @DateTimeJsonConverter() DateTime? created,
+    @DateTimeJsonConverter() DateTime? updated,
   }) = _Model;
 
   factory Model.fromJson(Map<String, dynamic> json) => _$ModelFromJson(json);
@@ -21,7 +21,7 @@ abstract class Model with _$Model {
 DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
-DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
-DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 ''';
 }
