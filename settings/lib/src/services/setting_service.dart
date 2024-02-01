@@ -64,6 +64,14 @@ class SettingService with ListenableServiceMixin {
     }
 
     if (_settings.isEmpty) {
+      final isSchemaCreated =
+          await _settingRepository.isSchemaCreated(tablePrefix);
+      _log.d('isSchemaCreated $isSchemaCreated');
+
+      if (!isSchemaCreated) {
+        await _settingRepository.createSchema(tablePrefix);
+      }
+
       // create user id if not found.
       if (await _settingRepository.getSettingByKey(
             tablePrefix,
@@ -87,6 +95,10 @@ class SettingService with ListenableServiceMixin {
 
   Future<void> clearData(String tablePrefix) async {
     await _settingRepository.deleteAllSettings(tablePrefix);
+    await _settingRepository.createSetting(
+      tablePrefix,
+      _settings[userIdKey]!,
+    ); // add back the userId
     _settings.clear();
     await initialise(tablePrefix);
     clearFormValuesFunction?.call();

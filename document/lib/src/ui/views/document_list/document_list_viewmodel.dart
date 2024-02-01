@@ -22,14 +22,7 @@ class DocumentListViewModel extends ReactiveViewModel {
   Future<void> initialise() async {
     _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
-    final isSchemaCreated = await _documentService.isSchemaCreated(tablePrefix);
-    _log.d('isSchemaCreated $isSchemaCreated');
-
-    if (!isSchemaCreated) {
-      _log.d('before createSchema()');
-      //await _documentService.createSchema(tablePrefix);
-      _log.d('after createSchema()');
-    }
+    await _documentService.initialise(tablePrefix);
   }
 
   bool get hasReachedMax => _documentService.hasReachedMax;

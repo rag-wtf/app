@@ -67,7 +67,8 @@ class ChatService with ListenableServiceMixin {
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${tablePrefix}_${Chat.tableName}') &&
         tables.containsKey('${tablePrefix}_${Message.tableName}') &&
-        tables.containsKey('${tablePrefix}_${ChatMessage.tableName}');
+        tables.containsKey('${tablePrefix}_${ChatMessage.tableName}') &&
+        tables.containsKey('${tablePrefix}_${MessageEmbedding.tableName}');
   }
 
   Future<void> createSchema(
@@ -80,12 +81,20 @@ class ChatService with ListenableServiceMixin {
           await _chatRepository.createSchema(tablePrefix, txn);
           await _messageRepository.createSchema(tablePrefix, txn);
           await _chatMessageRepository.createSchema(tablePrefix, txn);
+          await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
         },
       );
     } else {
       await _chatRepository.createSchema(tablePrefix, txn);
       await _messageRepository.createSchema(tablePrefix, txn);
       await _chatMessageRepository.createSchema(tablePrefix, txn);
+      await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
+    }
+  }
+
+  Future<void> initialise(String tablePrefix) async {
+    if (!await isSchemaCreated(tablePrefix)) {
+      await createSchema(tablePrefix);
     }
   }
 

@@ -18,7 +18,7 @@ abstract class Model with _$Model {
   static const tableName = 'models';
 
   static const sqlSchema = '''
-DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
+DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();

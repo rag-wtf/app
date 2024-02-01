@@ -66,6 +66,12 @@ class DocumentService with ListenableServiceMixin {
     }
   }
 
+  Future<void> initialise(String tablePrefix) async {
+    if (!await isSchemaCreated(tablePrefix)) {
+      await createSchema(tablePrefix);
+    }
+  }
+
   bool get hasReachedMax {
     final reachedMax = _total > -1 && _items.length >= _total;
     _log.d(reachedMax);
