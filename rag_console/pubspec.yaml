@@ -26,8 +26,7 @@ dependencies:
     path: ../settings
   stacked: ^3.4.0
   stacked_services: ^1.1.0
-  surrealdb_wasm: #^0.7.0+3
-    path: ../../surrealdb_wasm
+  surrealdb_wasm: ^0.7.0+4
 
 dev_dependencies:
   build_runner: ^2.4.6
