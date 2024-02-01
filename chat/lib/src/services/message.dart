@@ -13,11 +13,13 @@ abstract class Message with _$Message {
     required Role role,
     required String text,
     required MessageType type,
-    @DateTimeJsonConverter() required DateTime created,
-    @DateTimeJsonConverter() required DateTime updated,
-    int? pinned,
     String? id,
+    int? vote,
+    int? share,
+    bool? pinned,
     Object? metadata,
+    @DateTimeJsonConverter() DateTime? created,
+    @DateTimeJsonConverter() DateTime? updated,
     Status? status,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<Embedding>? embeddings,
@@ -36,10 +38,12 @@ DEFINE FIELD role ON {prefix}_$tableName TYPE string;
 DEFINE FIELD text ON {prefix}_$tableName TYPE string;
 DEFINE FIELD type ON {prefix}_$tableName TYPE string;
 DEFINE FIELD status ON {prefix}_$tableName TYPE option<string>;
+DEFINE FIELD vote ON {prefix}_$tableName TYPE number DEFAULT 0;
+DEFINE FIELD share ON {prefix}_$tableName TYPE number DEFAULT 0;
 DEFINE FIELD pinned ON {prefix}_$tableName TYPE option<bool>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
-DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
-DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 ''';
 }
 

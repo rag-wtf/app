@@ -38,10 +38,8 @@ void main() {
   group('createChat', () {
     test('should create chat', () async {
       // Arrange
-      final chat = Chat(
+      const chat = Chat(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
 
       // Act
@@ -49,21 +47,21 @@ void main() {
 
       // Assert
       expect(result.name, equals('name1'));
+      expect(result.vote, equals(0));
+      expect(result.share, equals(0));
+      expect(result.created, isNotNull);
+      expect(result.updated, isNotNull);
     });
   });
   group('getAllChats', () {
     test('should return a list of chats', () async {
       // Arrange
       final chats = [
-        Chat(
+        const Chat(
           name: 'name1',
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
-        Chat(
+        const Chat(
           name: 'name2',
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Chat.tableName}');
@@ -86,8 +84,6 @@ void main() {
       final chat = Chat(
         name: 'name1',
         metadata: metadata,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final result = await repository.createChat(defaultTablePrefix, chat);
       final id = result.id!;
@@ -112,10 +108,8 @@ void main() {
   group('updateChat', () {
     test('should update chat', () async {
       // Arrange
-      final chat = Chat(
+      const chat = Chat(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created = await repository.createChat(defaultTablePrefix, chat);
 
@@ -126,15 +120,14 @@ void main() {
 
       // Assert
       expect(updated?.name, equals(name1));
+      expect(updated!.updated!.isAfter(updated.created!), isTrue);
     });
 
     test('should be null when the update chat is not found', () async {
       // Arrange
-      final chat = Chat(
+      const chat = Chat(
         id: '${defaultTablePrefix}_${Chat.tableName}:1',
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateChat(chat), isNull);
@@ -144,10 +137,8 @@ void main() {
   group('deleteChat', () {
     test('should delete chat', () async {
       // Arrange
-      final chat = Chat(
+      const chat = Chat(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created = await repository.createChat(defaultTablePrefix, chat);
 

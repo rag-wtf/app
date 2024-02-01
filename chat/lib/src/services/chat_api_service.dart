@@ -162,7 +162,7 @@ class ChatApiService {
                     ? Role.user
                     : Role.assistant,
                 content: message.text,
-                dateTime: message.updated,
+                dateTime: message.updated!,
               ),
             )
             .toList()

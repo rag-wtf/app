@@ -75,10 +75,10 @@ CONTENT ${jsonEncode(payload)};''';
     Message message, [
     Transaction? txn,
   ]) async {
-    final payload = message.toJson();
-    final id = payload.remove('id') as String;
-    if (await _db.select(id) == null) return null;
+    if (await _db.select(message.id!) == null) return null;
 
+    final payload = message.copyWith(updated: DateTime.now()).toJson();
+    final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await _db.query(sql);
