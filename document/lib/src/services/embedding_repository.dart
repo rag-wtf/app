@@ -121,15 +121,15 @@ CONTENT ${jsonEncode(payload)};''';
     Embedding embedding, [
     Transaction? txn,
   ]) async {
-    final payload = embedding.toJson();
+    if (await _db.select(embedding.id!) == null) return null;
+
+    final payload = embedding.copyWith(updated: DateTime.now()).toJson();
     final validationErrors = Embedding.validate(payload);
     final isValid = validationErrors == null;
     if (!isValid) {
       return embedding.copyWith(errors: validationErrors);
     }
     final id = payload.remove('id') as String;
-    if (await _db.select(id) == null) return null;
-
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await _db.query(sql);

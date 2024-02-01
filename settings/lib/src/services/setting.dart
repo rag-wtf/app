@@ -8,23 +8,22 @@ abstract class Setting with _$Setting {
   const factory Setting({
     required String key,
     required String value,
-    @DateTimeJsonConverter() required DateTime created,
     String? id,
+    @DateTimeJsonConverter() DateTime? created,
     @DateTimeJsonConverter() DateTime? updated,
   }) = _Setting;
 
   factory Setting.fromJson(Map<String, dynamic> json) =>
       _$SettingFromJson(json);
 
-  static const sqlSchema = '''
-DEFINE TABLE {prefix}_settings SCHEMAFULL;
-DEFINE FIELD id ON {prefix}_settings TYPE record;
-DEFINE FIELD key ON {prefix}_settings TYPE string;
-DEFINE FIELD value ON {prefix}_settings TYPE string;
-DEFINE FIELD created ON {prefix}_settings TYPE datetime;
-DEFINE FIELD updated ON {prefix}_settings TYPE option<datetime>;
-DEFINE INDEX key_index ON {prefix}_settings COLUMNS key UNIQUE;
-''';
-
   static const tableName = 'settings';
+
+  static const sqlSchema = '''
+DEFINE TABLE {prefix}_$tableName SCHEMALESS;
+DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD key ON {prefix}_$tableName TYPE string;
+DEFINE FIELD value ON {prefix}_$tableName TYPE string;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+''';
 }

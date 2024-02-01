@@ -18,7 +18,7 @@ abstract class ChatMessage with _$ChatMessage {
   static const tableName = 'chat_messages';
 
   static const sqlSchema = '''
-DEFINE TABLE {prefix}_$tableName SCHEMAFULL;
+DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Chat.tableName}>;
 DEFINE FIELD out ON {prefix}_$tableName TYPE record<{prefix}_${Message.tableName}>;

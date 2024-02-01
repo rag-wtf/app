@@ -44,8 +44,6 @@ void main() {
         text: 'agent message 1',
         type: MessageType.text,
         metadata: metadata,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
 
       // Act
@@ -74,8 +72,6 @@ void main() {
           text: 'user message $index',
           type: MessageType.text,
           metadata: {'id': 'customId$index'},
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
       );
       const fullMessageTableName = '${defaultTablePrefix}_${Message.tableName}';
@@ -103,8 +99,6 @@ void main() {
         text: 'user message 1',
         type: MessageType.text,
         metadata: {'id': 'customId1'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final result =
           await repository.createMessage(defaultTablePrefix, message);
@@ -135,8 +129,6 @@ void main() {
         text: 'user message 1',
         type: MessageType.text,
         metadata: {'id': 'customId1'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created =
           await repository.createMessage(defaultTablePrefix, message);
@@ -159,8 +151,6 @@ void main() {
         text: 'user message 1',
         type: MessageType.text,
         metadata: {'id': 'customId1'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateMessage(message), isNull);
@@ -176,8 +166,6 @@ void main() {
         text: 'user message 1',
         type: MessageType.text,
         metadata: {'id': 'customId1'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created =
           await repository.createMessage(defaultTablePrefix, message);

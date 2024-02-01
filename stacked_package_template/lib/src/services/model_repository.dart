@@ -70,10 +70,10 @@ CREATE ONLY ${tablePrefix}_${Model.tableName} CONTENT ${jsonEncode(payload)};'''
   }
 
   Future<Model?> updateModel(Model model) async {
-    final payload = model.toJson();
-    final id = payload.remove('id') as String;
-    if (await _db.select(id) == null) return null;
+    if (await _db.select(model.id!) == null) return null;
 
+    final payload = model.copyWith(updated: DateTime.now()).toJson();
+    final id = payload.remove('id') as String;
     final result = await _db.query(
       'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
     );

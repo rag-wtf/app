@@ -93,10 +93,10 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
   }
 
   Future<Chat?> updateChat(Chat chat) async {
-    final payload = chat.toJson();
-    final id = payload.remove('id') as String;
-    if (await _db.select(id) == null) return null;
+    if (await _db.select(chat.id!) == null) return null;
 
+    final payload = chat.copyWith(updated: DateTime.now()).toJson();
+    final id = payload.remove('id') as String;
     final result = await _db.query(
       'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
     );

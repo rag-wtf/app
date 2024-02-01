@@ -78,16 +78,11 @@ void main() {
       role: Role.user,
       text: 'user message 1',
       type: MessageType.text,
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
     final embedding = Embedding(
       id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
       content: 'apple',
       embedding: testData['apple'],
-      tokensCount: 4,
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     // Act
@@ -117,7 +112,7 @@ void main() {
     );
 
     // Assert
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
       await db.select('${tablePrefix}_${MessageEmbedding.tableName}'),
@@ -137,8 +132,6 @@ void main() {
       role: Role.user,
       text: 'user message 1',
       type: MessageType.text,
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     final embeddings = [
@@ -147,45 +140,30 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
-        tokensCount: 15,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two'],
         metadata: {'id': 'customId4'},
-        tokensCount: 7,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana'],
         metadata: {'id': 'customId5'},
-        tokensCount: 10,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
 
@@ -249,8 +227,6 @@ void main() {
       role: Role.user,
       text: 'user message 1',
       type: MessageType.text,
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     // Arrange
@@ -260,8 +236,6 @@ void main() {
       role: Role.user,
       text: 'user message 2',
       type: MessageType.text,
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     final embeddings1 = [
@@ -270,18 +244,12 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
     final embeddings2 = [
@@ -290,27 +258,18 @@ void main() {
         content: 'twenty',
         embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
-        tokensCount: 15,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two'],
         metadata: {'id': 'customId4'},
-        tokensCount: 7,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana'],
         metadata: {'id': 'customId5'},
-        tokensCount: 10,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
 

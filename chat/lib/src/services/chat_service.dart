@@ -67,7 +67,8 @@ class ChatService with ListenableServiceMixin {
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
     return tables.containsKey('${tablePrefix}_${Chat.tableName}') &&
         tables.containsKey('${tablePrefix}_${Message.tableName}') &&
-        tables.containsKey('${tablePrefix}_${ChatMessage.tableName}');
+        tables.containsKey('${tablePrefix}_${ChatMessage.tableName}') &&
+        tables.containsKey('${tablePrefix}_${MessageEmbedding.tableName}');
   }
 
   Future<void> createSchema(
@@ -80,12 +81,20 @@ class ChatService with ListenableServiceMixin {
           await _chatRepository.createSchema(tablePrefix, txn);
           await _messageRepository.createSchema(tablePrefix, txn);
           await _chatMessageRepository.createSchema(tablePrefix, txn);
+          await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
         },
       );
     } else {
       await _chatRepository.createSchema(tablePrefix, txn);
       await _messageRepository.createSchema(tablePrefix, txn);
       await _chatMessageRepository.createSchema(tablePrefix, txn);
+      await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
+    }
+  }
+
+  Future<void> initialise(String tablePrefix) async {
+    if (!await isSchemaCreated(tablePrefix)) {
+      await createSchema(tablePrefix);
     }
   }
 
@@ -317,12 +326,10 @@ class ChatService with ListenableServiceMixin {
       _messages.first = _messages.first.copyWith(
         text: content,
         status: Status.sent,
-        updated: DateTime.now(),
       );
     } else {
       _messages.first = _messages.first.copyWith(
         text: _messages.first.text + content,
-        updated: DateTime.now(),
       );
     }
     notifyListeners();
@@ -340,7 +347,6 @@ class ChatService with ListenableServiceMixin {
     final chat = _chats[_chatIndex];
     _chats[_chatIndex] = chat.copyWith(
       name: chat.name != newChatName ? chat.name + content : content,
-      updated: DateTime.now(),
     );
     notifyListeners();
   }
@@ -376,7 +382,7 @@ class ChatService with ListenableServiceMixin {
       chat,
       message,
     );
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     final isTxnSucess = results.every(
       (sublist) => sublist.isNotEmpty,
     );
@@ -434,7 +440,7 @@ class ChatService with ListenableServiceMixin {
         chat,
         message,
       );
-      final results = List<Map>.from(txnResults! as List);
+      final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
       isTxnSucess = results.every(
         (sublist) => sublist.isNotEmpty,
       );
@@ -522,7 +528,6 @@ class ChatService with ListenableServiceMixin {
         final updatedChat = await _chatRepository.updateChat(
           _chats[_chatIndex].copyWith(
             name: generatedChatName,
-            updated: DateTime.now(),
           ),
         );
         if (updatedChat != null) {

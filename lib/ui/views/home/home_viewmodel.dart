@@ -59,6 +59,8 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> initialise() async {
     await _settingService.initialise(tablePrefix);
+    await _documentService.initialise(tablePrefix);
+    await _chatService.initialise(tablePrefix);
     _totalChats = await _chatRepository.getTotal(tablePrefix);
   }
 

@@ -14,6 +14,11 @@ void main() {
   final documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
   const tablePrefix = 'doc_emb';
 
+  tearDown(() async {
+    await documentRepository.deleteAllDocuments(tablePrefix);
+    await embeddingRepository.deleteAllEmbeddings(tablePrefix);
+  });
+
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
@@ -74,21 +79,15 @@ void main() {
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
-      tokensCount: 10,
-      created: DateTime.now(),
       errorMessage: '',
       name: 'Test Document',
       originFileSize: 200,
       status: DocumentStatus.created,
-      updated: DateTime.now(),
     );
     final embedding = Embedding(
       id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
       content: 'apple',
       embedding: testData['apple'],
-      tokensCount: 4,
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     // Act
@@ -116,16 +115,12 @@ void main() {
     );
 
     // Assert
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
       await db.select('${tablePrefix}_${DocumentEmbedding.tableName}'),
       hasLength(1),
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Document.tableName}');
-    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 
   test('should create document embeddings', () async {
@@ -135,13 +130,9 @@ void main() {
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
-      tokensCount: 10,
-      created: DateTime.now(),
-      errorMessage: '',
       name: 'Test Document',
       originFileSize: 200,
       status: DocumentStatus.created,
-      updated: DateTime.now(),
     );
 
     final embeddings = [
@@ -150,45 +141,30 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
-        tokensCount: 15,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two'],
         metadata: {'id': 'customId4'},
-        tokensCount: 7,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana'],
         metadata: {'id': 'customId5'},
-        tokensCount: 10,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
 
@@ -236,10 +212,6 @@ void main() {
       await db.select('${tablePrefix}_${DocumentEmbedding.tableName}'),
       hasLength(documentEmbeddings.length),
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Document.tableName}');
-    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 
   test('should retrieve embeddings of given document Id', () async {
@@ -249,13 +221,10 @@ void main() {
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
-      tokensCount: 10,
-      created: DateTime.now(),
       errorMessage: '',
       name: 'Document 1',
       originFileSize: 200,
       status: DocumentStatus.created,
-      updated: DateTime.now(),
     );
 
     // Arrange
@@ -264,13 +233,10 @@ void main() {
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
-      tokensCount: 10,
-      created: DateTime.now(),
       errorMessage: '',
       name: 'Document 2',
       originFileSize: 200,
       status: DocumentStatus.created,
-      updated: DateTime.now(),
     );
 
     final embeddings1 = [
@@ -279,18 +245,12 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
     final embeddings2 = [
@@ -299,27 +259,18 @@ void main() {
         content: 'twenty',
         embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
-        tokensCount: 15,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two'],
         metadata: {'id': 'customId4'},
-        tokensCount: 7,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana'],
         metadata: {'id': 'customId5'},
-        tokensCount: 10,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
 
@@ -395,9 +346,5 @@ void main() {
       ),
       hasLength(documentEmbeddings2.length),
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Document.tableName}');
-    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 }

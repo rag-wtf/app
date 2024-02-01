@@ -96,14 +96,14 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     Document document, [
     Transaction? txn,
   ]) async {
-    final payload = document.toJson();
+    if (await _db.select(document.id!) == null) return null;
+    final payload = document.copyWith(updated: DateTime.now()).toJson();
     final validationErrors = Document.validate(payload);
     final isValid = validationErrors == null;
     if (!isValid) {
       return document.copyWith(errors: validationErrors);
     }
     final id = payload.remove('id') as String;
-    if (await _db.select(id) == null) return null;
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await _db.query(sql);

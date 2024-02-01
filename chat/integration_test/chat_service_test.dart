@@ -43,8 +43,6 @@ void main() {
     final chat = Chat(
       id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
       name: 'chat 1',
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
@@ -53,8 +51,6 @@ void main() {
       text: 'user message 1',
       type: MessageType.text,
       metadata: {'id': 'customId1'},
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
     // Act
     final txnResults = await chatService.createChatAndMessage(
@@ -64,7 +60,7 @@ void main() {
     );
 
     // Assert
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
       await db.select('${tablePrefix}_${ChatMessage.tableName}'),
@@ -79,7 +75,6 @@ void main() {
       (index) => Chat(
         id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
         name: 'chat$index',
-        created: DateTime.now(),
         updated: DateTime.now().add(Duration(seconds: index)),
       ).toJson(),
     );

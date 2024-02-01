@@ -8,11 +8,13 @@ part 'chat.g.dart';
 abstract class Chat with _$Chat {
   const factory Chat({
     required String name,
-    @DateTimeJsonConverter() required DateTime created,
-    @DateTimeJsonConverter() required DateTime? updated,
     String? id,
+    int? vote,
+    int? share,
     bool? pinned,
     Object? metadata,
+    @DateTimeJsonConverter() DateTime? created,
+    @DateTimeJsonConverter() DateTime? updated,
   }) = _Chat;
 
   factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);
@@ -23,12 +25,13 @@ abstract class Chat with _$Chat {
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
+DEFINE FIELD vote ON {prefix}_$tableName TYPE number DEFAULT 0;
+DEFINE FIELD share ON {prefix}_$tableName TYPE number DEFAULT 0;
 DEFINE FIELD pinned ON {prefix}_$tableName TYPE option<bool>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
-DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
-DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 ''';
-//DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 }
 
 class ChatList {

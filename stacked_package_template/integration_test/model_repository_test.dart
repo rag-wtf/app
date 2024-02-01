@@ -38,10 +38,8 @@ void main() {
   group('createModel', () {
     test('should create model', () async {
       // Arrange
-      final model = Model(
+      const model = Model(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
 
       // Act
@@ -55,15 +53,11 @@ void main() {
     test('should return a list of models', () async {
       // Arrange
       final models = [
-        Model(
+        const Model(
           name: 'name1',
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
-        Model(
+        const Model(
           name: 'name2',
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Model.tableName}');
@@ -82,10 +76,8 @@ void main() {
   group('getModelById', () {
     test('should return a model by id', () async {
       // Arrange
-      final model = Model(
+      const model = Model(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final result = await repository.createModel(defaultTablePrefix, model);
       final id = result.id!;
@@ -109,10 +101,8 @@ void main() {
   group('updateModel', () {
     test('should update model', () async {
       // Arrange
-      final model = Model(
+      const model = Model(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created = await repository.createModel(defaultTablePrefix, model);
 
@@ -127,11 +117,9 @@ void main() {
 
     test('should be null when the update model is not found', () async {
       // Arrange
-      final model = Model(
+      const model = Model(
         id: '${defaultTablePrefix}_${Model.tableName}:1',
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateModel(model), isNull);
@@ -141,10 +129,8 @@ void main() {
   group('deleteModel', () {
     test('should delete model', () async {
       // Arrange
-      final model = Model(
+      const model = Model(
         name: 'name1',
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created = await repository.createModel(defaultTablePrefix, model);
 
