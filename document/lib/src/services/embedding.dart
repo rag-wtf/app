@@ -10,15 +10,14 @@ part 'embedding.g.dart';
 abstract class Embedding with _$Embedding {
   const factory Embedding({
     required String content,
-    required int tokensCount,
-    @DateTimeJsonConverter() required DateTime created,
-    @DateTimeJsonConverter() required DateTime updated,
     List<double>? embedding,
-    Object? metadata,
     String? id,
     @JsonKey(includeToJson: false) double? score,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
+    Object? metadata,
+    @DateTimeJsonConverter() DateTime? created,
+    @DateTimeJsonConverter() DateTime? updated,
   }) = _Embedding;
 
   factory Embedding.fromJson(Map<String, dynamic> json) =>
@@ -27,6 +26,13 @@ abstract class Embedding with _$Embedding {
   static const tableName = 'embeddings';
 
   static const sqlSchema = '''
+DEFINE TABLE {prefix}_$tableName SCHEMALESS;
+DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD content ON {prefix}_$tableName TYPE string;
+DEFINE FIELD embedding ON {prefix}_$tableName TYPE option<array<float, 384>>;
+DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
 FIELDS embedding MTREE DIMENSION 384;
 ''';
@@ -56,9 +62,6 @@ FIELDS embedding MTREE DIMENSION 384;
           'metadata': {
             'type': 'object',
           },
-          'tokensCount': {
-            'type': 'number',
-          },
           'created': {
             'type': 'string',
             'format': 'date-time',
@@ -74,9 +77,6 @@ FIELDS embedding MTREE DIMENSION 384;
         },
         'required': [
           'content',
-          'tokensCount',
-          'created',
-          'updated',
         ],
         'additionalProperties': false,
       },

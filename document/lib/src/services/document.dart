@@ -11,16 +11,13 @@ abstract class Document with _$Document {
   const factory Document({
     required int compressedFileSize,
     required String fileMimeType, // could be gzip file
-    @DateTimeJsonConverter() required DateTime created,
     required String name,
     required int originFileSize,
     required DocumentStatus status,
-    @DateTimeJsonConverter() required DateTime updated,
     String? id,
     String? content,
     String? contentMimeType, // mime type of content of the gzip file
     String? file,
-    int? tokensCount,
     Object? metadata,
     String? errorMessage,
     @DateTimeJsonConverter() DateTime? splitted,
@@ -30,6 +27,8 @@ abstract class Document with _$Document {
     List<ValidationError>? errors,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<List<int>>? byteData,
+    @DateTimeJsonConverter() DateTime? created,
+    @DateTimeJsonConverter() DateTime? updated,
   }) = _Document;
 
   factory Document.fromJson(Map<String, dynamic> json) =>
@@ -42,19 +41,19 @@ DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName TYPE record;
 DEFINE FIELD compressedFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD content ON {prefix}_$tableName TYPE option<string>;
-DEFINE FIELD tokensCount ON {prefix}_$tableName TYPE option<number>;
 DEFINE FIELD fileMimeType ON {prefix}_$tableName TYPE string;
 DEFINE FIELD contentMimeType ON {prefix}_$tableName TYPE option<string>;
-DEFINE FIELD created ON {prefix}_$tableName TYPE datetime;
 DEFINE FIELD errorMessage ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD file ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD status ON {prefix}_$tableName TYPE string;
-DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime;
 DEFINE FIELD splitted ON {prefix}_$tableName TYPE option<datetime>;
 DEFINE FIELD indexed ON {prefix}_$tableName TYPE option<datetime>;
 DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
+DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
+DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 ''';
 
   static const _jsonSchema = {
@@ -98,9 +97,6 @@ DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
           'status': {
             'type': 'string',
           },
-          'tokensCount': {
-            'type': 'number',
-          },
           'metadata': {
             'type': 'object',
           },
@@ -124,11 +120,9 @@ DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
         'required': [
           'compressedFileSize',
           'fileMimeType',
-          'created',
           'name',
           'originFileSize',
           'status',
-          'updated',
         ],
         'additionalProperties': false,
       },

@@ -314,7 +314,6 @@ class DocumentService with ListenableServiceMixin {
     documentItem.item = (await _documentRepository.updateDocument(
       documentItem.item.copyWith(
         status: status,
-        updated: DateTime.now(),
       ),
     ))!;
     notifyListeners();
@@ -378,9 +377,6 @@ class DocumentService with ListenableServiceMixin {
               id: '$fullTableName:${Ulid()}',
               content: item['content'] as String,
               metadata: item['metadata'],
-              tokensCount: item['tokens_count'] as int,
-              created: now,
-              updated: now,
             ),
           )
           .toList(),
@@ -390,7 +386,6 @@ class DocumentService with ListenableServiceMixin {
           ? responseData!['content'] as String
           : null,
       contentMimeType: responseData?['mime_type'] as String,
-      tokensCount: responseData?['tokens_count'] as int,
       status: DocumentStatus.indexing,
       splitted: now,
       updated: now,
@@ -400,7 +395,7 @@ class DocumentService with ListenableServiceMixin {
       document,
       embeddings,
     );
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<String, dynamic>>.from(txnResults! as List);
     assert(
       results[1].length == embeddings.length,
       'Length of the document embeddings result should equals to embeddings',

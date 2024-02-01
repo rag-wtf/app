@@ -37,9 +37,6 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
 
       // Act
@@ -59,9 +56,6 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
 
       // Act
@@ -86,41 +80,26 @@ void main() {
           content: 'apple',
           embedding: testData['apple'],
           metadata: {'id': 'customId1'},
-          tokensCount: 4,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'ten',
           embedding: testData['ten'],
           metadata: {'id': 'customId2'},
-          tokensCount: 5,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'twenty',
           embedding: testData['twenty'],
           metadata: {'id': 'customId3'},
-          tokensCount: 15,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'two',
           embedding: testData['two'],
           metadata: {'id': 'customId4'},
-          tokensCount: 7,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'banana',
           embedding: testData['banana'],
           metadata: {'id': 'customId5'},
-          tokensCount: 10,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
       ];
 
@@ -141,9 +120,6 @@ void main() {
         content: '',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
 
       // Act
@@ -170,17 +146,11 @@ void main() {
           content: 'apple',
           embedding: testData['apple'],
           metadata: {'id': 'customId1'},
-          tokensCount: 4,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
         Embedding(
           content: 'ten',
           embedding: testData['ten'],
           metadata: {'id': 'customId2'},
-          tokensCount: 5,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ).toJson(),
       ];
       const fullEmbeddingTableName =
@@ -205,9 +175,6 @@ void main() {
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final result =
           await repository.createEmbedding(defaultTablePrefix, embedding);
@@ -236,19 +203,18 @@ void main() {
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created =
           await repository.createEmbedding(defaultTablePrefix, embedding);
 
       // Act
-      final updated =
-          await repository.updateEmbedding(created.copyWith(tokensCount: 11));
+      final updatedMetadata = {'id': 'customId3'};
+      final updated = await repository.updateEmbedding(
+        created.copyWith(metadata: updatedMetadata),
+      );
 
       // Assert
-      expect(updated?.tokensCount, equals(11));
+      expect(updated?.metadata, equals(updatedMetadata));
     });
 
     test('should be null when the update embedding is not found', () async {
@@ -258,9 +224,6 @@ void main() {
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       // Act & Assert
       expect(await repository.updateEmbedding(embedding), isNull);
@@ -274,9 +237,6 @@ void main() {
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       );
       final created =
           await repository.createEmbedding(defaultTablePrefix, embedding);
@@ -308,41 +268,26 @@ void main() {
           content: 'apple',
           embedding: testData['apple'],
           metadata: {'id': 'customId1'},
-          tokensCount: 4,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'ten',
           embedding: testData['ten'],
           metadata: {'id': 'customId2'},
-          tokensCount: 5,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'twenty',
           embedding: testData['twenty'],
           metadata: {'id': 'customId3'},
-          tokensCount: 15,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'two',
           embedding: testData['two'],
           metadata: {'id': 'customId4'},
-          tokensCount: 7,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
         Embedding(
           content: 'banana',
           embedding: testData['banana'],
           metadata: {'id': 'customId5'},
-          tokensCount: 10,
-          created: DateTime.now(),
-          updated: DateTime.now(),
         ),
       ];
       const k = 3;

@@ -42,13 +42,9 @@ void main() {
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
-      tokensCount: 10,
-      created: DateTime.now(),
-      errorMessage: '',
       name: 'Test Document',
       originFileSize: 200,
       status: DocumentStatus.created,
-      updated: DateTime.now(),
     );
 
     final embeddings = [
@@ -57,45 +53,30 @@ void main() {
         content: 'apple',
         embedding: testData['apple'],
         metadata: {'id': 'customId1'},
-        tokensCount: 4,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
-        tokensCount: 5,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
         embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
-        tokensCount: 15,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
         embedding: testData['two'],
         metadata: {'id': 'customId4'},
-        tokensCount: 7,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
         embedding: testData['banana'],
         metadata: {'id': 'customId5'},
-        tokensCount: 10,
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
 
@@ -134,12 +115,9 @@ void main() {
         'compressedFileSize': 100,
         'fileMimeType': 'text/plain',
         'contentMimeType': 'text/plain',
-        'tokensCount': 10,
-        'created': '2023-10-31T03:1$index:16.601Z',
         'name': 'doc$index',
         'originFileSize': 200,
         'status': DocumentStatus.created.name,
-        'updated': '2023-10-31T03:1$index:16.601Z',
       },
     );
     await db.delete('${tablePrefix}_${Document.tableName}');
@@ -191,11 +169,9 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
     final document = Document(
       compressedFileSize: 0,
       fileMimeType: 'text/plain',
-      created: DateTime.now(),
       name: 'test',
       originFileSize: bytes.length,
       status: DocumentStatus.created,
-      updated: DateTime.now(),
       byteData: [bytes],
     );
 
