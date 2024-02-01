@@ -100,7 +100,7 @@ WHERE array::first(array::distinct(->$documentEmbeddingTableName<-$documentTable
     final results = (await _db.query(
       sql,
     ))! as List;
-    final result = Map<String, dynamic>.from(results! as Map);
+    final result = Map<String, dynamic>.from(results.first as Map);
     final embeddings = result['Embedding'] as List;
 
     return embeddings
