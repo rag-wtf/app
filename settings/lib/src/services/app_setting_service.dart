@@ -36,7 +36,6 @@ class AppSettingService {
     return Setting(
       key: key,
       value: value,
-      created: DateTime.now(),
     );
   }
 
@@ -73,7 +72,6 @@ class AppSettingService {
         final updatedSetting = await _settingRepository.updateSetting(
           setting.copyWith(
             value: newValue,
-            updated: DateTime.now(),
           ),
         );
         if (updatedSetting != null) {

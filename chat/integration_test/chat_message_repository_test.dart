@@ -71,8 +71,6 @@ void main() {
     final chat = Chat(
       id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
       name: 'chat 1',
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
     final message = Message(
       id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
@@ -81,8 +79,6 @@ void main() {
       text: 'user message 1',
       type: MessageType.text,
       metadata: {'id': 'customId1'},
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     // Act
@@ -110,7 +106,7 @@ void main() {
     );
 
     // Assert
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
       await db.select('${tablePrefix}_${ChatMessage.tableName}'),
@@ -127,15 +123,11 @@ void main() {
     final chat1 = Chat(
       id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
       name: 'chat 1',
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     final chat2 = Chat(
       id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
       name: 'chat 2',
-      created: DateTime.now(),
-      updated: DateTime.now(),
     );
 
     final messages1 = [
@@ -146,8 +138,6 @@ void main() {
         text: 'user message 1 of 1',
         type: MessageType.text,
         metadata: {'id': 'customId'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
@@ -156,8 +146,6 @@ void main() {
         text: 'user message 2 of 1',
         type: MessageType.text,
         metadata: {'id': 'customId'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
     final messages2 = [
@@ -168,8 +156,6 @@ void main() {
         text: 'user message 1 of 2',
         type: MessageType.text,
         metadata: {'id': 'customId'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
       Message(
         id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
@@ -178,8 +164,6 @@ void main() {
         text: 'user message 2 of 2',
         type: MessageType.text,
         metadata: {'id': 'customId'},
-        created: DateTime.now(),
-        updated: DateTime.now(),
       ),
     ];
 
@@ -243,7 +227,7 @@ void main() {
     );
 
     // Assert
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     final messageList = await chatMessageRepository.getAllMessagesOfChat(
       tablePrefix,

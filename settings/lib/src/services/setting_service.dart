@@ -43,7 +43,6 @@ class SettingService with ListenableServiceMixin {
     return Setting(
       key: key,
       value: value,
-      created: DateTime.now(),
     );
   }
 
@@ -74,7 +73,6 @@ class SettingService with ListenableServiceMixin {
         final userId = Setting(
           key: userIdKey,
           value: Ulid().toString(),
-          created: DateTime.now(),
         );
         await _settingRepository.createSetting(tablePrefix, userId);
       }
@@ -103,7 +101,6 @@ class SettingService with ListenableServiceMixin {
         final updatedSetting = await _settingRepository.updateSetting(
           setting.copyWith(
             value: newValue,
-            updated: DateTime.now(),
           ),
         );
         if (updatedSetting != null) {

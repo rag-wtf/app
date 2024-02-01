@@ -317,12 +317,10 @@ class ChatService with ListenableServiceMixin {
       _messages.first = _messages.first.copyWith(
         text: content,
         status: Status.sent,
-        updated: DateTime.now(),
       );
     } else {
       _messages.first = _messages.first.copyWith(
         text: _messages.first.text + content,
-        updated: DateTime.now(),
       );
     }
     notifyListeners();
@@ -340,7 +338,6 @@ class ChatService with ListenableServiceMixin {
     final chat = _chats[_chatIndex];
     _chats[_chatIndex] = chat.copyWith(
       name: chat.name != newChatName ? chat.name + content : content,
-      updated: DateTime.now(),
     );
     notifyListeners();
   }
@@ -376,7 +373,7 @@ class ChatService with ListenableServiceMixin {
       chat,
       message,
     );
-    final results = List<Map>.from(txnResults! as List);
+    final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
     final isTxnSucess = results.every(
       (sublist) => sublist.isNotEmpty,
     );
@@ -434,7 +431,7 @@ class ChatService with ListenableServiceMixin {
         chat,
         message,
       );
-      final results = List<Map>.from(txnResults! as List);
+      final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
       isTxnSucess = results.every(
         (sublist) => sublist.isNotEmpty,
       );
@@ -522,7 +519,6 @@ class ChatService with ListenableServiceMixin {
         final updatedChat = await _chatRepository.updateChat(
           _chats[_chatIndex].copyWith(
             name: generatedChatName,
-            updated: DateTime.now(),
           ),
         );
         if (updatedChat != null) {
