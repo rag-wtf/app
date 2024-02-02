@@ -376,12 +376,14 @@ class DocumentService with ListenableServiceMixin {
 
     final now = DateTime.now();
     final fullTableName = '${documentItem.tablePrefix}_${Embedding.tableName}';
+    final emptyEmbedding = List<double>.filled(384, 0);
     final embeddings = List<Embedding>.from(
       documentItems
           .map(
             (item) => Embedding(
               id: '$fullTableName:${Ulid()}',
               content: item['content'] as String,
+              embedding: emptyEmbedding,
               metadata: item['metadata'],
             ),
           )
@@ -401,9 +403,9 @@ class DocumentService with ListenableServiceMixin {
       document,
       embeddings,
     );
-    final results = List<Map<String, dynamic>>.from(txnResults! as List);
+    final results = txnResults! as List;
     assert(
-      results[1].length == embeddings.length,
+      (results[1] as List).length == embeddings.length,
       'Length of the document embeddings result should equals to embeddings',
     );
     documentItem.item = document;

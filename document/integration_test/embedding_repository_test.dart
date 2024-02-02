@@ -35,7 +35,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple'],
+        embedding: testData['apple']!!,
         metadata: {'id': 'customId1'},
       );
 
@@ -54,7 +54,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple'],
+        embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       );
 
@@ -78,28 +78,65 @@ void main() {
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple'],
+          embedding: testData['apple']!,
           metadata: {'id': 'customId1'},
         ),
         Embedding(
           content: 'ten',
-          embedding: testData['ten'],
+          embedding: testData['ten']!,
           metadata: {'id': 'customId2'},
         ),
         Embedding(
           content: 'twenty',
-          embedding: testData['twenty'],
+          embedding: testData['twenty']!,
           metadata: {'id': 'customId3'},
         ),
         Embedding(
           content: 'two',
-          embedding: testData['two'],
+          embedding: testData['two']!,
           metadata: {'id': 'customId4'},
         ),
         Embedding(
           content: 'banana',
-          embedding: testData['banana'],
+          embedding: testData['banana']!,
           metadata: {'id': 'customId5'},
+        ),
+      ];
+
+      // Act
+      final result =
+          await repository.createEmbeddings(defaultTablePrefix, embeddings);
+
+      // Assert
+      expect(result, hasLength(embeddings.length));
+
+      // Clean up
+      await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
+    });
+
+    test('should create embeddings with content only', () async {
+      // Arrange
+      final emptyEmbedding = List<double>.filled(384, 0);
+      final embeddings = [
+        Embedding(
+          content: 'apple',
+          embedding: emptyEmbedding,
+        ),
+        Embedding(
+          content: 'ten',
+          embedding: emptyEmbedding,
+        ),
+        Embedding(
+          content: 'twenty',
+          embedding: emptyEmbedding,
+        ),
+        Embedding(
+          content: 'two',
+          embedding: emptyEmbedding,
+        ),
+        Embedding(
+          content: 'banana',
+          embedding: emptyEmbedding,
         ),
       ];
 
@@ -118,7 +155,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: '',
-        embedding: testData['apple'],
+        embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       );
 
@@ -144,12 +181,12 @@ void main() {
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple'],
+          embedding: testData['apple']!,
           metadata: {'id': 'customId1'},
         ).toJson(),
         Embedding(
           content: 'ten',
-          embedding: testData['ten'],
+          embedding: testData['ten']!,
           metadata: {'id': 'customId2'},
         ).toJson(),
       ];
@@ -173,7 +210,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten'],
+        embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       );
       final result =
@@ -201,7 +238,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten'],
+        embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       );
       final created =
@@ -222,7 +259,7 @@ void main() {
       final embedding = Embedding(
         id: '${defaultTablePrefix}_${Embedding.tableName}:1',
         content: 'ten',
-        embedding: testData['ten'],
+        embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       );
       // Act & Assert
@@ -235,7 +272,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten'],
+        embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       );
       final created =
@@ -266,27 +303,27 @@ void main() {
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple'],
+          embedding: testData['apple']!,
           metadata: {'id': 'customId1'},
         ),
         Embedding(
           content: 'ten',
-          embedding: testData['ten'],
+          embedding: testData['ten']!,
           metadata: {'id': 'customId2'},
         ),
         Embedding(
           content: 'twenty',
-          embedding: testData['twenty'],
+          embedding: testData['twenty']!,
           metadata: {'id': 'customId3'},
         ),
         Embedding(
           content: 'two',
-          embedding: testData['two'],
+          embedding: testData['two']!,
           metadata: {'id': 'customId4'},
         ),
         Embedding(
           content: 'banana',
-          embedding: testData['banana'],
+          embedding: testData['banana']!,
           metadata: {'id': 'customId5'},
         ),
       ];

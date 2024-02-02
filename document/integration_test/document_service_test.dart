@@ -51,31 +51,31 @@ void main() {
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'apple',
-        embedding: testData['apple'],
+        embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'ten',
-        embedding: testData['ten'],
+        embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'twenty',
-        embedding: testData['twenty'],
+        embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'two',
-        embedding: testData['two'],
+        embedding: testData['two']!,
         metadata: {'id': 'customId4'},
       ),
       Embedding(
         id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
         content: 'banana',
-        embedding: testData['banana'],
+        embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
       ),
     ];
