@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:archive/archive.dart';
+import 'package:chat/chat.dart';
+// ignore: implementation_imports
+import 'package:chat/src/services/chat_api_message.dart' as chat_api;
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:rag_console/src/app/app.locator.dart';
 import 'package:rag_console/src/app/app.logger.dart';
-import 'package:rag_console/src/services/chat_message.dart';
+
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
@@ -17,12 +20,14 @@ class RagConsoleViewModel extends BaseViewModel {
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();
   final _gzipEncoder = locator<GZipEncoder>();
-  final _messages = <ChatMessage>[];
+  final _messages = <chat_api.ChatApiMessage>[];
   final _documentService = locator<DocumentService>();
+  final _chatService = locator<ChatService>();
   final _log = getLogger('RagConsoleViewModel');
-
+  late String _surrealVersion;
   String get embeddingsApiUrl => _settingService.get(embeddingsApiUrlKey).value;
   String get generationApiUrl => _settingService.get(generationApiUrlKey).value;
+  String get surrealVersion => _surrealVersion;
 
   static const helpMessageHint =
       'Type /h to see the list of supported commands.';
@@ -67,8 +72,8 @@ Example:
     _messages
       ..clear()
       ..add(
-        ChatMessage(
-          role: Role.system,
+        chat_api.ChatApiMessage(
+          role: chat_api.Role.system,
           content: systemPrompt,
           dateTime: DateTime.now(),
         ),
@@ -84,6 +89,8 @@ Example:
   Future<void> initialise() async {
     _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
+    await _documentService.initialise(tablePrefix);
+    await _chatService.initialise(tablePrefix);
     _initMessages();
   }
 
@@ -117,8 +124,8 @@ Example:
 
   Future<String> generate(String prompt, [String? input]) async {
     _messages.add(
-      ChatMessage(
-        role: Role.user,
+      chat_api.ChatApiMessage(
+        role: chat_api.Role.user,
         content: prompt,
         dateTime: DateTime.now(),
       ),
@@ -152,16 +159,16 @@ Example:
     if (input != null) {
       final chatMessage = _messages.removeLast();
       _messages.add(
-        ChatMessage(
-          role: Role.user,
+        chat_api.ChatApiMessage(
+          role: chat_api.Role.user,
           content: input,
           dateTime: chatMessage.dateTime,
         ),
       );
     }
     _messages.add(
-      ChatMessage(
-        role: Role.assistant,
+      chat_api.ChatApiMessage(
+        role: chat_api.Role.assistant,
         content: content,
         dateTime: DateTime.now(),
       ),
@@ -214,8 +221,8 @@ Example:
           }).join('\n');
           final promptTemplate = _settingService.get(promptTemplateKey).value;
           final prompt = promptTemplate
-              .replaceFirst('{context}', context)
-              .replaceFirst('{question}', input);
+              .replaceFirst(contextPlaceholder, context)
+              .replaceFirst(instructionPlaceholder, input);
           return generate(prompt, input);
         case 'sql':
           final query = value.substring(5);

@@ -8,5 +8,3 @@ const String summarizeInASentencePrompt =
 const String englishWordSeparator = ' ';
 const String defaultAgentId = 'agent:1';
 const String userIdPrefix = 'user:';
-const String contextPlaceholder = '{context}';
-const String instructionPlaceholder = '{instruction}';

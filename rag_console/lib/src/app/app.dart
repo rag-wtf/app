@@ -1,4 +1,5 @@
 import 'package:archive/archive_io.dart';
+import 'package:chat/chat.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:rag_console/src/services/rag_console_api_service.dart';
@@ -32,6 +33,18 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DocumentEmbeddingRepository>(
       classType: DocumentEmbeddingRepository,
     ),
+
+    // chat package
+    LazySingleton<ChatRepository>(classType: ChatRepository),
+    LazySingleton<ChatMessageRepository>(
+      classType: ChatMessageRepository,
+    ),
+    LazySingleton<MessageRepository>(classType: MessageRepository),
+    LazySingleton<MessageEmbeddingRepository>(
+      classType: MessageEmbeddingRepository,
+    ),
+    LazySingleton<ChatService>(classType: ChatService),
+    LazySingleton<ChatApiService>(classType: ChatApiService),
 
     LazySingleton<RagConsoleApiService>(classType: RagConsoleApiService),
 

@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   archive: ^3.4.10
+  chat:
+    path: ../chat
   console:
     path: ../console
   dio: ^5.4.0
