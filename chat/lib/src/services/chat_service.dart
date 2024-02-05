@@ -557,6 +557,7 @@ class ChatService with ListenableServiceMixin {
       tablePrefix,
       queryVector,
       _k,
+      0.5,
     );
     return embeddings;
   }

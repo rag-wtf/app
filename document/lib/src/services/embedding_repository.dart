@@ -156,31 +156,24 @@ CONTENT ${jsonEncode(payload)};''';
         : null;
   }
 
-  /* TODO: Re-test the following query in v1.1:
-      const sql = r'''
-SELECT *, vector::similarity::cosine(embedding, $vector) AS score
-FROM Embedding
-WHERE embedding <$k> $vector
-ORDER BY score DESC;''';
-*/
   Future<List<Embedding>> similaritySearch(
     String tablePrefix,
     List<double> vector,
     int k,
+    double threshold,
   ) async {
     final sql = '''
-SELECT *, vector::similarity::cosine(embedding, \$vector) AS score
-FROM ${tablePrefix}_${Embedding.tableName}
-ORDER BY score DESC
-LIMIT \$k;''';
+SELECT * FROM (
+  SELECT *, vector::similarity::cosine(embedding, $vector) AS score
+  FROM ${tablePrefix}_${Embedding.tableName}
+  WHERE embedding <$k> $vector
+)
+WHERE score >= $threshold
+ORDER BY score DESC;
+''';
 
-    final bindings = {
-      'vector': vector,
-      'k': k,
-    };
     final results = (await _db.query(
       sql,
-      bindings: bindings,
     ))! as List;
     return results
         .map(

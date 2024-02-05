@@ -187,6 +187,7 @@ Example:
       tablePrefix,
       queryVector,
       k,
+      0.5,
     );
     return embeddings;
   }

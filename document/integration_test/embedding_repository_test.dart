@@ -335,11 +335,13 @@ void main() {
         defaultTablePrefix,
         listAllNumbers,
         k,
+        0.5,
       );
       final result2 = await repository.similaritySearch(
         defaultTablePrefix,
         listAllFruits,
         k,
+        0.5,
       );
 
       // Assert
@@ -350,6 +352,8 @@ void main() {
           ['ten', 'twenty', 'apple'],
         ),
       );
+
+      print('*** scores: ${result2.map((e) => e.score).toList()}');
 
       expect(result2, hasLength(k));
       expect(

@@ -253,8 +253,14 @@ class DocumentService with ListenableServiceMixin {
     String tablePrefix,
     List<double> vector,
     int k,
+    double threshold,
   ) async {
-    return _embeddingRepository.similaritySearch(tablePrefix, vector, k);
+    return _embeddingRepository.similaritySearch(
+      tablePrefix,
+      vector,
+      k,
+      threshold,
+    );
   }
 
   Future<DocumentList> getDocumentList(
