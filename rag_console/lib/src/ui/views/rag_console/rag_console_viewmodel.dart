@@ -25,8 +25,14 @@ class RagConsoleViewModel extends BaseViewModel {
   final _chatService = locator<ChatService>();
   final _log = getLogger('RagConsoleViewModel');
   late String _surrealVersion;
-  String get embeddingsApiUrl => _settingService.get(embeddingsApiUrlKey).value;
-  String get generationApiUrl => _settingService.get(generationApiUrlKey).value;
+  String get _embeddingsApiUrl =>
+      _settingService.get(embeddingsApiUrlKey).value;
+  String get _generationApiUrl =>
+      _settingService.get(generationApiUrlKey).value;
+  String get _generationApiKeyValue =>
+      _settingService.get(generationApiKey).value;
+  double get _searchThreshold =>
+      _settingService.get(searchThresholdKey, type: double).value as double;
   String get surrealVersion => _surrealVersion;
 
   static const helpMessageHint =
@@ -87,11 +93,14 @@ Example:
   }
 
   Future<void> initialise() async {
+    setBusy(true);
     _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
     await _documentService.initialise(tablePrefix);
     await _chatService.initialise(tablePrefix);
     _initMessages();
+    _surrealVersion = await _db.version();
+    setBusy(false);
   }
 
   dynamic getEmbeddingInput(String input) {
@@ -106,7 +115,7 @@ Example:
   Future<Map<String, dynamic>?> embed(String input) async {
     final embeddingsApiKeyValue = _settingService.get(embeddingsApiKey).value;
     final response = await _dio.post<Map<String, dynamic>>(
-      embeddingsApiUrl,
+      _embeddingsApiUrl,
       options: Options(
         headers: {
           'Content-type': 'application/json',
@@ -132,19 +141,19 @@ Example:
     );
     final messagesMap = _messages.map((message) => message.toJson()).toList();
     _log.d(messagesMap);
-
-    final generationApiKeyValue = _settingService.get(generationApiKey).value;
+    final isLiteLlmProxy = _generationApiUrl.contains(litellm);
     final response = await _dio.post<Map<String, dynamic>>(
-      generationApiUrl,
+      _generationApiUrl,
       options: Options(
         headers: {
           'Content-type': 'application/json',
-          if (generationApiKeyValue.isNotEmpty)
-            'Authorization': 'Bearer $generationApiKeyValue',
+          if (!isLiteLlmProxy && _generationApiKeyValue.isNotEmpty)
+            'Authorization': 'Bearer $_generationApiKeyValue',
         },
       ),
       data: {
         'messages': messagesMap,
+        if (isLiteLlmProxy) 'api_key': _generationApiKeyValue,
       },
     );
     final responseData = response.data;
@@ -187,7 +196,7 @@ Example:
       tablePrefix,
       queryVector,
       k,
-      0.5,
+      _searchThreshold,
     );
     return embeddings;
   }

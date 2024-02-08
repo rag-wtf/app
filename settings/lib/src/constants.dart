@@ -30,8 +30,9 @@ const undefined = 'undefined';
 const splitApiUriPath = '/split';
 const embeddingsApiUriPath = '/embeddings';
 const generationApiUriPath = '/chat/completions';
-const String contextPlaceholder = '{context}';
-const String instructionPlaceholder = '{instruction}';
+const contextPlaceholder = '{context}';
+const instructionPlaceholder = '{instruction}';
+const litellm = 'litellm';
 
 const defaultTablePrefix = 'main';
 const surrealEndpoint = 'indxdb://rag';

@@ -16,15 +16,18 @@ class RagConsoleView extends StackedView<RagConsoleViewModel> {
   ) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Console(
-        content: '''
+      body: viewModel.isBusy
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Console(
+              content: '''
+SurrealDB v${viewModel.surrealVersion}.
 Connected to $surrealEndpoint, ns: $surrealNamespace, db: $surrealDatabase.
-embeddingsApiUrl: ${viewModel.embeddingsApiUrl}
-generationApiUrl: ${viewModel.generationApiUrl}
 ${RagConsoleViewModel.helpMessageHint}
-''',
-        executeFunction: viewModel.execute,
-      ),
+        ''',
+              executeFunction: viewModel.execute,
+            ),
     );
   }
 
