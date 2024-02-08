@@ -41,7 +41,7 @@ class ChatService with ListenableServiceMixin {
         _settingService.get(retrieveTopNResultsKey, type: int).value,
       );
   String get _promptTemplate => _settingService.get(promptTemplateKey).value;
-  String get _searchType => _settingService.get(similaritySearchTypeKey).value;
+  String get _searchType => _settingService.get(searchTypeKey).value;
 
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();

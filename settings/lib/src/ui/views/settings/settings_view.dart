@@ -10,8 +10,8 @@ import 'package:stacked/stacked_annotations.dart';
 @FormView(
   fields: [
     FormTextField(
-      name: 'dataIngestionApiUrl',
-      validator: SettingsValidators.validateDataIngestionApiUrl,
+      name: 'splitApiUrl',
+      validator: SettingsValidators.validateSplitApiUrl,
     ),
     FormTextField(name: 'chunkSize'),
     FormTextField(name: 'chunkOverlap'),
@@ -21,13 +21,14 @@ import 'package:stacked/stacked_annotations.dart';
       validator: SettingsValidators.validateEmbeddingsApiUrl,
     ),
     FormTextField(name: 'embeddingsApiKey'),
-    FormTextField(name: 'embeddingsDimension'),
+    FormTextField(name: 'embeddingsDimensions'),
     FormTextField(
       name: 'embeddingsApiBatchSize',
       validator: SettingsValidators.validateEmbeddingsApiBatchSize,
     ),
-    FormTextField(name: 'similaritySearchType'),
-    FormTextField(name: 'similaritySearchIndex'),
+    FormTextField(name: 'searchType'),
+    FormTextField(name: 'searchIndex'),
+    FormTextField(name: 'searchThreshold'),
     FormTextField(name: 'retrieveTopNResults'),
     FormTextField(name: 'generationModel'),
     FormTextField(
@@ -40,7 +41,7 @@ import 'package:stacked/stacked_annotations.dart';
     FormTextField(name: 'topP'),
     FormTextField(name: 'repetitionPenalty'),
     FormTextField(name: 'topK'),
-    FormTextField(name: 'maxNewTokens'),
+    FormTextField(name: 'maxTokens'),
     FormTextField(name: 'stop'),
   ],
 )
@@ -72,10 +73,9 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.https_outlined,
                             color: iconColor,
                           ),
-                          hintText: 'https://www.example.com/ingest',
-                          errorText:
-                              viewModel.dataIngestionApiUrlValidationMessage,
-                          controller: dataIngestionApiUrlController,
+                          hintText: 'https://www.example.com/split',
+                          errorText: viewModel.splitApiUrlValidationMessage,
+                          controller: splitApiUrlController,
                           textInputType: TextInputType.url,
                         ),
                         InputField(
@@ -114,7 +114,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.model_training_outlined,
                             color: iconColor,
                           ),
-                          hintText: 'text-embedding-ada-002',
+                          hintText: 'text-embedding-3-large',
                           errorText: viewModel.embeddingsModelValidationMessage,
                           controller: embeddingsModelController,
                           textInputType: TextInputType.text,
@@ -149,9 +149,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.numbers_outlined,
                             color: iconColor,
                           ),
+                          hintText: '256',
                           errorText:
-                              viewModel.embeddingsDimensionValidationMessage,
-                          controller: embeddingsDimensionController,
+                              viewModel.embeddingsDimensionsValidationMessage,
+                          controller: embeddingsDimensionsController,
                           textInputType: TextInputType.number,
                         ),
                         InputField(
@@ -175,15 +176,25 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     body: Column(
                       children: [
                         InputField(
-                          labelText: 'Similarity Search',
+                          labelText: 'Search Type',
                           prefixIcon: Icon(
                             Icons.search_outlined,
                             color: iconColor,
                           ),
-                          errorText:
-                              viewModel.similaritySearchTypeValidationMessage,
-                          controller: similaritySearchTypeController,
+                          errorText: viewModel.searchTypeValidationMessage,
+                          controller: searchTypeController,
                           textInputType: TextInputType.text,
+                        ),
+                        InputField(
+                          labelText: 'Search Threshold',
+                          prefixIcon: Icon(
+                            Icons.check_box_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '0.5 to 0.9',
+                          errorText: viewModel.searchThresholdValidationMessage,
+                          controller: searchThresholdController,
+                          textInputType: TextInputType.number,
                         ),
                         InputField(
                           labelText: 'Top N',
@@ -242,14 +253,14 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.none,
                         ),
                         InputField(
-                          labelText: 'Max New Tokens',
+                          labelText: 'Max Tokens',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
                             color: iconColor,
                           ),
                           hintText: 'Half of the context windows',
-                          errorText: viewModel.maxNewTokensValidationMessage,
-                          controller: maxNewTokensController,
+                          errorText: viewModel.maxTokensValidationMessage,
+                          controller: maxTokensController,
                           textInputType: TextInputType.number,
                         ),
                         SwitchListTile(
@@ -291,19 +302,19 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   Future<void> onViewModelReady(SettingsViewModel viewModel) async {
     syncFormWithViewModel(viewModel);
     await viewModel.initialise();
-    dataIngestionApiUrlController.addListener(viewModel.setDataIngestionApiUrl);
+    splitApiUrlController.addListener(viewModel.setSplitApiUrl);
     chunkSizeController.addListener(viewModel.setChunkSize);
     chunkOverlapController.addListener(viewModel.setChunkOverlap);
     embeddingsModelController.addListener(viewModel.setEmbeddingsModel);
     embeddingsApiUrlController.addListener(viewModel.setEmbeddingsApiUrl);
     embeddingsApiKeyController.addListener(viewModel.setEmbeddingsApiKey);
-    embeddingsDimensionController.addListener(viewModel.setEmbeddingsDimension);
+    embeddingsDimensionsController
+        .addListener(viewModel.setEmbeddingsDimensions);
     embeddingsApiBatchSizeController
         .addListener(viewModel.setEmbeddingsApiBatchSize);
-    similaritySearchTypeController
-        .addListener(viewModel.setSimilaritySearchType);
-    similaritySearchIndexController
-        .addListener(viewModel.setSimilaritySearchIndex);
+    searchTypeController.addListener(viewModel.setSearchType);
+    searchIndexController.addListener(viewModel.setSearchIndex);
+    searchThresholdController.addListener(viewModel.setSearchThreshold);
     retrieveTopNResultsController.addListener(viewModel.setRetrieveTopNResults);
     generationModelController.addListener(viewModel.setGenerationModel);
     generationApiUrlController.addListener(viewModel.setGenerationApiUrl);
@@ -313,7 +324,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     topPController.addListener(viewModel.setTopP);
     repetitionPenaltyController.addListener(viewModel.setRepetitionPenalty);
     topKController.addListener(viewModel.setTopK);
-    maxNewTokensController.addListener(viewModel.setMaxNewTokens);
+    maxTokensController.addListener(viewModel.setMaxTokens);
     stopController.addListener(viewModel.setStop);
   }
 
@@ -357,8 +368,8 @@ class SettingsValidators {
     }
   }
 
-  static String? validateDataIngestionApiUrl(String? value) {
-    return _validateApiUriPath(dataIngestionApiUriPath, value);
+  static String? validateSplitApiUrl(String? value) {
+    return _validateApiUriPath(splitApiUriPath, value);
   }
 
   static String? validateEmbeddingsApiUrl(String? value) {

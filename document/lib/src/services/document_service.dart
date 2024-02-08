@@ -308,7 +308,7 @@ class DocumentService with ListenableServiceMixin {
       documentItem.item = (await getDocumentById(documentItem.item.id!))!;
       await _apiService.split(
         _dio,
-        _settingService.get(dataIngestionApiUrlKey).value,
+        _settingService.get(splitApiUrlKey).value,
         documentItem,
         _updateDocumentStatus,
         _onProgress,

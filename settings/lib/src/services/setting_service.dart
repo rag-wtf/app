@@ -47,7 +47,7 @@ class SettingService with ListenableServiceMixin {
   }
 
   Future<void> initialise(String tablePrefix) async {
-    if (Env.read(dataIngestionApiUrlKey) == null) {
+    if (Env.read(splitApiUrlKey) == null) {
       String settings;
       try {
         // load from rag

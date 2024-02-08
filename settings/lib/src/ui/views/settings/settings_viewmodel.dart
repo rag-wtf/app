@@ -28,9 +28,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     setBusy(true);
     await _settingService.initialise(tablePrefix);
     _settingService.clearFormValuesFunction = clearFormValues;
-    final dataIngestionApiUrl = _settingService.get(dataIngestionApiUrlKey);
-    if (dataIngestionApiUrl.id != null) {
-      dataIngestionApiUrlValue = dataIngestionApiUrl.value;
+    final splitApiUrl = _settingService.get(splitApiUrlKey);
+    if (splitApiUrl.id != null) {
+      splitApiUrlValue = splitApiUrl.value;
     }
 
     final chunkSize = _settingService.get(chunkSizeKey, type: int);
@@ -58,10 +58,10 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsApiKeyValue = embeddingsApiKeyVal.value;
     }
 
-    final embeddingsDimension =
-        _settingService.get(embeddingsDimensionKey, type: int);
-    if (embeddingsDimension.id != null) {
-      embeddingsDimensionValue = embeddingsDimension.value;
+    final embeddingsDimensions =
+        _settingService.get(embeddingsDimensionsKey, type: int);
+    if (embeddingsDimensions.id != null) {
+      embeddingsDimensionsValue = embeddingsDimensions.value;
     }
 
     final embeddingsApiBatchSize =
@@ -70,14 +70,19 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
     }
 
-    final similaritySearchType = _settingService.get(similaritySearchTypeKey);
-    if (similaritySearchType.id != null) {
-      similaritySearchTypeValue = similaritySearchType.value;
+    final searchType = _settingService.get(searchTypeKey);
+    if (searchType.id != null) {
+      searchTypeValue = searchType.value;
     }
 
-    final similaritySearchIndex = _settingService.get(similaritySearchIndexKey);
-    if (similaritySearchIndex.id != null) {
-      similaritySearchIndexValue = similaritySearchIndex.value;
+    final searchIndex = _settingService.get(searchIndexKey);
+    if (searchIndex.id != null) {
+      searchIndexValue = searchIndex.value;
+    }
+
+    final searchThreshold = _settingService.get(searchThresholdKey);
+    if (searchThreshold.id != null) {
+      searchThresholdValue = searchThreshold.value;
     }
 
     final retrieveTopNResults =
@@ -127,9 +132,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       topKValue = topK.value;
     }
 
-    final maxNewTokens = _settingService.get(maxNewTokensKey, type: int);
-    if (maxNewTokens.id != null) {
-      maxNewTokensValue = maxNewTokens.value;
+    final maxTokens = _settingService.get(maxTokensKey, type: int);
+    if (maxTokens.id != null) {
+      maxTokensValue = maxTokens.value;
     }
 
     final stop = _settingService.get(stopKey);
@@ -141,16 +146,17 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   void clearFormValues() {
     const empty = '';
-    dataIngestionApiUrlValue = empty;
+    splitApiUrlValue = empty;
     chunkSizeValue = empty;
     chunkOverlapValue = empty;
     embeddingsModelValue = empty;
     embeddingsApiUrlValue = empty;
     embeddingsApiKeyValue = empty;
-    embeddingsDimensionValue = empty;
+    embeddingsDimensionsValue = empty;
     embeddingsApiBatchSizeValue = empty;
-    similaritySearchTypeValue = empty;
-    similaritySearchIndexValue = empty;
+    searchTypeValue = empty;
+    searchIndexValue = empty;
+    searchThresholdValue = empty;
     retrieveTopNResultsValue = empty;
     generationModelValue = empty;
     generationApiUrlValue = empty;
@@ -160,16 +166,16 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     topPValue = empty;
     repetitionPenaltyValue = empty;
     topKValue = empty;
-    maxNewTokensValue = empty;
+    maxTokensValue = empty;
     stopValue = empty;
   }
 
-  Future<void> setDataIngestionApiUrl() async {
-    if (hasDataIngestionApiUrl && !hasDataIngestionApiUrlValidationMessage) {
+  Future<void> setSplitApiUrl() async {
+    if (hasSplitApiUrl && !hasSplitApiUrlValidationMessage) {
       await _settingService.set(
         tablePrefix,
-        dataIngestionApiUrlKey,
-        dataIngestionApiUrlValue!,
+        splitApiUrlKey,
+        splitApiUrlValue!,
       );
     }
   }
@@ -226,13 +232,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
-  Future<void> setEmbeddingsDimension() async {
-    if (embeddingsDimensionValue != null &&
-        !hasEmbeddingsDimensionValidationMessage) {
+  Future<void> setEmbeddingsDimensions() async {
+    if (embeddingsDimensionsValue != null &&
+        !hasEmbeddingsDimensionsValidationMessage) {
       await _settingService.set(
         tablePrefix,
-        embeddingsDimensionKey,
-        embeddingsDimensionValue!,
+        embeddingsDimensionsKey,
+        embeddingsDimensionsValue!,
       );
     }
   }
@@ -248,24 +254,32 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
-  Future<void> setSimilaritySearchType() async {
-    if (similaritySearchTypeValue != null &&
-        !hasSimilaritySearchTypeValidationMessage) {
+  Future<void> setSearchType() async {
+    if (searchTypeValue != null && !hasSearchTypeValidationMessage) {
       await _settingService.set(
         tablePrefix,
-        similaritySearchTypeKey,
-        similaritySearchTypeValue!,
+        searchTypeKey,
+        searchTypeValue!,
       );
     }
   }
 
-  Future<void> setSimilaritySearchIndex() async {
-    if (similaritySearchIndexValue != null &&
-        !hasSimilaritySearchIndexValidationMessage) {
+  Future<void> setSearchIndex() async {
+    if (searchIndexValue != null && !hasSearchIndexValidationMessage) {
       await _settingService.set(
         tablePrefix,
-        similaritySearchIndexKey,
-        similaritySearchIndexValue!,
+        searchIndexKey,
+        searchIndexValue!,
+      );
+    }
+  }
+
+  Future<void> setSearchThreshold() async {
+    if (searchThresholdValue != null && !hasSearchThresholdValidationMessage) {
+      await _settingService.set(
+        tablePrefix,
+        searchThresholdKey,
+        searchThresholdValue!,
       );
     }
   }
@@ -364,12 +378,12 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
-  Future<void> setMaxNewTokens() async {
-    if (maxNewTokensValue != null && !hasMaxNewTokensValidationMessage) {
+  Future<void> setMaxTokens() async {
+    if (maxTokensValue != null && !hasMaxTokensValidationMessage) {
       await _settingService.set(
         tablePrefix,
-        maxNewTokensKey,
-        maxNewTokensValue!,
+        maxTokensKey,
+        maxTokensValue!,
       );
     }
   }

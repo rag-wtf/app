@@ -40,7 +40,7 @@ class AppSettingService {
   }
 
   Future<void> initialise() async {
-    if (Env.read(dataIngestionApiUrlKey) == null) {
+    if (Env.read(splitApiUrlKey) == null) {
       await Env.load(
         EnvStringLoader(
           await rootBundle.loadString('packages/settings/assets/app_settings'),
