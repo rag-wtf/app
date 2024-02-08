@@ -75,9 +75,11 @@ class DocumentApiService {
 
   Future<List<List<double>>> index(
     Dio dio,
+    String model,
     String apiUrl,
     String apiKey,
     List<String> chunkedTexts, {
+    int dimensions = 384,
     int batchSize = 100,
   }) async {
     // Calculate the number of batches
@@ -105,6 +107,7 @@ class DocumentApiService {
           requestEncoder: gzipRequestEncoder,
         ),
         data: {
+          'model': model,
           'input': batch,
         },
       );

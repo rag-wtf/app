@@ -17,6 +17,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 import 'package:ulid/ulid.dart';
+import 'package:env_reader/env_reader.dart';
 
 class DocumentService with ListenableServiceMixin {
   DocumentService() {
@@ -438,11 +439,25 @@ class DocumentService with ListenableServiceMixin {
           (embedding) => embedding.content,
         )
         .toList();
+
     final vectors = await _apiService.index(
       _dio,
+      _settingService.get(embeddingsModelKey).value,
       _settingService.get(embeddingsApiUrlKey).value,
       _settingService.get(embeddingsApiKey).value,
       chunkedTexts,
+      batchSize: _settingService
+          .get(
+            embeddingsApiBatchSizeKey,
+            type: int,
+          )
+          .value as int,
+      dimensions: _settingService
+          .get(
+            embeddingsDimensionsKey,
+            type: int,
+          )
+          .value as int,
     );
 
     await updateEmbeddings(
