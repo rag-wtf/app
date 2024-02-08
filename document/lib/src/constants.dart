@@ -7,3 +7,5 @@ const uploadProgressSemanticsLabel = 'upload progress';
 const processProgressSemanticsLabel = 'process progress';
 const int defaultPageSize = 10;
 const bool defaultAscendingOrder = false;
+const chunkSizeQueryString = 'q_chunk_size';
+const chunkOverlapQueryString = 'q_chunk_overlap';

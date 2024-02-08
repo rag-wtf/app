@@ -306,9 +306,19 @@ class DocumentService with ListenableServiceMixin {
     if (documentItem.item.status == DocumentStatus.pending) {
       _log.d(documentItem.item.id);
       documentItem.item = (await getDocumentById(documentItem.item.id!))!;
+      final chunkSize = _settingService.get(chunkSizeKey, type: int).value;
+      final chunkOverlap =
+          _settingService.get(chunkOverlapKey, type: int).value;
+      final url = StringBuffer()
+        ..write(_settingService.get(splitApiUrlKey).value)
+        ..write('?$chunkSizeQueryString=$chunkSize')
+        ..write('&$chunkOverlapQueryString=$chunkOverlap');
+
+      _log.d('url $url');
+
       await _apiService.split(
         _dio,
-        _settingService.get(splitApiUrlKey).value,
+        url.toString(),
         documentItem,
         _updateDocumentStatus,
         _onProgress,
