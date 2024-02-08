@@ -25,7 +25,7 @@ class RagConsoleView extends StackedView<RagConsoleViewModel> {
 SurrealDB v${viewModel.surrealVersion}.
 Connected to $surrealEndpoint, ns: $surrealNamespace, db: $surrealDatabase.
 ${RagConsoleViewModel.helpMessageHint}
-        ''',
+''',
               executeFunction: viewModel.execute,
             ),
     );

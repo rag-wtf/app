@@ -31,6 +31,7 @@ class RagConsoleViewModel extends BaseViewModel {
       _settingService.get(generationApiUrlKey).value;
   String get _generationApiKeyValue =>
       _settingService.get(generationApiKey).value;
+  String get _generationModel => _settingService.get(generationModelKey).value;
   double get _searchThreshold =>
       _settingService.get(searchThresholdKey, type: double).value as double;
   String get surrealVersion => _surrealVersion;
@@ -152,8 +153,10 @@ Example:
         },
       ),
       data: {
+        'model': _generationModel,
         'messages': messagesMap,
-        if (isLiteLlmProxy) 'api_key': _generationApiKeyValue,
+        if (isLiteLlmProxy && _generationApiKeyValue.isNotEmpty)
+          'api_key': _generationApiKeyValue,
       },
     );
     final responseData = response.data;
