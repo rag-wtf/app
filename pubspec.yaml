@@ -40,6 +40,7 @@ dev_dependencies:
 dependency_overrides:
   js: ^0.7.0
   meta: ^1.11.0
+  web: ^0.5.0
 
 flutter:
   assets:
