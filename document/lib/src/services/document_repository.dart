@@ -121,6 +121,25 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     }
   }
 
+  Future<Document?> updateDocumentStatus(
+    String documentId, 
+    DocumentStatus status, 
+  ) async {
+    final result = await _db.patch(
+        documentId,
+        [
+          {'op': 'replace', 'path': '/status', 'value': status.name},
+        ],
+    );
+    return Document.fromJson(
+      Map<String, dynamic>.from(
+        Document.toMap(
+          result! as Map,
+        ) as Map,
+      ),
+    );
+  }
+
   Future<Document?> deleteDocument(String id) async {
     final result = await _db.delete(id);
 

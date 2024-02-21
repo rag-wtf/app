@@ -279,6 +279,28 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
       // Act & Assert
       expect(await repository.updateDocument(document), isNull);
     });
+
+    test('should update document status', () async {
+      // Arrange
+      const document = Document(
+        compressedFileSize: 100,
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        errorMessage: '',
+        name: 'Test Document',
+        originFileSize: 200,
+        status: DocumentStatus.created,
+      );
+      final created =
+          await repository.createDocument(defaultTablePrefix, document);
+
+      // Act
+      final result = await repository.updateDocumentStatus(created.id!, 
+                      DocumentStatus.completed);
+
+      // Assert
+      expect(result?.status, equals(DocumentStatus.completed));
+    });
   });
 
   group('deleteDocument', () {
