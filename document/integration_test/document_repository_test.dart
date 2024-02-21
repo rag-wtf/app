@@ -294,12 +294,16 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
       final created =
           await repository.createDocument(defaultTablePrefix, document);
 
+      final updateStatus = created.copyWith(
+        status: DocumentStatus.completed,
+      );
+
       // Act
-      final result = await repository.updateDocumentStatus(created.id!, 
-                      DocumentStatus.completed);
+      final result = await repository.updateDocumentStatus(updateStatus);
 
       // Assert
       expect(result?.status, equals(DocumentStatus.completed));
+      expect(result?.updated?.isAfter(result!.created!), isTrue);
     });
   });
 

@@ -122,22 +122,37 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
   }
 
   Future<Document?> updateDocumentStatus(
-    String documentId, 
-    DocumentStatus status, 
-  ) async {
-    final result = await _db.patch(
-        documentId,
-        [
-          {'op': 'replace', 'path': '/status', 'value': status.name},
-        ],
-    );
-    return Document.fromJson(
-      Map<String, dynamic>.from(
-        Document.toMap(
-          result! as Map,
-        ) as Map,
-      ),
-    );
+    Document document, [
+    Transaction? txn,
+  ]) async {
+    final payload = document.copyWith(updated: DateTime.now()).toJson();
+    String sql = '''
+UPDATE ONLY ${payload['id']} PATCH [
+  {
+      "op": "replace",
+      "path": "/status",
+      "value": "${payload['status']}"
+  },
+  {
+      "op": "replace",
+      "path": "/updated",
+      "value": "${payload['updated']}"
+  }  
+]
+''';
+    if (txn == null) {
+      final result = await _db.query(sql);
+      return Document.fromJson(
+        Map<String, dynamic>.from(
+          Document.toMap(
+            result! as Map,
+          ) as Map,
+        ),
+      );
+    } else {
+      txn.query(sql);
+      return null;
+    }
   }
 
   Future<Document?> deleteDocument(String id) async {
