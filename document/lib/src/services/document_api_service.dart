@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -8,6 +9,7 @@ import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:http_parser/http_parser.dart';
+
 
 class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
@@ -33,6 +35,8 @@ class DocumentApiService {
     // ignore: prefer_void_to_null
     Future<Null> Function(DocumentItem documentItem, dynamic error) onError,
   ) async {
+    final bytesLength = documentItem.item.byteData![0].length;
+    _log.d('bytesLength $bytesLength');
     final multipartFile = MultipartFile.fromStream(
       () => Stream.fromIterable(documentItem.item.byteData!),
       documentItem.item.byteData!.length,
@@ -67,9 +71,13 @@ class DocumentApiService {
         onProgress(documentItem, progress);
       },
     ).then((response) async {
-      await onSplitCompleted(documentItem, response.data);
-    }).catchError(
-      (dynamic error) => onError(documentItem, error),
+      await onSplitCompleted(documentItem, response.data).timeout(
+        Duration(milliseconds: max(bytesLength * 3, 5000)),
+      );
+    }).catchError((dynamic error) {
+      onError(documentItem, error);
+    }).timeout(
+        Duration(milliseconds: max(bytesLength * 3, 5000)),
     );
   }
 
@@ -105,6 +113,8 @@ class DocumentApiService {
             if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
           },
           requestEncoder: gzipRequestEncoder,
+          sendTimeout: Duration(seconds: 600),
+          receiveTimeout: Duration(seconds: 600),
         ),
         data: {
           'model': model,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
@@ -112,6 +113,7 @@ class DocumentService with ListenableServiceMixin {
         );
         _items.insert(0, documentItem);
         notifyListeners();
+        _log.d('0. documentItem.hashCode ${documentItem.hashCode}');
         await _split(documentItem);
       }
     }
@@ -333,11 +335,12 @@ class DocumentService with ListenableServiceMixin {
     DocumentStatus status,
   ) async {
     _log.d('item.name ${documentItem.item.name}, status $status');
-    documentItem.item = (await _documentRepository.updateDocument(
+    documentItem.item = (await _documentRepository.updateDocumentStatus(
       documentItem.item.copyWith(
         status: status,
       ),
     ))!;
+    _log.d('done!');
     notifyListeners();
   }
 
@@ -371,14 +374,19 @@ class DocumentService with ListenableServiceMixin {
     Map<String, dynamic>? responseData,
   ) async {
     _log.d('responseData $responseData');
-    final embeddings = await _splitted(documentItem, responseData);
-    await _indexing(documentItem, embeddings);
+    final embeddings = await _splitted(documentItem, responseData).timeout(
+      Duration(seconds: max((responseData?['items'] as List).length, 5)),
+    );
+    await _indexing(documentItem, embeddings).timeout(
+      Duration(seconds: max(embeddings.length, 5)),
+    );
   }
 
   Future<List<Embedding>> _splitted(
     DocumentItem documentItem,
     Map<String, dynamic>? responseData,
   ) async {
+    _log.d('1. documentItem.hashCode ${documentItem.hashCode}');
     final documentItems =
         List<Map<String, dynamic>>.from(responseData?['items'] as List);
     if (documentItems.isEmpty) {
@@ -425,6 +433,7 @@ class DocumentService with ListenableServiceMixin {
       'Length of the document embeddings result should equals to embeddings',
     );
     documentItem.item = document;
+    _log.d('2. documentItem.hashCode ${documentItem.hashCode}');
     notifyListeners();
     return embeddings;
   }
@@ -452,14 +461,26 @@ class DocumentService with ListenableServiceMixin {
         _settingService.get(embeddingsDimensionsKey, type: int).value,
       ),
     );
+    //.timeout(
+    //  Duration(seconds: max(embeddings.length, 5)),
+    //);
 
     await updateEmbeddings(
       documentItem.tablePrefix,
       embeddings,
       vectors,
     );
+    //.timeout(
+    //  Duration(seconds: max(embeddings.length, 5)),
+    //);
 
-    await _updateDocumentStatus(documentItem, DocumentStatus.completed);
+    await _updateDocumentStatus(
+      documentItem, 
+      DocumentStatus.completed,
+    );
+    //.timeout(
+    //  Duration(seconds: max(embeddings.length,5)),
+    //);
   }
 
   // ignore: prefer_void_to_null
