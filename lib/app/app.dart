@@ -26,7 +26,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
     // document package
-    LazySingleton<Dio>(classType: Dio),
+    Factory(classType: Dio),
     LazySingleton<DocumentApiService>(classType: DocumentApiService),
     LazySingleton<GZipEncoder>(classType: GZipEncoder),
     LazySingleton<GZipDecoder>(classType: GZipDecoder),
