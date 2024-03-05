@@ -10,7 +10,6 @@ import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:http_parser/http_parser.dart';
 
-
 class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
 
@@ -72,13 +71,41 @@ class DocumentApiService {
       },
     ).then((response) async {
       await onSplitCompleted(documentItem, response.data).timeout(
-        Duration(milliseconds: max(bytesLength * 3, 5000)),
+        Duration(milliseconds: max(bytesLength * 3, 600 * 1000)),
       );
     }).catchError((dynamic error) {
       onError(documentItem, error);
     }).timeout(
-        Duration(milliseconds: max(bytesLength * 3, 5000)),
+      Duration(milliseconds: max(bytesLength * 3, 600 * 1000)),
     );
+  }
+
+  Future<List<TResult>> executeInBatch<TInput, TResult>(
+    List<TInput> values,
+    int batchSize,
+    Future<List<TResult>> Function(
+      List<TInput> values,
+    ) batchFunction,
+  ) async {
+    final numBatches = (values.length / batchSize).ceil();
+    final items = List<TResult>.empty(growable: true);
+
+    for (var i = 0; i < numBatches; i++) {
+      // Get the start and end indices of the current batch
+      final start = i * batchSize;
+      final end = start + batchSize;
+
+      _log.d('start $start, end $end');
+
+      // Get the current batch of items
+      final batch = values.sublist(
+        start,
+        min(end, values.length),
+      );
+      items.addAll(await batchFunction(batch));
+    }
+
+    return items;
   }
 
   Future<List<List<double>>> index(
@@ -90,41 +117,30 @@ class DocumentApiService {
     int dimensions = 384,
     int batchSize = 100,
   }) async {
-    // Calculate the number of batches
-    final numBatches = (chunkedTexts.length / batchSize).ceil();
-    final embeddings = <List<double>>[];
-
-    for (var i = 0; i < numBatches; i++) {
-      // Get the start and end indices of the current batch
-      final start = i * batchSize;
-      final end = start + batchSize;
-
-      _log.d('start $start, end $end');
-
-      // Get the current batch of texts
-      final batch = chunkedTexts.sublist(start, min(end, chunkedTexts.length));
-
-      // Send the batch and add the future to the list
-      final response = await dio.post<Map<String, dynamic>>(
-        apiUrl,
-        options: Options(
-          headers: {
-            'Content-type': 'application/json',
-            if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
+    final embeddings = await executeInBatch<String, List<double>>(
+      chunkedTexts,
+      batchSize,
+      (values) async {
+        // Send the batch and add the future to the list
+        final response = await dio.post<Map<String, dynamic>>(
+          apiUrl,
+          options: Options(
+            headers: {
+              'Content-type': 'application/json',
+              if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
+            },
+            requestEncoder: gzipRequestEncoder,
+            sendTimeout: const Duration(seconds: 600),
+            receiveTimeout: const Duration(seconds: 600),
+          ),
+          data: {
+            'model': model,
+            'input': values,
           },
-          requestEncoder: gzipRequestEncoder,
-          sendTimeout: Duration(seconds: 600),
-          receiveTimeout: Duration(seconds: 600),
-        ),
-        data: {
-          'model': model,
-          'input': batch,
-        },
-      );
+        );
 
-      final embeddingsDataMap = response.data;
-      embeddings.addAll(
-        List<Map<String, dynamic>>.from(
+        final embeddingsDataMap = response.data;
+        return List<Map<String, dynamic>>.from(
           embeddingsDataMap?['data'] as List,
         )
             .map(
@@ -132,9 +148,9 @@ class DocumentApiService {
                 item['embedding'] as List,
               ),
             )
-            .toList(),
-      );
-    }
+            .toList();
+      },
+    );
 
     _log.d('embeddings.length = ${embeddings.length}');
 

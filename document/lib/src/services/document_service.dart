@@ -375,10 +375,10 @@ class DocumentService with ListenableServiceMixin {
   ) async {
     _log.d('responseData $responseData');
     final embeddings = await _splitted(documentItem, responseData).timeout(
-      Duration(seconds: max((responseData?['items'] as List).length, 5)),
+      Duration(seconds: max((responseData?['items'] as List).length, 600)),
     );
     await _indexing(documentItem, embeddings).timeout(
-      Duration(seconds: max(embeddings.length, 5)),
+      Duration(seconds: max(embeddings.length, 600)),
     );
   }
 
@@ -461,26 +461,17 @@ class DocumentService with ListenableServiceMixin {
         _settingService.get(embeddingsDimensionsKey, type: int).value,
       ),
     );
-    //.timeout(
-    //  Duration(seconds: max(embeddings.length, 5)),
-    //);
 
     await updateEmbeddings(
       documentItem.tablePrefix,
       embeddings,
       vectors,
     );
-    //.timeout(
-    //  Duration(seconds: max(embeddings.length, 5)),
-    //);
 
     await _updateDocumentStatus(
-      documentItem, 
+      documentItem,
       DocumentStatus.completed,
     );
-    //.timeout(
-    //  Duration(seconds: max(embeddings.length,5)),
-    //);
   }
 
   // ignore: prefer_void_to_null
