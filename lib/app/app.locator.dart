@@ -15,6 +15,7 @@ import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
 import 'package:dio/src/dio.dart';
+import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
@@ -51,6 +52,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => DocumentRepository());
   locator.registerLazySingleton(() => EmbeddingRepository());
   locator.registerLazySingleton(() => DocumentEmbeddingRepository());
+  locator.registerLazySingleton(() => BatchService());
   locator.registerLazySingleton(() => ChatRepository());
   locator.registerLazySingleton(() => ChatMessageRepository());
   locator.registerLazySingleton(() => MessageRepository());

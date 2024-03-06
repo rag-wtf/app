@@ -36,6 +36,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DocumentEmbeddingRepository>(
       classType: DocumentEmbeddingRepository,
     ),
+    LazySingleton<BatchService>(classType: BatchService),
 
     // chat package
     LazySingleton<ChatRepository>(classType: ChatRepository),
