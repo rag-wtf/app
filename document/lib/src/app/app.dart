@@ -1,5 +1,6 @@
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
+import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
@@ -33,10 +34,12 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DocumentEmbeddingRepository>(
       classType: DocumentEmbeddingRepository,
     ),
+    LazySingleton<BatchService>(classType: BatchService),
     InitializableSingleton(
       classType: DatabaseService,
       asType: Surreal,
     ),
+
 // @stacked-service
   ],
   logger: StackedLogger(),

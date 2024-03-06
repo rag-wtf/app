@@ -6,13 +6,14 @@ import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
+import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:http_parser/http_parser.dart';
 
 class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
-
+  final _batchService = locator<BatchService>();
   final _log = getLogger('DocumentApiService');
 
   Future<void> split(
@@ -80,34 +81,6 @@ class DocumentApiService {
     );
   }
 
-  Future<List<TResult>> executeInBatch<TInput, TResult>(
-    List<TInput> values,
-    int batchSize,
-    Future<List<TResult>> Function(
-      List<TInput> values,
-    ) batchFunction,
-  ) async {
-    final numBatches = (values.length / batchSize).ceil();
-    final items = List<TResult>.empty(growable: true);
-
-    for (var i = 0; i < numBatches; i++) {
-      // Get the start and end indices of the current batch
-      final start = i * batchSize;
-      final end = start + batchSize;
-
-      _log.d('start $start, end $end');
-
-      // Get the current batch of items
-      final batch = values.sublist(
-        start,
-        min(end, values.length),
-      );
-      items.addAll(await batchFunction(batch));
-    }
-
-    return items;
-  }
-
   Future<List<List<double>>> index(
     Dio dio,
     String model,
@@ -117,7 +90,7 @@ class DocumentApiService {
     int dimensions = 384,
     int batchSize = 100,
   }) async {
-    final embeddings = await executeInBatch<String, List<double>>(
+    final embeddings = await _batchService.execute<String, List<double>>(
       chunkedTexts,
       batchSize,
       (values) async {

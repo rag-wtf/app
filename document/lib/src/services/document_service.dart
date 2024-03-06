@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/constants.dart';
+import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding.dart';
@@ -29,6 +30,7 @@ class DocumentService with ListenableServiceMixin {
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
   final _apiService = locator<DocumentApiService>();
+  final _batchService = locator<BatchService>();
   final _settingService = locator<SettingService>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
@@ -175,7 +177,7 @@ class DocumentService with ListenableServiceMixin {
     }
   }
 
-  Future<Object?> updateEmbeddings(
+  Future<Object?> _updateEmbeddings(
     String tablePrefix,
     List<Embedding> embeddings,
     List<List<double>> vectors, [
@@ -185,33 +187,35 @@ class DocumentService with ListenableServiceMixin {
       embeddings.length == vectors.length,
       'embeddings(${embeddings.length}) != vectors(${vectors.length})',
     );
-    final now = DateTime.now();
-    if (txn == null) {
-      return _db.transaction(
-        (txn) async {
-          for (var i = 0; i < embeddings.length; i++) {
-            await _embeddingRepository.updateEmbedding(
-              embeddings[i].copyWith(
-                embedding: vectors[i],
-                updated: now,
-              ),
-              txn,
-            );
-          }
-        },
+    for (var i = 0; i < embeddings.length; i++) {
+      embeddings[i] = embeddings[i].copyWith(
+        embedding: vectors[i],
       );
-    } else {
-      for (var i = 0; i < embeddings.length; i++) {
-        await _embeddingRepository.updateEmbedding(
-          embeddings[i].copyWith(
-            embedding: vectors[i],
-            updated: now,
-          ),
-          txn,
-        );
-      }
-      return null;
     }
+    final batchResults = await _batchService.execute<Embedding, dynamic>(
+        embeddings, defaultDbBatchSize, (values) async {
+      if (txn == null) {
+        return (await _db.transaction(
+          (txn) async {
+            for (final embedding in values) {
+              await _embeddingRepository.updateEmbedding(
+                embedding,
+                txn,
+              );
+            }
+          },
+        ))! as List;
+      } else {
+        for (final embedding in values) {
+          await _embeddingRepository.updateEmbedding(
+            embedding,
+            txn,
+          );
+        }
+        return List.empty();
+      }
+    });
+    return batchResults;
   }
 
   Future<Document> createDocument(String tablePrefix, Document document) async {
@@ -422,14 +426,22 @@ class DocumentService with ListenableServiceMixin {
       splitted: now,
       updated: now,
     );
-    final txnResults = await updateDocumentAndCreateEmbeddings(
-      documentItem.tablePrefix,
-      document,
+    final batchResults = await _batchService.execute<Embedding, dynamic>(
       embeddings,
+      defaultDbBatchSize,
+      (values) async {
+        final txnResults = await updateDocumentAndCreateEmbeddings(
+          documentItem.tablePrefix,
+          document,
+          values,
+        );
+        final results = txnResults! as List;
+        return results[1] as List;
+      },
     );
-    final results = txnResults! as List;
+
     assert(
-      (results[1] as List).length == embeddings.length,
+      batchResults.length == embeddings.length,
       'Length of the document embeddings result should equals to embeddings',
     );
     documentItem.item = document;
@@ -462,7 +474,7 @@ class DocumentService with ListenableServiceMixin {
       ),
     );
 
-    await updateEmbeddings(
+    await _updateEmbeddings(
       documentItem.tablePrefix,
       embeddings,
       vectors,

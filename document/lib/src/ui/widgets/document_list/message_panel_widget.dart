@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class MessagePanelWidget extends StatelessWidget {
-
   const MessagePanelWidget({required this.message, super.key, this.icon});
   final Icon? icon;
   final String message;

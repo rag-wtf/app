@@ -1,3 +1,4 @@
+import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -14,12 +15,14 @@ final locator = StackedLocator.instance;
     MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
     MockSpec<DocumentApiService>(onMissingStub: OnMissingStub.returnDefault),
 
+    MockSpec<BatchService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
   ],
 )
 void registerServices() {
   getAndRegisterNavigationService();
   getAndRegisterApiService();
+  getAndRegisterBatchService();
 // @stacked-mock-register
 }
 
@@ -37,6 +40,12 @@ MockDocumentApiService getAndRegisterApiService() {
   return service;
 }
 
+MockBatchService getAndRegisterBatchService() {
+  _removeRegistrationIfExists<BatchService>();
+  final service = MockBatchService();
+  locator.registerSingleton<BatchService>(service);
+  return service;
+}
 // @stacked-mock-create
 
 void _removeRegistrationIfExists<T extends Object>() {
