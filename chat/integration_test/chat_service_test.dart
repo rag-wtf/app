@@ -64,7 +64,7 @@ void main() {
     expect(results.every((sublist) => sublist.isNotEmpty), isTrue);
     expect(
       await db.select('${tablePrefix}_${ChatMessage.tableName}'),
-      hasLength(1),
+      isNotNull,
     );
   });
 

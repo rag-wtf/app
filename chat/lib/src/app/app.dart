@@ -32,6 +32,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       classType: DocumentEmbeddingRepository,
     ),
     LazySingleton<DocumentApiService>(classType: DocumentApiService),
+    LazySingleton<BatchService>(classType: BatchService),
 
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),

@@ -485,10 +485,10 @@ packages:
     dependency: "direct overridden"
     description:
       name: js
-      sha256: "4186c61b32f99e60f011f7160e32c89a758ae9b1d0c6d28e2c02ef0382300e2b"
+      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   json_annotation:
     dependency: transitive
     description:
@@ -581,10 +581,10 @@ packages:
     dependency: "direct overridden"
     description:
       name: meta
-      sha256: d584fa6707a52763a52446f02cc621b077888fb63b93bbcb1143a7be5a0c0c04
+      sha256: "7687075e408b093f36e6bbf6c91878cc0d4cd10f409506f7bc996f68220b9136"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.0"
+    version: "1.12.0"
   mime:
     dependency: transitive
     description:
@@ -992,10 +992,10 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_wasm
-      sha256: b4f95ca654d5fc351e78456c90e43b946c84111653b9fd88d6e23607c421ba3a
+      sha256: "3357399b21052cb7f608c47b8186eaf2bd65f4395616c565659f5c8b7a4c21e2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0+4"
+    version: "0.9.0+7"
   term_glyph:
     dependency: transitive
     description:
@@ -1176,10 +1176,10 @@ packages:
     dependency: "direct overridden"
     description:
       name: web
-      sha256: "1d9158c616048c38f712a6646e317a3426da10e884447626167240d45209cbad"
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   web_socket_channel:
     dependency: transitive
     description:

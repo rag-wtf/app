@@ -7,8 +7,8 @@ class DatabaseService extends Surreal implements InitializableDependency {
   Future<void> init() async {
     await connect(surrealEndpoint);
     await use(
-      ns: surrealNamespace,
-      db: surrealDatabase,
+      namespace: surrealNamespace,
+      database: surrealDatabase,
     );
   }
 }
