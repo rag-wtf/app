@@ -2,18 +2,22 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:settings/settings.dart';
 import 'package:stacked_package_template/src/app/app.locator.dart';
+import 'package:stacked_package_template/src/constants.dart';
 import 'package:stacked_package_template/src/services/model.dart';
 import 'package:stacked_package_template/src/services/model_repository.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
   final repository = locator<ModelRepository>();
 
-  setUpAll(() async {});
+  setUpAll(() async {
+    await db.connect(surrealEndpoint);
+    await db.use(namespace: surrealNamespace, database: surrealDatabase);
+    await db.signin({'username': surrealUsername, 'password': surrealPassword});
+  });
 
   tearDown(() async {
     await repository.deleteAllModels(defaultTablePrefix);
@@ -62,7 +66,8 @@ void main() {
       ];
       await db.delete('${defaultTablePrefix}_${Model.tableName}');
       await db.query(
-        'INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}',
+        '''
+INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''',
       );
 
       // Act

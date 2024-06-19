@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:stacked_package_template/src/app/app.locator.dart';
 import 'package:stacked_package_template/src/services/model.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 class ModelRepository {
   final _db = locator<Surreal>();

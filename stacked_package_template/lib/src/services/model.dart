@@ -4,8 +4,8 @@ import 'package:stacked_package_template/src/services/date_time_json_converter.d
 part 'model.freezed.dart';
 part 'model.g.dart';
 
-@freezed
-abstract class Model with _$Model {
+@Freezed(toJson: true)
+sealed class Model with _$Model {
   const factory Model({
     required String name,
     String? id,
@@ -13,8 +13,18 @@ abstract class Model with _$Model {
     @DateTimeJsonConverter() DateTime? updated,
   }) = _Model;
 
-  factory Model.fromJson(Map<String, dynamic> json) => _$ModelFromJson(json);
+  //factory Model.fromJson(Map<String, dynamic> json) => _$ModelFromJson(json);
 
+  factory Model.fromJson(Map<String, dynamic> json) {
+    return Model(
+      id: json['id'].toString(),
+      name: json['name'] as String,
+      created: json['created'] as DateTime,
+      updated: json['updated'] as DateTime,
+    );
+  }
+
+  //static String? _fromJsonId(dynamic id) => id.toString();
   static const tableName = 'models';
 
   static const sqlSchema = '''
