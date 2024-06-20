@@ -1,5 +1,4 @@
 import 'package:chat/chat.dart';
-import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';

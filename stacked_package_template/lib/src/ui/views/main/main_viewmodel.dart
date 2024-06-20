@@ -1,5 +1,4 @@
 import 'package:stacked/stacked.dart';
-import 'package:stacked_package_template/src/app/app.locator.dart';
 import 'package:stacked_package_template/src/app/app.logger.dart';
 
 class MainViewModel extends BaseViewModel {

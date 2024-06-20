@@ -46,7 +46,7 @@ class HorizontalList extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: itemPadding),
                     width: itemWidth,
-                    color: Theme.of(context).colorScheme.background,
+                    color: Theme.of(context).colorScheme.surface,
                     child: ScrollConfiguration(
                       behavior: ScrollConfiguration.of(context).copyWith(
                         scrollbars: false,

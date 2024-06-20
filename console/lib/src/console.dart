@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:flutter/material.dart';
 import 'package:flutter_console_widget/flutter_console.dart';
 
@@ -27,7 +29,6 @@ class _ConsoleState extends State<Console> {
     );
     dynamic result;
     try {
-      // ignore: avoid_dynamic_calls
       result = await function();
       controller.print(
         message: ' ✅',

@@ -15,7 +15,7 @@ class RagConsoleView extends StackedView<RagConsoleViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: viewModel.isBusy
           ? const Center(
               child: CircularProgressIndicator(),

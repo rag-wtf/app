@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/app/app.router.dart';
-import 'package:rag/l10n/l10n.dart';
+import 'package:rag/l10n/arb/app_localizations.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:rag/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:rag/ui/views/home/home_view.dart';
@@ -77,7 +77,7 @@ class App extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          background: Colors.black87,
+          surface: Colors.black87,
           brightness: Brightness.dark,
           secondary: Colors.lightBlue[700],
         ),
@@ -102,7 +102,7 @@ class App extends StatelessWidget {
       lightTheme: ThemeData(
         brightness: Brightness.light,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          background: Colors.white70,
+          surface: Colors.white70,
           brightness: Brightness.light,
           secondary: Colors.blue[700],
         ),

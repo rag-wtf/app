@@ -25,6 +25,7 @@ class ChatViewModel extends ReactiveViewModel {
     String authorId,
     String text,
   ) async {
+    _log.d('addMessage($authorId, $text)');
     await _chatService.addMessage(
       tablePrefix,
       authorId,

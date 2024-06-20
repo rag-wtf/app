@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:document/document.dart';
@@ -35,7 +37,7 @@ void main() {
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple']!!,
+        embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       );
 

@@ -23,7 +23,7 @@ class SettingsExpansionPanel {
       body: body,
       isExpanded: isExpanded,
       canTapOnHeader: true,
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
     );
   }
 }

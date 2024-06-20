@@ -17,8 +17,9 @@ class DocumentItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fileSizeInMB = documentItem.item.originFileSize / megaBytes;
     return Card(
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.surface,
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
       child: Stack(
         children: [
@@ -48,7 +49,7 @@ class DocumentItemWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '${(documentItem.item.originFileSize / megaBytes).toStringAsFixed(2)} MB',
+                            '${fileSizeInMB.toStringAsFixed(2)} MB',
                             style: const TextStyle(
                               color: Colors.grey,
                             ),

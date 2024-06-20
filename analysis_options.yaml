@@ -6,5 +6,10 @@ analyzer:
     - "**/*.freezed.dart"
     - "**/app.*.dart"
     - "**/*.form.dart"
+    - "**/*.mocks.dart"
   errors:
+    cascade_invocations: ignore
+    inference_failure_on_function_invocation: ignore
+    inference_failure_on_function_return_type: ignore
     public_member_api_docs: ignore
+    strict_raw_type: ignore

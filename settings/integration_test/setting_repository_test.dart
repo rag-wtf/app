@@ -66,7 +66,8 @@ void main() {
       ];
       await db.delete('${defaultTablePrefix}_${Setting.tableName}');
       await db.query(
-        'INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}',
+        '''
+INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}''',
       );
 
       // Act

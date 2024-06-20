@@ -6,6 +6,7 @@ analyzer:
     - "**/*.freezed.dart"
     - "**/app.*.dart"
     - "**/*.form.dart"
+    - "**/*.mocks.dart"
 
 linter:
   rules:

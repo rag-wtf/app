@@ -150,7 +150,7 @@ class MessageBar extends StatelessWidget {
                         vertical: 10,
                       ),
                       hintStyle: messageBarHintStyle,
-                      fillColor: Theme.of(context).colorScheme.background,
+                      fillColor: Theme.of(context).colorScheme.surface,
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),

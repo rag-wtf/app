@@ -18,6 +18,7 @@ class ChatListViewModel extends ReactiveViewModel {
   bool get hasReachedMax => _chatService.hasReachedMaxChat;
 
   Future<void> fetchChats() async {
+    _log.d('fetchChats()');
     await _chatService.fetchChats(tablePrefix);
   }
 

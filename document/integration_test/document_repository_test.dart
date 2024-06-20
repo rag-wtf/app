@@ -303,7 +303,7 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
 
       // Assert
       expect(result?.status, equals(DocumentStatus.completed));
-      expect(result?.updated?.isAfter(result!.created!), isTrue);
+      expect(result?.updated?.isAfter(result.created!), isTrue);
     });
   });
 

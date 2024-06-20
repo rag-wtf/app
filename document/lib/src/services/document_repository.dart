@@ -126,7 +126,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     Transaction? txn,
   ]) async {
     final payload = document.copyWith(updated: DateTime.now()).toJson();
-    String sql = '''
+    final sql = '''
 UPDATE ONLY ${payload['id']} PATCH [
   {
       "op": "replace",
