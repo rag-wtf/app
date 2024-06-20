@@ -1,0 +1,40 @@
+name: database
+description: database package.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  json_schema: ^5.1.7
+  logger:
+  responsive_builder: ^0.7.0
+  stacked: ^3.4.0
+  stacked_services: ^1.5.0
+  surrealdb_js: ^1.0.0-beta.8+1
+
+dev_dependencies:
+  build_runner: ^2.4.11
+  flutter_test:
+    sdk: flutter
+  freezed: ^2.5.3
+  integration_test:
+    sdk: flutter
+  json_serializable: ^6.8.0
+  mockito:
+  stacked_generator: ^1.5.2
+  ulid: ^2.0.0
+  very_good_analysis: ^5.1.0
+
+dependency_overrides:
+  meta: ^1.15.0
+
+flutter:
+  uses-material-design: true

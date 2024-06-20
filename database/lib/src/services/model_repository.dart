@@ -1,0 +1,103 @@
+import 'dart:convert';
+
+import 'package:database/src/app/app.locator.dart';
+import 'package:database/src/services/model.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
+
+class ModelRepository {
+  final _db = locator<Surreal>();
+
+  Future<bool> isSchemaCreated(String tablePrefix) async {
+    final results = await _db.query('INFO FOR DB');
+    final result = Map<String, dynamic>.from(results! as Map);
+    final tables = Map<String, dynamic>.from(result['tables'] as Map);
+    return tables.containsKey('${tablePrefix}_${Model.tableName}');
+  }
+
+  Future<void> createSchema(
+    String tablePrefix, [
+    Transaction? txn,
+  ]) async {
+    final sqlSchema = Model.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
+  }
+
+  Future<Model> createModel(
+    String tablePrefix,
+    Model model, [
+    Transaction? txn,
+  ]) async {
+    final payload = model.toJson();
+    final sql = '''
+CREATE ONLY ${tablePrefix}_${Model.tableName} CONTENT ${jsonEncode(payload)};''';
+    if (txn == null) {
+      final result = await _db.query(sql);
+
+      return Model.fromJson(
+        Map<String, dynamic>.from(
+          result! as Map,
+        ),
+      );
+    } else {
+      txn.query(sql);
+      return model;
+    }
+  }
+
+  Future<List<Model>> getAllModels(String tablePrefix) async {
+    final results = (await _db
+        .query('SELECT * FROM ${tablePrefix}_${Model.tableName}'))! as List;
+    return results
+        .map(
+          (result) => Model.fromJson(
+            Map<String, dynamic>.from(
+              result as Map,
+            ),
+          ),
+        )
+        .toList();
+  }
+
+  Future<Model?> getModelById(String id) async {
+    final result = await _db.select(id);
+    return result != null
+        ? Model.fromJson(
+            Map<String, dynamic>.from(
+              result as Map,
+            ),
+          )
+        : null;
+  }
+
+  Future<Model?> updateModel(Model model) async {
+    if (await _db.select(model.id!) == null) return null;
+
+    final payload = model.copyWith(updated: DateTime.now()).toJson();
+    final id = payload.remove('id') as String;
+    final result = await _db.query(
+      'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
+    );
+
+    return Model.fromJson(
+      Map<String, dynamic>.from(
+        result! as Map,
+      ),
+    );
+  }
+
+  Future<Model?> deleteModel(String id) async {
+    final result = await _db.delete(id);
+
+    return result != null
+        ? Model.fromJson(
+            Map<String, dynamic>.from(
+              result as Map,
+            ),
+          )
+        : null;
+  }
+
+  Future<void> deleteAllModels(String tablePrefix) async {
+    await _db.delete('${tablePrefix}_${Model.tableName}');
+  }
+}
