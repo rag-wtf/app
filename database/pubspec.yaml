@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_secure_storage: ^4.2.1
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
   json_schema: ^5.1.7
@@ -27,11 +28,13 @@ dev_dependencies:
   freezed: ^2.5.3
   integration_test:
     sdk: flutter
+  js: ^0.7.1  
   json_serializable: ^6.8.0
   mockito:
   stacked_generator: ^1.5.2
   ulid: ^2.0.0
   very_good_analysis: ^5.1.0
+  
 
 dependency_overrides:
   meta: ^1.15.0
