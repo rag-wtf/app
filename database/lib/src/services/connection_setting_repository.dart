@@ -13,16 +13,16 @@ class ConnectionSettingRepository {
     ConnectionSetting.usernameKey,
     ConnectionSetting.passwordKey,
   ];
-  static const connectionKeyCounterKey = 'connectionKeyCounterKey';
+  static const connectionCounterKey = 'connectionKeyCounterKey';
 
   Future<String> createConnectionKey() async {
     final connectionKeyCounterFromStorage =
-        await _storage.read(key: connectionKeyCounterKey);
+        await _storage.read(key: connectionCounterKey);
     final connectionKeyCounter = connectionKeyCounterFromStorage != null
-        ? (connectionKeyCounterFromStorage as int) + 1
+        ? int.parse(connectionKeyCounterFromStorage) + 1
         : 0;
     await _storage.write(
-      key: connectionKeyCounterKey,
+      key: connectionCounterKey,
       value: connectionKeyCounter.toString(),
     );
 
@@ -142,6 +142,6 @@ class ConnectionSettingRepository {
       }
     }
     await _storage.delete(key: connectionKeysKey);
-    await _storage.delete(key: connectionKeyCounterKey);
+    await _storage.delete(key: connectionCounterKey);
   }
 }

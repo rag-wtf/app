@@ -25,17 +25,17 @@ void main() {
       );
       expect(
         await storage.read(
-          key: ConnectionSettingRepository.connectionKeyCounterKey,
+          key: ConnectionSettingRepository.connectionCounterKey,
         ),
         '0',
       );
       expect(
         await repository.createConnectionKey(),
-        '${ConnectionSetting.connectionKey}1',
+        'connection0,${ConnectionSetting.connectionKey}1',
       );
       expect(
         await storage.read(
-          key: ConnectionSettingRepository.connectionKeyCounterKey,
+          key: ConnectionSettingRepository.connectionCounterKey,
         ),
         '1',
       );
