@@ -13,6 +13,7 @@ abstract class ConnectionSetting with _$ConnectionSetting {
       _$ConnectionSettingFromJson(json);
 
   static const connectionKey = 'connection';
+  static const nameKey = 'name';
   static const protocolKey = 'protocol';
   static const addressPortKey = 'addressPort';
   static const namespaceKey = 'namespace';

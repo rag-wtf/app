@@ -1,11 +1,14 @@
 import 'package:database/src/app/app.locator.dart';
+import 'package:database/src/app/app.logger.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ConnectionSettingRepository {
+  final _log = getLogger('ConnectionSettingRepository');
   final _storage = locator<FlutterSecureStorage>();
   static const connectionKeysKey = 'connectionKeysKey';
   static const _valueKeys = [
+    ConnectionSetting.nameKey,
     ConnectionSetting.protocolKey,
     ConnectionSetting.addressPortKey,
     ConnectionSetting.namespaceKey,
@@ -13,7 +16,7 @@ class ConnectionSettingRepository {
     ConnectionSetting.usernameKey,
     ConnectionSetting.passwordKey,
   ];
-  static const connectionCounterKey = 'connectionKeyCounterKey';
+  static const connectionCounterKey = 'connectionCounterKey';
 
   Future<String> createConnectionKey() async {
     final connectionKeyCounterFromStorage =
@@ -27,11 +30,10 @@ class ConnectionSettingRepository {
     );
 
     final connectionKeys = await _storage.read(key: connectionKeysKey);
-    final connectionKey = connectionKeys != null
-        ? '$connectionKeys,${ConnectionSetting.connectionKey}$connectionKeyCounter'
-        : '${ConnectionSetting.connectionKey}$connectionKeyCounter';
+    final key = '${ConnectionSetting.connectionKey}$connectionKeyCounter';
+    final connectionKey = connectionKeys != null ? '$connectionKeys,$key' : key;
     await _storage.write(key: connectionKeysKey, value: connectionKey);
-    return connectionKey;
+    return key;
   }
 
   Future<void> deleteConnectionKey(String connectionKey) async {
@@ -49,19 +51,27 @@ class ConnectionSettingRepository {
     return connectionKeys != null ? connectionKeys.split(',') : List.empty();
   }
 
-  Future<List<ConnectionSetting>> getAllConnections() async {
-    final connectionKeys = await getAllConnectionKeys();
-    final connections = <ConnectionSetting>[];
+  Future<bool> isValidConnectionKey(String connectionKey) async {
+    final connectionKeys = await _storage.read(key: connectionKeysKey);
+    return connectionKeys?.contains(connectionKey) ?? false;
+  }
 
+  Future<List<ConnectionSetting>> getAllConnectionNames() async {
+    final connectionKeys = await getAllConnectionKeys();
+    final connectionNames = <ConnectionSetting>[];
+
+    _log.d('connectionKeys $connectionKeys');
     for (final connectionKey in connectionKeys) {
-      connections.add(
+      final key = '${connectionKey}_${ConnectionSetting.nameKey}';
+      _log.d('key $key');
+      connectionNames.add(
         ConnectionSetting(
-          key: connectionKey,
-          value: (await _storage.read(key: connectionKey))!,
+          key: key,
+          value: (await _storage.read(key: key))!,
         ),
       );
     }
-    return connections;
+    return connectionNames;
   }
 
   Future<ConnectionSetting> createConnectionSetting(
@@ -69,7 +79,11 @@ class ConnectionSettingRepository {
     String key,
     String value,
   ) async {
+    if (!await isValidConnectionKey(connectionKey)) {
+      throw ArgumentError('Invalid connectionKey: $connectionKey');
+    }
     final compositeKey = '${connectionKey}_$key';
+    _log.d('compositeKey $compositeKey');
     await _storage.write(key: compositeKey, value: value);
     return ConnectionSetting(key: compositeKey, value: value);
   }
@@ -77,6 +91,9 @@ class ConnectionSettingRepository {
   Future<Map<String, String?>> getAllConnectionSettings(
     String connectionKey,
   ) async {
+    if (!await isValidConnectionKey(connectionKey)) {
+      throw ArgumentError('Invalid connectionKey: $connectionKey');
+    }
     final connectionSettings = {
       for (final valueKey in _valueKeys)
         if (await _storage.containsKey(key: '${connectionKey}_$valueKey'))
@@ -90,6 +107,9 @@ class ConnectionSettingRepository {
     String connectionKey,
     String key,
   ) async {
+    if (!await isValidConnectionKey(connectionKey)) {
+      throw ArgumentError('Invalid connectionKey: $connectionKey');
+    }
     final compositeKey = '${connectionKey}_$key';
     if (await _storage.containsKey(key: compositeKey)) {
       return ConnectionSetting(
@@ -106,6 +126,9 @@ class ConnectionSettingRepository {
     String key,
     String value,
   ) async {
+    if (!await isValidConnectionKey(connectionKey)) {
+      throw ArgumentError('Invalid connectionKey: $connectionKey');
+    }
     final compositeKey = '${connectionKey}_$key';
     if (await _storage.containsKey(key: compositeKey)) {
       await _storage.write(key: compositeKey, value: value);
@@ -122,11 +145,17 @@ class ConnectionSettingRepository {
     String connectionKey,
     String key,
   ) async {
+    if (!await isValidConnectionKey(connectionKey)) {
+      throw ArgumentError('Invalid connectionKey: $connectionKey');
+    }
     final compositeKey = '${connectionKey}_$key';
     await _storage.delete(key: compositeKey);
   }
 
   Future<void> deleteConnectionSettings(String connectionKey) async {
+    if (!await isValidConnectionKey(connectionKey)) {
+      throw ArgumentError('Invalid connectionKey: $connectionKey');
+    }
     for (final valueKey in _valueKeys) {
       await _storage.delete(key: '${connectionKey}_$valueKey');
     }
@@ -136,7 +165,6 @@ class ConnectionSettingRepository {
     final connectionKeys = await _storage.read(key: connectionKeysKey);
     final connectionKeyList = connectionKeys!.split(',');
     for (final connectionKey in connectionKeyList) {
-      await _storage.delete(key: connectionKey);
       for (final valueKey in _valueKeys) {
         await _storage.delete(key: '${connectionKey}_$valueKey');
       }

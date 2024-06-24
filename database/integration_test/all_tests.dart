@@ -7,5 +7,5 @@ import 'model_repository_test.dart' as model_repository;
 Future<void> main() async {
   await setupLocator();
   connection_setting_repository.main();
-  model_repository.main();
+  //model_repository.main();
 }

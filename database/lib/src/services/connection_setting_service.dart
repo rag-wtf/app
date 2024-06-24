@@ -6,16 +6,17 @@ import 'package:stacked/stacked.dart';
 
 class ConnectionSettingService with ListenableServiceMixin {
   ConnectionSettingService() {
-    listenToReactiveValues([_connections]);
+    listenToReactiveValues([_connectionNames]);
   }
-  List<ConnectionSetting> _connections = [];
+  List<ConnectionSetting> _connectionNames = [];
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
   void Function()? clearFormValuesFunction;
   final _log = getLogger('ConnectionSettingService');
 
   Future<void> initialise() async {
-    if (_connections.isEmpty) {
-      _connections = await _connectionSettingRepository.getAllConnections();
+    if (_connectionNames.isEmpty) {
+      _connectionNames =
+          await _connectionSettingRepository.getAllConnectionNames();
       _log.d('_connections loaded');
     }
   }
