@@ -16,6 +16,7 @@ import 'package:surrealdb_js/surrealdb_js.dart';
 // @stacked-route
   ],
   dependencies: [
+    LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<ModelRepository>(classType: ModelRepository),
     LazySingleton<Surreal>(classType: Surreal),
