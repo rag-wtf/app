@@ -39,10 +39,14 @@ class ConnectionSettingRepository {
   Future<void> deleteConnectionKey(String connectionKey) async {
     final connectionKeys = await getAllConnectionKeys();
     if (connectionKeys.remove(connectionKey)) {
-      await _storage.write(
-        key: connectionKeysKey,
-        value: connectionKeys.join(','),
-      );
+      if (connectionKeys.isNotEmpty) {
+        await _storage.write(
+          key: connectionKeysKey,
+          value: connectionKeys.join(','),
+        );
+      } else {
+        await _storage.delete(key: connectionKeysKey);
+      }
     }
   }
 
@@ -156,6 +160,7 @@ class ConnectionSettingRepository {
     if (!await isValidConnectionKey(connectionKey)) {
       throw ArgumentError('Invalid connectionKey: $connectionKey');
     }
+    await deleteConnectionKey(connectionKey);
     for (final valueKey in _valueKeys) {
       await _storage.delete(key: '${connectionKey}_$valueKey');
     }
@@ -163,10 +168,12 @@ class ConnectionSettingRepository {
 
   Future<void> deleteAllConnectionSettings() async {
     final connectionKeys = await _storage.read(key: connectionKeysKey);
-    final connectionKeyList = connectionKeys!.split(',');
-    for (final connectionKey in connectionKeyList) {
-      for (final valueKey in _valueKeys) {
-        await _storage.delete(key: '${connectionKey}_$valueKey');
+    final connectionKeyList = connectionKeys?.split(',');
+    if (connectionKeyList != null) {
+      for (final connectionKey in connectionKeyList) {
+        for (final valueKey in _valueKeys) {
+          await _storage.delete(key: '${connectionKey}_$valueKey');
+        }
       }
     }
     await _storage.delete(key: connectionKeysKey);

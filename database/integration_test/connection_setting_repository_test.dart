@@ -41,6 +41,48 @@ void main() {
     });
   });
 
+  group('deleteConnectionKey', () {
+    test('should delete a connectionKey', () async {
+      // Arrange
+      await repository.createConnectionKey();
+      await repository.createConnectionKey();
+      await repository.createConnectionKey();
+      final expected = [
+        '${ConnectionSetting.connectionKey}0',
+        '${ConnectionSetting.connectionKey}2',
+      ];
+
+      // Act & Assert
+      await repository
+          .deleteConnectionKey('${ConnectionSetting.connectionKey}1');
+      expect(await repository.getAllConnectionKeys(), equals(expected));
+
+      await repository
+          .deleteConnectionKey('${ConnectionSetting.connectionKey}0');
+      expect(
+        await repository.getAllConnectionKeys(),
+        equals(['${ConnectionSetting.connectionKey}2']),
+      );
+    });
+
+    test('Value of connectionKeysKey should be null', () async {
+      // Arrange
+      await repository.createConnectionKey();
+
+      // Act
+      await repository
+          .deleteConnectionKey('${ConnectionSetting.connectionKey}0');
+
+      // Assert
+      expect(
+        await storage.read(
+          key: ConnectionSettingRepository.connectionKeysKey,
+        ),
+        isNull,
+      );
+    });
+  });
+
   group('createConnectionSetting', () {
     test('should create connectionSetting', () async {
       // Arrange
@@ -247,7 +289,6 @@ void main() {
   group('deleteConnectionSetting', () {
     test('should delete connection setting', () async {
       // Arrange
-
       final connectionKey = await repository.createConnectionKey();
       const key = ConnectionSetting.nameKey;
       const value = 'name1';
@@ -265,7 +306,6 @@ void main() {
       );
 
       // Assert
-      // Act & Assert
       expect(await repository.getConnectionSetting(connectionKey, key), isNull);
     });
   });
@@ -284,10 +324,15 @@ void main() {
 
       // Act
       await repository.deleteConnectionSettings(connectionKey);
-      final results = await repository.getAllConnectionSettings(connectionKey);
 
       // Assert
-      expect(results, equals({}));
+      expect(
+        () async {
+          // throw an ArgumentError as the connectionKey is deleted
+          await repository.getAllConnectionSettings(connectionKey);
+        },
+        throwsA(isA<ArgumentError>()),
+      );
     });
   });
 }
