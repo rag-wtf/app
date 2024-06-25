@@ -141,7 +141,8 @@ void main() {
   });
 
   Future<Map<String, String>> createConnectionSettings(
-      String connectionKey) async {
+    String connectionKey,
+  ) async {
     const name = 'Connection 1';
     const protocol = 'https';
     const addressPort = 'localhost:8000';

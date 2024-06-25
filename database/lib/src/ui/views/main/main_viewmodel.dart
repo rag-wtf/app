@@ -19,7 +19,7 @@ class MainViewModel extends BaseViewModel {
     _dialogService.showCustomDialog(
       variant: DialogType.connection,
       title: 'Connection',
-      description: 'Create your first database connection.',
+      description: 'Create database connection',
     );
   }
 }
