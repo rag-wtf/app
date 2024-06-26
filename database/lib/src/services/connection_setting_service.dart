@@ -71,6 +71,12 @@ class ConnectionSettingService {
     String username,
     String password,
   ) async {
+    _log
+      ..d('Protocol: $protocol')
+      ..d('Address & Port: $addressPort')
+      ..d('Namespace: $namespace')
+      ..d('Database: $database')
+      ..d('Username: $username');
     try {
       await _db.connect('$protocol://$addressPort');
       await _db.use(

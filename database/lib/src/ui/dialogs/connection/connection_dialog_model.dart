@@ -2,10 +2,10 @@ import 'package:database/src/app/app.locator.dart';
 import 'package:database/src/app/app.logger.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/services/connection_setting_repository.dart';
+import 'package:database/src/services/connection_setting_service.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked.dart';
-import 'package:surrealdb_js/surrealdb_js.dart';
 
 class ConnectionDialogModel extends FormViewModel {
   static const _rpcUri = '/rpc';
@@ -17,8 +17,8 @@ class ConnectionDialogModel extends FormViewModel {
 
   final _log = getLogger('ConnectionDialogModel');
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
+  final _connectionSettingService = locator<ConnectionSettingService>();
   final _storage = locator<FlutterSecureStorage>();
-  final _db = locator<Surreal>();
   String connectionKeySelected = newConnectionKey;
   String protocol = 'ws';
   late List<ConnectionSetting> connectionNames;
@@ -73,45 +73,24 @@ class ConnectionDialogModel extends FormViewModel {
   }
 
   Future<bool> connectAndSave() async {
-    return runErrorFuture(connect(), key: connectErrorKey);
-  }
-
-  Future<bool> connect() async {
-    _log
-      ..d('Name: $nameValue')
-      ..d('Protocol: $protocol')
-      ..d('Address & Port: $addressPortValue')
-      ..d('Namespace: $namespaceValue')
-      ..d('Database: $databaseValue')
-      ..d('Username: $usernameValue');
-
     var addressPort = addressPortValue!;
     if (!addressPort.endsWith(_rpcUri)) {
       addressPort += _rpcUri;
     }
-
-    try {
-      await _db.connect('$protocol://$addressPort');
-      await _db.use(
-        namespace: namespaceValue,
-        database: databaseValue,
-      );
-      await _db.signin(
-        {'username': usernameValue, 'password': passwordValue},
-      );
-      await saveConnectionSettings(protocol, addressPort);
-      return true;
-    } catch (e) {
-      final error = e.toString();
-
-      if (error.startsWith('VersionRetrievalFailure')) {
-        throw Exception('Unable to connect to database!');
-      } else if (error.endsWith('authentication')) {
-        throw Exception('Invalid username or password!');
-      } else {
-        rethrow;
-      }
-    }
+    await runErrorFuture(
+      _connectionSettingService.connect(
+        protocol,
+        addressPort,
+        namespaceValue!,
+        databaseValue!,
+        usernameValue!,
+        passwordValue!,
+      ),
+      key: connectErrorKey,
+      throwException: true,
+    );
+    await saveConnectionSettings(protocol, addressPort);
+    return true;
   }
 
   Future<void> saveConnectionSettings(
