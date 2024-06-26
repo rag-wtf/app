@@ -1,6 +1,7 @@
 import 'package:database/src/app/app.dialogs.dart';
 import 'package:database/src/app/app.locator.dart';
 import 'package:database/src/app/app.logger.dart';
+import 'package:database/src/services/connection_setting_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -10,16 +11,16 @@ class MainViewModel extends BaseViewModel {
 
   final _log = getLogger('MainViewModel');
   final _dialogService = locator<DialogService>();
+  final _connectionSettingService = locator<ConnectionSettingService>();
 
   Future<void> initialise() async {
     _log.d('initialise() tablePrefix: $tablePrefix');
-  }
-
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.connection,
-      title: 'Connection',
-      description: 'Create database connection',
-    );
+    if (!await _connectionSettingService.autoConnect()) {
+      await _dialogService.showCustomDialog(
+        variant: DialogType.connection,
+        title: 'Connection',
+        description: 'Create database connection',
+      );
+    }
   }
 }

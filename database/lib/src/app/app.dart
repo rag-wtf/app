@@ -1,4 +1,5 @@
 import 'package:database/src/services/connection_setting_repository.dart';
+import 'package:database/src/services/connection_setting_service.dart';
 import 'package:database/src/services/model_repository.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.dart';
 import 'package:database/src/ui/views/main/main_view.dart';
@@ -23,6 +24,9 @@ import 'package:surrealdb_js/surrealdb_js.dart';
     LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
     LazySingleton<ConnectionSettingRepository>(
       classType: ConnectionSettingRepository,
+    ),
+    LazySingleton<ConnectionSettingService>(
+      classType: ConnectionSettingService,
     ),
 // @stacked-service
   ],

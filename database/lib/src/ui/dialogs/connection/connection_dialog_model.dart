@@ -40,6 +40,8 @@ class ConnectionDialogModel extends FormViewModel {
     final autoConnectValue = await _storage.read(key: autoConnectKey);
     if (autoConnectValue != null) {
       autoConnect = bool.parse(autoConnectValue);
+    } else {
+      await _storage.write(key: autoConnectKey, value: autoConnect.toString());
     }
   }
 

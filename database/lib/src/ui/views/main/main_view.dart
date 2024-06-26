@@ -16,16 +16,6 @@ class MainView extends StackedView<MainViewModel> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
-        child: MaterialButton(
-          color: Colors.grey,
-          onPressed: viewModel.showDialog,
-          child: const Text(
-            'Show Dialog',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
       ),
     );
   }
