@@ -34,11 +34,8 @@ dev_dependencies:
   ulid: ^2.0.0
   very_good_analysis: ^5.1.0
   
-
 dependency_overrides:
-  js: ^0.7.1
   meta: ^1.15.0
-  
 
 flutter:
   uses-material-design: true
