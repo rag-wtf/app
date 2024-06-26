@@ -12,8 +12,6 @@ abstract class ConnectionSetting with _$ConnectionSetting {
   factory ConnectionSetting.fromJson(Map<String, dynamic> json) =>
       _$ConnectionSettingFromJson(json);
 
-  static const autoConnectKey = 'autoConnect';
-  static const autoConnectionKey = 'autoConnection';
   static const connectionKey = 'connection';
   static const nameKey = 'name';
   static const protocolKey = 'protocol';

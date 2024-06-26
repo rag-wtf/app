@@ -191,6 +191,18 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               controller: passwordController,
               textInputType: TextInputType.none,
             ),
+            verticalSpaceTiny,
+            SwitchListTile(
+              title: Text(
+                'Auto-Connect',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              value: viewModel.autoConnect,
+              onChanged: (value) async {
+                await viewModel.setAutoConnect(value);
+              },
+            ),
             verticalSpaceMedium,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +218,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                         onPressed: viewModel.delete,
                         child: const Text('Delete'),
                       ),
-                    horizontalSpaceSmall,
+                    horizontalSpaceMedium,
                     ElevatedButton(
                       onPressed: () async => completer(
                         DialogResponse(

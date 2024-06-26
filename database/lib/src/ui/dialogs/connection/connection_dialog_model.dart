@@ -3,6 +3,7 @@ import 'package:database/src/app/app.logger.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/services/connection_setting_repository.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
@@ -11,9 +12,12 @@ class ConnectionDialogModel extends FormViewModel {
   static const connectErrorKey = 'connection-dialog-connect';
   static const newConnectionKey = 'new';
   static const newConnectionName = '[New connection]';
+  static const autoConnectKey = 'autoConnect';
+  static const autoConnectionKey = 'autoConnection';
 
   final _log = getLogger('ConnectionDialogModel');
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
+  final _storage = locator<FlutterSecureStorage>();
   final _db = locator<Surreal>();
   String connectionKeySelected = newConnectionKey;
   String protocol = 'ws';
@@ -33,6 +37,10 @@ class ConnectionDialogModel extends FormViewModel {
         value: newConnectionName,
       ),
     );
+    final autoConnectValue = await _storage.read(key: autoConnectKey);
+    if (autoConnectValue != null) {
+      autoConnect = bool.parse(autoConnectValue);
+    }
   }
 
   Future<void> onConnectionSelected(String connectionKey) async {
@@ -146,6 +154,9 @@ class ConnectionDialogModel extends FormViewModel {
       ConnectionSetting.passwordKey,
       passwordValue!,
     );
+    if (autoConnect) {
+      await _storage.write(key: autoConnectionKey, value: connectionKey);
+    }
   }
 
   Future<void> delete() async {
@@ -160,5 +171,12 @@ class ConnectionDialogModel extends FormViewModel {
 
       clearForm();
     }
+  }
+
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> setAutoConnect(bool value) async {
+    autoConnect = value;
+    await _storage.write(key: autoConnectKey, value: value.toString());
+    notifyListeners();
   }
 }
