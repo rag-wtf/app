@@ -1,6 +1,7 @@
 /// database package
 library database;
 
-export 'src/services/model.dart';
-export 'src/services/model_repository.dart';
-export 'src/ui/views/main/main_view.dart';
+export 'src/services/connection_setting.dart';
+export 'src/services/connection_setting_repository.dart';
+export 'src/services/connection_setting_service.dart';
+export 'src/ui/dialogs/connection/connection_dialog.dart';
