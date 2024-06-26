@@ -37,6 +37,8 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
     ConnectionDialogModel viewModel,
     Widget? child,
   ) {
+    final showClearTextButton = viewModel.connectionKeySelected !=
+        ConnectionDialogModel.newConnectionKey;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Colors.white,
@@ -98,8 +100,15 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               // REF: https://gist.github.com/slightfoot/f0b753606c97d8a2c06659803c12d858
               suffixIcon: PopupMenuButton<String>(
                 icon: const Icon(Icons.arrow_drop_down),
-                onSelected: (String value) {
-                  nameController.text = value;
+                onSelected: (String connectionNameKey) async {
+                  final connectionKey = connectionNameKey ==
+                          ConnectionDialogModel.newConnectionKey
+                      ? connectionNameKey
+                      : connectionNameKey.substring(
+                          0,
+                          connectionNameKey.indexOf('_'),
+                        );
+                  await viewModel.onConnectionSelected(connectionKey);
                 },
                 itemBuilder: (BuildContext context) {
                   return viewModel.connectionNames
@@ -147,11 +156,12 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     },
                   ),
                 ),
-                const SizedBox(width: 8),
+                horizontalSpaceTiny,
                 Expanded(
                   child: InputField(
                     hintText: 'address:port',
                     controller: addressPortController,
+                    showClearTextButton: showClearTextButton,
                   ),
                 ),
               ],
@@ -160,16 +170,19 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
             InputField(
               labelText: 'Namespace',
               controller: namespaceController,
+              showClearTextButton: showClearTextButton,
             ),
             verticalSpaceTiny,
             InputField(
               labelText: 'Database',
               controller: databaseController,
+              showClearTextButton: showClearTextButton,
             ),
             verticalSpaceTiny,
             InputField(
               labelText: 'Username',
               controller: usernameController,
+              showClearTextButton: showClearTextButton,
             ),
             verticalSpaceTiny,
             InputField(

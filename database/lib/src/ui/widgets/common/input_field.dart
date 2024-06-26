@@ -13,6 +13,7 @@ class InputField extends StatelessWidget {
     this.textInputType,
     this.prefixIcon,
     this.suffixIcon,
+    this.showClearTextButton = true,
   });
   final TextEditingController controller;
   final String? labelText;
@@ -22,6 +23,7 @@ class InputField extends StatelessWidget {
   final TextInputType? textInputType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final bool showClearTextButton;
 
   static const double kdDesktopMaxContentWidth = 1150;
 
@@ -69,7 +71,8 @@ class InputField extends StatelessWidget {
                       ),
                       suffixIcon: suffixIcon ??
                           (Focus.of(context).hasFocus &&
-                                  controller.text.isNotEmpty
+                                  controller.text.isNotEmpty &&
+                                  showClearTextButton
                               ? IconButton(
                                   icon: const Icon(Icons.cancel),
                                   onPressed: controller.clear,

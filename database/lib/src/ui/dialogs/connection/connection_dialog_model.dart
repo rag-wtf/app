@@ -9,23 +9,61 @@ import 'package:surrealdb_js/surrealdb_js.dart';
 class ConnectionDialogModel extends FormViewModel {
   static const _rpcUri = '/rpc';
   static const connectErrorKey = 'connection-dialog-connect';
+  static const newConnectionKey = 'new';
+  static const newConnectionName = '[New connection]';
 
   final _log = getLogger('ConnectionDialogModel');
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
   final _db = locator<Surreal>();
+  String connectionKeySelected = newConnectionKey;
   String protocol = 'ws';
   late List<ConnectionSetting> connectionNames;
   bool autoConnect = true;
 
   Future<void> initialise() async {
     _log.d('initialise()');
+    clearForm();
+    connectionKeySelected = newConnectionKey;
     connectionNames =
         await _connectionSettingRepository.getAllConnectionNames();
+    connectionNames.insert(
+      0,
+      const ConnectionSetting(
+        key: newConnectionKey,
+        value: newConnectionName,
+      ),
+    );
+  }
+
+  Future<void> onConnectionSelected(String connectionKey) async {
+    _log.d('connectionKey $connectionKey');
+    connectionKeySelected = connectionKey;
+    if (connectionKey == newConnectionKey) {
+      clearForm();
+    } else {
+      final connectionSettings = await _connectionSettingRepository
+          .getAllConnectionSettings(connectionKey);
+      if (connectionSettings.isNotEmpty) {
+        nameValue =
+            connectionSettings['${connectionKey}_${ConnectionSetting.nameKey}'];
+        protocol = connectionSettings[
+            '${connectionKey}_${ConnectionSetting.protocolKey}']!;
+        addressPortValue = connectionSettings[
+            '${connectionKey}_${ConnectionSetting.addressPortKey}'];
+        namespaceValue = connectionSettings[
+            '${connectionKey}_${ConnectionSetting.namespaceKey}'];
+        databaseValue = connectionSettings[
+            '${connectionKey}_${ConnectionSetting.databaseKey}'];
+        usernameValue = connectionSettings[
+            '${connectionKey}_${ConnectionSetting.usernameKey}'];
+        passwordValue = connectionSettings[
+            '${connectionKey}_${ConnectionSetting.passwordKey}'];
+      }
+    }
   }
 
   Future<bool> connectAndSave() async {
-    return runErrorFuture(connect(),
-        key: connectErrorKey, throwException: true);
+    return runErrorFuture(connect(), key: connectErrorKey);
   }
 
   Future<bool> connect() async {
@@ -51,7 +89,7 @@ class ConnectionDialogModel extends FormViewModel {
       await _db.signin(
         {'username': usernameValue, 'password': passwordValue},
       );
-      await createConnectionSettings(protocol, addressPort);
+      await saveConnectionSettings(protocol, addressPort);
       return true;
     } catch (e) {
       final error = e.toString();
@@ -66,13 +104,13 @@ class ConnectionDialogModel extends FormViewModel {
     }
   }
 
-  Future<void> createConnectionSettings(
+  Future<void> saveConnectionSettings(
     String protocol,
     String addressPort,
   ) async {
-    final connectionKey =
-        await _connectionSettingRepository.createConnectionKey();
-    // Act
+    final connectionKey = connectionKeySelected == newConnectionKey
+        ? await _connectionSettingRepository.createConnectionKey()
+        : connectionKeySelected;
     await _connectionSettingRepository.createConnectionSetting(
       connectionKey,
       ConnectionSetting.nameKey,
