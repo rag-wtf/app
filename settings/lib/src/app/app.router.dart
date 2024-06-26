@@ -5,12 +5,13 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:flutter/foundation.dart' as _i5;
 import 'package:flutter/material.dart' as _i4;
 import 'package:flutter/material.dart';
 import 'package:settings/src/ui/views/settings/settings_view.dart' as _i3;
 import 'package:settings/src/ui/views/startup/startup_view.dart' as _i2;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i5;
+import 'package:stacked_services/stacked_services.dart' as _i6;
 
 class Routes {
   static const startupView = '/startup-view';
@@ -67,7 +68,7 @@ class SettingsViewArguments {
     this.tablePrefix = 'main',
   });
 
-  final _i4.Key? key;
+  final _i5.Key? key;
 
   final String tablePrefix;
 
@@ -88,7 +89,7 @@ class SettingsViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i5.NavigationService {
+extension NavigatorStateExtension on _i6.NavigationService {
   Future<dynamic> navigateToStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -104,7 +105,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
   }
 
   Future<dynamic> navigateToSettingsView({
-    _i4.Key? key,
+    _i5.Key? key,
     String tablePrefix = 'main',
     int? routerId,
     bool preventDuplicates = true,
@@ -135,7 +136,7 @@ extension NavigatorStateExtension on _i5.NavigationService {
   }
 
   Future<dynamic> replaceWithSettingsView({
-    _i4.Key? key,
+    _i5.Key? key,
     String tablePrefix = 'main',
     int? routerId,
     bool preventDuplicates = true,

@@ -35,9 +35,11 @@ const instructionPlaceholder = '{instruction}';
 const litellm = 'litellm';
 
 const defaultTablePrefix = 'main';
-const surrealEndpoint = 'indxdb://rag';
-const surrealNamespace = 'rag';
-const surrealDatabase = 'rag';
+const surrealEndpoint = 'http://127.0.0.1:8000/rpc';
+const surrealNamespace = 'surreal';
+const surrealDatabase = 'surreal';
+const surrealUsername = 'root';
+const surrealPassword = 'root';
 
 const appTitle = 'RAG.WTF';
 const appTablePrefix = '__app';

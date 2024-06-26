@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/services/setting.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 class SettingRepository {
   final _db = locator<Surreal>();

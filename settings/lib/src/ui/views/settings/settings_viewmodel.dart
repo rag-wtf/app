@@ -1,22 +1,29 @@
+import 'package:database/database.dart';
+import 'package:settings/src/app/app.dialogs.dart';
 import 'package:settings/src/app/app.locator.dart';
+import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   SettingsViewModel(this.tablePrefix);
   final String tablePrefix;
+  final _log = getLogger('SettingsViewModel');
   final _isPanelExpanded = List.filled(4, true);
   final _settingService = locator<SettingService>();
+  final _dialogService = locator<DialogService>();
+  final _connectionSettingService = locator<ConnectionSettingService>();
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_settingService];
 
   bool isPanelExpanded(int index) => _isPanelExpanded[index];
 
-  bool get stream =>
-      bool.parse(_settingService.get(streamKey, type: bool).value);
+  bool get stream => false;
+  //bool.parse(_settingService.get(streamKey, type: bool).value);
 
   void setPanelExpanded(int index, {required bool isExpanded}) {
     _isPanelExpanded[index] = isExpanded;
@@ -25,123 +32,133 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   }
 
   Future<void> initialise() async {
-    setBusy(true);
-    await _settingService.initialise(tablePrefix);
-    _settingService.clearFormValuesFunction = clearFormValues;
-    final splitApiUrl = _settingService.get(splitApiUrlKey);
-    if (splitApiUrl.id != null) {
-      splitApiUrlValue = splitApiUrl.value;
-    }
+    _log.d('initialise() tablePrefix: $tablePrefix');
+    if (!await _connectionSettingService.autoConnect()) {
+      await _dialogService.showCustomDialog(
+        variant: DialogType.connection,
+        title: 'Connection',
+        description: 'Create database connection',
+      );
 
-    final chunkSize = _settingService.get(chunkSizeKey, type: int);
-    if (chunkSize.id != null) {
-      chunkSizeValue = chunkSize.value;
-    }
+      setBusy(true);
 
-    final chunkOverlap = _settingService.get(chunkOverlapKey, type: int);
-    if (chunkOverlap.id != null) {
-      chunkOverlapValue = chunkOverlap.value;
-    }
+      await _settingService.initialise(tablePrefix);
+      _settingService.clearFormValuesFunction = clearFormValues;
+      final splitApiUrl = _settingService.get(splitApiUrlKey);
+      if (splitApiUrl.id != null) {
+        splitApiUrlValue = splitApiUrl.value;
+      }
 
-    final embeddingsModel = _settingService.get(embeddingsModelKey);
-    if (embeddingsModel.id != null) {
-      embeddingsModelValue = embeddingsModel.value;
-    }
+      final chunkSize = _settingService.get(chunkSizeKey, type: int);
+      if (chunkSize.id != null) {
+        chunkSizeValue = chunkSize.value;
+      }
 
-    final embeddingsApiUrl = _settingService.get(embeddingsApiUrlKey);
-    if (embeddingsApiUrl.id != null) {
-      embeddingsApiUrlValue = embeddingsApiUrl.value;
-    }
+      final chunkOverlap = _settingService.get(chunkOverlapKey, type: int);
+      if (chunkOverlap.id != null) {
+        chunkOverlapValue = chunkOverlap.value;
+      }
 
-    final embeddingsApiKeyVal = _settingService.get(embeddingsApiKey);
-    if (embeddingsApiKeyVal.id != null) {
-      embeddingsApiKeyValue = embeddingsApiKeyVal.value;
-    }
+      final embeddingsModel = _settingService.get(embeddingsModelKey);
+      if (embeddingsModel.id != null) {
+        embeddingsModelValue = embeddingsModel.value;
+      }
 
-    final embeddingsDimensions =
-        _settingService.get(embeddingsDimensionsKey, type: int);
-    if (embeddingsDimensions.id != null) {
-      embeddingsDimensionsValue = embeddingsDimensions.value;
-    }
+      final embeddingsApiUrl = _settingService.get(embeddingsApiUrlKey);
+      if (embeddingsApiUrl.id != null) {
+        embeddingsApiUrlValue = embeddingsApiUrl.value;
+      }
 
-    final embeddingsApiBatchSize =
-        _settingService.get(embeddingsApiBatchSizeKey, type: int);
-    if (embeddingsApiBatchSize.id != null) {
-      embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
-    }
+      final embeddingsApiKeyVal = _settingService.get(embeddingsApiKey);
+      if (embeddingsApiKeyVal.id != null) {
+        embeddingsApiKeyValue = embeddingsApiKeyVal.value;
+      }
 
-    final searchType = _settingService.get(searchTypeKey);
-    if (searchType.id != null) {
-      searchTypeValue = searchType.value;
-    }
+      final embeddingsDimensions =
+          _settingService.get(embeddingsDimensionsKey, type: int);
+      if (embeddingsDimensions.id != null) {
+        embeddingsDimensionsValue = embeddingsDimensions.value;
+      }
 
-    final searchIndex = _settingService.get(searchIndexKey);
-    if (searchIndex.id != null) {
-      searchIndexValue = searchIndex.value;
-    }
+      final embeddingsApiBatchSize =
+          _settingService.get(embeddingsApiBatchSizeKey, type: int);
+      if (embeddingsApiBatchSize.id != null) {
+        embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
+      }
 
-    final searchThreshold = _settingService.get(searchThresholdKey);
-    if (searchThreshold.id != null) {
-      searchThresholdValue = searchThreshold.value;
-    }
+      final searchType = _settingService.get(searchTypeKey);
+      if (searchType.id != null) {
+        searchTypeValue = searchType.value;
+      }
 
-    final retrieveTopNResults =
-        _settingService.get(retrieveTopNResultsKey, type: int);
-    if (retrieveTopNResults.id != null) {
-      retrieveTopNResultsValue = retrieveTopNResults.value;
-    }
+      final searchIndex = _settingService.get(searchIndexKey);
+      if (searchIndex.id != null) {
+        searchIndexValue = searchIndex.value;
+      }
 
-    final generationModel = _settingService.get(generationModelKey);
-    if (generationModel.id != null) {
-      generationModelValue = generationModel.value;
-    }
+      final searchThreshold = _settingService.get(searchThresholdKey);
+      if (searchThreshold.id != null) {
+        searchThresholdValue = searchThreshold.value;
+      }
 
-    final generationApiUrl = _settingService.get(generationApiUrlKey);
-    if (generationApiUrl.id != null) {
-      generationApiUrlValue = generationApiUrl.value;
-    }
+      final retrieveTopNResults =
+          _settingService.get(retrieveTopNResultsKey, type: int);
+      if (retrieveTopNResults.id != null) {
+        retrieveTopNResultsValue = retrieveTopNResults.value;
+      }
 
-    final generationApiKeyVal = _settingService.get(generationApiKey);
-    if (generationApiKeyVal.id != null) {
-      generationApiKeyValue = generationApiKeyVal.value;
-    }
+      final generationModel = _settingService.get(generationModelKey);
+      if (generationModel.id != null) {
+        generationModelValue = generationModel.value;
+      }
 
-    final promptTemplate = _settingService.get(promptTemplateKey);
-    if (promptTemplate.id != null) {
-      promptTemplateValue = promptTemplate.value;
-    }
+      final generationApiUrl = _settingService.get(generationApiUrlKey);
+      if (generationApiUrl.id != null) {
+        generationApiUrlValue = generationApiUrl.value;
+      }
 
-    final temperature = _settingService.get(temperatureKey, type: double);
-    if (temperature.id != null) {
-      temperatureValue = temperature.value;
-    }
+      final generationApiKeyVal = _settingService.get(generationApiKey);
+      if (generationApiKeyVal.id != null) {
+        generationApiKeyValue = generationApiKeyVal.value;
+      }
 
-    final topP = _settingService.get(topPKey, type: double);
-    if (topP.id != null) {
-      topPValue = topP.value;
-    }
+      final promptTemplate = _settingService.get(promptTemplateKey);
+      if (promptTemplate.id != null) {
+        promptTemplateValue = promptTemplate.value;
+      }
 
-    final repetitionPenalty =
-        _settingService.get(repetitionPenaltyKey, type: double);
-    if (repetitionPenalty.id != null) {
-      repetitionPenaltyValue = repetitionPenalty.value;
-    }
+      final temperature = _settingService.get(temperatureKey, type: double);
+      if (temperature.id != null) {
+        temperatureValue = temperature.value;
+      }
 
-    final topK = _settingService.get(topKKey, type: int);
-    if (topK.id != null) {
-      topKValue = topK.value;
-    }
+      final topP = _settingService.get(topPKey, type: double);
+      if (topP.id != null) {
+        topPValue = topP.value;
+      }
 
-    final maxTokens = _settingService.get(maxTokensKey, type: int);
-    if (maxTokens.id != null) {
-      maxTokensValue = maxTokens.value;
-    }
+      final repetitionPenalty =
+          _settingService.get(repetitionPenaltyKey, type: double);
+      if (repetitionPenalty.id != null) {
+        repetitionPenaltyValue = repetitionPenalty.value;
+      }
 
-    final stop = _settingService.get(stopKey);
-    if (stop.id != null) {
-      stopValue = stop.value;
+      final topK = _settingService.get(topKKey, type: int);
+      if (topK.id != null) {
+        topKValue = topK.value;
+      }
+
+      final maxTokens = _settingService.get(maxTokensKey, type: int);
+      if (maxTokens.id != null) {
+        maxTokensValue = maxTokens.value;
+      }
+
+      final stop = _settingService.get(stopKey);
+      if (stop.id != null) {
+        stopValue = stop.value;
+      }
+      setBusy(false);
     }
-    setBusy(false);
   }
 
   void clearFormValues() {

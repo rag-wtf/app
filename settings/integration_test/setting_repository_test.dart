@@ -6,14 +6,18 @@ import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
   final repository = locator<SettingRepository>();
 
-  setUpAll(() async {});
+  setUpAll(() async {
+    await db.connect(surrealEndpoint);
+    await db.use(namespace: surrealNamespace, database: surrealDatabase);
+    await db.signin({'username': surrealUsername, 'password': surrealPassword});
+  });
 
   tearDown(() async {
     await repository.deleteAllSettings(defaultTablePrefix);

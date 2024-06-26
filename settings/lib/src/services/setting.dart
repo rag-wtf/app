@@ -3,8 +3,8 @@ import 'package:settings/src/services/date_time_json_converter.dart';
 part 'setting.freezed.dart';
 part 'setting.g.dart';
 
-@freezed
-abstract class Setting with _$Setting {
+@Freezed(toJson: true)
+sealed class Setting with _$Setting {
   const factory Setting({
     required String key,
     required String value,
@@ -13,8 +13,15 @@ abstract class Setting with _$Setting {
     @DateTimeJsonConverter() DateTime? updated,
   }) = _Setting;
 
-  factory Setting.fromJson(Map<String, dynamic> json) =>
-      _$SettingFromJson(json);
+  factory Setting.fromJson(Map<String, dynamic> json) {
+    return Setting(
+      id: json['id'].toString(),
+      key: json['key'] as String,
+      value: json['value'] as String,
+      created: json['created'] as DateTime,
+      updated: json['updated'] as DateTime,
+    );
+  }
 
   static const tableName = 'settings';
 

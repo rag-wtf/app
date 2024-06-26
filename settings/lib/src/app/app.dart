@@ -1,12 +1,13 @@
+import 'package:database/database.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:settings/src/services/app_setting_service.dart';
-import 'package:settings/src/services/database_service.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.dart';
 import 'package:settings/src/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 // @stacked-import
 
 @StackedApp(
@@ -16,15 +17,25 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 // @stacked-route
   ],
   dependencies: [
+    LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<AppSettingService>(classType: AppSettingService),
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
-    InitializableSingleton(
-      classType: DatabaseService,
-      asType: Surreal,
+
+    LazySingleton<Surreal>(classType: Surreal),
+    LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
+    LazySingleton<ConnectionSettingRepository>(
+      classType: ConnectionSettingRepository,
+    ),
+    LazySingleton<ConnectionSettingService>(
+      classType: ConnectionSettingService,
     ),
 // @stacked-service
+  ],
+  dialogs: [
+    StackedDialog(classType: ConnectionDialog),
+    // @stacked-dialog
   ],
   logger: StackedLogger(),
 )
