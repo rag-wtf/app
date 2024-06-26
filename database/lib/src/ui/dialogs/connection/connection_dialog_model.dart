@@ -147,4 +147,18 @@ class ConnectionDialogModel extends FormViewModel {
       passwordValue!,
     );
   }
+
+  Future<void> delete() async {
+    if (connectionKeySelected != newConnectionKey) {
+      await _connectionSettingRepository
+          .deleteConnectionSettings(connectionKeySelected);
+      connectionNames.removeWhere(
+        (connectionSetting) =>
+            connectionSetting.key.startsWith(connectionKeySelected),
+      );
+      connectionKeySelected = newConnectionKey;
+
+      clearForm();
+    }
+  }
 }

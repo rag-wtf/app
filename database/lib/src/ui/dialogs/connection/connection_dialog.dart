@@ -39,6 +39,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
   ) {
     final showClearTextButton = viewModel.connectionKeySelected !=
         ConnectionDialogModel.newConnectionKey;
+    final showDeleteButton = showClearTextButton;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Colors.white,
@@ -198,11 +199,22 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   onPressed: () => completer(DialogResponse()),
                   child: const Text('Close'),
                 ),
-                ElevatedButton(
-                  onPressed: () async => completer(
-                    DialogResponse(confirmed: await viewModel.connectAndSave()),
-                  ),
-                  child: const Text('Connect'),
+                Row(
+                  children: [
+                    if (showDeleteButton)
+                      ElevatedButton(
+                        onPressed: viewModel.delete,
+                        child: const Text('Delete'),
+                      ),
+                    horizontalSpaceSmall,
+                    ElevatedButton(
+                      onPressed: () async => completer(
+                        DialogResponse(
+                            confirmed: await viewModel.connectAndSave()),
+                      ),
+                      child: const Text('Connect'),
+                    ),
+                  ],
                 ),
               ],
             ),
