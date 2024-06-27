@@ -4,7 +4,8 @@ import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:settings/settings.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 import 'package:ulid/ulid.dart';
 
 void main() {
@@ -13,6 +14,12 @@ void main() {
   final chatService = locator<ChatService>();
   const tablePrefix = 'chat_service';
 
+  setUpAll(() async {
+    await db.connect(surrealEndpoint);
+    await db.use(namespace: surrealNamespace, database: surrealDatabase);
+    await db.signin({'username': surrealUsername, 'password': surrealPassword});
+  });
+  
   tearDown(() async {
     await db.delete('${tablePrefix}_${Chat.tableName}');
     await db.delete('${tablePrefix}_${Message.tableName}');

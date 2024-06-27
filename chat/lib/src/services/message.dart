@@ -6,8 +6,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'message.freezed.dart';
 part 'message.g.dart';
 
-@freezed
-abstract class Message with _$Message {
+@Freezed(toJson: true)
+sealed class Message with _$Message {
   const factory Message({
     required String authorId,
     required Role role,
@@ -25,8 +25,24 @@ abstract class Message with _$Message {
     List<Embedding>? embeddings,
   }) = _Message;
 
-  factory Message.fromJson(Map<String, dynamic> json) =>
-      _$MessageFromJson(json);
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      id: json['id'].toString(),
+      authorId: json['authorId'].toString(),
+      role: Role.values.byName(json['role'] as String),
+      text: json['text'] as String,
+      type: MessageType.values.byName(json['type'] as String),
+      vote: (json['vote'] as num?)?.toInt(),
+      share: (json['share'] as num?)?.toInt(),
+      pinned: json['pinned'] as bool?,
+      metadata: json['metadata'],
+      status: json['status'] != null
+          ? Status.values.byName(json['status'] as String)
+          : null,
+      created: json['created'] as DateTime,
+      updated: json['updated'] as DateTime,
+    );
+  }
 
   static const tableName = 'messages';
 

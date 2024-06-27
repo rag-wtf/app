@@ -4,8 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'message_embedding.freezed.dart';
 part 'message_embedding.g.dart';
 
-@freezed
-abstract class MessageEmbedding with _$MessageEmbedding {
+@Freezed(toJson: true)
+sealed class MessageEmbedding with _$MessageEmbedding {
   const factory MessageEmbedding({
     required String messageId,
     required String embeddingId,
@@ -14,8 +14,15 @@ abstract class MessageEmbedding with _$MessageEmbedding {
     String? id,
   }) = _MessageEmbedding;
 
-  factory MessageEmbedding.fromJson(Map<String, dynamic> json) =>
-      _$MessageEmbeddingFromJson(json);
+  factory MessageEmbedding.fromJson(Map<String, dynamic> json) {
+    return MessageEmbedding(
+      id: json['id'].toString(),
+      messageId: json['messageId'] as String,
+      embeddingId: json['embeddingId'] as String,
+      searchType: json['searchType'] as String,
+      score: (json['score'] as num).toDouble(),
+    );
+  }
 
   static const tableName = 'message_embeddings';
 

@@ -4,16 +4,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'chat_message.freezed.dart';
 part 'chat_message.g.dart';
 
-@freezed
-abstract class ChatMessage with _$ChatMessage {
+@Freezed(toJson: true)
+sealed class ChatMessage with _$ChatMessage {
   const factory ChatMessage({
     required String chatId,
     required String messageId,
     String? id,
   }) = _ChatMessage;
 
-  factory ChatMessage.fromJson(Map<String, dynamic> json) =>
-      _$ChatMessageFromJson(json);
+  factory ChatMessage.fromJson(Map<String, dynamic> json) {
+    return ChatMessage(
+      id: json['id'].toString(),
+      chatId: json['chatId'] as String,
+      messageId: json['messageId'] as String,
+    );
+  }
 
   static const tableName = 'chat_messages';
 

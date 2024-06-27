@@ -2,7 +2,7 @@ import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_message.dart';
 import 'package:chat/src/services/message.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 class ChatMessageRepository {
   final _db = locator<Surreal>();

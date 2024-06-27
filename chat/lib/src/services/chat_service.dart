@@ -14,7 +14,7 @@ import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 import 'package:ulid/ulid.dart';
 
 class ChatService with ListenableServiceMixin {

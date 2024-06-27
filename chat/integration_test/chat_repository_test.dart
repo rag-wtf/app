@@ -6,14 +6,18 @@ import 'package:chat/src/services/chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
   final repository = locator<ChatRepository>();
 
-  setUpAll(() async {});
+  setUpAll(() async {
+    await db.connect(surrealEndpoint);
+    await db.use(namespace: surrealNamespace, database: surrealDatabase);
+    await db.signin({'username': surrealUsername, 'password': surrealPassword});
+  });
 
   tearDown(() async {
     await repository.deleteAllChats(defaultTablePrefix);

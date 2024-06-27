@@ -4,8 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'chat.freezed.dart';
 part 'chat.g.dart';
 
-@freezed
-abstract class Chat with _$Chat {
+@Freezed(toJson: true)
+sealed class Chat with _$Chat {
   const factory Chat({
     required String name,
     String? id,
@@ -17,7 +17,18 @@ abstract class Chat with _$Chat {
     @DateTimeJsonConverter() DateTime? updated,
   }) = _Chat;
 
-  factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);
+  factory Chat.fromJson(Map<String, dynamic> json) {
+    return Chat(
+      id: json['id'].toString(),
+      name: json['name'] as String,
+      vote: (json['vote'] as num?)?.toInt(),
+      share: (json['share'] as num?)?.toInt(),
+      pinned: json['pinned'] as bool?,
+      metadata: json['metadata'],
+      created: json['created'] as DateTime,
+      updated: json['updated'] as DateTime,
+    );
+  }
 
   static const tableName = 'chats';
 
