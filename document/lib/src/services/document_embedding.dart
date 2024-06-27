@@ -4,16 +4,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'document_embedding.freezed.dart';
 part 'document_embedding.g.dart';
 
-@freezed
-abstract class DocumentEmbedding with _$DocumentEmbedding {
+@Freezed(toJson: true)
+sealed class DocumentEmbedding with _$DocumentEmbedding {
   const factory DocumentEmbedding({
     required String documentId,
     required String embeddingId,
     String? id,
   }) = _DocumentEmbedding;
 
-  factory DocumentEmbedding.fromJson(Map<String, dynamic> json) =>
-      _$DocumentEmbeddingFromJson(json);
+  factory DocumentEmbedding.fromJson(Map<String, dynamic> json) {
+    return DocumentEmbedding(
+      id: json['id'].toString(),
+      documentId: json['documentId'] as String,
+      embeddingId: json['embeddingId'] as String,
+    );
+  }
 
   static const tableName = 'document_embeddings';
 

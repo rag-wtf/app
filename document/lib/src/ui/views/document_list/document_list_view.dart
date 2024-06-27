@@ -15,8 +15,13 @@ import 'package:mime_type/mime_type.dart';
 import 'package:stacked/stacked.dart';
 
 class DocumentListView extends StackedView<DocumentListViewModel> {
-  const DocumentListView({super.key, this.tablePrefix = 'main'});
+  const DocumentListView({
+    super.key,
+    this.tablePrefix = 'main',
+    this.hasConnectDatabase = false,
+  });
   final String tablePrefix;
+  final bool hasConnectDatabase;
 
   @override
   Widget builder(
@@ -66,7 +71,10 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   DocumentListViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      DocumentListViewModel(tablePrefix);
+      DocumentListViewModel(
+        tablePrefix,
+        hasConnectDatabase: hasConnectDatabase,
+      );
 
   @override
   Future<void> onViewModelReady(DocumentListViewModel viewModel) async {

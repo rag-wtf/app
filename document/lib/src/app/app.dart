@@ -1,4 +1,5 @@
 import 'package:archive/archive.dart';
+import 'package:database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document_api_service.dart';
@@ -8,10 +9,11 @@ import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/embedding_repository.dart';
 import 'package:document/src/ui/views/document_list/document_list_view.dart';
 import 'package:document/src/ui/views/startup/startup_view.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 // @stacked-import
 
 @StackedApp(
@@ -22,6 +24,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   ],
   dependencies: [
     Factory(classType: Dio),
+    LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<DocumentApiService>(classType: DocumentApiService),
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
@@ -35,12 +38,20 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       classType: DocumentEmbeddingRepository,
     ),
     LazySingleton<BatchService>(classType: BatchService),
-    InitializableSingleton(
-      classType: DatabaseService,
-      asType: Surreal,
-    ),
 
+    LazySingleton<Surreal>(classType: Surreal),
+    LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
+    LazySingleton<ConnectionSettingRepository>(
+      classType: ConnectionSettingRepository,
+    ),
+    LazySingleton<ConnectionSettingService>(
+      classType: ConnectionSettingService,
+    ),
 // @stacked-service
+  ],
+  dialogs: [
+    StackedDialog(classType: ConnectionDialog),
+    // @stacked-dialog
   ],
   logger: StackedLogger(),
 )

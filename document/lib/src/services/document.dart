@@ -6,8 +6,8 @@ import 'package:json_schema/json_schema.dart';
 part 'document.freezed.dart';
 part 'document.g.dart';
 
-@freezed
-abstract class Document with _$Document {
+@Freezed(toJson: true)
+sealed class Document with _$Document {
   const factory Document({
     required int compressedFileSize,
     required String fileMimeType, // could be gzip file
@@ -31,8 +31,26 @@ abstract class Document with _$Document {
     @DateTimeJsonConverter() DateTime? updated,
   }) = _Document;
 
-  factory Document.fromJson(Map<String, dynamic> json) =>
-      _$DocumentFromJson(json);
+  factory Document.fromJson(Map<String, dynamic> json) {
+    return Document(
+      id: json['id'].toString(),
+      compressedFileSize: json['compressedFileSize'] as int,
+      fileMimeType: json['fileMimeType'] as String,
+      name: json['name'] as String,
+      originFileSize: json['originFileSize'] as int,
+      status: DocumentStatus.values.byName(json['status'] as String),
+      content: json['content'] as String?,
+      contentMimeType: json['contentMimeType'] as String?,
+      file: json['file'] as String?,
+      metadata: json['metadata'],
+      errorMessage: json['errorMessage'] as String?,
+      splitted: json['splitted'] as DateTime?,
+      indexed: json['indexed'] as DateTime?,
+      done: json['done'] as DateTime?,
+      created: json['created'] as DateTime,
+      updated: json['updated'] as DateTime,
+    );
+  }
 
   static const tableName = 'documents';
 

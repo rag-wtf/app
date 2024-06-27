@@ -6,8 +6,8 @@ import 'package:json_schema/json_schema.dart';
 part 'embedding.freezed.dart';
 part 'embedding.g.dart';
 
-@freezed
-abstract class Embedding with _$Embedding {
+@Freezed(toJson: true)
+sealed class Embedding with _$Embedding {
   const factory Embedding({
     required String content,
     required List<double> embedding,
@@ -20,8 +20,19 @@ abstract class Embedding with _$Embedding {
     @DateTimeJsonConverter() DateTime? updated,
   }) = _Embedding;
 
-  factory Embedding.fromJson(Map<String, dynamic> json) =>
-      _$EmbeddingFromJson(json);
+  factory Embedding.fromJson(Map<String, dynamic> json) {
+    return Embedding(
+      id: json['id'].toString(),
+      content: json['content'] as String,
+      embedding: (json['embedding'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(),
+      score: (json['score'] as num?)?.toDouble(),
+      metadata: json['metadata'],
+      created: json['created'] as DateTime,
+      updated: json['updated'] as DateTime,
+    );
+  }
 
   static const tableName = 'embeddings';
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/services/embedding.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 class EmbeddingRepository {
   final _db = locator<Surreal>();

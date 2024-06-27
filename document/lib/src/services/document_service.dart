@@ -17,7 +17,7 @@ import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 import 'package:ulid/ulid.dart';
 
 class DocumentService with ListenableServiceMixin {
