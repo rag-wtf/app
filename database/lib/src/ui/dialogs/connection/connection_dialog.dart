@@ -245,4 +245,10 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
     await viewModel.initialise();
     syncFormWithViewModel(viewModel);
   }
+
+  @override
+  void onDispose(ConnectionDialogModel viewModel) {
+    super.onDispose(viewModel);
+    disposeForm();
+  }
 }

@@ -46,8 +46,13 @@ import 'package:stacked/stacked_annotations.dart';
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
-  const SettingsView({super.key, this.tablePrefix = 'main'});
+  const SettingsView({
+    super.key,
+    this.tablePrefix = 'main',
+    this.hasConnectDatabase = false,
+  });
   final String tablePrefix;
+  final bool hasConnectDatabase;
 
   @override
   Widget builder(
@@ -296,7 +301,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   SettingsViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      SettingsViewModel(tablePrefix);
+      SettingsViewModel(tablePrefix, hasConnectDatabase: hasConnectDatabase);
 
   @override
   Future<void> onViewModelReady(SettingsViewModel viewModel) async {

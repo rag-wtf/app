@@ -20,7 +20,10 @@ class SettingsExpansionPanel {
           ),
         );
       },
-      body: body,
+      body: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        child: body,
+      ),
       isExpanded: isExpanded,
       canTapOnHeader: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
