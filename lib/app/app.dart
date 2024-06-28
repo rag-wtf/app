@@ -1,8 +1,10 @@
 import 'package:archive/archive.dart';
 import 'package:chat/chat.dart';
+import 'package:database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/arb/app_localizations.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
@@ -13,7 +15,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 @StackedApp(
   routes: [
@@ -53,9 +55,15 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     // settings package
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
-    InitializableSingleton(
-      classType: DatabaseService,
-      asType: Surreal,
+
+    // database package
+    LazySingleton<Surreal>(classType: Surreal),
+    LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
+    LazySingleton<ConnectionSettingRepository>(
+      classType: ConnectionSettingRepository,
+    ),
+    LazySingleton<ConnectionSettingService>(
+      classType: ConnectionSettingService,
     ),
 // @stacked-service
   ],
@@ -65,6 +73,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
+    StackedDialog(classType: ConnectionDialog),
     // @stacked-dialog
   ],
 )

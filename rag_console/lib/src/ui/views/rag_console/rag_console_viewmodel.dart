@@ -11,7 +11,7 @@ import 'package:rag_console/src/app/app.logger.dart';
 
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
-import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 class RagConsoleViewModel extends BaseViewModel {
   RagConsoleViewModel(this.tablePrefix);

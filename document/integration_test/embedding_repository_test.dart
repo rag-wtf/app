@@ -21,7 +21,7 @@ void main() {
     await db.use(namespace: surrealNamespace, database: surrealDatabase);
     await db.signin({'username': surrealUsername, 'password': surrealPassword});
   });
-  
+
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert

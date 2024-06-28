@@ -196,6 +196,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: "55d7b444feb71301ef6b8838dbc1ae02e63dd48c8773f3810ff53bb1e2945b32"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
   crypto:
     dependency: transitive
     description:
@@ -220,6 +228,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  database:
+    dependency: "direct main"
+    description:
+      path: database
+      relative: true
+    source: path
+    version: "0.1.0+1"
   dio:
     dependency: "direct main"
     description:
@@ -279,10 +294,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: "1bbf65dd997458a08b531042ec3794112a6c39c07c37ff22113d2e7e4f81d4e4"
+      sha256: "2ca051989f69d1b2ca012b2cf3ccf78c70d40144f0861ff2c063493f7c8c3d45"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.1"
+    version: "8.0.5"
   fixnum:
     dependency: transitive
     description:
@@ -324,6 +339,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.20"
+  flutter_secure_storage:
+    dependency: "direct main"
+    description:
+      name: flutter_secure_storage
+      sha256: "165164745e6afb5c0e3e3fcc72a012fb9e58496fb26ffb92cf22e16a821e85d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.2.2"
+  flutter_secure_storage_linux:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_linux
+      sha256: "4d91bfc23047422cbcd73ac684bc169859ee766482517c22172c86596bf1464b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
+  flutter_secure_storage_macos:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_macos
+      sha256: "1693ab11121a5f925bbea0be725abfcfbbcf36c1e29e571f84a0c0f436147a81"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
+  flutter_secure_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_platform_interface
+      sha256: cf91ad32ce5adef6fba4d736a542baca9daf3beac4db2d04be350b87f69ac4a8
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
+  flutter_secure_storage_web:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_web
+      sha256: f4ebff989b4f07b2656fb16b47852c0aab9fed9b4ec1c70103368337bc1886a9
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
+  flutter_secure_storage_windows:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_windows
+      sha256: b20b07cb5ed4ed74fc567b78a72936203f587eba460af1df11281c9326cd3709
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   flutter_statusbarcolor_ns:
     dependency: transitive
     description:
@@ -358,14 +421,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-  gap:
-    dependency: transitive
-    description:
-      name: gap
-      sha256: f19387d4e32f849394758b91377f9153a1b41d79513ef7668c088c77dbc6955d
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
   get:
     dependency: transitive
     description:
@@ -506,10 +561,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: "7ad7215c15420a102ec687bb320a7312afd449bac63bfb1c60d9787c27b9767f"
+      sha256: af05cc8714f356fd1f3888fb6741cbe9fbe25cdb6eedbab80e1a6db21047d4a4
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "2.3.0"
   logging:
     dependency: transitive
     description:
@@ -893,18 +948,18 @@ packages:
     dependency: "direct main"
     description:
       name: stacked
-      sha256: "32641025f7bedf3acddd068008932c5f4d89bd089f1b091f61c9fe466c66229e"
+      sha256: ed19ecdc2dcc682b9be9c7e34646e603c0f770437a914b15c7d2d13391c92a09
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.2"
+    version: "3.4.3"
   stacked_generator:
     dependency: "direct dev"
     description:
       name: stacked_generator
-      sha256: ed9fcada06d97def2fe2d9d1df620da17a7c01a6b319fe115e035c2ac1a9f2c8
+      sha256: "80540ee9a51143f5b2b9703fed6d416bb9a63943646654535956b7569989464f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0"
+    version: "2.0.0-pre.1"
   stacked_services:
     dependency: "direct main"
     description:
@@ -917,10 +972,10 @@ packages:
     dependency: transitive
     description:
       name: stacked_shared
-      sha256: e6bc2921eb59b7c741c551fbb4060f22a543ea9c2d9351315fb58aa055b535f3
+      sha256: "26e11dcfe23df81d565d0180eb5bcf4742efed066ba3328623b458f21a82b346"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.1"
   stacked_themes:
     dependency: "direct main"
     description:
@@ -953,14 +1008,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  surrealdb_wasm:
+  surrealdb_js:
     dependency: "direct main"
     description:
-      name: surrealdb_wasm
-      sha256: "3357399b21052cb7f608c47b8186eaf2bd65f4395616c565659f5c8b7a4c21e2"
+      name: surrealdb_js
+      sha256: e6f62ad0f3976f7fb6a0af9865dece229fa0f2fbabdc153f5a863453b93e2606
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.0+7"
+    version: "1.0.0-beta.8+1"
   term_glyph:
     dependency: transitive
     description:
@@ -1093,10 +1148,10 @@ packages:
     dependency: "direct dev"
     description:
       name: very_good_analysis
-      sha256: "9ae7f3a3bd5764fb021b335ca28a34f040cd0ab6eec00a1b213b445dae58a4b8"
+      sha256: "1fb637c0022034b1f19ea2acb42a3603cbd8314a470646a59a2fb01f5f3a8629"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "6.0.0"
   very_good_infinite_list:
     dependency: transitive
     description:
@@ -1130,7 +1185,7 @@ packages:
     source: hosted
     version: "1.1.0"
   web:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: web
       sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"

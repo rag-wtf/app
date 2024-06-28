@@ -1,4 +1,5 @@
 import 'package:chat/chat.dart';
+import 'package:database/database.dart';
 import 'package:document/document.dart';
 import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
@@ -12,6 +13,7 @@ class HomeViewModel extends BaseViewModel {
   HomeViewModel({this.tablePrefix = defaultTablePrefix});
   final String tablePrefix;
 
+  final _connectionSettingService = locator<ConnectionSettingService>();
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _settingService = locator<SettingService>();
@@ -58,10 +60,28 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> initialise() async {
+    setBusy(true);
+    await connectDatabase();
     await _settingService.initialise(tablePrefix);
     await _documentService.initialise(tablePrefix);
     await _chatService.initialise(tablePrefix);
     _totalChats = await _chatRepository.getTotal(tablePrefix);
+    setBusy(false);
+  }
+
+  Future<void> connectDatabase() async {
+    var confirmed = false;
+    if (!await _connectionSettingService.autoConnect()) {
+      while (!confirmed) {
+        final response = await _dialogService.showCustomDialog(
+          variant: DialogType.connection,
+          title: 'Connection',
+          description: 'Create database connection',
+        );
+
+        confirmed = response?.confirmed ?? false;
+      }
+    }
   }
 
   Future<void> deleteAllData() async {

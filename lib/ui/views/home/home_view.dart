@@ -77,14 +77,18 @@ class _HomeViewState extends State<HomeView>
                     ),
                 ],
               ),
-              body: SafeArea(
-                child: BodyWidget(
-                  viewModel,
-                  constraints.maxWidth,
-                  closeDrawer,
-                  _leftWidgetTabController,
-                ),
-              ),
+              body: viewModel.isBusy
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SafeArea(
+                      child: BodyWidget(
+                        viewModel,
+                        constraints.maxWidth,
+                        closeDrawer,
+                        _leftWidgetTabController,
+                      ),
+                    ),
               drawer: constraints.maxWidth < mediumScreenWidth
                   ? Drawer(
                       child: LeftWidget(

@@ -14,6 +14,8 @@ import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
+import 'package:database/src/services/connection_setting_repository.dart';
+import 'package:database/src/services/connection_setting_service.dart';
 import 'package:dio/src/dio.dart';
 import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document_api_service.dart';
@@ -21,14 +23,14 @@ import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/embedding_repository.dart';
-import 'package:settings/src/services/database_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:stacked_services/src/bottom_sheet/bottom_sheet_service.dart';
 import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
-import 'package:surrealdb_wasm/src/surrealdb_wasm.dart';
+import 'package:surrealdb_js/src/surrealdb_js.dart';
 
 final locator = StackedLocator.instance;
 
@@ -61,7 +63,8 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => ChatApiService());
   locator.registerLazySingleton(() => SettingService());
   locator.registerLazySingleton(() => SettingRepository());
-  final databaseService = DatabaseService();
-  await databaseService.init();
-  locator.registerSingleton<Surreal>(databaseService);
+  locator.registerLazySingleton(() => Surreal());
+  locator.registerLazySingleton(() => FlutterSecureStorage());
+  locator.registerLazySingleton(() => ConnectionSettingRepository());
+  locator.registerLazySingleton(() => ConnectionSettingService());
 }

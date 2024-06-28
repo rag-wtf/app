@@ -98,4 +98,12 @@ class ConnectionSettingService {
       }
     }
   }
+
+  Future<bool> isReady() async {
+    try {
+      return (await _db.version()).isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
 }

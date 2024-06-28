@@ -19,7 +19,7 @@ void main() {
     await db.use(namespace: surrealNamespace, database: surrealDatabase);
     await db.signin({'username': surrealUsername, 'password': surrealPassword});
   });
-  
+
   tearDown(() async {
     await db.delete('${tablePrefix}_${Chat.tableName}');
     await db.delete('${tablePrefix}_${Message.tableName}');

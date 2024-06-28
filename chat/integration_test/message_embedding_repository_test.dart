@@ -23,7 +23,7 @@ void main() {
     await db.use(namespace: surrealNamespace, database: surrealDatabase);
     await db.signin({'username': surrealUsername, 'password': surrealPassword});
   });
-  
+
   tearDown(() async {
     await messageRepository.deleteAllMessages(tablePrefix);
     await embeddingRepository.deleteAllEmbeddings(tablePrefix);
