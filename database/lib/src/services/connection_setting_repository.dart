@@ -102,7 +102,7 @@ class ConnectionSettingRepository {
       for (final valueKey in _valueKeys)
         if (await _storage.containsKey(key: '${connectionKey}_$valueKey'))
           '${connectionKey}_$valueKey':
-              await _storage.read(key: '${connectionKey}_$valueKey')
+              await _storage.read(key: '${connectionKey}_$valueKey'),
     };
     return connectionSettings;
   }

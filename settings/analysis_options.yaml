@@ -7,4 +7,5 @@ analyzer:
     - "**/app.*.dart"
     - "**/*.form.dart"
   errors:
+    inference_failure_on_function_invocation: ignore
     public_member_api_docs: ignore

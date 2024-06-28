@@ -222,7 +222,8 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     ElevatedButton(
                       onPressed: () async => completer(
                         DialogResponse(
-                            confirmed: await viewModel.connectAndSave()),
+                          confirmed: await viewModel.connectAndSave(),
+                        ),
                       ),
                       child: const Text('Connect'),
                     ),
