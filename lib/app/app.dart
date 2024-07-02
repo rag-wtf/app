@@ -82,40 +82,73 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lightTheme = ThemeData(
+      brightness: Brightness.light,
+      primarySwatch: Colors.blue,
+      scaffoldBackgroundColor: Colors.white,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(
+          color: Colors.black87,
+          fontSize: 16,
+        ),
+        bodyMedium: TextStyle(
+          color: Colors.black54,
+          fontSize: 14,
+        ),
+      ),
+      tabBarTheme: const TabBarTheme(
+        labelColor: Colors.blue,
+        unselectedLabelColor: Colors.black54,
+        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+      ),
+    );
+
+    final darkTheme = ThemeData(
+      brightness: Brightness.dark,
+      primarySwatch: Colors.blue,
+      scaffoldBackgroundColor: Colors.grey[900],
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey[900],
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+        bodyMedium: TextStyle(
+          color: Colors.white70,
+          fontSize: 14,
+        ),
+      ),
+      tabBarTheme: const TabBarTheme(
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white70,
+        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+      ),
+    );
+
     return ThemeBuilder(
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          surface: Colors.black87,
-          brightness: Brightness.dark,
-          secondary: Colors.lightBlue[700],
-        ),
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(color: Colors.white),
-          displayMedium: TextStyle(color: Colors.white),
-          displaySmall: TextStyle(color: Colors.white),
-          headlineLarge: TextStyle(color: Colors.white),
-          headlineMedium: TextStyle(color: Colors.white),
-          headlineSmall: TextStyle(color: Colors.white),
-          titleLarge: TextStyle(color: Colors.white),
-          titleMedium: TextStyle(color: Colors.white),
-          titleSmall: TextStyle(color: Colors.white),
-          bodyLarge: TextStyle(color: Colors.white),
-          bodyMedium: TextStyle(color: Colors.white),
-          bodySmall: TextStyle(color: Colors.white),
-          labelLarge: TextStyle(color: Colors.white),
-          labelMedium: TextStyle(color: Colors.white),
-          labelSmall: TextStyle(color: Colors.white),
-        ),
-      ),
-      lightTheme: ThemeData(
-        brightness: Brightness.light,
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          surface: Colors.white70,
-          brightness: Brightness.light,
-          secondary: Colors.blue[700],
-        ),
-      ),
+      darkTheme: darkTheme,
+      lightTheme: lightTheme,
       statusBarColorBuilder: (theme) => theme?.colorScheme.secondary,
       navigationBarColorBuilder: (theme) => theme?.colorScheme.secondary,
       builder: (context, regularTheme, darkTheme, themeMode) => MaterialApp(

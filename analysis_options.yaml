@@ -7,6 +7,7 @@ analyzer:
     - "**/app.*.dart"
     - "**/*.form.dart"
     - "**/*.mocks.dart"
+    - "**/app_localizations*.dart"
   errors:
     cascade_invocations: ignore
     inference_failure_on_function_invocation: ignore

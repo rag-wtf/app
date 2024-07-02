@@ -93,7 +93,7 @@ class InputField extends StatelessWidget {
               child: Text(
                 errorText!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.error,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
