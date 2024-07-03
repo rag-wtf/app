@@ -110,6 +110,8 @@ class DocumentApiService {
             'model': model,
             'input': values,
           },
+        ).timeout(
+          const Duration(seconds: 600),
         );
 
         final embeddingsDataMap = response.data;
