@@ -75,7 +75,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'API URL',
                           prefixIcon: Icon(
-                            Icons.https_outlined,
+                            Icons.http_outlined,
                             color: iconColor,
                           ),
                           hintText: 'https://www.example.com/split',
@@ -116,7 +116,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'Model',
                           prefixIcon: Icon(
-                            Icons.model_training_outlined,
+                            Icons.api_outlined,
                             color: iconColor,
                           ),
                           hintText: 'text-embedding-3-large',
@@ -127,7 +127,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'API URL',
                           prefixIcon: Icon(
-                            Icons.https_outlined,
+                            Icons.http_outlined,
                             color: iconColor,
                           ),
                           hintText: 'https://api.openai.com/v1/embeddings',
@@ -139,7 +139,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'API Key',
                           prefixIcon: Icon(
-                            Icons.key_outlined,
+                            Icons.lock_outlined,
                             color: iconColor,
                           ),
                           hintText: '*' * 32,
@@ -193,7 +193,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'Search Threshold',
                           prefixIcon: Icon(
-                            Icons.check_box_outlined,
+                            Icons.manage_search_outlined,
                             color: iconColor,
                           ),
                           hintText: '0.5 to 0.9',
@@ -224,7 +224,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'Model',
                           prefixIcon: Icon(
-                            Icons.model_training_outlined,
+                            Icons.api_outlined,
                             color: iconColor,
                           ),
                           hintText: 'gpt-3.5-turbo',
@@ -235,7 +235,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'API URL',
                           prefixIcon: Icon(
-                            Icons.https_outlined,
+                            Icons.http_outlined,
                             color: iconColor,
                           ),
                           hintText:
@@ -248,7 +248,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         InputField(
                           labelText: 'API Key',
                           prefixIcon: Icon(
-                            Icons.key_outlined,
+                            Icons.lock_outlined,
                             color: iconColor,
                           ),
                           hintText: '*' * 32,
@@ -349,8 +349,11 @@ class SettingsValidators {
     final uri = Uri.tryParse(value);
     if (uri == null) {
       return 'Enter a valid URL';
-    } else if (!uri.isScheme('HTTPS')) {
-      return 'The API URL must start with https.';
+    } else {
+      final uriString = uri.toString().toLowerCase();
+      if (!(uriString.startsWith('http') || uriString.startsWith('https'))) {
+        return 'The API URL must start with http or https.';
+      }
     }
 
     return null;
