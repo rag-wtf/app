@@ -1,7 +1,6 @@
 import 'package:console/console.dart';
 import 'package:flutter/material.dart';
 import 'package:rag_console/src/ui/views/rag_console/rag_console_viewmodel.dart';
-import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
 class RagConsoleView extends StackedView<RagConsoleViewModel> {
@@ -21,8 +20,9 @@ class RagConsoleView extends StackedView<RagConsoleViewModel> {
             )
           : Console(
               content: '''
-SurrealDB v${viewModel.surrealVersion}.
-Connected to $surrealEndpoint, ns: $surrealNamespace, db: $surrealDatabase.
+Connected to ${viewModel.surrealEndpoint}, ns: ${viewModel.surrealNamespace}, db: ${viewModel.surrealDatabase}
+${viewModel.surrealVersion}.
+
 ${RagConsoleViewModel.helpMessageHint}
 ''',
               executeFunction: viewModel.execute,

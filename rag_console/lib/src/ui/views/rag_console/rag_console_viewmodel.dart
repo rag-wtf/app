@@ -4,8 +4,10 @@ import 'package:archive/archive.dart';
 import 'package:chat/chat.dart';
 // ignore: implementation_imports
 import 'package:chat/src/services/chat_api_message.dart' as chat_api;
+import 'package:database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rag_console/src/app/app.locator.dart';
 import 'package:rag_console/src/app/app.logger.dart';
 
@@ -23,8 +25,13 @@ class RagConsoleViewModel extends BaseViewModel {
   final _messages = <chat_api.ChatApiMessage>[];
   final _documentService = locator<DocumentService>();
   final _chatService = locator<ChatService>();
+  final _storage = locator<FlutterSecureStorage>();
+  final _connectionSettingRepository = locator<ConnectionSettingRepository>();
   final _log = getLogger('RagConsoleViewModel');
   late String _surrealVersion;
+  late String surrealEndpoint;
+  late String surrealNamespace;
+  late String surrealDatabase;
   String get _embeddingsApiUrl =>
       _settingService.get(embeddingsApiUrlKey).value;
   String get _generationApiUrl =>
@@ -101,6 +108,21 @@ Example:
     await _chatService.initialise(tablePrefix);
     _initMessages();
     _surrealVersion = await _db.version();
+    final lastConnectionKey =
+        await _storage.read(key: ConnectionSetting.lastConnectionKey);
+    if (lastConnectionKey != null) {
+      final connectionSettings = await _connectionSettingRepository
+          .getAllConnectionSettings(lastConnectionKey);
+      final protocol = connectionSettings[
+          '${lastConnectionKey}_${ConnectionSetting.protocolKey}']!;
+      final addressPort = connectionSettings[
+          '${lastConnectionKey}_${ConnectionSetting.addressPortKey}']!;
+      surrealEndpoint = '$protocol://$addressPort';
+      surrealNamespace = connectionSettings[
+          '${lastConnectionKey}_${ConnectionSetting.namespaceKey}']!;
+      surrealDatabase = connectionSettings[
+          '${lastConnectionKey}_${ConnectionSetting.databaseKey}']!;
+    }
     setBusy(false);
   }
 

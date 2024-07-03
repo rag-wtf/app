@@ -20,7 +20,7 @@ dependencies:
     path: ../document
   flutter:
     sdk: flutter
-
+  flutter_secure_storage: ^9.2.2
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
   json_schema: ^5.1.7

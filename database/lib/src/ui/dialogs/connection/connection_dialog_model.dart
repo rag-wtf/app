@@ -12,8 +12,6 @@ class ConnectionDialogModel extends FormViewModel {
   static const connectErrorKey = 'connection-dialog-connect';
   static const newConnectionKey = 'new';
   static const newConnectionName = '[New connection]';
-  static const autoConnectKey = 'autoConnect';
-  static const autoConnectionKey = 'autoConnection';
 
   final _log = getLogger('ConnectionDialogModel');
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
@@ -37,11 +35,15 @@ class ConnectionDialogModel extends FormViewModel {
         value: newConnectionName,
       ),
     );
-    final autoConnectValue = await _storage.read(key: autoConnectKey);
+    final autoConnectValue =
+        await _storage.read(key: ConnectionSetting.autoConnectKey);
     if (autoConnectValue != null) {
       autoConnect = bool.parse(autoConnectValue);
     } else {
-      await _storage.write(key: autoConnectKey, value: autoConnect.toString());
+      await _storage.write(
+        key: ConnectionSetting.autoConnectKey,
+        value: autoConnect.toString(),
+      );
     }
   }
 
@@ -135,9 +137,11 @@ class ConnectionDialogModel extends FormViewModel {
       ConnectionSetting.passwordKey,
       passwordValue!,
     );
-    if (autoConnect) {
-      await _storage.write(key: autoConnectionKey, value: connectionKey);
-    }
+
+    await _storage.write(
+      key: ConnectionSetting.lastConnectionKey,
+      value: connectionKey,
+    );
   }
 
   Future<void> delete() async {
@@ -157,7 +161,10 @@ class ConnectionDialogModel extends FormViewModel {
   // ignore: avoid_positional_boolean_parameters
   Future<void> setAutoConnect(bool value) async {
     autoConnect = value;
-    await _storage.write(key: autoConnectKey, value: value.toString());
+    await _storage.write(
+      key: ConnectionSetting.autoConnectKey,
+      value: value.toString(),
+    );
     notifyListeners();
   }
 }
