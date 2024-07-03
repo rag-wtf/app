@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'package:rag/l10n/arb/app_localizations_en.dart';
-import 'package:rag/l10n/arb/app_localizations_es.dart';
+import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 
 /// Callers can lookup localized strings with an instance of AppLocalizations
 /// returned by `AppLocalizations.of(context)`.

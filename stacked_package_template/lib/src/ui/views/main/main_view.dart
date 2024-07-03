@@ -14,7 +14,6 @@ class MainView extends StackedView<MainViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
       ),

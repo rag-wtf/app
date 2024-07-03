@@ -62,7 +62,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   ) {
     final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

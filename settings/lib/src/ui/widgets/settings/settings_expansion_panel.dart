@@ -26,7 +26,6 @@ class SettingsExpansionPanel {
       ),
       isExpanded: isExpanded,
       canTapOnHeader: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
     );
   }
 }

@@ -95,6 +95,7 @@ class App extends StatelessWidget {
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
+        actionsIconTheme: IconThemeData(color: Colors.black),
       ),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(
@@ -127,6 +128,7 @@ class App extends StatelessWidget {
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
+        actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(

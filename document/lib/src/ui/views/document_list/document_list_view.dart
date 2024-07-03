@@ -30,7 +30,6 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
           const MessagePanelWidget(

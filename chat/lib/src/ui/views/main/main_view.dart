@@ -15,7 +15,7 @@ class MainView extends StackedView<MainViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+
       body: Row(
         children: [
           const Flexible(

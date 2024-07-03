@@ -1,8 +1,8 @@
-import 'package:rag/l10n/arb/app_localizations.dart';
+import 'app_localizations.dart';
 
 /// The translations for Spanish Castilian (`es`).
 class AppLocalizationsEs extends AppLocalizations {
-  AppLocalizationsEs([super.locale = 'es']);
+  AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
   String get counterAppBarTitle => 'Contador';

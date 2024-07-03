@@ -19,7 +19,6 @@ class ChatListView extends StackedView<ChatListViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: InfiniteList(
         itemCount: viewModel.chats.length,
         isLoading: viewModel.isBusy,

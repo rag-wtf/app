@@ -1,8 +1,8 @@
-import 'package:rag/l10n/arb/app_localizations.dart';
+import 'app_localizations.dart';
 
 /// The translations for English (`en`).
 class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([super.locale = 'en']);
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
   String get counterAppBarTitle => 'Counter';
