@@ -460,19 +460,23 @@ class DocumentService with ListenableServiceMixin {
         )
         .toList();
 
-    final vectors = await _apiService.index(
-      _dio,
-      _settingService.get(embeddingsModelKey).value,
-      _settingService.get(embeddingsApiUrlKey).value,
-      _settingService.get(embeddingsApiKey).value,
-      chunkedTexts,
-      batchSize: int.parse(
-        _settingService.get(embeddingsApiBatchSizeKey, type: int).value,
-      ),
-      dimensions: int.parse(
-        _settingService.get(embeddingsDimensionsKey, type: int).value,
-      ),
-    );
+    final vectors = await _apiService
+        .index(
+          _dio,
+          _settingService.get(embeddingsModelKey).value,
+          _settingService.get(embeddingsApiUrlKey).value,
+          _settingService.get(embeddingsApiKey).value,
+          chunkedTexts,
+          batchSize: int.parse(
+            _settingService.get(embeddingsApiBatchSizeKey, type: int).value,
+          ),
+          dimensions: int.parse(
+            _settingService.get(embeddingsDimensionsKey, type: int).value,
+          ),
+        )
+        .timeout(
+          Duration(seconds: max(embeddings.length, 600)),
+        );
 
     await _updateEmbeddings(
       documentItem.tablePrefix,
