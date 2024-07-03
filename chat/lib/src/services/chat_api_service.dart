@@ -12,9 +12,27 @@ import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:chat/src/services/sse_transformer.dart';
 import 'package:dio/dio.dart';
 
+enum ApiKeyType { header, body }
+
 class ChatApiService {
   final _gzipEncoder = locator<GZipEncoder>();
   final _log = getLogger('ChatApiService');
+
+  Map<String, String>? getGenerationApiKey(
+    ApiKeyType type,
+    String generationApiUrl,
+    String generationApiKey,
+  ) {
+    if (generationApiKey.isNotEmpty) {
+      if (type == ApiKeyType.header && !generationApiUrl.contains('litellm')) {
+        return {'Authorization': 'Bearer $generationApiKey'};
+      } else if (type == ApiKeyType.body &&
+          generationApiUrl.contains('litellm')) {
+        return {'api_key': generationApiKey};
+      }
+    }
+    return null;
+  }
 
   Future<String> generate(
     Dio dio,
@@ -31,8 +49,11 @@ class ChatApiService {
       options: Options(
         headers: {
           'Content-type': 'application/json',
-          if (generationApiKey.isNotEmpty)
-            'Authorization': 'Bearer $generationApiKey',
+          ...?getGenerationApiKey(
+            ApiKeyType.header,
+            generationApiUrl,
+            generationApiKey,
+          ),
         },
       ),
       data: {
@@ -42,6 +63,11 @@ class ChatApiService {
           chatWindow,
           prompt,
           systemPrompt,
+        ),
+        ...?getGenerationApiKey(
+          ApiKeyType.body,
+          generationApiUrl,
+          generationApiKey,
         ),
       },
     );
@@ -86,8 +112,11 @@ class ChatApiService {
       options: Options(
         headers: {
           'Content-Type': 'application/json',
-          if (generationApiKey.isNotEmpty)
-            'Authorization': 'Bearer $generationApiKey',
+          ...?getGenerationApiKey(
+            ApiKeyType.header,
+            generationApiUrl,
+            generationApiKey,
+          ),
         },
         responseType: ResponseType.stream,
       ),
@@ -100,6 +129,11 @@ class ChatApiService {
           systemPrompt,
         ),
         'stream': true,
+        ...?getGenerationApiKey(
+          ApiKeyType.body,
+          generationApiUrl,
+          generationApiKey,
+        ),
       },
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
@@ -122,9 +156,9 @@ class ChatApiService {
       final dataLine = message.data;
       if (dataLine.isNotEmpty &&
           !dataLine.startsWith(': ping') && // modal_llama-cpp-python
-          dataLine != 'data: [DONE]') {
-        final map = dataLine.replaceAll('data: ', '');
-        final data = Map<String, dynamic>.from(jsonDecode(map) as Map);
+          !dataLine.contains('[DONE]')) {
+        //final map = dataLine.replaceAll('data: ', '');
+        final data = Map<String, dynamic>.from(jsonDecode(dataLine) as Map);
         final choices = List<dynamic>.from(data['choices'] as List);
         final choice = Map<String, dynamic>.from(choices[0] as Map);
         if (choice['finish_reason'] == null) {
