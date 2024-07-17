@@ -22,7 +22,8 @@ dependencies:
   responsive_builder: ^0.7.0
   stacked: ^3.4.3
   stacked_services: ^1.5.0
-  surrealdb_js: ^1.0.0-beta.8+1
+  surrealdb_js: ^1.0.0-beta.14+3
+  surrealdb_wasm: ^1.0.0-beta.14+10
   ulid: ^2.0.0
 
 dev_dependencies:

@@ -8,6 +8,7 @@ import 'package:settings/src/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
+import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 // @stacked-import
 
 @StackedApp(
@@ -23,7 +24,11 @@ import 'package:surrealdb_js/surrealdb_js.dart';
     LazySingleton<SettingService>(classType: SettingService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
 
-    LazySingleton<Surreal>(classType: Surreal),
+    LazySingleton<Surreal>(
+      classType: SurrealWasm,
+      asType: Surreal,
+      resolveUsing: SurrealWasm.getInstance,
+    ),
     LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
     LazySingleton<ConnectionSettingRepository>(
       classType: ConnectionSettingRepository,
