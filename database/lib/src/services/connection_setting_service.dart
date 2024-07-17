@@ -82,9 +82,11 @@ class ConnectionSettingService {
         namespace: namespace,
         database: database,
       );
-      await _db.signin(
-        {'username': username, 'password': password},
-      );
+      if (username.isNotEmpty) {
+        await _db.signin(
+          {'username': username, 'password': password},
+        );
+      }
     } catch (e) {
       final error = e.toString();
 

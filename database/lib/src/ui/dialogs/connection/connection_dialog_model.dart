@@ -18,9 +18,17 @@ class ConnectionDialogModel extends FormViewModel {
   final _connectionSettingService = locator<ConnectionSettingService>();
   final _storage = locator<FlutterSecureStorage>();
   String connectionKeySelected = newConnectionKey;
-  String protocol = 'ws';
+  String _protocol = 'ws';
   late List<ConnectionSetting> connectionNames;
   bool autoConnect = true;
+
+  String get protocol => _protocol;
+
+  // Setter method for protocol
+  set protocol(String value) {
+    _protocol = value;
+    notifyListeners();
+  }
 
   Future<void> initialise() async {
     _log.d('initialise()');
@@ -58,7 +66,7 @@ class ConnectionDialogModel extends FormViewModel {
       if (connectionSettings.isNotEmpty) {
         nameValue =
             connectionSettings['${connectionKey}_${ConnectionSetting.nameKey}'];
-        protocol = connectionSettings[
+        _protocol = connectionSettings[
             '${connectionKey}_${ConnectionSetting.protocolKey}']!;
         addressPortValue = connectionSettings[
             '${connectionKey}_${ConnectionSetting.addressPortKey}'];
@@ -76,12 +84,14 @@ class ConnectionDialogModel extends FormViewModel {
 
   Future<bool> connectAndSave() async {
     var addressPort = addressPortValue!;
-    if (!addressPort.endsWith(_rpcUri)) {
+    if (_protocol != 'mem' &&
+        protocol != 'indxdb' &&
+        !addressPort.endsWith(_rpcUri)) {
       addressPort += _rpcUri;
     }
     await runErrorFuture(
       _connectionSettingService.connect(
-        protocol,
+        _protocol,
         addressPort,
         namespaceValue!,
         databaseValue!,
@@ -91,11 +101,11 @@ class ConnectionDialogModel extends FormViewModel {
       key: connectErrorKey,
       throwException: true,
     );
-    await saveConnectionSettings(protocol, addressPort);
+    await _saveConnectionSettings(_protocol, addressPort);
     return true;
   }
 
-  Future<void> saveConnectionSettings(
+  Future<void> _saveConnectionSettings(
     String protocol,
     String addressPort,
   ) async {

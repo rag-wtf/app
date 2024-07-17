@@ -14,6 +14,7 @@ class InputField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.showClearTextButton = true,
+    this.enabled = true,
   });
   final TextEditingController controller;
   final String? labelText;
@@ -24,6 +25,7 @@ class InputField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool showClearTextButton;
+  final bool enabled;
 
   static const double kdDesktopMaxContentWidth = 1150;
 
@@ -47,6 +49,7 @@ class InputField extends StatelessWidget {
                   );
                 } else {
                   return TextField(
+                    enabled: enabled,
                     controller: controller,
                     decoration: InputDecoration(
                       label: labelText != null

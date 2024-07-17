@@ -129,7 +129,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
             Row(
               children: [
                 SizedBox(
-                  width: 100,
+                  width: 130,
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -140,30 +140,43 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     items: const [
                       DropdownMenuItem(
                         value: 'http',
-                        child: Text('http'),
+                        child: Text('HTTP'),
                       ),
                       DropdownMenuItem(
                         value: 'https',
-                        child: Text('https'),
+                        child: Text('HTTPS'),
                       ),
                       DropdownMenuItem(
                         value: 'ws',
-                        child: Text('ws'),
+                        child: Text('WS'),
                       ),
                       DropdownMenuItem(
                         value: 'wss',
-                        child: Text('wss'),
+                        child: Text('WSS'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'mem',
+                        child: Text('Memory'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'indxdb',
+                        child: Text('IndexedDB'),
                       ),
                     ],
                     onChanged: (value) {
                       viewModel.protocol = value!;
+                      if (viewModel.protocol == 'mem' ||
+                          viewModel.protocol == 'indxdb') {
+                        addressPortController.clear();
+                      }
                     },
                   ),
                 ),
                 horizontalSpaceTiny,
                 Expanded(
                   child: InputField(
-                    hintText: 'address:port',
+                    enabled: viewModel.protocol != 'mem',
+                    hintText: getAddressPortHintText(viewModel.protocol),
                     controller: addressPortController,
                     showClearTextButton: showClearTextButton,
                   ),
@@ -182,18 +195,21 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               controller: databaseController,
               showClearTextButton: showClearTextButton,
             ),
-            verticalSpaceTiny,
-            InputField(
-              labelText: 'Username',
-              controller: usernameController,
-              showClearTextButton: showClearTextButton,
-            ),
-            verticalSpaceTiny,
-            InputField(
-              labelText: 'Password',
-              controller: passwordController,
-              textInputType: TextInputType.none,
-            ),
+            if (viewModel.protocol != 'mem' &&
+                viewModel.protocol != 'indxdb') ...[
+              verticalSpaceTiny,
+              InputField(
+                labelText: 'Username',
+                controller: usernameController,
+                showClearTextButton: showClearTextButton,
+              ),
+              verticalSpaceTiny,
+              InputField(
+                labelText: 'Password',
+                controller: passwordController,
+                textInputType: TextInputType.none,
+              ),
+            ],
             verticalSpaceTiny,
             SwitchListTile(
               title: Text(
@@ -238,6 +254,16 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
         ),
       ),
     );
+  }
+
+  String getAddressPortHintText(String protocol) {
+    var hintText = 'address:port';
+    if (protocol == 'mem') {
+      hintText = 'Not applicable';
+    } else if (protocol == 'indxdb') {
+      hintText = 'database_name';
+    }
+    return hintText;
   }
 
   @override

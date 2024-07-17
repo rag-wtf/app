@@ -1,5 +1,6 @@
 const defaultTablePrefix = 'main';
-const surrealEndpoint = 'http://127.0.0.1:8000/rpc';
+const surrealIndxdbEndpoint = 'indxdb://surreal';
+const surrealHttpEndpoint = 'http://127.0.0.1:8000/rpc';
 const surrealNamespace = 'surreal';
 const surrealDatabase = 'surreal';
 const surrealUsername = 'root';
