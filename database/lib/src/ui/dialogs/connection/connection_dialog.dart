@@ -66,163 +66,170 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               ),
             ],
             verticalSpaceTiny,
-            if (viewModel.hasErrorForKey(ConnectionDialogModel.connectErrorKey))
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer,
-                    border:
-                        Border.all(color: Theme.of(context).colorScheme.error),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.error,
-                        color: Theme.of(context).colorScheme.error,
+            if (viewModel
+                .hasErrorForKey(ConnectionDialogModel.connectErrorKey)) ...[
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  border:
+                      Border.all(color: Theme.of(context).colorScheme.error),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        viewModel
+                            .error(ConnectionDialogModel.connectErrorKey)
+                            .toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          viewModel
-                              .error(ConnectionDialogModel.connectErrorKey)
-                              .toString(),
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                    ),
+                  ],
+                ),
+              ),
+              verticalSpaceTiny,
+            ],
+            Expanded(
+              child: ListView(
+                children: [
+                  InputField(
+                    hintText: 'New connection',
+                    controller: nameController,
+                    // REF: https://gist.github.com/slightfoot/f0b753606c97d8a2c06659803c12d858
+                    suffixIcon: PopupMenuButton<String>(
+                      icon: const Icon(Icons.arrow_drop_down),
+                      onSelected: (String connectionNameKey) async {
+                        final connectionKey = connectionNameKey ==
+                                ConnectionDialogModel.newConnectionKey
+                            ? connectionNameKey
+                            : connectionNameKey.substring(
+                                0,
+                                connectionNameKey.indexOf('_'),
+                              );
+                        await viewModel.onConnectionSelected(connectionKey);
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return viewModel.connectionNames
+                            .map<PopupMenuItem<String>>(
+                                (ConnectionSetting name) {
+                          return PopupMenuItem(
+                            value: name.key,
+                            child: Text(name.value),
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ),
+                  verticalSpaceTiny,
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 130,
+                        child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
+                          value: viewModel.protocol,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'http',
+                              child: Text('HTTP'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'https',
+                              child: Text('HTTPS'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'ws',
+                              child: Text('WS'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'wss',
+                              child: Text('WSS'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'mem',
+                              child: Text('Memory'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'indxdb',
+                              child: Text('IndexedDB'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            viewModel.protocol = value!;
+                            if (viewModel.protocol == 'mem' ||
+                                viewModel.protocol == 'indxdb') {
+                              addressPortController.clear();
+                            }
+                          },
+                        ),
+                      ),
+                      horizontalSpaceTiny,
+                      Expanded(
+                        child: InputField(
+                          enabled: viewModel.protocol != 'mem',
+                          hintText: getAddressPortHintText(viewModel.protocol),
+                          controller: addressPortController,
+                          showClearTextButton: showClearTextButton,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            InputField(
-              hintText: 'New connection',
-              controller: nameController,
-              // REF: https://gist.github.com/slightfoot/f0b753606c97d8a2c06659803c12d858
-              suffixIcon: PopupMenuButton<String>(
-                icon: const Icon(Icons.arrow_drop_down),
-                onSelected: (String connectionNameKey) async {
-                  final connectionKey = connectionNameKey ==
-                          ConnectionDialogModel.newConnectionKey
-                      ? connectionNameKey
-                      : connectionNameKey.substring(
-                          0,
-                          connectionNameKey.indexOf('_'),
-                        );
-                  await viewModel.onConnectionSelected(connectionKey);
-                },
-                itemBuilder: (BuildContext context) {
-                  return viewModel.connectionNames
-                      .map<PopupMenuItem<String>>((ConnectionSetting name) {
-                    return PopupMenuItem(
-                      value: name.key,
-                      child: Text(name.value),
-                    );
-                  }).toList();
-                },
-              ),
-            ),
-            verticalSpaceTiny,
-            Row(
-              children: [
-                SizedBox(
-                  width: 130,
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    value: viewModel.protocol,
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'http',
-                        child: Text('HTTP'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'https',
-                        child: Text('HTTPS'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'ws',
-                        child: Text('WS'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'wss',
-                        child: Text('WSS'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'mem',
-                        child: Text('Memory'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'indxdb',
-                        child: Text('IndexedDB'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      viewModel.protocol = value!;
-                      if (viewModel.protocol == 'mem' ||
-                          viewModel.protocol == 'indxdb') {
-                        addressPortController.clear();
-                      }
-                    },
-                  ),
-                ),
-                horizontalSpaceTiny,
-                Expanded(
-                  child: InputField(
-                    enabled: viewModel.protocol != 'mem',
-                    hintText: getAddressPortHintText(viewModel.protocol),
-                    controller: addressPortController,
+                  verticalSpaceTiny,
+                  InputField(
+                    labelText: 'Namespace',
+                    controller: namespaceController,
                     showClearTextButton: showClearTextButton,
                   ),
-                ),
-              ],
+                  verticalSpaceTiny,
+                  InputField(
+                    labelText: 'Database',
+                    controller: databaseController,
+                    showClearTextButton: showClearTextButton,
+                  ),
+                  if (viewModel.protocol != 'mem' &&
+                      viewModel.protocol != 'indxdb') ...[
+                    verticalSpaceTiny,
+                    InputField(
+                      labelText: 'Username',
+                      controller: usernameController,
+                      showClearTextButton: showClearTextButton,
+                    ),
+                    verticalSpaceTiny,
+                    InputField(
+                      labelText: 'Password',
+                      controller: passwordController,
+                      textInputType: TextInputType.none,
+                    ),
+                  ],
+                  verticalSpaceTiny,
+                  SwitchListTile(
+                    title: Text(
+                      'Auto-Connect',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: viewModel.autoConnect,
+                    onChanged: (value) async {
+                      await viewModel.setAutoConnect(value);
+                    },
+                  ),
+                ],
+              ),
             ),
             verticalSpaceTiny,
-            InputField(
-              labelText: 'Namespace',
-              controller: namespaceController,
-              showClearTextButton: showClearTextButton,
-            ),
-            verticalSpaceTiny,
-            InputField(
-              labelText: 'Database',
-              controller: databaseController,
-              showClearTextButton: showClearTextButton,
-            ),
-            if (viewModel.protocol != 'mem' &&
-                viewModel.protocol != 'indxdb') ...[
-              verticalSpaceTiny,
-              InputField(
-                labelText: 'Username',
-                controller: usernameController,
-                showClearTextButton: showClearTextButton,
-              ),
-              verticalSpaceTiny,
-              InputField(
-                labelText: 'Password',
-                controller: passwordController,
-                textInputType: TextInputType.none,
-              ),
-            ],
-            verticalSpaceTiny,
-            SwitchListTile(
-              title: Text(
-                'Auto-Connect',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              controlAffinity: ListTileControlAffinity.leading,
-              value: viewModel.autoConnect,
-              onChanged: (value) async {
-                await viewModel.setAutoConnect(value);
-              },
-            ),
-            verticalSpaceMedium,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -237,7 +244,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                         onPressed: viewModel.delete,
                         child: const Text('Delete'),
                       ),
-                    horizontalSpaceMedium,
+                    horizontalSpaceTiny,
                     ElevatedButton(
                       onPressed: () async => completer(
                         DialogResponse(
