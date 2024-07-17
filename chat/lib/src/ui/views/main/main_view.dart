@@ -15,7 +15,6 @@ class MainView extends StackedView<MainViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-
       body: Row(
         children: [
           const Flexible(
