@@ -4,6 +4,7 @@ import 'package:stacked_package_template/src/ui/views/main/main_view.dart';
 import 'package:stacked_package_template/src/ui/views/startup/startup_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
+import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 // @stacked-import
 
 @StackedApp(
@@ -15,9 +16,17 @@ import 'package:surrealdb_js/surrealdb_js.dart';
   dependencies: [
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<ModelRepository>(classType: ModelRepository),
-    LazySingleton<Surreal>(classType: Surreal),
+    LazySingleton<Surreal>(
+      classType: SurrealWasm,
+      asType: Surreal,
+      resolveUsing: SurrealWasm.getInstance,
+    ),
 // @stacked-service
   ],
   logger: StackedLogger(),
 )
 class App {}
+
+Surreal getInstance() {
+  return Surreal({'engines': WasmEngine()});
+}
