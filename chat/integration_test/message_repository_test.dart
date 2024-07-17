@@ -9,15 +9,25 @@ import 'package:settings/settings.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 import 'package:ulid/ulid.dart';
 
-void main() {
+void main({bool wasm = false}) {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
   final repository = locator<MessageRepository>();
 
   setUpAll(() async {
-    await db.connect(surrealEndpoint);
-    await db.use(namespace: surrealNamespace, database: surrealDatabase);
-    await db.signin({'username': surrealUsername, 'password': surrealPassword});
+    if (wasm) {
+      await db.connect(surrealIndxdbEndpoint);
+      await db.use(namespace: surrealNamespace, database: surrealDatabase);
+    } else {
+      await db.connect(surrealHttpEndpoint);
+      await db.use(namespace: surrealNamespace, database: surrealDatabase);
+      await db
+          .signin({'username': surrealUsername, 'password': surrealPassword});
+    }
+  });
+
+  tearDownAll(() async {
+    await db.close();
   });
 
   tearDown(() async {

@@ -9,7 +9,7 @@ import 'package:ulid/ulid.dart';
 
 import 'test_data.dart';
 
-void main() {
+void main({bool wasm = false}) {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
   final messageRepository = locator<MessageRepository>();
@@ -19,9 +19,19 @@ void main() {
   const defaultSearchType = 'COSINE';
 
   setUpAll(() async {
-    await db.connect(surrealEndpoint);
-    await db.use(namespace: surrealNamespace, database: surrealDatabase);
-    await db.signin({'username': surrealUsername, 'password': surrealPassword});
+    if (wasm) {
+      await db.connect(surrealIndxdbEndpoint);
+      await db.use(namespace: surrealNamespace, database: surrealDatabase);
+    } else {
+      await db.connect(surrealHttpEndpoint);
+      await db.use(namespace: surrealNamespace, database: surrealDatabase);
+      await db
+          .signin({'username': surrealUsername, 'password': surrealPassword});
+    }
+  });
+
+  tearDownAll(() async {
+    await db.close();
   });
 
   tearDown(() async {
