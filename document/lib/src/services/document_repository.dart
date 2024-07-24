@@ -41,9 +41,7 @@ class DocumentRepository {
 
       return Document.fromJson(
         Map<String, dynamic>.from(
-          Document.toMap(
-            result! as Map,
-          ) as Map,
+          result! as Map,
         ),
       );
     } else {
@@ -67,7 +65,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
         .map(
           (result) => Document.fromJson(
             Map<String, dynamic>.from(
-              Document.toMap(result) as Map,
+              result as Map,
             ),
           ),
         )
@@ -87,7 +85,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     return result != null
         ? Document.fromJson(
             Map<String, dynamic>.from(
-              Document.toMap(result) as Map,
+              result as Map,
             ),
           )
         : null;
@@ -140,9 +138,7 @@ UPDATE ONLY ${payload['id']} PATCH [
       final result = await _db.query(sql);
       return Document.fromJson(
         Map<String, dynamic>.from(
-          Document.toMap(
-            result! as Map,
-          ) as Map,
+          result! as Map,
         ),
       );
     } else {
@@ -157,7 +153,7 @@ UPDATE ONLY ${payload['id']} PATCH [
     return result != null
         ? Document.fromJson(
             Map<String, dynamic>.from(
-              Document.toMap(result) as Map,
+              result as Map,
             ),
           )
         : null;

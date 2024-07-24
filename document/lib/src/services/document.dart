@@ -170,24 +170,6 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
     }
     return null;
   }
-
-  static dynamic toMap(dynamic input) {
-    if (input is Map) {
-      final result = <String, dynamic>{};
-      input.forEach((key, value) {
-        result[key.toString()] = toMap(value);
-      });
-      return result;
-    } else if (input is List) {
-      final result = <dynamic>[];
-      for (final item in input) {
-        result.add(toMap(item));
-      }
-      return result;
-    } else {
-      return input;
-    }
-  }
 }
 
 enum DocumentStatus {
