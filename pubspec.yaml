@@ -4,16 +4,16 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ^3.4.0
+  sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
-  archive: any
+  archive: ^3.6.1
   chat:
     path: chat
   confirm_dialog: ^1.0.3
   database:
     path: database  
-  dio: any
+  dio: ^5.5.0+1
   document:
     path: document
   flutter:
@@ -27,8 +27,8 @@ dependencies:
   settings:
     path: settings
   stacked: ^3.4.3
-  stacked_services: ^1.1.0
-  stacked_themes: ^0.3.12
+  stacked_services: ^1.5.0
+  stacked_themes: ^0.3.13
   surrealdb_js: ^1.0.0-beta.14+3
   surrealdb_wasm: ^1.0.0-beta.14+10
 
