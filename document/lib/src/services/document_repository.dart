@@ -1,11 +1,11 @@
-import 'dart:convert';
-
 import 'package:document/src/app/app.locator.dart';
+import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class DocumentRepository {
   final _db = locator<Surreal>();
+  final _log = getLogger('DocumentRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -34,9 +34,10 @@ class DocumentRepository {
       return document.copyWith(errors: validationErrors);
     }
     final fullTableName = '${tablePrefix}_${Document.tableName}';
-    final sql = 'CREATE ONLY $fullTableName CONTENT ${jsonEncode(payload)};';
+    final sql = 'CREATE ONLY $fullTableName CONTENT \$content;';
+    _log.d('txn: $txn, payload: $payload');
     if (txn == null) {
-      final result = await _db.query(sql);
+      final result = await _db.query(sql, bindings: {'content': payload});
 
       return Document.fromJson(
         Map<String, dynamic>.from(
@@ -46,7 +47,7 @@ class DocumentRepository {
         ),
       );
     } else {
-      txn.query(sql);
+      txn.query(sql, bindings: {'content': payload});
       return document;
     }
   }
@@ -97,26 +98,25 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     Transaction? txn,
   ]) async {
     if (await _db.select(document.id!) == null) return null;
-    final payload = document.copyWith(updated: DateTime.now()).toJson();
+    final payload = document.toJson();
     final validationErrors = Document.validate(payload);
     final isValid = validationErrors == null;
     if (!isValid) {
       return document.copyWith(errors: validationErrors);
     }
     final id = payload.remove('id') as String;
-    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
+    final sql = 'UPDATE ONLY $id MERGE \$content;';
+    _log.d('txn: $txn, payload: $payload');
     if (txn == null) {
-      final result = await _db.query(sql);
+      final result = await _db.query(sql, bindings: {'content': payload});
 
       return Document.fromJson(
         Map<String, dynamic>.from(
-          Document.toMap(
-            result! as Map,
-          ) as Map,
+          result! as Map,
         ),
       );
     } else {
-      txn.query(sql);
+      txn.query(sql, bindings: {'content': payload});
       return null;
     }
   }
@@ -125,21 +125,17 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     Document document, [
     Transaction? txn,
   ]) async {
-    final payload = document.copyWith(updated: DateTime.now()).toJson();
+    final payload = document.toJson();
     final sql = '''
 UPDATE ONLY ${payload['id']} PATCH [
   {
       "op": "replace",
       "path": "/status",
       "value": "${payload['status']}"
-  },
-  {
-      "op": "replace",
-      "path": "/updated",
-      "value": "${payload['updated']}"
-  }  
+  }
 ]
 ''';
+    _log.d('txn: $txn, payload: $payload');
     if (txn == null) {
       final result = await _db.query(sql);
       return Document.fromJson(

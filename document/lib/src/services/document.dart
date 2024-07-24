@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'dart:typed_data';
+
 import 'package:document/src/services/date_time_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
@@ -17,7 +19,7 @@ sealed class Document with _$Document {
     String? id,
     String? content,
     String? contentMimeType, // mime type of content of the gzip file
-    String? file,
+    Uint8List? file,
     Object? metadata,
     String? errorMessage,
     @DateTimeJsonConverter() DateTime? splitted,
@@ -27,8 +29,8 @@ sealed class Document with _$Document {
     List<ValidationError>? errors,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<List<int>>? byteData,
-    @DateTimeJsonConverter() DateTime? created,
-    @DateTimeJsonConverter() DateTime? updated,
+    @JsonKey(includeToJson: false) DateTime? created,
+    @JsonKey(includeToJson: false) DateTime? updated,
   }) = _Document;
 
   factory Document.fromJson(Map<String, dynamic> json) {
@@ -41,7 +43,9 @@ sealed class Document with _$Document {
       status: DocumentStatus.values.byName(json['status'] as String),
       content: json['content'] as String?,
       contentMimeType: json['contentMimeType'] as String?,
-      file: json['file'] as String?,
+      file: json['file'] != null
+          ? (json['file'] as ByteBuffer).asUint8List()
+          : null,
       metadata: json['metadata'],
       errorMessage: json['errorMessage'] as String?,
       splitted: json['splitted'] as DateTime?,
@@ -62,7 +66,7 @@ DEFINE FIELD content ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD fileMimeType ON {prefix}_$tableName TYPE string;
 DEFINE FIELD contentMimeType ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD errorMessage ON {prefix}_$tableName TYPE option<string>;
-DEFINE FIELD file ON {prefix}_$tableName TYPE option<string>;
+DEFINE FIELD file ON {prefix}_$tableName TYPE option<bytes>;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD status ON {prefix}_$tableName TYPE string;
@@ -72,6 +76,10 @@ DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName 
+WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
+    UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
+);
 ''';
 
   static const _jsonSchema = {
@@ -104,7 +112,12 @@ DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
             'type': 'string',
           },
           'file': {
-            'type': 'string',
+            'type': 'array',
+            'items': {
+              'type': 'integer',
+              'minimum': 0,
+              'maximum': 255,
+            },
           },
           'name': {
             'type': 'string',

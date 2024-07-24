@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
@@ -219,12 +220,12 @@ class DocumentService with ListenableServiceMixin {
   }
 
   Future<Document> createDocument(String tablePrefix, Document document) async {
-    final base64EncodedFile = await _compressFileToBase64(
+    final compressedFile = await _compressFile(
       document.byteData!.first,
     );
     final newDocument = document.copyWith(
-      compressedFileSize: base64EncodedFile.length,
-      file: base64EncodedFile,
+      compressedFileSize: compressedFile.length,
+      file: compressedFile,
     );
     return _documentRepository.createDocument(
       tablePrefix,
@@ -237,7 +238,7 @@ class DocumentService with ListenableServiceMixin {
 
     if (document != null && document.file != null) {
       document = document.copyWith(
-        byteData: [await _decompressFileFromBase64(document.file!)],
+        byteData: [await _decompressFile(document.file!)],
       );
     }
     return document;
@@ -289,6 +290,7 @@ class DocumentService with ListenableServiceMixin {
     return fileBytes[0] == 0x1f && fileBytes[1] == 0x8b;
   }
 
+  /*
   Future<String> _compressFileToBase64(List<int> bytes) async {
     if (_isGzFile(bytes)) {
       return base64Encode(bytes);
@@ -298,10 +300,25 @@ class DocumentService with ListenableServiceMixin {
       );
     }
   }
+  */
 
+  Future<Uint8List> _compressFile(List<int> bytes) async {
+    if (_isGzFile(bytes)) {
+      return Uint8List.fromList(bytes);
+    } else {
+      return Uint8List.fromList(_gzipEncoder.encode(bytes)!);
+    }
+  }
+
+  /*
   Future<List<int>> _decompressFileFromBase64(String file) async {
     final bytes = base64Decode(file);
     return _isGzFile(bytes) ? _gzipDecoder.decodeBytes(bytes) : bytes;
+  }
+  */
+
+  Future<List<int>> _decompressFile(Uint8List file) async {
+    return _isGzFile(file) ? _gzipDecoder.decodeBytes(file) : file;
   }
 
   //--- Document Item ---//

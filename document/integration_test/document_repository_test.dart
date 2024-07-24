@@ -27,6 +27,7 @@ void main({bool wasm = false}) {
   tearDownAll(() async {
     await db.close();
   });
+
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
@@ -66,12 +67,13 @@ void main({bool wasm = false}) {
 
     test('should have validation errors', () async {
       // Arrange
-      const document = Document(
+      const fileContent = 'Hello world!';
+      final document = Document(
         compressedFileSize: 100,
         fileMimeType: 'text/plain',
         contentMimeType: '',
         errorMessage: '',
-        file: 'base64 encoded',
+        file: utf8.encode(fileContent),
         name: 'Test Document',
         originFileSize: 200,
         status: DocumentStatus.created,
@@ -92,6 +94,7 @@ void main({bool wasm = false}) {
   group('getAllDocuments', () {
     test('should return a list of documents', () async {
       // Arrange
+      const fileContent = 'Hello world!';
       final documents = [
         {
           'compressedFileSize': 100,
@@ -107,16 +110,16 @@ void main({bool wasm = false}) {
           'fileMimeType': 'text/plain',
           'contentMimeType': 'text/plain',
           'errorMessage': '',
-          'file': 'base64 encoded string',
+          'file': utf8.encode(fileContent),
           'name': 'Test Document 2',
           'originFileSize': 250,
           'status': DocumentStatus.created.name,
         },
       ];
       await db.delete('${defaultTablePrefix}_${Document.tableName}');
-      final sql = '''
-INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
-      await db.query(sql);
+      const sql = '''
+INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
+      await db.query(sql, bindings: {'content': documents});
 
       // Act
       final result = await repository.getAllDocuments(defaultTablePrefix);
@@ -194,16 +197,15 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
           'fileMimeType': 'text/plain',
           'contentMimeType': 'text/plain',
           'errorMessage': '',
-          'file': 'base64 encoded string',
           'name': 'Test Document 2',
           'originFileSize': 250,
           'status': DocumentStatus.created.name,
         },
       ];
       await db.delete('${defaultTablePrefix}_${Document.tableName}');
-      final sql = '''
-INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
-      await db.query(sql);
+      const sql = '''
+INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
+      await db.query(sql, bindings: {'content': documents});
 
       // Act
       final result = await repository.getTotal(defaultTablePrefix);
@@ -216,12 +218,13 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
   group('getDocumentById', () {
     test('should return a document by id', () async {
       // Arrange
-      const document = Document(
+      const fileContent = 'Hello world!';
+      final document = Document(
         compressedFileSize: 100,
         fileMimeType: 'text/plain',
         contentMimeType: 'text/plain',
         errorMessage: '',
-        file: 'base64 encoded string',
+        file: utf8.encode(fileContent),
         name: 'Test Document',
         originFileSize: 200,
         status: DocumentStatus.created,
@@ -235,12 +238,7 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
 
       // Assert
       expect(getDocumentById?.id, equals(id));
-      expect(
-        getDocumentById?.file,
-        equals(
-          'base64 encoded string',
-        ),
-      );
+      expect(utf8.decode(getDocumentById!.file!.toList()), equals(fileContent));
     });
 
     test('should not found', () async {
@@ -255,12 +253,13 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
   group('updateDocument', () {
     test('should update document', () async {
       // Arrange
-      const document = Document(
+      const fileContent = 'Hello world!';
+      final document = Document(
         compressedFileSize: 100,
         fileMimeType: 'text/plain',
         contentMimeType: 'text/plain',
         errorMessage: '',
-        file: 'base64 encoded string',
+        file: utf8.encode(fileContent),
         name: 'Test Document',
         originFileSize: 200,
         status: DocumentStatus.created,
@@ -279,13 +278,14 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
 
     test('should be null when the update document is not found', () async {
       // Arrange
-      const document = Document(
+      const fileContent = 'Hello world!';
+      final document = Document(
         id: '${defaultTablePrefix}_${Document.tableName}:1',
         compressedFileSize: 100,
         fileMimeType: 'text/plain',
         contentMimeType: 'text/plain',
         errorMessage: '',
-        file: 'base64 encoded string',
+        file: utf8.encode(fileContent),
         name: 'Test Document',
         originFileSize: 200,
         status: DocumentStatus.created,
@@ -315,10 +315,11 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
 
       // Act
       final result = await repository.updateDocumentStatus(updateStatus);
+      final updatedResult = await repository.getDocumentById(created.id!);
 
       // Assert
       expect(result?.status, equals(DocumentStatus.completed));
-      expect(result?.updated?.isAfter(result.created!), isTrue);
+      expect(updatedResult?.updated?.isAfter(updatedResult.created!), isTrue);
     });
   });
 
@@ -330,7 +331,6 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} ${jsonEncode(documents)}
         fileMimeType: 'text/plain',
         contentMimeType: 'text/plain',
         errorMessage: '',
-        file: 'base64 encoded string',
         name: 'Test Document',
         originFileSize: 200,
         status: DocumentStatus.created,
