@@ -126,7 +126,6 @@ class DocumentApiService {
             .toList();
       },
     );
-
     _log.d('embeddings.length = ${embeddings.length}');
 
     return embeddings;
