@@ -47,13 +47,15 @@ void main({bool wasm = false}) {
   group('createDocument', () {
     test('should create document', () async {
       // Arrange
-      const document = Document(
+      const fileContent = 'Hello world!';
+      final document = Document(
         compressedFileSize: 100,
         fileMimeType: 'text/plain',
         contentMimeType: 'text/plain',
         errorMessage: '',
         name: 'Test Document',
         originFileSize: 200,
+        file: utf8.encode(fileContent),
         status: DocumentStatus.created,
       );
 
@@ -326,6 +328,7 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
   group('deleteDocument', () {
     test('should delete document', () async {
       // Arrange
+
       const document = Document(
         compressedFileSize: 100,
         fileMimeType: 'text/plain',

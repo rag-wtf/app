@@ -28,6 +28,9 @@ class DocumentRepository {
     Transaction? txn,
   ]) async {
     final payload = document.toJson();
+    if (document.file != null) {
+      payload['file'] = document.file;
+    }
     final validationErrors = Document.validate(payload);
     final isValid = validationErrors == null;
     if (!isValid) {
@@ -123,17 +126,16 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     Document document, [
     Transaction? txn,
   ]) async {
-    final payload = document.toJson();
     final sql = '''
-UPDATE ONLY ${payload['id']} PATCH [
+UPDATE ONLY ${document.id} PATCH [
   {
       "op": "replace",
       "path": "/status",
-      "value": "${payload['status']}"
+      "value": "${document.status.name}"
   }
 ]
 ''';
-    _log.d('txn: $txn, payload: $payload');
+    _log.d('txn: $txn, sql: $sql');
     if (txn == null) {
       final result = await _db.query(sql);
       return Document.fromJson(

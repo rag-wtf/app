@@ -19,7 +19,7 @@ sealed class Document with _$Document {
     String? id,
     String? content,
     String? contentMimeType, // mime type of content of the gzip file
-    Uint8List? file,
+    @JsonKey(includeToJson: false) Uint8List? file,
     Object? metadata,
     String? errorMessage,
     @DateTimeJsonConverter() DateTime? splitted,
