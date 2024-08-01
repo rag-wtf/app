@@ -89,6 +89,7 @@ class DocumentApiService {
     List<String> chunkedTexts, {
     int dimensions = 384,
     int batchSize = 100,
+    bool compressed = true,
   }) async {
     final embeddings = await _batchService.execute<String, List<double>>(
       chunkedTexts,
@@ -102,7 +103,7 @@ class DocumentApiService {
               'Content-type': 'application/json',
               if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
             },
-            requestEncoder: gzipRequestEncoder,
+            requestEncoder: compressed ? gzipRequestEncoder : null,
             sendTimeout: const Duration(seconds: 600),
             receiveTimeout: const Duration(seconds: 600),
           ),

@@ -171,6 +171,16 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           controller: embeddingsApiBatchSizeController,
                           textInputType: TextInputType.number,
                         ),
+                        SwitchListTile(
+                          title: Text(
+                            'Compressed',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          value: viewModel.embeddingsCompressed,
+                          onChanged: (value) async {
+                            await viewModel.setEmbeddingsCompressed(value);
+                          },
+                        ),
                       ],
                     ),
                     isExpanded: viewModel.isPanelExpanded(1),

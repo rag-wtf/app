@@ -26,6 +26,19 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   bool _stream = true;
   bool get stream => _stream;
 
+  bool _embeddingsCompressed = true;
+  bool get embeddingsCompressed => _embeddingsCompressed;
+
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> setEmbeddingsCompressed(bool value) async {
+    await _settingService.set(
+      tablePrefix,
+      embeddingsCompressedKey,
+      value.toString(),
+    );
+    _embeddingsCompressed = value;
+  }
+
   void setPanelExpanded(int index, {required bool isExpanded}) {
     _isPanelExpanded[index] = isExpanded;
 
@@ -43,6 +56,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     await _settingService.initialise(tablePrefix);
     _settingService.clearFormValuesFunction = clearFormValues;
     _stream = bool.parse(_settingService.get(streamKey, type: bool).value);
+    _embeddingsCompressed = bool.parse(
+        _settingService.get(embeddingsCompressedKey, type: bool).value);
     final splitApiUrl = _settingService.get(splitApiUrlKey);
     if (splitApiUrl.id != null) {
       splitApiUrlValue = splitApiUrl.value;

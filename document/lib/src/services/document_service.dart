@@ -491,6 +491,9 @@ class DocumentService with ListenableServiceMixin {
             dimensions: int.parse(
               _settingService.get(embeddingsDimensionsKey, type: int).value,
             ),
+            compressed: bool.parse(
+              _settingService.get(embeddingsCompressedKey, type: bool).value,
+            ),
           )
           .timeout(
             Duration(seconds: max(embeddings.length, 600)),

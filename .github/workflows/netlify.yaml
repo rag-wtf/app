@@ -32,6 +32,7 @@ jobs:
           --release 
           --no-tree-shake-icons 
           --target lib/main_production.dart
+          --dart-define ENV_KEY=${{ secrets.ENV_KEY }}
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0

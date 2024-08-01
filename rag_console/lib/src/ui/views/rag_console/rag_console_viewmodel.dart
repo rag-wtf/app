@@ -42,6 +42,9 @@ class RagConsoleViewModel extends BaseViewModel {
   double get _searchThreshold =>
       _settingService.get(searchThresholdKey, type: double).value as double;
   String get surrealVersion => _surrealVersion;
+  bool get _embeddingsCompressed => bool.parse(
+        _settingService.get(embeddingsCompressedKey, type: bool).value,
+      );
 
   static const helpMessageHint =
       'Type /h to see the list of supported commands.';
@@ -145,9 +148,10 @@ Example:
           if (embeddingsApiKeyValue.isNotEmpty)
             'Authorization': 'Bearer $embeddingsApiKeyValue',
         },
-        requestEncoder: gzipEncoder,
+        requestEncoder: _embeddingsCompressed ? gzipEncoder : null,
       ),
       data: {
+        'model': _settingService.get(embeddingsModelKey).value,
         'input': getEmbeddingInput(input),
       },
     );

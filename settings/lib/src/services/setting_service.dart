@@ -59,7 +59,7 @@ class SettingService with ListenableServiceMixin {
       }
       await Env.load(
         EnvStringLoader(settings),
-        'yG5~mhzE*;X&ZgF#]tQ,Ue',
+        const String.fromEnvironment(envKey),
       );
     }
 
