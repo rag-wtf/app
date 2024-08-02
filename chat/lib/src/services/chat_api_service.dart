@@ -245,6 +245,7 @@ class ChatApiService {
     Dio dio,
     String embeddingsApiUrl,
     String embeddingsApiKey,
+    String model,
     String input, {
     bool compressed = true,
   }) async {
@@ -259,6 +260,7 @@ class ChatApiService {
         requestEncoder: compressed ? _gzipEncoderFunction : null,
       ),
       data: {
+        'model': model,
         'input': getEmbeddingInput(input),
       },
     );
