@@ -551,6 +551,9 @@ class ChatService with ListenableServiceMixin {
       _embeddingsApiKey,
       _settingService.get(embeddingsModelKey).value,
       input,
+      dimensions: int.parse(
+        _settingService.get(embeddingsDimensionsKey, type: int).value,
+      ),
       compressed: bool.parse(
         _settingService.get(embeddingsCompressedKey, type: bool).value,
       ),

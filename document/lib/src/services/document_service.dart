@@ -399,7 +399,7 @@ class DocumentService with ListenableServiceMixin {
       Duration(seconds: max((responseData?['items'] as List).length, 600)),
     );
     await _indexing(documentItem, embeddings).timeout(
-      Duration(seconds: max(embeddings.length, 600)),
+      Duration(seconds: max(embeddings.length, 900)),
     );
   }
 

@@ -110,6 +110,7 @@ class DocumentApiService {
           data: {
             'model': model,
             'input': values,
+            'dimensions': dimensions,
           },
         ).timeout(
           const Duration(seconds: 600),

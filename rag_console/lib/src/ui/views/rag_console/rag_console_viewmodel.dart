@@ -140,6 +140,9 @@ Example:
 
   Future<Map<String, dynamic>?> embed(String input) async {
     final embeddingsApiKeyValue = _settingService.get(embeddingsApiKey).value;
+    final dimensions = int.parse(
+      _settingService.get(embeddingsDimensionsKey, type: int).value,
+    );
     final response = await _dio.post<Map<String, dynamic>>(
       _embeddingsApiUrl,
       options: Options(
@@ -153,6 +156,7 @@ Example:
       data: {
         'model': _settingService.get(embeddingsModelKey).value,
         'input': getEmbeddingInput(input),
+        'dimensions': dimensions,
       },
     );
     return response.data;
