@@ -245,8 +245,9 @@ class ChatApiService {
     Dio dio,
     String embeddingsApiUrl,
     String embeddingsApiKey,
-    String input,
-  ) async {
+    String input, {
+    bool compressed = true,
+  }) async {
     final response = await dio.post<Map<String, dynamic>>(
       embeddingsApiUrl,
       options: Options(
@@ -255,7 +256,7 @@ class ChatApiService {
           if (embeddingsApiKey.isNotEmpty)
             'Authorization': 'Bearer $embeddingsApiKey',
         },
-        requestEncoder: _gzipEncoderFunction,
+        requestEncoder: compressed ? _gzipEncoderFunction : null,
       ),
       data: {
         'input': getEmbeddingInput(input),

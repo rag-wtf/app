@@ -550,6 +550,9 @@ class ChatService with ListenableServiceMixin {
       _embeddingsApiUrl,
       _embeddingsApiKey,
       input,
+      compressed: bool.parse(
+        _settingService.get(embeddingsCompressedKey, type: bool).value,
+      ),
     );
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
