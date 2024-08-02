@@ -57,7 +57,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     _settingService.clearFormValuesFunction = clearFormValues;
     _stream = bool.parse(_settingService.get(streamKey, type: bool).value);
     _embeddingsCompressed = bool.parse(
-        _settingService.get(embeddingsCompressedKey, type: bool).value);
+      _settingService.get(embeddingsCompressedKey, type: bool).value,
+    );
     final splitApiUrl = _settingService.get(splitApiUrlKey);
     if (splitApiUrl.id != null) {
       splitApiUrlValue = splitApiUrl.value;
