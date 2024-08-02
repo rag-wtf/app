@@ -44,7 +44,7 @@ void main({bool wasm = false}) {
     test('should create schemas and return true', () async {
       // Act
       if (!await documentService.isSchemaCreated(tablePrefix)) {
-        await documentService.createSchema(tablePrefix);
+        await documentService.createSchema(tablePrefix, '384');
       }
 
       // Assert

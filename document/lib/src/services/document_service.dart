@@ -52,27 +52,28 @@ class DocumentService with ListenableServiceMixin {
   }
 
   Future<void> createSchema(
-    String tablePrefix, [
+    String tablePrefix,
+    String dimensions, [
     Transaction? txn,
   ]) async {
     if (txn == null) {
       await _db.transaction(
         (txn) async {
           await _documentRepository.createSchema(tablePrefix, txn);
-          await _embeddingRepository.createSchema(tablePrefix, txn);
+          await _embeddingRepository.createSchema(tablePrefix, dimensions, txn);
           await _documentEmbeddingRepository.createSchema(tablePrefix, txn);
         },
       );
     } else {
       await _documentRepository.createSchema(tablePrefix, txn);
-      await _embeddingRepository.createSchema(tablePrefix, txn);
+      await _embeddingRepository.createSchema(tablePrefix, dimensions, txn);
       await _documentEmbeddingRepository.createSchema(tablePrefix, txn);
     }
   }
 
-  Future<void> initialise(String tablePrefix) async {
+  Future<void> initialise(String tablePrefix, String dimensions) async {
     if (!await isSchemaCreated(tablePrefix)) {
-      await createSchema(tablePrefix);
+      await createSchema(tablePrefix, dimensions);
     }
   }
 

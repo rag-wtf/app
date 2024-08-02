@@ -40,7 +40,7 @@ void main({bool wasm = false}) {
     test('should create schema and return true', () async {
       // Arrange
       if (!await repository.isSchemaCreated(defaultTablePrefix)) {
-        await repository.createSchema(defaultTablePrefix);
+        await repository.createSchema(defaultTablePrefix, '384');
       }
       // Assert
       expect(await repository.isSchemaCreated(defaultTablePrefix), isTrue);

@@ -44,9 +44,12 @@ DEFINE FIELD embedding ON {prefix}_$tableName TYPE array<float>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
-DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
-FIELDS embedding MTREE DIMENSION 384;
+$_defineEmbeddingsMtreeIndex
 ''';
+
+  static const _defineEmbeddingsMtreeIndex = '''
+DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
+FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE;''';
 
   static const _jsonSchema = {
     r'$ref': '#/definitions/embedding',

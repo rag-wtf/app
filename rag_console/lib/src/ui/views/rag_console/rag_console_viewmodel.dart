@@ -107,7 +107,9 @@ Example:
     setBusy(true);
     _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
-    await _documentService.initialise(tablePrefix);
+    final dimensions =
+        _settingService.get(embeddingsDimensionsKey, type: int).value;
+    await _documentService.initialise(tablePrefix, dimensions);
     await _chatService.initialise(tablePrefix);
     _initMessages();
     _surrealVersion = await _db.version();

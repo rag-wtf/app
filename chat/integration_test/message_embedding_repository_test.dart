@@ -64,7 +64,7 @@ void main({bool wasm = false}) {
             await messageRepository.createSchema(tablePrefix, txn);
           }
           if (!await embeddingRepository.isSchemaCreated(tablePrefix)) {
-            await embeddingRepository.createSchema(tablePrefix, txn);
+            await embeddingRepository.createSchema(tablePrefix, '384', txn);
           }
           if (!await messageEmbeddingRepository.isSchemaCreated(tablePrefix)) {
             await messageEmbeddingRepository.createSchema(

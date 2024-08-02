@@ -11,6 +11,7 @@ import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:chat/src/services/sse_transformer.dart';
 import 'package:dio/dio.dart';
+import 'package:settings/settings.dart';
 
 enum ApiKeyType { header, body }
 
@@ -247,7 +248,7 @@ class ChatApiService {
     String embeddingsApiKey,
     String model,
     String input, {
-    int dimensions = 384,
+    int dimensions = defaultEmbeddingsDimensions,
     bool compressed = true,
   }) async {
     final response = await dio.post<Map<String, dynamic>>(

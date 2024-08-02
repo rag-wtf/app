@@ -32,7 +32,9 @@ class DocumentListViewModel extends ReactiveViewModel {
       await connectDatabase();
     }
     await _settingService.initialise(tablePrefix);
-    await _documentService.initialise(tablePrefix);
+    final dimensions =
+        _settingService.get(embeddingsDimensionsKey, type: int).value;
+    await _documentService.initialise(tablePrefix, dimensions);
   }
 
   Future<void> connectDatabase() async {

@@ -63,7 +63,9 @@ class HomeViewModel extends BaseViewModel {
     setBusy(true);
     await connectDatabase();
     await _settingService.initialise(tablePrefix);
-    await _documentService.initialise(tablePrefix);
+    final dimensions =
+        _settingService.get(embeddingsDimensionsKey, type: int).value;
+    await _documentService.initialise(tablePrefix, dimensions);
     await _chatService.initialise(tablePrefix);
     _totalChats = await _chatRepository.getTotal(tablePrefix);
     setBusy(false);

@@ -15,10 +15,13 @@ class EmbeddingRepository {
   }
 
   Future<void> createSchema(
-    String tablePrefix, [
+    String tablePrefix,
+    String dimensions, [
     Transaction? txn,
   ]) async {
-    final sqlSchema = Embedding.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    final sqlSchema = Embedding.sqlSchema
+        .replaceAll('{prefix}', tablePrefix)
+        .replaceFirst('{dimensions}', dimensions);
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
 

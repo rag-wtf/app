@@ -10,6 +10,7 @@ import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:settings/settings.dart';
 
 class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
@@ -87,7 +88,7 @@ class DocumentApiService {
     String apiUrl,
     String apiKey,
     List<String> chunkedTexts, {
-    int dimensions = 384,
+    int dimensions = defaultEmbeddingsDimensions,
     int batchSize = 100,
     bool compressed = true,
   }) async {
