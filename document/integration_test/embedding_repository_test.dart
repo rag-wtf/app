@@ -31,6 +31,11 @@ void main({bool wasm = false}) {
   tearDownAll(() async {
     await db.close();
   });
+
+  tearDown(() async {
+    await repository.deleteAllEmbeddings(defaultTablePrefix);
+  });
+
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
@@ -47,6 +52,54 @@ void main({bool wasm = false}) {
     });
   });
 
+  group('redefineEmbeddingIndex', () {
+    test('should create embedding of 4 dimensions', () async {
+      // Arrange
+      if (!await repository.isSchemaCreated(defaultTablePrefix)) {
+        await repository.createSchema(defaultTablePrefix, '4');
+      } else {
+        await repository.redefineEmbeddingIndex(defaultTablePrefix, '4');
+      }
+
+      const embedding = Embedding(
+        content: 'apple',
+        embedding: [1.1, 2.2, 3.3, 4.4],
+        metadata: {'id': 'customId1'},
+      );
+
+      // Act
+      final result =
+          await repository.createEmbedding(defaultTablePrefix, embedding);
+
+      // Assert
+      expect(result.id, isNotNull);
+
+      // Clean up
+      await repository.deleteAllEmbeddings(defaultTablePrefix);
+      await repository.redefineEmbeddingIndex(defaultTablePrefix, '384');
+    });
+
+    test('should throw an error', () async {
+      // Arrange
+      const embedding = Embedding(
+        content: 'apple',
+        embedding: [1.1, 2.2, 3.3, 4.4],
+        metadata: {'id': 'customId1'},
+      );
+
+      // Act & Assert
+      expect(
+        () async => repository.createEmbedding(defaultTablePrefix, embedding),
+        throwsA(
+          predicate(
+            (e) => e
+                .toString()
+                .contains('ResponseError: Incorrect vector dimension (4)'),
+          ),
+        ),
+      );
+    });
+  });
   group('createEmbedding', () {
     test('should create embedding', () async {
       // Arrange
@@ -62,9 +115,6 @@ void main({bool wasm = false}) {
 
       // Assert
       expect(result.id, isNotNull);
-
-      // Clean up
-      await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
     });
 
     test('should have validation errors', () async {

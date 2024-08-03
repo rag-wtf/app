@@ -5,13 +5,15 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i6;
+
 import 'package:flutter/foundation.dart' as _i5;
 import 'package:flutter/material.dart' as _i4;
 import 'package:flutter/material.dart';
 import 'package:settings/src/ui/views/settings/settings_view.dart' as _i3;
 import 'package:settings/src/ui/views/startup/startup_view.dart' as _i2;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i6;
+import 'package:stacked_services/stacked_services.dart' as _i7;
 
 class Routes {
   static const startupView = '/startup-view';
@@ -51,7 +53,9 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i3.SettingsView(
             key: args.key,
             tablePrefix: args.tablePrefix,
-            hasConnectDatabase: args.hasConnectDatabase),
+            hasConnectDatabase: args.hasConnectDatabase,
+            redefineEmbeddingIndexFunction:
+                args.redefineEmbeddingIndexFunction),
         settings: data,
       );
     },
@@ -69,6 +73,7 @@ class SettingsViewArguments {
     this.key,
     this.tablePrefix = 'main',
     this.hasConnectDatabase = false,
+    this.redefineEmbeddingIndexFunction,
   });
 
   final _i5.Key? key;
@@ -77,9 +82,14 @@ class SettingsViewArguments {
 
   final bool hasConnectDatabase;
 
+  final _i6.Future<String?> Function(
+    String,
+    String,
+  )? redefineEmbeddingIndexFunction;
+
   @override
   String toString() {
-    return '{"key": "$key", "tablePrefix": "$tablePrefix", "hasConnectDatabase": "$hasConnectDatabase"}';
+    return '{"key": "$key", "tablePrefix": "$tablePrefix", "hasConnectDatabase": "$hasConnectDatabase", "redefineEmbeddingIndexFunction": "$redefineEmbeddingIndexFunction"}';
   }
 
   @override
@@ -87,16 +97,20 @@ class SettingsViewArguments {
     if (identical(this, other)) return true;
     return other.key == key &&
         other.tablePrefix == tablePrefix &&
-        other.hasConnectDatabase == hasConnectDatabase;
+        other.hasConnectDatabase == hasConnectDatabase &&
+        other.redefineEmbeddingIndexFunction == redefineEmbeddingIndexFunction;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ tablePrefix.hashCode ^ hasConnectDatabase.hashCode;
+    return key.hashCode ^
+        tablePrefix.hashCode ^
+        hasConnectDatabase.hashCode ^
+        redefineEmbeddingIndexFunction.hashCode;
   }
 }
 
-extension NavigatorStateExtension on _i6.NavigationService {
+extension NavigatorStateExtension on _i7.NavigationService {
   Future<dynamic> navigateToStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -115,6 +129,10 @@ extension NavigatorStateExtension on _i6.NavigationService {
     _i5.Key? key,
     String tablePrefix = 'main',
     bool hasConnectDatabase = false,
+    _i6.Future<String?> Function(
+      String,
+      String,
+    )? redefineEmbeddingIndexFunction,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -125,7 +143,8 @@ extension NavigatorStateExtension on _i6.NavigationService {
         arguments: SettingsViewArguments(
             key: key,
             tablePrefix: tablePrefix,
-            hasConnectDatabase: hasConnectDatabase),
+            hasConnectDatabase: hasConnectDatabase,
+            redefineEmbeddingIndexFunction: redefineEmbeddingIndexFunction),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -150,6 +169,10 @@ extension NavigatorStateExtension on _i6.NavigationService {
     _i5.Key? key,
     String tablePrefix = 'main',
     bool hasConnectDatabase = false,
+    _i6.Future<String?> Function(
+      String,
+      String,
+    )? redefineEmbeddingIndexFunction,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -160,7 +183,8 @@ extension NavigatorStateExtension on _i6.NavigationService {
         arguments: SettingsViewArguments(
             key: key,
             tablePrefix: tablePrefix,
-            hasConnectDatabase: hasConnectDatabase),
+            hasConnectDatabase: hasConnectDatabase,
+            redefineEmbeddingIndexFunction: redefineEmbeddingIndexFunction),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

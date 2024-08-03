@@ -9,7 +9,11 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
-  SettingsViewModel(this.tablePrefix, {required this.hasConnectDatabase});
+  SettingsViewModel(
+    this.tablePrefix,
+    this.redefineEmbeddingIndexFunction, {
+    required this.hasConnectDatabase,
+  });
   final String tablePrefix;
   final bool hasConnectDatabase;
   final _log = getLogger('SettingsViewModel');
@@ -17,6 +21,10 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   final _settingService = locator<SettingService>();
   final _dialogService = locator<DialogService>();
   final _connectionSettingService = locator<ConnectionSettingService>();
+  final Future<String?> Function(
+    String tablePrefix,
+    String dimensions,
+  )? redefineEmbeddingIndexFunction;
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_settingService];
@@ -279,13 +287,28 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   }
 
   Future<void> setEmbeddingsDimensions() async {
+    final embeddingsDimensions =
+        _settingService.get(embeddingsDimensionsKey, type: int).value;
     if (embeddingsDimensionsValue != null &&
+        embeddingsDimensionsValue != embeddingsDimensions &&
         !hasEmbeddingsDimensionsValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        embeddingsDimensionsKey,
-        embeddingsDimensionsValue!,
-      );
+      String? redefineEmbeddingIndexError;
+      if (redefineEmbeddingIndexFunction != null) {
+        redefineEmbeddingIndexError = await redefineEmbeddingIndexFunction!(
+          tablePrefix,
+          embeddingsDimensionsValue!,
+        );
+      }
+      if (redefineEmbeddingIndexError != null) {
+        fieldsValidationMessages[EmbeddingsDimensionsValueKey] =
+            redefineEmbeddingIndexError;
+      } else {
+        await _settingService.set(
+          tablePrefix,
+          embeddingsDimensionsKey,
+          embeddingsDimensionsValue!,
+        );
+      }
     }
   }
 

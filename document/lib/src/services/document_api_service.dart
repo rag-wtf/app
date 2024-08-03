@@ -114,7 +114,7 @@ class DocumentApiService {
             'dimensions': dimensions,
           },
         ).timeout(
-          const Duration(seconds: 600),
+          const Duration(seconds: 900),
         );
 
         final embeddingsDataMap = response.data;

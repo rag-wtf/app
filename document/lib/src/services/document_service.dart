@@ -340,15 +340,24 @@ class DocumentService with ListenableServiceMixin {
 
       _log.d('url $url');
 
-      await _apiService.split(
-        _dio,
-        url.toString(),
-        documentItem,
-        _updateDocumentStatus,
-        _onProgress,
-        _onSplitCompleted,
-        _onError,
-      );
+      await _apiService
+          .split(
+            _dio,
+            url.toString(),
+            documentItem,
+            _updateDocumentStatus,
+            _onProgress,
+            _onSplitCompleted,
+            _onError,
+          )
+          .timeout(
+            Duration(
+              seconds: max(
+                (documentItem.item.originFileSize * 0.001).round(),
+                900,
+              ),
+            ),
+          );
     }
   }
 
@@ -422,7 +431,10 @@ class DocumentService with ListenableServiceMixin {
 
     final now = DateTime.now();
     final fullTableName = '${documentItem.tablePrefix}_${Embedding.tableName}';
-    final emptyEmbedding = List<double>.filled(384, 0);
+    final dimensions = int.parse(
+      _settingService.get(embeddingsDimensionsKey, type: int).value,
+    );
+    final emptyEmbedding = List<double>.filled(dimensions, 0);
     final embeddings = List<Embedding>.from(
       documentItems
           .map(
@@ -497,7 +509,7 @@ class DocumentService with ListenableServiceMixin {
             ),
           )
           .timeout(
-            Duration(seconds: max(embeddings.length, 600)),
+            Duration(seconds: max(embeddings.length, 900)),
           );
 
       await _updateEmbeddings(

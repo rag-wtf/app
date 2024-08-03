@@ -208,10 +208,13 @@ class RightWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              body: const TabBarView(
+              body: TabBarView(
                 children: [
-                  SettingsView(),
-                  RagConsoleView(),
+                  SettingsView(
+                    redefineEmbeddingIndexFunction:
+                        viewModel.redefineEmbeddingIndexFunction,
+                  ),
+                  const RagConsoleView(),
                 ],
               ),
             ),

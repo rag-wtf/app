@@ -18,6 +18,7 @@ class HomeViewModel extends BaseViewModel {
   final _bottomSheetService = locator<BottomSheetService>();
   final _settingService = locator<SettingService>();
   final _documentService = locator<DocumentService>();
+  final _embeddingRepository = locator<EmbeddingRepository>();
   final _chatRepository = locator<ChatRepository>();
   final _chatService = locator<ChatService>();
   int get totalChats => _totalChats;
@@ -58,6 +59,12 @@ class HomeViewModel extends BaseViewModel {
     final setting = _settingService.get(key, type: type);
     return setting.value;
   }
+
+  Future<String?> Function(
+    String tablePrefix,
+    String dimensions,
+  )? get redefineEmbeddingIndexFunction =>
+      _embeddingRepository.redefineEmbeddingIndex;
 
   Future<void> initialise() async {
     setBusy(true);

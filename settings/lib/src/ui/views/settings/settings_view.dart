@@ -21,7 +21,10 @@ import 'package:stacked/stacked_annotations.dart';
       validator: SettingsValidators.validateEmbeddingsApiUrl,
     ),
     FormTextField(name: 'embeddingsApiKey'),
-    FormTextField(name: 'embeddingsDimensions'),
+    FormTextField(
+      name: 'embeddingsDimensions',
+      validator: SettingsValidators.validateEmbeddingsDimensions,
+    ),
     FormTextField(
       name: 'embeddingsApiBatchSize',
       validator: SettingsValidators.validateEmbeddingsApiBatchSize,
@@ -50,9 +53,14 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     super.key,
     this.tablePrefix = 'main',
     this.hasConnectDatabase = false,
+    this.redefineEmbeddingIndexFunction,
   });
   final String tablePrefix;
   final bool hasConnectDatabase;
+  final Future<String?> Function(
+    String tablePrefix,
+    String dimensions,
+  )? redefineEmbeddingIndexFunction;
 
   @override
   Widget builder(
@@ -310,7 +318,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   SettingsViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      SettingsViewModel(tablePrefix, hasConnectDatabase: hasConnectDatabase);
+      SettingsViewModel(
+        tablePrefix,
+        redefineEmbeddingIndexFunction,
+        hasConnectDatabase: hasConnectDatabase,
+      );
 
   @override
   Future<void> onViewModelReady(SettingsViewModel viewModel) async {
@@ -413,6 +425,23 @@ class SettingsValidators {
       }
     } else {
       return 'Enter a valid number';
+    }
+
+    return null;
+  }
+
+  static String? validateEmbeddingsDimensions(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    if (isPositiveInteger(value)) {
+      final integer = int.parse(value);
+      if (integer < 256) {
+        return 'Please enter a minimum value of 256.';
+      }
+    } else {
+      return 'Please enter a valid number';
     }
 
     return null;

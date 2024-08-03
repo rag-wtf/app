@@ -49,7 +49,13 @@ $_defineEmbeddingsMtreeIndex
 
   static const _defineEmbeddingsMtreeIndex = '''
 DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
-FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE;''';
+FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE;
+''';
+
+  static const redefineEmbeddingsMtreeIndex = '''
+REMOVE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
+$_defineEmbeddingsMtreeIndex
+''';
 
   static const _jsonSchema = {
     r'$ref': '#/definitions/embedding',
