@@ -300,6 +300,46 @@ void main({bool wasm = false}) {
     });
   });
 
+  group('updateEmbeddings', () {
+    test('should update embeddings', () async {
+      final emptyEmbedding = List<double>.filled(384, 0);
+      final embeddings = [
+        Embedding(
+          content: 'apple',
+          embedding: emptyEmbedding,
+        ),
+        Embedding(
+          content: 'ten',
+          embedding: emptyEmbedding,
+        ),
+        Embedding(
+          content: 'twenty',
+          embedding: emptyEmbedding,
+        ),
+      ];
+      final results =
+          await repository.createEmbeddings(defaultTablePrefix, embeddings);
+      results[0] = results[0].copyWith(embedding: testData['apple']!);
+      results[1] = results[1].copyWith(embedding: testData['ten']!);
+      results[2] = results[2].copyWith(embedding: testData['twenty']!);
+
+      // Act
+      final txnResults = await repository.updateEmbeddings(results);
+
+      // Assert
+      expect(txnResults, hasLength(embeddings.length));
+
+      expect(
+        txnResults.every(
+          (sublist) => sublist is Iterable
+              ? sublist.isNotEmpty
+              : (sublist as Map).isNotEmpty,
+        ),
+        isTrue,
+      );
+    });
+  });
+
   group('updateEmbedding', () {
     test('should update embedding', () async {
       // Arrange

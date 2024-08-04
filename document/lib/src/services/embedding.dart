@@ -1,6 +1,4 @@
 // ignore_for_file: invalid_annotation_target
-
-import 'package:document/src/services/date_time_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
 part 'embedding.freezed.dart';
@@ -16,8 +14,8 @@ sealed class Embedding with _$Embedding {
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
     Object? metadata,
-    @DateTimeJsonConverter() DateTime? created,
-    @DateTimeJsonConverter() DateTime? updated,
+    @JsonKey(includeToJson: false) DateTime? created,
+    @JsonKey(includeToJson: false) DateTime? updated,
   }) = _Embedding;
 
   factory Embedding.fromJson(Map<String, dynamic> json) {
@@ -45,6 +43,10 @@ DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 $_defineEmbeddingsMtreeIndex
+DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName 
+WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
+    UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
+);
 ''';
 
   static const _defineEmbeddingsMtreeIndex = '''

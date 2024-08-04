@@ -196,26 +196,10 @@ class DocumentService with ListenableServiceMixin {
     }
     final batchResults = await _batchService.execute<Embedding, dynamic>(
         embeddings, defaultDbBatchSize, (values) async {
-      if (txn == null) {
-        return (await _db.transaction(
-          (txn) async {
-            for (final embedding in values) {
-              await _embeddingRepository.updateEmbedding(
-                embedding,
-                txn,
-              );
-            }
-          },
-        ))! as List;
-      } else {
-        for (final embedding in values) {
-          await _embeddingRepository.updateEmbedding(
-            embedding,
-            txn,
-          );
-        }
-        return List.empty();
-      }
+      return _embeddingRepository.updateEmbeddings(
+        values,
+        txn,
+      );
     });
     return batchResults;
   }

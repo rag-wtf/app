@@ -141,13 +141,39 @@ CONTENT ${jsonEncode(payload)};''';
         : null;
   }
 
+  Future<List<dynamic>> updateEmbeddings(
+    List<Embedding> embeddings, [
+    Transaction? txn,
+  ]) async {
+    if (txn == null) {
+      return (await _db.transaction(
+        (txn) async {
+          for (final embedding in embeddings) {
+            await updateEmbedding(
+              embedding,
+              txn,
+            );
+          }
+        },
+      ))! as List;
+    } else {
+      for (final embedding in embeddings) {
+        await updateEmbedding(
+          embedding,
+          txn,
+        );
+      }
+      return List.empty();
+    }
+  }
+
   Future<Embedding?> updateEmbedding(
     Embedding embedding, [
     Transaction? txn,
   ]) async {
     if (await _db.select(embedding.id!) == null) return null;
 
-    final payload = embedding.copyWith(updated: DateTime.now()).toJson();
+    final payload = embedding.toJson();
     final validationErrors = Embedding.validate(payload);
     final isValid = validationErrors == null;
     if (!isValid) {
@@ -155,6 +181,7 @@ CONTENT ${jsonEncode(payload)};''';
     }
     final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
+    _log.d('sql $sql');
     if (txn == null) {
       final result = await _db.query(sql);
       return Embedding.fromJson(

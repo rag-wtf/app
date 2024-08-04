@@ -14,8 +14,8 @@ Future<void> main() async {
   await setupLocator();
   final wasm = const String.fromEnvironment('WASM').isNotEmpty;
   logger.i('WasmEngine: $wasm');
-  document_repository.main(wasm: wasm);
+  //document_repository.main(wasm: wasm);
   embedding_repository.main(wasm: wasm);
-  document_embedding_repository.main(wasm: wasm);
-  document_service.main(wasm: wasm);
+  //document_embedding_repository.main(wasm: wasm);
+  //document_service.main(wasm: wasm);
 }
