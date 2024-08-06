@@ -146,7 +146,7 @@ CONTENT ${jsonEncode(payload)};''';
     Transaction? txn,
   ]) async {
     if (txn == null) {
-      return (await _db.transaction(
+      final results = (await _db.transaction(
         (txn) async {
           for (final embedding in embeddings) {
             await updateEmbedding(
@@ -155,7 +155,9 @@ CONTENT ${jsonEncode(payload)};''';
             );
           }
         },
-      ))! as List;
+      ))!;
+
+      return results is Iterable ? results as List : [results];
     } else {
       for (final embedding in embeddings) {
         await updateEmbedding(
@@ -181,7 +183,6 @@ CONTENT ${jsonEncode(payload)};''';
     }
     final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
-    _log.d('sql $sql');
     if (txn == null) {
       final result = await _db.query(sql);
       return Embedding.fromJson(

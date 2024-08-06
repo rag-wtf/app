@@ -51,7 +51,8 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
 
   static const _defineEmbeddingsMtreeIndex = '''
 DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
-FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE;
+FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32
+CAPACITY 400;
 ''';
 
   static const redefineEmbeddingsMtreeIndex = '''
