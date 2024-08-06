@@ -109,24 +109,34 @@ class SettingService with ListenableServiceMixin {
     final newValue = value.trim();
     if (_settings.containsKey(key)) {
       final setting = _settings[key];
-      if (setting!.value != newValue) {
-        final updatedSetting = await _settingRepository.updateSetting(
-          setting.copyWith(
-            value: newValue,
-          ),
-        );
-        if (updatedSetting != null) {
-          if (updatedSetting.value == newValue) {
-            _settings[key] = updatedSetting;
-            notifyListeners();
+      if (newValue.isNotEmpty) {
+        if (setting!.value != newValue) {
+          final updatedSetting = await _settingRepository.updateSetting(
+            setting.copyWith(
+              value: newValue,
+            ),
+          );
+          if (updatedSetting != null) {
+            if (updatedSetting.value == newValue) {
+              _settings[key] = updatedSetting;
+              notifyListeners();
+            } else {
+              throw Exception('Unable to update setting of "$key"!');
+            }
           } else {
-            throw Exception('Unable to update setting of "$key"!');
+            throw Exception('Setting of key "$key" not found!');
           }
+        }
+      } else {
+        _settings.remove(key);
+        final result = await _settingRepository.deleteSetting(setting!.id!);
+        if (result != null) {
+          notifyListeners();
         } else {
-          throw Exception('Setting of key "$key" not found!');
+          throw Exception('Unable to delete setting of "$key"!');
         }
       }
-    } else {
+    } else if (newValue.isNotEmpty) {
       final setting =
           Setting(key: key, value: newValue, created: DateTime.now());
 
