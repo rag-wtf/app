@@ -79,7 +79,27 @@ void main({bool wasm = false}) {
       await repository.redefineEmbeddingIndex(defaultTablePrefix, '384');
     });
 
-    test('should throw an error', () async {
+    test('should return cannot change dimensions message', () async {
+      // Arrange
+      final embedding = Embedding(
+        content: 'apple',
+        embedding: testData['apple']!,
+        metadata: {'id': 'customId1'},
+      );
+      await repository.createEmbedding(defaultTablePrefix, embedding);
+      const expected = '''
+Cannot change dimensions,
+There are existing embeddings in the database.''';
+
+      // Act
+      final result =
+          await repository.redefineEmbeddingIndex(defaultTablePrefix, '4');
+
+      // Assert
+      expect(result, equals(expected));
+    });
+
+    test('should throw an incorrect dimension error', () async {
       // Arrange
       const embedding = Embedding(
         content: 'apple',
