@@ -10,5 +10,6 @@ export 'src/services/document_repository.dart';
 export 'src/services/document_service.dart';
 export 'src/services/embedding.dart';
 export 'src/services/embedding_repository.dart';
-
+export 'src/ui/dialogs/embedding/embedding_dialog.dart';
+export 'src/ui/dialogs/info_alert/info_alert_dialog.dart';
 export 'src/ui/views/document_list/document_list_view.dart';

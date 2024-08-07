@@ -3,6 +3,7 @@
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
 import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
+import 'package:document/document.dart';
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -10,6 +11,7 @@ import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
   ChatView({
+    required this.showDialogFunction,
     super.key,
     this.tablePrefix = 'main',
     this.leftWidgetTabController,
@@ -17,6 +19,7 @@ class ChatView extends StackedView<ChatViewModel> {
   final String tablePrefix;
   final _scrollController = ScrollController();
   final TabController? leftWidgetTabController;
+  final Future<void> Function(Embedding embedding) showDialogFunction;
 
   @override
   Widget builder(
@@ -35,7 +38,10 @@ class ChatView extends StackedView<ChatViewModel> {
             reverse: true,
             hasReachedMax: viewModel.hasReachedMax,
             itemBuilder: (context, index) {
-              return MessageWidget(viewModel.messages[index]);
+              return MessageWidget(
+                viewModel.messages[index],
+                showDialogFunction,
+              );
             },
           ),
         ),

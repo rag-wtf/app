@@ -4,6 +4,7 @@ import 'package:document/document.dart';
 import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
 import 'package:rag/app/app.locator.dart';
+import 'package:rag/app/app.logger.dart';
 import 'package:rag/ui/common/app_strings.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -21,6 +22,8 @@ class HomeViewModel extends BaseViewModel {
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _chatRepository = locator<ChatRepository>();
   final _chatService = locator<ChatService>();
+  // ignore: unused_field
+  final _log = getLogger('HomeViewModel');
   int get totalChats => _totalChats;
   late int _totalChats;
   bool _isKeepSettings = true;
@@ -99,5 +102,12 @@ class HomeViewModel extends BaseViewModel {
     }
     await _documentService.clearData(tablePrefix);
     await _chatService.clearData(tablePrefix);
+  }
+
+  Future<void> showEmbeddingDialog(Embedding embedding) async {
+    await _dialogService.showCustomDialog<void, Embedding>(
+      variant: DialogType.embedding,
+      data: embedding,
+    );
   }
 }

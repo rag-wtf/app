@@ -15,6 +15,9 @@ class InputField extends StatelessWidget {
     this.suffixIcon,
     this.showClearTextButton = true,
     this.enabled = true,
+    this.readOnly = false,
+    this.minLines = 1,
+    this.maxLines = 1,
   });
   final TextEditingController controller;
   final String? labelText;
@@ -26,6 +29,9 @@ class InputField extends StatelessWidget {
   final Widget? suffixIcon;
   final bool showClearTextButton;
   final bool enabled;
+  final bool readOnly;
+  final int minLines;
+  final int maxLines;
 
   static const double kdDesktopMaxContentWidth = 1150;
 
@@ -49,6 +55,9 @@ class InputField extends StatelessWidget {
                   );
                 } else {
                   return TextField(
+                    minLines: minLines,
+                    maxLines: maxLines,
+                    readOnly: readOnly,
                     enabled: enabled,
                     controller: controller,
                     decoration: InputDecoration(
@@ -68,6 +77,7 @@ class InputField extends StatelessWidget {
 
                       //          filled: true,
                       //          fillColor: kcMediumGrey,
+
                       prefixIcon: prefixIcon,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -75,7 +85,8 @@ class InputField extends StatelessWidget {
                       suffixIcon: suffixIcon ??
                           (Focus.of(context).hasFocus &&
                                   controller.text.isNotEmpty &&
-                                  showClearTextButton
+                                  showClearTextButton &&
+                                  !readOnly
                               ? IconButton(
                                   icon: const Icon(Icons.cancel),
                                   onPressed: controller.clear,

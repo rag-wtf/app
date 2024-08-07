@@ -58,6 +58,11 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 // @stacked-service
   ],
+  dialogs: [
+    StackedDialog(classType: EmbeddingDialog),
+    StackedDialog(classType: InfoAlertDialog),
+// @stacked-dialog
+  ],
   logger: StackedLogger(),
 )
 class App {}

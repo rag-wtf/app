@@ -8,7 +8,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/arb/app_localizations.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
-import 'package:rag/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:rag/ui/views/home/home_view.dart';
 import 'package:rag/ui/views/startup/startup_view.dart';
 import 'package:settings/settings.dart';
@@ -79,8 +78,10 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
     StackedDialog(classType: ConnectionDialog),
+    StackedDialog(classType: EmbeddingDialog),
     // @stacked-dialog
   ],
+  logger: StackedLogger(),
 )
 class App extends StatelessWidget {
   const App({super.key});

@@ -2,12 +2,14 @@ import 'package:avatar_brick/avatar_brick.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:chat/src/ui/widgets/horizontal_list.dart';
 import 'package:chat/src/ui/widgets/markdown_widget.dart';
+import 'package:document/document.dart';
 import 'package:flutter/material.dart';
 
 class MessageWidget extends StatelessWidget {
-  const MessageWidget(this.message, {super.key});
+  const MessageWidget(this.message, this.showDialogFunction, {super.key});
 
   final Message message;
+  final Future<void> Function(Embedding embedding) showDialogFunction;
   static const avatarPadding = 8.0;
 
   @override
@@ -62,7 +64,7 @@ class MessageWidget extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: MarkdownWidget(message.text),
                   ),
-                  HorizontalList(message.embeddings),
+                  HorizontalList(message.embeddings, showDialogFunction),
                 ],
               ),
             ),

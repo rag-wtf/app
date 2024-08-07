@@ -7,6 +7,7 @@ import 'package:document/src/services/document_embedding_repository.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/embedding_repository.dart';
+import 'package:document/src/ui/dialogs/embedding/embedding_dialog.dart';
 import 'package:document/src/ui/views/document_list/document_list_view.dart';
 import 'package:document/src/ui/views/startup/startup_view.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -56,7 +57,8 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   ],
   dialogs: [
     StackedDialog(classType: ConnectionDialog),
-    // @stacked-dialog
+    StackedDialog(classType: EmbeddingDialog),
+// @stacked-dialog
   ],
   logger: StackedLogger(),
 )

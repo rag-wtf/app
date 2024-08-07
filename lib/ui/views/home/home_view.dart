@@ -239,6 +239,7 @@ class CenterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChatView(
       leftWidgetTabController: leftWidgetTabController,
+      showDialogFunction: viewModel.showEmbeddingDialog,
     );
   }
 }
