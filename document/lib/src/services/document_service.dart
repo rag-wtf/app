@@ -474,36 +474,32 @@ class DocumentService with ListenableServiceMixin {
         )
         .toList();
 
-    try {
-      final vectors = await _apiService
-          .index(
-            _dio,
-            _settingService.get(embeddingsModelKey).value,
-            _settingService.get(embeddingsApiUrlKey).value,
-            _settingService.get(embeddingsApiKey).value,
-            chunkedTexts,
-            batchSize: int.parse(
-              _settingService.get(embeddingsApiBatchSizeKey, type: int).value,
-            ),
-            dimensions: int.parse(
-              _settingService.get(embeddingsDimensionsKey, type: int).value,
-            ),
-            compressed: bool.parse(
-              _settingService.get(embeddingsCompressedKey, type: bool).value,
-            ),
-          )
-          .timeout(
-            Duration(seconds: max(embeddings.length, 900)),
-          );
+    final vectors = await _apiService
+        .index(
+          _dio,
+          _settingService.get(embeddingsModelKey).value,
+          _settingService.get(embeddingsApiUrlKey).value,
+          _settingService.get(embeddingsApiKey).value,
+          chunkedTexts,
+          batchSize: int.parse(
+            _settingService.get(embeddingsApiBatchSizeKey, type: int).value,
+          ),
+          dimensions: int.parse(
+            _settingService.get(embeddingsDimensionsKey, type: int).value,
+          ),
+          compressed: bool.parse(
+            _settingService.get(embeddingsCompressedKey, type: bool).value,
+          ),
+        )
+        .timeout(
+          Duration(seconds: max(embeddings.length, 900)),
+        );
 
-      await _updateEmbeddings(
-        documentItem.tablePrefix,
-        embeddings,
-        vectors,
-      );
-    } catch (e, s) {
-      _log.e(e, stackTrace: s);
-    }
+    await _updateEmbeddings(
+      documentItem.tablePrefix,
+      embeddings,
+      vectors,
+    );
 
     await _updateDocumentStatus(
       documentItem,
