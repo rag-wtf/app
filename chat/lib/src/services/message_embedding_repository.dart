@@ -1,4 +1,5 @@
 import 'package:chat/src/app/app.locator.dart';
+import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:chat/src/services/message_embedding.dart';
 import 'package:document/document.dart';
@@ -6,6 +7,7 @@ import 'package:surrealdb_js/surrealdb_js.dart';
 
 class MessageEmbeddingRepository {
   final _db = locator<Surreal>();
+  final _log = getLogger('MessageEmbeddingRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -97,10 +99,13 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
         '${tablePrefix}_${MessageEmbedding.tableName}';
     final messageTableName = '${tablePrefix}_${Message.tableName}';
     final sql = '''
-SELECT ->$messageEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
+SELECT ->$messageEmbeddingTableName.* AS MessageEmbedding,
+->$messageEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
 AS Embedding FROM $messageTableName 
 WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableName)) == $messageId;
 ''';
+
+    _log.d('sql $sql');
 
     final results = (await _db.query(
       sql,
@@ -108,16 +113,22 @@ WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableNa
     if (results.isNotEmpty) {
       final result = Map<String, dynamic>.from(results.first as Map);
       final embeddings = result['Embedding'] as List;
+      final messageEmbeddings = result['MessageEmbedding'] as List;
 
-      return embeddings
-          .map(
-            (result) => Embedding.fromJson(
-              Map<String, dynamic>.from(
-                result as Map,
-              ),
+      return embeddings.asMap().entries.map(
+        (entry) {
+          final idx = entry.key;
+          final val = entry.value as Map;
+          final embedding = Embedding.fromJson(
+            Map<String, dynamic>.from(val),
+          );
+          return embedding.copyWith(
+            score: double.parse(
+              (messageEmbeddings[idx] as Map)['score'].toString(),
             ),
-          )
-          .toList();
+          );
+        },
+      ).toList();
     } else {
       return List.empty();
     }
