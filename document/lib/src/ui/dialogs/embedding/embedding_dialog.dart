@@ -47,11 +47,14 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  request.title ?? idController.text,
+                  request.title ??
+                      idController.text
+                          .substring(idController.text.indexOf(':') + 1),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -65,8 +68,8 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
             else
               ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 420),
-                child: Expanded(
-                  child: ListView(
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
                       /* InputField(
                         labelText: 'ID',
