@@ -35,7 +35,6 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
     EmbeddingDialogModel viewModel,
     Widget? child,
   ) {
-    final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
@@ -64,73 +63,74 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
             if (viewModel.isBusy)
               const Center(child: CircularProgressIndicator())
             else
-              Expanded(
-                child: ListView(
-                  children: [
-                    /* InputField(
-                      labelText: 'ID',
-                      prefixIcon: Icon(
-                        Icons.fingerprint,
-                        color: iconColor,
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 420),
+                child: Expanded(
+                  child: ListView(
+                    children: [
+                      /* InputField(
+                        labelText: 'ID',
+                        prefixIcon: Icon(
+                          Icons.fingerprint,
+                          color: iconColor,
+                        ),
+                        errorText: viewModel.idValidationMessage,
+                        controller: idController,
+                        textInputType: TextInputType.text,
+                        readOnly: true,
                       ),
-                      errorText: viewModel.idValidationMessage,
-                      controller: idController,
-                      textInputType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    verticalSpaceTiny,
-                    */
-                    InputField(
-                      labelText: 'Content',
-                      errorText: viewModel.contentValidationMessage,
-                      controller: contentController,
-                      textInputType: TextInputType.text,
-                      readOnly: true,
-                      maxLines: 5,
-                    ),
-                    verticalSpaceTiny,
-                    InputField(
-                      labelText: 'Embedding',
-                      errorText: viewModel.embeddingValidationMessage,
-                      controller: embeddingController,
-                      textInputType: TextInputType.text,
-                      readOnly: true,
-                      //minLines: 1,
-                      //maxLines: 1,
-                    ),
-                    verticalSpaceTiny,
-                    InputField(
-                      labelText: 'Metadata',
-                      errorText: viewModel.metadataValidationMessage,
-                      controller: metadataController,
-                      textInputType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    verticalSpaceTiny,
-                    InputField(
-                      labelText: 'Created',
-                      errorText: viewModel.createdValidationMessage,
-                      controller: createdController,
-                      textInputType: TextInputType.datetime,
-                      readOnly: true,
-                    ),
-                    verticalSpaceTiny,
-                    InputField(
-                      labelText: 'Updated',
-                      errorText: viewModel.updatedValidationMessage,
-                      controller: updatedController,
-                      textInputType: TextInputType.datetime,
-                      readOnly: true,
-                    ),
-                    verticalSpaceTiny,
-                    InputField(
-                      labelText: 'Score',
-                      errorText: viewModel.scoreValidationMessage,
-                      controller: scoreController,
-                      textInputType: TextInputType.number,
-                      readOnly: true,
-                    ),
-                  ],
+                      verticalSpaceTiny,
+                      */
+                      InputField(
+                        labelText: 'Content',
+                        errorText: viewModel.contentValidationMessage,
+                        controller: contentController,
+                        textInputType: TextInputType.text,
+                        readOnly: true,
+                        maxLines: 3,
+                      ),
+                      verticalSpaceTiny,
+                      InputField(
+                        labelText: 'Embedding',
+                        errorText: viewModel.embeddingValidationMessage,
+                        controller: embeddingController,
+                        textInputType: TextInputType.text,
+                        readOnly: true,
+                      ),
+                      verticalSpaceTiny,
+                      InputField(
+                        labelText: 'Metadata',
+                        errorText: viewModel.metadataValidationMessage,
+                        controller: metadataController,
+                        textInputType: TextInputType.text,
+                        readOnly: true,
+                      ),
+                      verticalSpaceTiny,
+                      InputField(
+                        labelText: 'Score',
+                        errorText: viewModel.scoreValidationMessage,
+                        controller: scoreController,
+                        textInputType: TextInputType.number,
+                        readOnly: true,
+                      ),
+                      verticalSpaceTiny,
+                      InputField(
+                        labelText: 'Created',
+                        errorText: viewModel.createdValidationMessage,
+                        controller: createdController,
+                        textInputType: TextInputType.datetime,
+                        readOnly: true,
+                      ),
+                      verticalSpaceTiny,
+                      InputField(
+                        labelText: 'Updated',
+                        errorText: viewModel.updatedValidationMessage,
+                        controller: updatedController,
+                        textInputType: TextInputType.datetime,
+                        readOnly: true,
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],
