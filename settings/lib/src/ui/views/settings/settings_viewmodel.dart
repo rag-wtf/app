@@ -290,6 +290,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     final embeddingsDimensions =
         _settingService.get(embeddingsDimensionsKey, type: int).value;
     if (embeddingsDimensionsValue != null &&
+        embeddingsDimensionsValue!.isNotEmpty &&
         embeddingsDimensionsValue != embeddingsDimensions &&
         !hasEmbeddingsDimensionsValidationMessage) {
       String? redefineEmbeddingIndexError;
@@ -299,9 +300,11 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
           embeddingsDimensionsValue!,
         );
       }
+      _log.d('redefineEmbeddingIndexError $redefineEmbeddingIndexError');
       if (redefineEmbeddingIndexError != null) {
         fieldsValidationMessages[EmbeddingsDimensionsValueKey] =
             redefineEmbeddingIndexError;
+        notifyListeners();
       } else {
         await _settingService.set(
           tablePrefix,

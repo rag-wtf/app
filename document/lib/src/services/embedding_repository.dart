@@ -38,8 +38,7 @@ class EmbeddingRepository {
     final total = await getTotal(tablePrefix);
     if (total > 0) {
       return '''
-Cannot change dimensions,
-There are existing embeddings in the database.''';
+Cannot change dimensions, there are existing embeddings in the database.''';
     } else {
       await _db.query(sql);
       return null;
