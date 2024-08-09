@@ -107,7 +107,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     }
     final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE \$content;';
-    _log.d('txn: $txn, payload: $payload');
+    _log.d('txn: $txn, id: $id, payload: $payload');
     if (txn == null) {
       final result = await _db.query(sql, bindings: {'content': payload});
 

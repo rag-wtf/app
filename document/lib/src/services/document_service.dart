@@ -370,9 +370,9 @@ class DocumentService with ListenableServiceMixin {
         status: DocumentStatus.failed,
         errorMessage: errorMessage,
         done: now,
-        updated: now,
       ),
     ))!;
+    _log.d('updatedDocument ${documentItem.item}');
     notifyListeners();
   }
 
