@@ -108,6 +108,7 @@ class HomeViewModel extends BaseViewModel {
     await _dialogService.showCustomDialog<void, Embedding>(
       variant: DialogType.embedding,
       data: embedding,
+      barrierDismissible: true,
     );
   }
 }
