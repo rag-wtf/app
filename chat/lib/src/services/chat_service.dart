@@ -26,7 +26,7 @@ class ChatService with ListenableServiceMixin {
   List<Chat> get chats => _chats.toList();
   List<Message> get messages => _messages.toList();
   bool get _isStreaming => bool.parse(
-        _settingService.get(streamKey, type: bool).value,
+        _settingService.get(streamKey).value,
       );
   String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
   String get _generationApiUrl =>
@@ -38,7 +38,7 @@ class ChatService with ListenableServiceMixin {
       _settingService.get(embeddingsApiUrlKey).value;
   String get _embeddingsApiKey => _settingService.get(embeddingsApiKey).value;
   int get _k => int.parse(
-        _settingService.get(retrieveTopNResultsKey, type: int).value,
+        _settingService.get(retrieveTopNResultsKey).value,
       );
   String get _promptTemplate => _settingService.get(promptTemplateKey).value;
   String get _searchType => _settingService.get(searchTypeKey).value;
@@ -552,10 +552,10 @@ class ChatService with ListenableServiceMixin {
       _settingService.get(embeddingsModelKey).value,
       input,
       dimensions: int.parse(
-        _settingService.get(embeddingsDimensionsKey, type: int).value,
+        _settingService.get(embeddingsDimensionsKey).value,
       ),
       compressed: bool.parse(
-        _settingService.get(embeddingsCompressedKey, type: bool).value,
+        _settingService.get(embeddingsCompressedKey).value,
       ),
     );
     final embedding = (responseData?['data'] as List).first as Map;

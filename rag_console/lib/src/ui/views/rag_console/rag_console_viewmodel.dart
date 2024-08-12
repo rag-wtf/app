@@ -40,10 +40,10 @@ class RagConsoleViewModel extends BaseViewModel {
       _settingService.get(generationApiKey).value;
   String get _generationModel => _settingService.get(generationModelKey).value;
   double get _searchThreshold =>
-      _settingService.get(searchThresholdKey, type: double).value as double;
+      _settingService.get(searchThresholdKey).value as double;
   String get surrealVersion => _surrealVersion;
   bool get _embeddingsCompressed => bool.parse(
-        _settingService.get(embeddingsCompressedKey, type: bool).value,
+        _settingService.get(embeddingsCompressedKey).value,
       );
 
   static const helpMessageHint =
@@ -107,8 +107,7 @@ Example:
     setBusy(true);
     _log.d('initialise() tablePrefix: $tablePrefix');
     await _settingService.initialise(tablePrefix);
-    final dimensions =
-        _settingService.get(embeddingsDimensionsKey, type: int).value;
+    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
     await _documentService.initialise(tablePrefix, dimensions);
     await _chatService.initialise(tablePrefix);
     _initMessages();
@@ -143,7 +142,7 @@ Example:
   Future<Map<String, dynamic>?> embed(String input) async {
     final embeddingsApiKeyValue = _settingService.get(embeddingsApiKey).value;
     final dimensions = int.parse(
-      _settingService.get(embeddingsDimensionsKey, type: int).value,
+      _settingService.get(embeddingsDimensionsKey).value,
     );
     final response = await _dio.post<Map<String, dynamic>>(
       _embeddingsApiUrl,
@@ -225,7 +224,7 @@ Example:
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
     final k = int.parse(
-      _settingService.get(retrieveTopNResultsKey, type: int).value,
+      _settingService.get(retrieveTopNResultsKey).value,
     );
     final embeddings = await _documentService.similaritySearch(
       tablePrefix,

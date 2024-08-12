@@ -16,7 +16,7 @@ class SettingService with ListenableServiceMixin {
   void Function()? clearFormValuesFunction;
   final _log = getLogger('SettingService');
 
-  Setting get(String key, {Type? type}) {
+  Setting get(String key) {
     Setting setting;
 
     if (_settings.containsKey(key)) {

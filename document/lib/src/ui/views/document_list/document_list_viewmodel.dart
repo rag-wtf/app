@@ -32,8 +32,7 @@ class DocumentListViewModel extends ReactiveViewModel {
       await connectDatabase();
     }
     await _settingService.initialise(tablePrefix);
-    final dimensions =
-        _settingService.get(embeddingsDimensionsKey, type: int).value;
+    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
     await _documentService.initialise(tablePrefix, dimensions);
   }
 

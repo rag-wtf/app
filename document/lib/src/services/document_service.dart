@@ -314,9 +314,8 @@ class DocumentService with ListenableServiceMixin {
     if (documentItem.item.status == DocumentStatus.pending) {
       _log.d(documentItem.item.id);
       documentItem.item = (await getDocumentById(documentItem.item.id!))!;
-      final chunkSize = _settingService.get(chunkSizeKey, type: int).value;
-      final chunkOverlap =
-          _settingService.get(chunkOverlapKey, type: int).value;
+      final chunkSize = _settingService.get(chunkSizeKey).value;
+      final chunkOverlap = _settingService.get(chunkOverlapKey).value;
       final url = StringBuffer()
         ..write(_settingService.get(splitApiUrlKey).value)
         ..write('?$chunkSizeQueryString=$chunkSize')
@@ -416,7 +415,7 @@ class DocumentService with ListenableServiceMixin {
     final now = DateTime.now();
     final fullTableName = '${documentItem.tablePrefix}_${Embedding.tableName}';
     final dimensions = int.parse(
-      _settingService.get(embeddingsDimensionsKey, type: int).value,
+      _settingService.get(embeddingsDimensionsKey).value,
     );
     final emptyEmbedding = List<double>.filled(dimensions, 0);
     final embeddings = List<Embedding>.from(
@@ -482,13 +481,13 @@ class DocumentService with ListenableServiceMixin {
           _settingService.get(embeddingsApiKey).value,
           chunkedTexts,
           batchSize: int.parse(
-            _settingService.get(embeddingsApiBatchSizeKey, type: int).value,
+            _settingService.get(embeddingsApiBatchSizeKey).value,
           ),
           dimensions: int.parse(
-            _settingService.get(embeddingsDimensionsKey, type: int).value,
+            _settingService.get(embeddingsDimensionsKey).value,
           ),
           compressed: bool.parse(
-            _settingService.get(embeddingsCompressedKey, type: bool).value,
+            _settingService.get(embeddingsCompressedKey).value,
           ),
         )
         .timeout(

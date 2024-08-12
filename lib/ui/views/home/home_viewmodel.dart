@@ -58,8 +58,8 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
-  String getSettingValue(String key, {Type? type}) {
-    final setting = _settingService.get(key, type: type);
+  String getSettingValue(String key) {
+    final setting = _settingService.get(key);
     return setting.value;
   }
 
@@ -73,8 +73,7 @@ class HomeViewModel extends BaseViewModel {
     setBusy(true);
     await connectDatabase();
     await _settingService.initialise(tablePrefix);
-    final dimensions =
-        _settingService.get(embeddingsDimensionsKey, type: int).value;
+    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
     await _documentService.initialise(tablePrefix, dimensions);
     await _chatService.initialise(tablePrefix);
     _totalChats = await _chatRepository.getTotal(tablePrefix);

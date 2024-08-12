@@ -63,21 +63,21 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     setBusy(true);
     await _settingService.initialise(tablePrefix);
     _settingService.clearFormValuesFunction = clearFormValues;
-    _stream = bool.parse(_settingService.get(streamKey, type: bool).value);
+    _stream = bool.parse(_settingService.get(streamKey).value);
     _embeddingsCompressed = bool.parse(
-      _settingService.get(embeddingsCompressedKey, type: bool).value,
+      _settingService.get(embeddingsCompressedKey).value,
     );
     final splitApiUrl = _settingService.get(splitApiUrlKey);
     if (splitApiUrl.id != null) {
       splitApiUrlValue = splitApiUrl.value;
     }
 
-    final chunkSize = _settingService.get(chunkSizeKey, type: int);
+    final chunkSize = _settingService.get(chunkSizeKey);
     if (chunkSize.id != null) {
       chunkSizeValue = chunkSize.value;
     }
 
-    final chunkOverlap = _settingService.get(chunkOverlapKey, type: int);
+    final chunkOverlap = _settingService.get(chunkOverlapKey);
     if (chunkOverlap.id != null) {
       chunkOverlapValue = chunkOverlap.value;
     }
@@ -97,14 +97,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsApiKeyValue = embeddingsApiKeyVal.value;
     }
 
-    final embeddingsDimensions =
-        _settingService.get(embeddingsDimensionsKey, type: int);
+    final embeddingsDimensions = _settingService.get(embeddingsDimensionsKey);
     if (embeddingsDimensions.id != null) {
       embeddingsDimensionsValue = embeddingsDimensions.value;
     }
 
     final embeddingsApiBatchSize =
-        _settingService.get(embeddingsApiBatchSizeKey, type: int);
+        _settingService.get(embeddingsApiBatchSizeKey);
     if (embeddingsApiBatchSize.id != null) {
       embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
     }
@@ -124,8 +123,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       searchThresholdValue = searchThreshold.value;
     }
 
-    final retrieveTopNResults =
-        _settingService.get(retrieveTopNResultsKey, type: int);
+    final retrieveTopNResults = _settingService.get(retrieveTopNResultsKey);
     if (retrieveTopNResults.id != null) {
       retrieveTopNResultsValue = retrieveTopNResults.value;
     }
@@ -150,28 +148,27 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       promptTemplateValue = promptTemplate.value;
     }
 
-    final temperature = _settingService.get(temperatureKey, type: double);
+    final temperature = _settingService.get(temperatureKey);
     if (temperature.id != null) {
       temperatureValue = temperature.value;
     }
 
-    final topP = _settingService.get(topPKey, type: double);
+    final topP = _settingService.get(topPKey);
     if (topP.id != null) {
       topPValue = topP.value;
     }
 
-    final repetitionPenalty =
-        _settingService.get(repetitionPenaltyKey, type: double);
+    final repetitionPenalty = _settingService.get(repetitionPenaltyKey);
     if (repetitionPenalty.id != null) {
       repetitionPenaltyValue = repetitionPenalty.value;
     }
 
-    final topK = _settingService.get(topKKey, type: int);
+    final topK = _settingService.get(topKKey);
     if (topK.id != null) {
       topKValue = topK.value;
     }
 
-    final maxTokens = _settingService.get(maxTokensKey, type: int);
+    final maxTokens = _settingService.get(maxTokensKey);
     if (maxTokens.id != null) {
       maxTokensValue = maxTokens.value;
     }
@@ -288,7 +285,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> setEmbeddingsDimensions() async {
     final embeddingsDimensions =
-        _settingService.get(embeddingsDimensionsKey, type: int).value;
+        _settingService.get(embeddingsDimensionsKey).value;
     if (embeddingsDimensionsValue != null &&
         embeddingsDimensionsValue!.isNotEmpty &&
         embeddingsDimensionsValue != embeddingsDimensions &&
