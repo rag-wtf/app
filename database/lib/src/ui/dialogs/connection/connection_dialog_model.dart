@@ -20,14 +20,24 @@ class ConnectionDialogModel extends FormViewModel {
   String connectionKeySelected = newConnectionKey;
   String _protocol = 'ws';
   late List<ConnectionSetting> connectionNames;
-  bool autoConnect = true;
+  bool _autoConnect = true;
+
+  bool get autoConnect => _autoConnect;
+
+  set autoConnect(bool value) {
+    if (_autoConnect != value) {
+      _autoConnect = value;
+      notifyListeners();
+    }
+  }
 
   String get protocol => _protocol;
 
-  // Setter method for protocol
   set protocol(String value) {
-    _protocol = value;
-    notifyListeners();
+    if (_protocol != value) {
+      _protocol = value;
+      notifyListeners();
+    }
   }
 
   Future<void> initialise() async {
@@ -43,16 +53,6 @@ class ConnectionDialogModel extends FormViewModel {
         value: newConnectionName,
       ),
     );
-    final autoConnectValue =
-        await _storage.read(key: ConnectionSetting.autoConnectKey);
-    if (autoConnectValue != null) {
-      autoConnect = bool.parse(autoConnectValue);
-    } else {
-      await _storage.write(
-        key: ConnectionSetting.autoConnectKey,
-        value: autoConnect.toString(),
-      );
-    }
   }
 
   Future<void> onConnectionSelected(String connectionKey) async {
@@ -102,6 +102,10 @@ class ConnectionDialogModel extends FormViewModel {
       throwException: true,
     );
     await _saveConnectionSettings(_protocol, addressPort);
+    await _storage.write(
+      key: ConnectionSetting.autoConnectKey,
+      value: autoConnect.toString(),
+    );
     return true;
   }
 
@@ -166,15 +170,5 @@ class ConnectionDialogModel extends FormViewModel {
 
       clearForm();
     }
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  Future<void> setAutoConnect(bool value) async {
-    autoConnect = value;
-    await _storage.write(
-      key: ConnectionSetting.autoConnectKey,
-      value: value.toString(),
-    );
-    notifyListeners();
   }
 }

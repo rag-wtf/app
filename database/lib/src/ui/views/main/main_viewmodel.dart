@@ -23,4 +23,13 @@ class MainViewModel extends BaseViewModel {
       );
     }
   }
+
+  Future<void> disconnect() async {
+    await _connectionSettingService.disconnect();
+    await _dialogService.showCustomDialog(
+      variant: DialogType.connection,
+      title: 'Connection',
+      description: 'Create database connection',
+    );
+  }
 }

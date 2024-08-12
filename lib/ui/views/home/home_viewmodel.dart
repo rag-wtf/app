@@ -111,4 +111,9 @@ class HomeViewModel extends BaseViewModel {
       barrierDismissible: true,
     );
   }
+
+  Future<void> disconnect() async {
+    await _connectionSettingService.disconnect();
+    await connectDatabase();
+  }
 }

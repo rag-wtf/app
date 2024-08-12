@@ -100,6 +100,11 @@ class ConnectionSettingService {
     }
   }
 
+  Future<void> disconnect() async {
+    await _db.close();
+    await _storage.delete(key: ConnectionSetting.autoConnectKey);
+  }
+
   Future<bool> isReady() async {
     try {
       return (await _db.version()).isNotEmpty;

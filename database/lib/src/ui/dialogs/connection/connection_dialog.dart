@@ -222,8 +222,8 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: viewModel.autoConnect,
-                    onChanged: (value) async {
-                      await viewModel.setAutoConnect(value);
+                    onChanged: (value) {
+                      viewModel.autoConnect = value;
                     },
                   ),
                 ],

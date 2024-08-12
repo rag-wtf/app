@@ -75,6 +75,11 @@ class _HomeViewState extends State<HomeView>
                         icon: const Icon(Icons.settings),
                       ),
                     ),
+                  const VerticalDivider(),
+                  IconButton(
+                    onPressed: viewModel.disconnect,
+                    icon: const Icon(Icons.exit_to_app),
+                  ),
                 ],
               ),
               body: viewModel.isBusy

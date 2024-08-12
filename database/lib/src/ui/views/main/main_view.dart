@@ -16,6 +16,15 @@ class MainView extends StackedView<MainViewModel> {
       body: Container(
         padding: const EdgeInsets.only(left: 25, right: 25),
       ),
+      appBar: AppBar(
+        title: const Text('Database'),
+        actions: [
+          IconButton(
+            onPressed: viewModel.disconnect,
+            icon: const Icon(Icons.exit_to_app),
+          ),
+        ],
+      ),
     );
   }
 
