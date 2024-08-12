@@ -25,6 +25,9 @@ jobs:
           chmod +x ./rag_console/generate.sh && cd rag_console && ./generate.sh && cd ..
           chmod +x ./settings/generate.sh && cd settings && ./generate.sh && cd ..
 
+      - name: Create .env file
+        run: echo "${{ secrets.DOT_ENV_FILE }}" > .env
+
       - name: Flutter Build
         run: >
           flutter build web 
@@ -32,7 +35,7 @@ jobs:
           --release 
           --no-tree-shake-icons 
           --target lib/main_production.dart
-          --dart-define ENV_KEY=${{ secrets.ENV_KEY }}
+          --dart-define-from-file=.env
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0

@@ -1,2 +1,2 @@
 #!/bin/bash
-flutter run -d chrome --dart-define ENV_KEY=$ENV_KEY
+flutter run -d chrome  --dart-define-from-file=../.env

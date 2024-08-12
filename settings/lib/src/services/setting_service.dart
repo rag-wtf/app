@@ -1,5 +1,3 @@
-import 'package:env_reader/env_reader.dart';
-import 'package:flutter/services.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
@@ -13,6 +11,7 @@ class SettingService with ListenableServiceMixin {
     listenToReactiveValues([_settings]);
   }
   final Map<String, Setting> _settings = {};
+  final Map<String, String> _enviromentVariables = {};
   final _settingRepository = locator<SettingRepository>();
   void Function()? clearFormValuesFunction;
   final _log = getLogger('SettingService');
@@ -23,47 +22,72 @@ class SettingService with ListenableServiceMixin {
     if (_settings.containsKey(key)) {
       setting = _settings[key]!;
     } else {
-      setting = _getDefaultSetting(key, type);
+      setting = _getDefaultSetting(key);
     }
     _log.d(setting.toString());
     return setting;
   }
 
-  Setting _getDefaultSetting(String key, Type? type) {
-    String value;
-    if (type == int) {
-      value = Env.read<int>(key).toString();
-    } else if (type == double) {
-      value = Env.read<double>(key).toString();
-    } else if (type == bool) {
-      value = Env.read<bool>(key).toString();
-    } else {
-      value = Env.read<String>(key) ?? undefined;
-    }
+  Setting _getDefaultSetting(String key) {
+    final value = _enviromentVariables[key];
     return Setting(
       key: key,
-      value: value,
+      value: value != null && value.isNotEmpty ? value : undefined,
     );
   }
 
-  Future<void> initialise(String tablePrefix) async {
-    if (Env.read(splitApiUrlKey) == null) {
-      String settings;
-      try {
-        // load from rag
-        settings =
-            await rootBundle.loadString('packages/settings/assets/settings');
-      } catch (_) {
-        // load in the package
-        settings = await rootBundle.loadString('settings');
-      }
-      await Env.load(
-        EnvStringLoader(settings),
-        const String.fromEnvironment(envKey),
-      );
-    }
+  void _initialiseEnvironmentVariables() {
+    _enviromentVariables[splitApiUrlKey] =
+        const String.fromEnvironment(splitApiUrlKey);
+    _enviromentVariables[chunkSizeKey] =
+        const String.fromEnvironment(chunkSizeKey);
+    _enviromentVariables[chunkOverlapKey] =
+        const String.fromEnvironment(chunkOverlapKey);
+    _enviromentVariables[embeddingsModelKey] =
+        const String.fromEnvironment(embeddingsModelKey);
+    _enviromentVariables[embeddingsApiUrlKey] =
+        const String.fromEnvironment(embeddingsApiUrlKey);
+    _enviromentVariables[embeddingsApiKey] =
+        const String.fromEnvironment(embeddingsApiKey);
+    _enviromentVariables[embeddingsDimensionsKey] =
+        const String.fromEnvironment(embeddingsDimensionsKey);
+    _enviromentVariables[embeddingsApiBatchSizeKey] =
+        const String.fromEnvironment(embeddingsApiBatchSizeKey);
+    _enviromentVariables[embeddingsCompressedKey] =
+        const String.fromEnvironment(embeddingsCompressedKey);
+    _enviromentVariables[searchTypeKey] =
+        const String.fromEnvironment(searchTypeKey);
+    _enviromentVariables[searchIndexKey] =
+        const String.fromEnvironment(searchIndexKey);
+    _enviromentVariables[searchThresholdKey] =
+        const String.fromEnvironment(searchThresholdKey);
+    _enviromentVariables[retrieveTopNResultsKey] =
+        const String.fromEnvironment(retrieveTopNResultsKey);
+    _enviromentVariables[generationModelKey] =
+        const String.fromEnvironment(generationModelKey);
+    _enviromentVariables[generationApiUrlKey] =
+        const String.fromEnvironment(generationApiUrlKey);
+    _enviromentVariables[generationApiKey] =
+        const String.fromEnvironment(generationApiKey);
+    _enviromentVariables[systemPromptKey] =
+        const String.fromEnvironment(systemPromptKey);
+    _enviromentVariables[promptTemplateKey] =
+        const String.fromEnvironment(promptTemplateKey);
+    _enviromentVariables[temperatureKey] =
+        const String.fromEnvironment(temperatureKey);
+    _enviromentVariables[topPKey] = const String.fromEnvironment(topPKey);
+    _enviromentVariables[repetitionPenaltyKey] =
+        const String.fromEnvironment(repetitionPenaltyKey);
+    _enviromentVariables[topKKey] = const String.fromEnvironment(topKKey);
+    _enviromentVariables[maxTokensKey] =
+        const String.fromEnvironment(maxTokensKey);
+    _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);
+    _enviromentVariables[streamKey] = const String.fromEnvironment(streamKey);
+  }
 
+  Future<void> initialise(String tablePrefix) async {
     if (_settings.isEmpty) {
+      _initialiseEnvironmentVariables();
       final isSchemaCreated =
           await _settingRepository.isSchemaCreated(tablePrefix);
       _log.d('isSchemaCreated $isSchemaCreated');

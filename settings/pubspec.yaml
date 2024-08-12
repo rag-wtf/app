@@ -10,7 +10,6 @@ environment:
 dependencies:
   database: 
     path: ../database
-  env_reader: ^2.1.0
   flutter:
     sdk: flutter
   flutter_secure_storage: ^9.2.2  
@@ -37,10 +36,7 @@ dev_dependencies:
   very_good_analysis: ^6.0.0
 
 dependency_overrides:
-  js: ^0.7.1
   meta: ^1.15.0
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/
