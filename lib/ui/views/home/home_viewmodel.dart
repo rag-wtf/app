@@ -26,6 +26,9 @@ class HomeViewModel extends BaseViewModel {
   final _log = getLogger('HomeViewModel');
   int get totalChats => _totalChats;
   late int _totalChats;
+
+  String get buildNumber => const String.fromEnvironment('BUILD_NUMBER');
+
   bool _isKeepSettings = true;
   bool get isKeepSettings => _isKeepSettings;
   set isKeepSettings(bool value) {

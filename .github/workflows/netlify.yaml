@@ -36,6 +36,7 @@ jobs:
           --no-tree-shake-icons 
           --target lib/main_production.dart
           --dart-define-from-file=.env
+          --dart-define BUILD_NUMBER=$GITHUB_RUN_NUMBER
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0

@@ -87,11 +87,27 @@ class _HomeViewState extends State<HomeView>
                       child: CircularProgressIndicator(),
                     )
                   : SafeArea(
-                      child: BodyWidget(
-                        viewModel,
-                        constraints.maxWidth,
-                        closeDrawer,
-                        _leftWidgetTabController,
+                      child: Column(
+                        children: [
+                          Flexible(
+                            flex: 96,
+                            child: BodyWidget(
+                              viewModel,
+                              constraints.maxWidth,
+                              closeDrawer,
+                              _leftWidgetTabController,
+                            ),
+                          ),
+                          Flexible(
+                            flex: 4,
+                            child: Center(
+                              child: Text(
+                                'b${viewModel.buildNumber}',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
               drawer: constraints.maxWidth < mediumScreenWidth
