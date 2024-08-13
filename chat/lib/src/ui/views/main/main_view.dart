@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class MainView extends StackedView<MainViewModel> {
-  const MainView({super.key, this.tablePrefix = 'main'});
+  const MainView({
+    super.key,
+    this.tablePrefix = 'main',
+    this.hasConnectDatabase = false,
+  });
   final String tablePrefix;
+  final bool hasConnectDatabase;
 
   @override
   Widget builder(
@@ -34,7 +39,7 @@ class MainView extends StackedView<MainViewModel> {
   MainViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      MainViewModel(tablePrefix);
+      MainViewModel(tablePrefix, hasConnectDatabase: hasConnectDatabase);
 
   @override
   Future<void> onViewModelReady(MainViewModel viewModel) async {

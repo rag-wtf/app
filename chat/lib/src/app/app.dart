@@ -7,8 +7,10 @@ import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
 import 'package:chat/src/ui/views/main/main_view.dart';
 import 'package:chat/src/ui/views/startup/startup_view.dart';
+import 'package:database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -23,7 +25,15 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 // @stacked-route
   ],
   dependencies: [
-// document package
+    LazySingleton<DialogService>(classType: DialogService),
+    LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
+    LazySingleton<ConnectionSettingRepository>(
+      classType: ConnectionSettingRepository,
+    ),
+    LazySingleton<ConnectionSettingService>(
+      classType: ConnectionSettingService,
+    ),
+    // document package
     LazySingleton<GZipEncoder>(classType: GZipEncoder),
     LazySingleton<GZipDecoder>(classType: GZipDecoder),
     LazySingleton<DocumentService>(classType: DocumentService),
@@ -59,6 +69,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 // @stacked-service
   ],
   dialogs: [
+    StackedDialog(classType: ConnectionDialog),
     StackedDialog(classType: EmbeddingDialog),
     StackedDialog(classType: InfoAlertDialog),
 // @stacked-dialog
