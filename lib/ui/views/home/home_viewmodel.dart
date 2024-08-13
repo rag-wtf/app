@@ -1,6 +1,7 @@
 import 'package:chat/chat.dart';
 import 'package:database/database.dart';
 import 'package:document/document.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
 import 'package:rag/app/app.locator.dart';
@@ -27,7 +28,12 @@ class HomeViewModel extends BaseViewModel {
   int get totalChats => _totalChats;
   late int _totalChats;
 
-  String get buildNumber => const String.fromEnvironment('BUILD_NUMBER');
+  late String _appName;
+  String get appName => _appName;
+  late String _version;
+  String get version => _version;
+  late String _buildNumber;
+  String get buildNumber => _buildNumber;
 
   bool _isKeepSettings = true;
   bool get isKeepSettings => _isKeepSettings;
@@ -74,6 +80,10 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> initialise() async {
     setBusy(true);
+    final packageInfo = await PackageInfo.fromPlatform();
+    _appName = packageInfo.appName;
+    _version = packageInfo.version;
+    _buildNumber = packageInfo.buildNumber;
     await connectDatabase();
     await _settingService.initialise(tablePrefix);
     final dimensions = _settingService.get(embeddingsDimensionsKey).value;

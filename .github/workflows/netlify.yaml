@@ -28,6 +28,9 @@ jobs:
       - name: Create .env file
         run: echo "${{ secrets.DOT_ENV_FILE }}" > .env
 
+      - name: Update GITHUB_RUN_NUMBER to version
+        run: ./update_version.sh
+        
       - name: Flutter Build
         run: >
           flutter build web 
@@ -36,7 +39,6 @@ jobs:
           --no-tree-shake-icons 
           --target lib/main_production.dart
           --dart-define-from-file=.env
-          --dart-define BUILD_NUMBER=$GITHUB_RUN_NUMBER
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0

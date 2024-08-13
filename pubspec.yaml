@@ -1,6 +1,6 @@
 name: rag
 description: RAG.WTF App.
-version: 1.0.0+1
+version: 1.0.0
 publish_to: none
 
 environment:
@@ -22,6 +22,7 @@ dependencies:
     sdk: flutter
   flutter_secure_storage: ^9.2.2    
   intl: ^0.19.0
+  package_info_plus: ^8.0.2
   rag_console:
     path: rag_console
   settings:
