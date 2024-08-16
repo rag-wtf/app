@@ -51,6 +51,10 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     ),
     LazySingleton<ChatService>(classType: ChatService),
     LazySingleton<ChatApiService>(classType: ChatApiService),
+    LazySingleton<StreamResponseService>(
+      classType: HttpStreamResponseService,
+      asType: StreamResponseService,
+    ),
 
     // settings package
     LazySingleton<SettingService>(classType: SettingService),

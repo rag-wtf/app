@@ -322,6 +322,7 @@ class ChatService with ListenableServiceMixin {
   }
 
   void _onMessageTextResponse(String content) {
+    _log.d('${DateTime.now().millisecond} $content');
     if (_messages.first.status == Status.sending) {
       _messages.first = _messages.first.copyWith(
         text: content,
@@ -388,8 +389,7 @@ class ChatService with ListenableServiceMixin {
     );
     if (isTxnSucess) {
       if (chat.name == newChatName) {
-        final responseStream = _chatApiService.generateStream(
-          _dio,
+        await _chatApiService.generateStream(
           [],
           defaultChatWindow,
           '$summarizeInASentencePrompt${_messages.first.text}',
@@ -397,11 +397,9 @@ class ChatService with ListenableServiceMixin {
           _generationApiKey,
           _model,
           chatNameSummarizerSystemPrompt,
+          _onChatNameResponse,
+          onDone: _onChatNameResponseCompleted,
         );
-        await for (final content in responseStream) {
-          _onChatNameResponse(content);
-        }
-        await _onChatNameResponseCompleted();
       }
     } else {
       throw Exception('Unable to create message.');
@@ -496,9 +494,14 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  Stream<String> generateMessageText(String prompt) async* {
-    yield* _chatApiService.generateStream(
-      _dio,
+  Future<void> generateMessageText(
+    String prompt,
+    void Function(String content)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) async {
+    await _chatApiService.generateStream(
       messages,
       defaultChatWindow,
       prompt,
@@ -506,6 +509,10 @@ class ChatService with ListenableServiceMixin {
       _generationApiKey,
       _model,
       _systemPrompt,
+      onData,
+      onDone: onDone,
+      onError: onError,
+      cancelOnError: cancelOnError,
     );
   }
 
@@ -585,11 +592,11 @@ class ChatService with ListenableServiceMixin {
     }
 
     if (_isStreaming) {
-      final responseStream = generateMessageText(prompt);
-      await for (final content in responseStream) {
-        _onMessageTextResponse(content);
-      }
-      await _onMessageTextResponseCompleted();
+      await generateMessageText(
+        prompt,
+        _onMessageTextResponse,
+        onDone: _onMessageTextResponseCompleted,
+      );
       return '';
     } else {
       final generatedText = await _chatApiService.generate(

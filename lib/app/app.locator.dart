@@ -14,6 +14,8 @@ import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
+import 'package:chat/src/services/stream_response_service/http_stream_response_service.dart';
+import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:database/src/services/connection_setting_repository.dart';
 import 'package:database/src/services/connection_setting_service.dart';
 import 'package:dio/src/dio.dart';
@@ -62,6 +64,8 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => MessageEmbeddingRepository());
   locator.registerLazySingleton(() => ChatService());
   locator.registerLazySingleton(() => ChatApiService());
+  locator.registerLazySingleton<StreamResponseService>(
+      () => HttpStreamResponseService());
   locator.registerLazySingleton(() => SettingService());
   locator.registerLazySingleton(() => SettingRepository());
   locator.registerLazySingleton<Surreal>(() => SurrealWasm.getInstance());

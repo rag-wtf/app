@@ -5,6 +5,8 @@ import 'package:chat/src/services/chat_repository.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
+import 'package:chat/src/services/stream_response_service/http_stream_response_service.dart';
+import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:chat/src/ui/views/main/main_view.dart';
 import 'package:chat/src/ui/views/startup/startup_view.dart';
 import 'package:database/database.dart';
@@ -60,6 +62,10 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
     LazySingleton<Dio>(classType: Dio),
     LazySingleton<ChatApiService>(classType: ChatApiService),
+    LazySingleton<StreamResponseService>(
+      classType: HttpStreamResponseService,
+      asType: StreamResponseService,
+    ),
     LazySingleton<Surreal>(
       classType: SurrealWasm,
       asType: Surreal,
