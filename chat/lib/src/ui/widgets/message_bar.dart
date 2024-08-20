@@ -135,8 +135,6 @@ class MessageBar extends StatelessWidget {
                     focusNode: focusNode,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
-                    minLines: 3,
-                    maxLines: 5,
                     onChanged: (String value) {
                       if (value.contains('\n')) {
                         // User pressed Enter key
