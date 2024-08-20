@@ -231,10 +231,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: e17f6b3097b8c51b72c74c9f071a605c47bcc8893839bd66732457a5ebe73714
+      sha256: "0dfb6b6a1979dac1c1245e17cef824d7b452ea29bd33d3467269f9bef3715fb0"
       url: "https://pub.dev"
     source: hosted
-    version: "5.5.0+1"
+    version: "5.6.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -1028,18 +1028,18 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_js
-      sha256: "4395dcccad827250117c37b33aaa281436e87a0af3698df0d010a8facc3f5b94"
+      sha256: a0a87941a1eb4ca3b94728d46f6604aad17acc4c345cccd6ee9d43d81fb959e7
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.14+3"
+    version: "1.0.0-beta.20+4"
   surrealdb_wasm:
     dependency: "direct main"
     description:
       name: surrealdb_wasm
-      sha256: d16f1e5641b3e980de649582588bb29f6f927035a5f5f12e8b372b76a27b7f2b
+      sha256: "5626162e74c635a49f761703effacd4753f86cb7d792b211f87c507b7698813b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.14+10"
+    version: "1.0.0-beta.16+11"
   term_glyph:
     dependency: transitive
     description:
@@ -1177,12 +1177,11 @@ packages:
     source: hosted
     version: "6.0.0"
   very_good_infinite_list:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: very_good_infinite_list
-      sha256: "6f5ad429edbce6084e1c600e56b26b1de8c6b138e8e8fc2de41b686166029aa5"
-      url: "https://pub.dev"
-    source: hosted
+      path: very_good_infinite_list
+      relative: true
+    source: path
     version: "0.7.1"
   visibility_detector:
     dependency: transitive

@@ -34,7 +34,7 @@ dependencies:
   surrealdb_js: ^1.0.0-beta.20+4
   surrealdb_wasm: ^1.0.0-beta.16+11
   ulid: ^2.0.0
-  very_good_infinite_list: ^0.7.1
+
 
 dev_dependencies:
   build_runner: ^2.4.11
@@ -51,6 +51,8 @@ dev_dependencies:
 dependency_overrides:
   js: ^0.7.1
   meta: ^1.15.0
+  very_good_infinite_list: 
+    path: ../very_good_infinite_list
 
 flutter:
   uses-material-design: true

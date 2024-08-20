@@ -45,6 +45,8 @@ dev_dependencies:
 
 dependency_overrides:
   meta: ^1.15.0
+  very_good_infinite_list: 
+    path: very_good_infinite_list
 
 flutter:
   assets:

@@ -30,19 +30,23 @@ class ChatView extends StackedView<ChatViewModel> {
     return Column(
       children: [
         Flexible(
-          child: InfiniteList(
-            scrollController: _scrollController,
-            itemCount: viewModel.messages.length,
-            isLoading: viewModel.isBusy,
-            onFetchData: viewModel.fetchMessages,
-            reverse: true,
-            hasReachedMax: viewModel.hasReachedMax,
-            itemBuilder: (context, index) {
-              return MessageWidget(
-                viewModel.messages[index],
-                showDialogFunction,
-              );
-            },
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: InfiniteList(
+              scrollController: _scrollController,
+              itemCount: viewModel.messages.length,
+              isLoading: viewModel.isBusy,
+              onFetchData: viewModel.fetchMessages,
+              reverse: true,
+              shrinkWrap: true,
+              hasReachedMax: viewModel.hasReachedMax,
+              itemBuilder: (context, index) {
+                return MessageWidget(
+                  viewModel.messages[index],
+                  showDialogFunction,
+                );
+              },
+            ),
           ),
         ),
         const SizedBox(
