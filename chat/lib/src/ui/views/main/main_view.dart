@@ -20,6 +20,7 @@ class MainView extends StackedView<MainViewModel> {
     Widget? child,
   ) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Row(
         children: [
           const Flexible(

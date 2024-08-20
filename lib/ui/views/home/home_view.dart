@@ -55,6 +55,7 @@ class _HomeViewState extends State<HomeView>
           builder: (context, constraints) {
             return Scaffold(
               key: scaffoldKey,
+              resizeToAvoidBottomInset: true,
               appBar: AppBar(
                 title: const Text(appTitle),
                 leading: constraints.maxWidth < mediumScreenWidth
