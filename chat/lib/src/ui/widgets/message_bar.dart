@@ -68,6 +68,7 @@ class MessageBar extends StatelessWidget {
   final void Function(String)? onTextChanged;
   final void Function(String) onSend;
   final void Function()? onTapCloseReply;
+  final focusNode = FocusNode();
 
   /// [MessageBar] builder method
   ///
@@ -131,6 +132,7 @@ class MessageBar extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: _textController,
+                    focusNode: focusNode,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
                     minLines: 3,
@@ -197,8 +199,9 @@ class MessageBar extends StatelessWidget {
   Future<void> _send() async {
     final text = _textController.text.trim();
     if (text.isNotEmpty && !isSendButtonBusy) {
-      onSend(text);
+      focusNode.unfocus();
       _textController.text = '';
+      onSend(text);
     }
   }
 }
