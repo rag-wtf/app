@@ -1,6 +1,6 @@
 import 'package:database/database.dart';
 import 'package:flutter/material.dart';
-import 'package:settings/src/constants.dart';
+import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:settings/src/ui/widgets/settings/settings_expansion_panel.dart';
@@ -13,8 +13,14 @@ import 'package:stacked/stacked_annotations.dart';
       name: 'splitApiUrl',
       validator: SettingsValidators.validateSplitApiUrl,
     ),
-    FormTextField(name: 'chunkSize'),
-    FormTextField(name: 'chunkOverlap'),
+    FormTextField(
+      name: 'chunkSize',
+      validator: SettingsValidators.validateChunkSize,
+    ),
+    FormTextField(
+      name: 'chunkOverlap',
+      validator: SettingsValidators.validateChunkOverlap,
+    ),
     FormTextField(name: 'embeddingsModel'),
     FormTextField(
       name: 'embeddingsApiUrl',
@@ -29,10 +35,22 @@ import 'package:stacked/stacked_annotations.dart';
       name: 'embeddingsApiBatchSize',
       validator: SettingsValidators.validateEmbeddingsApiBatchSize,
     ),
-    FormTextField(name: 'searchType'),
-    FormTextField(name: 'searchIndex'),
-    FormTextField(name: 'searchThreshold'),
-    FormTextField(name: 'retrieveTopNResults'),
+    FormTextField(
+      name: 'searchType',
+      validator: SettingsValidators.validateSearchType,
+    ),
+    FormTextField(
+      name: 'searchIndex',
+      validator: SettingsValidators.validateSearchIndex,
+    ),
+    FormTextField(
+      name: 'searchThreshold',
+      validator: SettingsValidators.validateSearchThreshold,
+    ),
+    FormTextField(
+      name: 'retrieveTopNResults',
+      validator: SettingsValidators.validateRetrieveTopNResults,
+    ),
     FormTextField(name: 'generationModel'),
     FormTextField(
       name: 'generationApiUrl',
@@ -40,12 +58,28 @@ import 'package:stacked/stacked_annotations.dart';
     ),
     FormTextField(name: 'generationApiKey'),
     FormTextField(name: 'promptTemplate'),
-    FormTextField(name: 'temperature'),
-    FormTextField(name: 'topP'),
-    FormTextField(name: 'repetitionPenalty'),
-    FormTextField(name: 'topK'),
-    FormTextField(name: 'maxTokens'),
-    FormTextField(name: 'stop'),
+    FormTextField(
+      name: 'temperature',
+      validator: SettingsValidators.validateTemperature,
+    ),
+    FormTextField(
+      name: 'topP',
+      validator: SettingsValidators.validateTopP,
+    ),
+    FormTextField(
+      name: 'repetitionPenalty',
+      validator: SettingsValidators.validateRepetitionPenalty,
+    ),
+    FormTextField(
+      name: 'topK',
+    ),
+    FormTextField(
+      name: 'maxTokens',
+      validator: SettingsValidators.validateMaxTokens,
+    ),
+    FormTextField(
+      name: 'stop',
+    ),
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
@@ -96,7 +130,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.numbers_outlined,
                             color: iconColor,
                           ),
-                          hintText: '100 to 1000',
+                          hintText: '100 to 2000',
                           errorText: viewModel.chunkSizeValidationMessage,
                           controller: chunkSizeController,
                           textInputType: TextInputType.number,
@@ -107,7 +141,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.numbers_outlined,
                             color: iconColor,
                           ),
-                          hintText: '10 to 100',
+                          hintText: '10 to 400',
                           errorText: viewModel.chunkOverlapValidationMessage,
                           controller: chunkOverlapController,
                           textInputType: TextInputType.number,
@@ -197,6 +231,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     headerText: 'Retrieval',
                     body: Column(
                       children: [
+                        /* 
                         InputField(
                           labelText: 'Search Type',
                           prefixIcon: Icon(
@@ -207,6 +242,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           controller: searchTypeController,
                           textInputType: TextInputType.text,
                         ),
+                        */
                         InputField(
                           labelText: 'Search Threshold',
                           prefixIcon: Icon(
@@ -358,92 +394,5 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   void onDispose(SettingsViewModel viewModel) {
     super.onDispose(viewModel);
     disposeForm();
-  }
-}
-
-class SettingsValidators {
-  static String? validateUrl(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-
-    final uri = Uri.tryParse(value);
-    if (uri == null) {
-      return 'Enter a valid URL';
-    } else {
-      final uriString = uri.toString().toLowerCase();
-      if (!(uriString.startsWith('http') || uriString.startsWith('https'))) {
-        return 'The API URL must start with http or https.';
-      }
-    }
-
-    return null;
-  }
-
-  static String? _validateApiUriPath(String uriPath, String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-
-    final message = validateUrl(value);
-    if (message != null) {
-      return message;
-    } else {
-      final uri = Uri.tryParse(value);
-      if (!uri!.path.endsWith(uriPath)) {
-        return 'The API URL must be ended with $uriPath.';
-      }
-      return null;
-    }
-  }
-
-  static String? validateSplitApiUrl(String? value) {
-    return _validateApiUriPath(splitApiUriPath, value);
-  }
-
-  static String? validateEmbeddingsApiUrl(String? value) {
-    return _validateApiUriPath(embeddingsApiUriPath, value);
-  }
-
-  static String? validateGenerationApiUrl(String? value) {
-    return _validateApiUriPath(generationApiUriPath, value);
-  }
-
-  static bool isPositiveInteger(String s) {
-    return RegExp(r'^[0-9]+$').hasMatch(s);
-  }
-
-  static String? validateEmbeddingsApiBatchSize(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-
-    if (isPositiveInteger(value)) {
-      final integer = int.parse(value);
-      if (integer < 10 || integer > 500) {
-        return 'Enter number between 10 and 500.';
-      }
-    } else {
-      return 'Enter a valid number';
-    }
-
-    return null;
-  }
-
-  static String? validateEmbeddingsDimensions(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-
-    if (isPositiveInteger(value)) {
-      final integer = int.parse(value);
-      if (integer < 256) {
-        return 'Please enter a minimum value of 256.';
-      }
-    } else {
-      return 'Please enter a valid number';
-    }
-
-    return null;
   }
 }
