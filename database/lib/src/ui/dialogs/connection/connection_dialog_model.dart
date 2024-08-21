@@ -83,7 +83,11 @@ class ConnectionDialogModel extends FormViewModel {
     }
   }
 
-  bool _validate() {
+  bool validate() {
+    validateForm();
+    if (hasAnyValidationMessage) {
+      return false;
+    }
     var validationMessage =
         ConnectionDialogValidators.validateNamespaceOrDatabaseValue(
       namespaceValue,
@@ -99,8 +103,8 @@ class ConnectionDialogModel extends FormViewModel {
       case 'wss':
       case 'http':
       case 'https':
-        validationMessage =
-            ConnectionDialogValidators.validateAddressPort(addressPortValue);
+        validationMessage = ConnectionDialogValidators.validateAddressPort(
+            _protocol, addressPortValue);
         if (validationMessage != null && validationMessage.isNotEmpty) {
           fieldsValidationMessages[AddressPortValueKey] = validationMessage;
           notifyListeners();
@@ -143,9 +147,6 @@ class ConnectionDialogModel extends FormViewModel {
   }
 
   Future<bool> connectAndSave() async {
-    //if (!_validate()) {
-    //  return false;
-    //}
     var addressPort = addressPortValue!;
     if (_protocol != 'mem' &&
         protocol != 'indxdb' &&

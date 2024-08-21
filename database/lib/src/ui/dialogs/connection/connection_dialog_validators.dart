@@ -23,8 +23,12 @@ class ConnectionDialogValidators {
     return null;
   }
 
-  static String? validateAddressPort(String? value) {
-    return _validateUrl(value);
+  static String? validateAddressPort(String protocol, String? addressPort) {
+    if (addressPort != null && addressPort.isNotEmpty) {
+      return _validateUrl('$protocol//$addressPort');
+    } else {
+      return 'Please enter address:port.';
+    }
   }
 
   static String? validateConnectionName(String? value) {
@@ -88,11 +92,7 @@ class ConnectionDialogValidators {
   }
 
   static String? validatePassword(String? value) {
-    if (value != null && value.isNotEmpty) {
-      if (!Fzregex.hasMatch(value, FzPattern.passwordEasy)) {
-        return 'Please enter valid password.';
-      }
-    } else {
+    if (value == null || value.isEmpty) {
       return 'Please enter Password.';
     }
     return null;

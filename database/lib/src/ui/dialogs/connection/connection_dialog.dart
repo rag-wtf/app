@@ -141,15 +141,15 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     ),
                   ),
                   verticalSpaceTiny,
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 130,
+                  InputField(
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: SizedBox(
+                        width: 115,
                         child: DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 12),
+                            border: InputBorder.none,
                           ),
                           value: viewModel.protocol,
                           items: const [
@@ -187,17 +187,12 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                           },
                         ),
                       ),
-                      horizontalSpaceTiny,
-                      Expanded(
-                        child: InputField(
-                          enabled: viewModel.protocol != 'mem',
-                          hintText: getAddressPortHintText(viewModel.protocol),
-                          controller: addressPortController,
-                          errorText: viewModel.addressPortValidationMessage,
-                          showClearTextButton: showClearTextButton,
-                        ),
-                      ),
-                    ],
+                    ),
+                    enabled: viewModel.protocol != 'mem',
+                    hintText: getAddressPortHintText(viewModel.protocol),
+                    controller: addressPortController,
+                    errorText: viewModel.addressPortValidationMessage,
+                    showClearTextButton: showClearTextButton,
                   ),
                   verticalSpaceTiny,
                   InputField(
@@ -262,11 +257,15 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                       ),
                     horizontalSpaceTiny,
                     ElevatedButton(
-                      onPressed: () async => completer(
-                        DialogResponse(
-                          confirmed: await viewModel.connectAndSave(),
-                        ),
-                      ),
+                      onPressed: () async {
+                        if (viewModel.validate()) {
+                          return completer(
+                            DialogResponse(
+                              confirmed: await viewModel.connectAndSave(),
+                            ),
+                          );
+                        }
+                      },
                       child: const Text('Connect'),
                     ),
                   ],
