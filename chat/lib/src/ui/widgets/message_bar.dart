@@ -1,5 +1,6 @@
 import 'package:avatar_brick/avatar_brick.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Modified Message Bar from https://pub.dev/packages/chat_bubbles
 ///
@@ -52,6 +53,7 @@ class MessageBar extends StatelessWidget {
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.onTextChanged,
     this.onTapCloseReply,
+    this.prefixIcon,
   });
   final bool replying;
   final String replyingTo;
@@ -68,12 +70,32 @@ class MessageBar extends StatelessWidget {
   final void Function(String)? onTextChanged;
   final void Function(String) onSend;
   final void Function()? onTapCloseReply;
-  final focusNode = FocusNode();
+  final Widget? prefixIcon;
+  static final textFieldBorderRadius = BorderRadius.circular(30);
 
   /// [MessageBar] builder method
   ///
   @override
   Widget build(BuildContext context) {
+    final focusNode = FocusNode(
+      onKeyEvent: (focusNode, event) {
+        if (event is KeyDownEvent) {
+          if (HardwareKeyboard.instance.isShiftPressed &&
+              event.logicalKey.keyLabel == 'Enter') {
+            debugPrint('Shift + Enter');
+            _textController.text = '${_textController.text}\n';
+            return KeyEventResult.handled;
+          } else if (event.logicalKey.keyLabel == 'Enter') {
+            debugPrint('Enter');
+            focusNode.unfocus();
+            _send();
+            return KeyEventResult.handled;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+    );
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Column(
@@ -135,13 +157,8 @@ class MessageBar extends StatelessWidget {
                     focusNode: focusNode,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
-                    onChanged: (String value) {
-                      if (value.contains('\n')) {
-                        // User pressed Enter key
-                        _send();
-                      }
-                      onTextChanged?.call(value);
-                    },
+                    maxLines: null,
+                    onChanged: onTextChanged,
                     decoration: InputDecoration(
                       hintText: messageBarHintText,
                       hintMaxLines: 1,
@@ -153,36 +170,36 @@ class MessageBar extends StatelessWidget {
                       fillColor: Theme.of(context).colorScheme.surface,
                       filled: true,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: textFieldBorderRadius,
                         borderSide: const BorderSide(
                           color: Colors.white,
-                          width: 0.2,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: textFieldBorderRadius,
                         borderSide: const BorderSide(
                           color: Colors.black26,
-                          width: 0.2,
                         ),
                       ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(bottom: 40),
-                        child: isSendButtonBusy
-                            ? const AvatarBrick(
-                                isLoading: true,
-                                size: Size(32, 32),
-                                backgroundColor: Colors.transparent,
-                              )
-                            : InkWell(
-                                onTap: _send,
-                                child: Icon(
+                      prefixIcon: prefixIcon,
+                      suffixIcon: isSendButtonBusy
+                          ? const AvatarBrick(
+                              isLoading: true,
+                              size: Size(32, 32),
+                              backgroundColor: Colors.transparent,
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: IconButton(
+                                padding: const EdgeInsets.all(5),
+                                onPressed: _send,
+                                icon: Icon(
                                   Icons.send,
                                   color: sendButtonColor,
                                   size: 24,
                                 ),
                               ),
-                      ),
+                            ),
                     ),
                   ),
                 ),
@@ -194,10 +211,9 @@ class MessageBar extends StatelessWidget {
     );
   }
 
-  Future<void> _send() async {
+  void _send() {
     final text = _textController.text.trim();
     if (text.isNotEmpty && !isSendButtonBusy) {
-      focusNode.unfocus();
       _textController.text = '';
       onSend(text);
     }

@@ -54,21 +54,21 @@ class ChatView extends StackedView<ChatViewModel> {
         ),
         MessageBar(
           isSendButtonBusy: viewModel.isGenerating,
-          sendButtonColor: Colors.lightBlue,
+          sendButtonColor: Theme.of(context).colorScheme.primary,
           onSend: (text) async => _onSend(viewModel, text),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8, top: 8),
-              child: InkWell(
-                onTap: viewModel.newChat,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.lightBlue,
-                  size: 24,
-                ),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(8),
+            child: IconButton(
+              padding: const EdgeInsets.all(5),
+              onPressed: viewModel.newChat,
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.primary,
+                size: 24,
               ),
             ),
-          ],
+          ),
+          messageBarColor: Colors.transparent,
         ),
       ],
     );
