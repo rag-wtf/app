@@ -50,7 +50,7 @@ class _HomeViewState extends State<HomeView>
             _leftWidgetTabController.animateTo(1);
           }
         });
-        final bottomText = '${viewModel.version} ${viewModel.buildNumber}';
+
         return LayoutBuilder(
           builder: (context, constraints) {
             return Scaffold(
@@ -104,7 +104,7 @@ class _HomeViewState extends State<HomeView>
                             flex: 4,
                             child: Center(
                               child: Text(
-                                bottomText,
+                                '${viewModel.version} ${viewModel.buildNumber}',
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),
