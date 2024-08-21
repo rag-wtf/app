@@ -429,6 +429,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  fzregex:
+    dependency: transitive
+    description:
+      name: fzregex
+      sha256: "6ff6548330e94d98d591b62532dd8b824ccce27f730ad834152c7c1115d54e83"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   get:
     dependency: transitive
     description:

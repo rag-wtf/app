@@ -4,6 +4,7 @@ import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/ui/common/ui_helpers.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_model.dart';
+import 'package:database/src/ui/dialogs/connection/connection_dialog_validators.dart';
 import 'package:database/src/ui/widgets/common/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -12,10 +13,19 @@ import 'package:stacked_services/stacked_services.dart';
 
 @FormView(
   fields: [
-    FormTextField(name: 'name'),
+    FormTextField(
+      name: 'name',
+      validator: ConnectionDialogValidators.validateConnectionName,
+    ),
     FormTextField(name: 'addressPort'),
-    FormTextField(name: 'namespace'),
-    FormTextField(name: 'database'),
+    FormTextField(
+      name: 'namespace',
+      validator: ConnectionDialogValidators.validateNamespace,
+    ),
+    FormTextField(
+      name: 'database',
+      validator: ConnectionDialogValidators.validateDatabase,
+    ),
     FormTextField(name: 'username'),
     FormTextField(name: 'password'),
   ],
@@ -104,6 +114,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   InputField(
                     hintText: 'New connection',
                     controller: nameController,
+                    errorText: viewModel.nameValidationMessage,
                     // REF: https://gist.github.com/slightfoot/f0b753606c97d8a2c06659803c12d858
                     suffixIcon: PopupMenuButton<String>(
                       icon: const Icon(Icons.arrow_drop_down),
@@ -182,6 +193,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                           enabled: viewModel.protocol != 'mem',
                           hintText: getAddressPortHintText(viewModel.protocol),
                           controller: addressPortController,
+                          errorText: viewModel.addressPortValidationMessage,
                           showClearTextButton: showClearTextButton,
                         ),
                       ),
@@ -191,12 +203,14 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   InputField(
                     labelText: 'Namespace',
                     controller: namespaceController,
+                    errorText: viewModel.namespaceValidationMessage,
                     showClearTextButton: showClearTextButton,
                   ),
                   verticalSpaceTiny,
                   InputField(
                     labelText: 'Database',
                     controller: databaseController,
+                    errorText: viewModel.databaseValidationMessage,
                     showClearTextButton: showClearTextButton,
                   ),
                   if (viewModel.protocol != 'mem' &&
@@ -205,12 +219,14 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     InputField(
                       labelText: 'Username',
                       controller: usernameController,
+                      errorText: viewModel.usernameValidationMessage,
                       showClearTextButton: showClearTextButton,
                     ),
                     verticalSpaceTiny,
                     InputField(
                       labelText: 'Password',
                       controller: passwordController,
+                      errorText: viewModel.passwordValidationMessage,
                       textInputType: TextInputType.none,
                     ),
                   ],

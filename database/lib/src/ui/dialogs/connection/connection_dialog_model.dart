@@ -4,6 +4,7 @@ import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/services/connection_setting_repository.dart';
 import 'package:database/src/services/connection_setting_service.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
+import 'package:database/src/ui/dialogs/connection/connection_dialog_validators.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stacked/stacked.dart';
 
@@ -82,7 +83,69 @@ class ConnectionDialogModel extends FormViewModel {
     }
   }
 
+  bool _validate() {
+    var validationMessage =
+        ConnectionDialogValidators.validateNamespaceOrDatabaseValue(
+      namespaceValue,
+      databaseValue,
+    );
+    if (validationMessage != null && validationMessage.isNotEmpty) {
+      fieldsValidationMessages[NamespaceValueKey] = validationMessage;
+      notifyListeners();
+      return false;
+    }
+    switch (_protocol) {
+      case 'ws':
+      case 'wss':
+      case 'http':
+      case 'https':
+        validationMessage =
+            ConnectionDialogValidators.validateAddressPort(addressPortValue);
+        if (validationMessage != null && validationMessage.isNotEmpty) {
+          fieldsValidationMessages[AddressPortValueKey] = validationMessage;
+          notifyListeners();
+          return false;
+        }
+        if (validationMessage != null && validationMessage.isNotEmpty) {
+          fieldsValidationMessages[NamespaceValueKey] = validationMessage;
+          notifyListeners();
+          return false;
+        }
+        validationMessage = ConnectionDialogValidators.validateUsername(
+          usernameValue,
+        );
+        if (validationMessage != null && validationMessage.isNotEmpty) {
+          fieldsValidationMessages[UsernameValueKey] = validationMessage;
+          notifyListeners();
+          return false;
+        }
+        validationMessage = ConnectionDialogValidators.validatePassword(
+          passwordValue,
+        );
+        if (validationMessage != null && validationMessage.isNotEmpty) {
+          fieldsValidationMessages[PasswordValueKey] = validationMessage;
+          notifyListeners();
+          return false;
+        }
+        return true;
+      case 'indxdb':
+        validationMessage =
+            ConnectionDialogValidators.validateDatabaseName(addressPortValue);
+        if (validationMessage != null && validationMessage.isNotEmpty) {
+          fieldsValidationMessages[AddressPortValueKey] = validationMessage;
+          notifyListeners();
+          return false;
+        }
+        return true;
+      default:
+        return true;
+    }
+  }
+
   Future<bool> connectAndSave() async {
+    //if (!_validate()) {
+    //  return false;
+    //}
     var addressPort = addressPortValue!;
     if (_protocol != 'mem' &&
         protocol != 'indxdb' &&
