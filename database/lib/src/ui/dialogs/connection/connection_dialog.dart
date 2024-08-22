@@ -151,6 +151,10 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                             contentPadding: EdgeInsets.only(left: 12),
                             border: InputBorder.none,
                           ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
+                          ),
                           value: viewModel.protocol,
                           items: const [
                             DropdownMenuItem(
