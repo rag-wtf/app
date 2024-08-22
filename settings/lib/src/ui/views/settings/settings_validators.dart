@@ -4,6 +4,7 @@ import 'package:settings/src/constants.dart';
 
 class SettingsValidators {
   static const Pattern decimalNumber = r'^-?\d+(\.\d+)?$';
+  static const Pattern csvUpTo4 = r'^([^,\s]+)(,[^,\s]+){0,3}$';
 
   static String? validateUrl(String? value) {
     if (value != null && value.isNotEmpty) {
@@ -164,5 +165,15 @@ class SettingsValidators {
 
   static String? validateMaxTokens(String? value) {
     return _validateMinimumValue(value, 64);
+  }
+
+  static String? validateStop(String? value) {
+    if (value != null && value.isNotEmpty) {
+      if (!Fzregex.hasMatch(value, csvUpTo4)) {
+        return 'Please enter up to 4 comma-separated values without space.';
+      }
+    }
+
+    return null;
   }
 }

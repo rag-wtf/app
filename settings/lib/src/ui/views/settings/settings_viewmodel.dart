@@ -163,11 +163,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       repetitionPenaltyValue = repetitionPenalty.value;
     }
 
-    final topK = _settingService.get(topKKey);
-    if (topK.id != null) {
-      topKValue = topK.value;
-    }
-
     final maxTokens = _settingService.get(maxTokensKey);
     if (maxTokens.id != null) {
       maxTokensValue = maxTokens.value;
@@ -216,7 +211,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     temperatureValue = empty;
     topPValue = empty;
     repetitionPenaltyValue = empty;
-    topKValue = empty;
     maxTokensValue = empty;
     stopValue = empty;
   }
@@ -433,16 +427,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         tablePrefix,
         repetitionPenaltyKey,
         repetitionPenaltyValue!,
-      );
-    }
-  }
-
-  Future<void> setTopK() async {
-    if (topKValue != null && !hasTopKValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        topKKey,
-        topKValue!,
       );
     }
   }

@@ -78,7 +78,6 @@ class SettingService with ListenableServiceMixin {
     _enviromentVariables[topPKey] = const String.fromEnvironment(topPKey);
     _enviromentVariables[repetitionPenaltyKey] =
         const String.fromEnvironment(repetitionPenaltyKey);
-    _enviromentVariables[topKKey] = const String.fromEnvironment(topKKey);
     _enviromentVariables[maxTokensKey] =
         const String.fromEnvironment(maxTokensKey);
     _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);

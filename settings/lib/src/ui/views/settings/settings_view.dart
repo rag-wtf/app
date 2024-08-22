@@ -71,14 +71,12 @@ import 'package:stacked/stacked_annotations.dart';
       validator: SettingsValidators.validateRepetitionPenalty,
     ),
     FormTextField(
-      name: 'topK',
-    ),
-    FormTextField(
       name: 'maxTokens',
       validator: SettingsValidators.validateMaxTokens,
     ),
     FormTextField(
       name: 'stop',
+      validator: SettingsValidators.validateStop,
     ),
   ],
 )
@@ -280,7 +278,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.api_outlined,
                             color: iconColor,
                           ),
-                          hintText: 'gpt-3.5-turbo',
+                          hintText: 'gpt-4o-mini',
                           errorText: viewModel.generationModelValidationMessage,
                           controller: generationModelController,
                           textInputType: TextInputType.text,
@@ -316,10 +314,55 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             Icons.numbers_outlined,
                             color: iconColor,
                           ),
-                          hintText: 'Half of the context windows',
+                          hintText: 'Half the size of context windows',
                           errorText: viewModel.maxTokensValidationMessage,
                           controller: maxTokensController,
                           textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          labelText: 'Temperature',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '0 to 1',
+                          errorText: viewModel.temperatureValidationMessage,
+                          controller: temperatureController,
+                          textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          labelText: 'Repetition Penalty',
+                          prefixIcon: Icon(
+                            Icons.repeat,
+                            color: iconColor,
+                          ),
+                          hintText: '-2 to 2',
+                          errorText:
+                              viewModel.repetitionPenaltyValidationMessage,
+                          controller: repetitionPenaltyController,
+                          textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          labelText: 'Top P',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '0 to 1',
+                          errorText: viewModel.topPValidationMessage,
+                          controller: topPController,
+                          textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          labelText: 'Stop',
+                          prefixIcon: Icon(
+                            Icons.stop_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: 'User,</s>',
+                          errorText: viewModel.stopValidationMessage,
+                          controller: stopController,
+                          textInputType: TextInputType.text,
                         ),
                         SwitchListTile(
                           title: Text(
@@ -385,7 +428,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     temperatureController.addListener(viewModel.setTemperature);
     topPController.addListener(viewModel.setTopP);
     repetitionPenaltyController.addListener(viewModel.setRepetitionPenalty);
-    topKController.addListener(viewModel.setTopK);
     maxTokensController.addListener(viewModel.setMaxTokens);
     stopController.addListener(viewModel.setStop);
   }

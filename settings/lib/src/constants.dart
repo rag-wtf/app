@@ -21,7 +21,6 @@ const promptTemplateKey = 'PROMPT_TEMPLATE';
 const temperatureKey = 'TEMPERATURE';
 const topPKey = 'TOP_P';
 const repetitionPenaltyKey = 'REPETITION_PENALTY';
-const topKKey = 'TOP_K';
 const maxTokensKey = 'MAX_TOKENS';
 const stopKey = 'STOP';
 const streamKey = 'STREAM';
