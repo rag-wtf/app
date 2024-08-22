@@ -42,6 +42,15 @@ class ChatService with ListenableServiceMixin {
       );
   String get _promptTemplate => _settingService.get(promptTemplateKey).value;
   String get _searchType => _settingService.get(searchTypeKey).value;
+  double get _temperature => double.parse(
+        _settingService.get(temperatureKey).value,
+      );
+  double get _topP => double.parse(_settingService.get(topPKey).value);
+  double get _repetitionPenalty => double.parse(
+        _settingService.get(repetitionPenaltyKey).value,
+      );
+  int get _maxTokens => int.parse(_settingService.get(maxTokensKey).value);
+  String get _stop => _settingService.get(stopKey).value;
 
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();
@@ -392,11 +401,16 @@ class ChatService with ListenableServiceMixin {
         await _chatApiService.generateStream(
           [],
           defaultChatWindow,
+          chatNameSummarizerSystemPrompt,
           '$summarizeInASentencePrompt${_messages.first.text}',
           _generationApiUrl,
           _generationApiKey,
           _model,
-          chatNameSummarizerSystemPrompt,
+          _repetitionPenalty,
+          _maxTokens,
+          _stop,
+          _temperature,
+          _topP,
           _onChatNameResponse,
           onDone: _onChatNameResponseCompleted,
         );
@@ -504,11 +518,16 @@ class ChatService with ListenableServiceMixin {
     await _chatApiService.generateStream(
       messages,
       defaultChatWindow,
+      _systemPrompt,
       prompt,
       _generationApiUrl,
       _generationApiKey,
       _model,
-      _systemPrompt,
+      _repetitionPenalty,
+      _maxTokens,
+      _stop,
+      _temperature,
+      _topP,
       onData,
       onDone: onDone,
       onError: onError,
@@ -524,11 +543,16 @@ class ChatService with ListenableServiceMixin {
         _dio,
         [],
         defaultChatWindow,
+        chatNameSummarizerSystemPrompt,
         '$summarizeInASentencePrompt$generatedText',
         _generationApiUrl,
         _generationApiKey,
         _model,
-        chatNameSummarizerSystemPrompt,
+        _repetitionPenalty,
+        _maxTokens,
+        _stop,
+        _temperature,
+        _topP,
       );
 
       if (generatedChatName.isNotEmpty) {
@@ -603,11 +627,16 @@ class ChatService with ListenableServiceMixin {
         _dio,
         messages,
         defaultChatWindow,
+        _systemPrompt,
         prompt,
         _generationApiUrl,
         _generationApiKey,
         _model,
-        _systemPrompt,
+        _repetitionPenalty,
+        _maxTokens,
+        _stop,
+        _temperature,
+        _topP,
       );
       return generatedText;
     }

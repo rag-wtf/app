@@ -39,11 +39,16 @@ class ChatApiService {
     Dio dio,
     List<chat_message.Message> messages,
     int chatWindow,
+    String systemPrompt,
     String prompt,
     String generationApiUrl,
     String generationApiKey,
     String model,
-    String systemPrompt,
+    double repetitionPenalty,
+    int maxTokens,
+    String stop,
+    double temperature,
+    double topP,
   ) async {
     final response = await dio.post<Map<String, dynamic>>(
       generationApiUrl,
@@ -57,20 +62,20 @@ class ChatApiService {
           ),
         },
       ),
-      data: {
-        'model': model,
-        'messages': _getMessages(
-          messages,
-          chatWindow,
-          prompt,
-          systemPrompt,
-        ),
-        ...?getGenerationApiKey(
-          ApiKeyType.body,
-          generationApiUrl,
-          generationApiKey,
-        ),
-      },
+      data: _getData(
+        messages,
+        chatWindow,
+        systemPrompt,
+        prompt,
+        generationApiUrl,
+        generationApiKey,
+        model,
+        repetitionPenalty,
+        maxTokens,
+        stop,
+        temperature,
+        topP,
+      ),
     );
     final responseData = response.data;
     final choice = Map<String, dynamic>.from(
@@ -84,14 +89,54 @@ class ChatApiService {
     return content;
   }
 
-  Future<void> generateStream(
+  Map<String, Object> _getData(
     List<chat_message.Message> messages,
     int chatWindow,
+    String systemPrompt,
     String prompt,
     String generationApiUrl,
     String generationApiKey,
     String model,
+    double repetitionPenalty,
+    int maxTokens,
+    String stop,
+    double temperature,
+    double topP,
+  ) {
+    return {
+      'model': model,
+      'frequency_penalty': repetitionPenalty,
+      'max_tokens': maxTokens,
+      if (stop.isNotEmpty) ...{'stop': stop.split(',')},
+      'temperature': temperature,
+      'top_p': topP,
+      'messages': _getMessages(
+        messages,
+        chatWindow,
+        prompt,
+        systemPrompt,
+      ),
+      ...?getGenerationApiKey(
+        ApiKeyType.body,
+        generationApiUrl,
+        generationApiKey,
+      ),
+    };
+  }
+
+  Future<void> generateStream(
+    List<chat_message.Message> messages,
+    int chatWindow,
     String systemPrompt,
+    String prompt,
+    String generationApiUrl,
+    String generationApiKey,
+    String model,
+    double repetitionPenalty,
+    int maxTokens,
+    String stop,
+    double temperature,
+    double topP,
     void Function(String content)? onData, {
     Function? onError,
     void Function()? onDone,
@@ -108,21 +153,22 @@ class ChatApiService {
       ),
     };
 
-    final body = {
-      'model': model,
-      'messages': _getMessages(
-        messages,
-        chatWindow,
-        prompt,
-        systemPrompt,
-      ),
-      'stream': true,
-      ...?getGenerationApiKey(
-        ApiKeyType.body,
-        generationApiUrl,
-        generationApiKey,
-      ),
-    };
+    final body = _getData(
+      messages,
+      chatWindow,
+      systemPrompt,
+      prompt,
+      generationApiUrl,
+      generationApiKey,
+      model,
+      repetitionPenalty,
+      maxTokens,
+      stop,
+      temperature,
+      topP,
+    );
+
+    body['stream'] = true;
 
     await _streamResponseService.send(
       generationApiUrl,
