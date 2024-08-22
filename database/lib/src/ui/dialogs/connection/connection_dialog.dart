@@ -244,31 +244,26 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
-                  onPressed: () => completer(DialogResponse()),
-                  child: const Text('Close'),
-                ),
-                Row(
-                  children: [
-                    if (showDeleteButton)
-                      ElevatedButton(
-                        onPressed: viewModel.delete,
-                        child: const Text('Delete'),
-                      ),
-                    horizontalSpaceTiny,
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (viewModel.validate()) {
-                          return completer(
-                            DialogResponse(
-                              confirmed: await viewModel.connectAndSave(),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('Connect'),
-                    ),
-                  ],
+                if (showDeleteButton) ...[
+                  ElevatedButton(
+                    onPressed: viewModel.delete,
+                    child: const Text('Delete'),
+                  ),
+                  horizontalSpaceMedium,
+                ],
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (viewModel.validate()) {
+                        return completer(
+                          DialogResponse(
+                            confirmed: await viewModel.connectAndSave(),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Connect'),
+                  ),
                 ),
               ],
             ),
