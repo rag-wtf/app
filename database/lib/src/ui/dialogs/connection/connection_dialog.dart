@@ -188,7 +188,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                         ),
                       ),
                     ),
-                    enabled: viewModel.protocol != 'mem',
+                    readOnly: viewModel.protocol == 'mem',
                     hintText: getAddressPortHintText(viewModel.protocol),
                     controller: addressPortController,
                     errorText: viewModel.addressPortValidationMessage,
