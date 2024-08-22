@@ -16,7 +16,6 @@ class InputField extends StatelessWidget {
     this.showClearTextButton = true,
     this.enabled = true,
     this.readOnly = false,
-    this.minLines = 1,
     this.maxLines = 1,
   });
   final TextEditingController controller;
@@ -30,7 +29,6 @@ class InputField extends StatelessWidget {
   final bool showClearTextButton;
   final bool enabled;
   final bool readOnly;
-  final int minLines;
   final int maxLines;
 
   static const double kdDesktopMaxContentWidth = 1150;
@@ -55,7 +53,6 @@ class InputField extends StatelessWidget {
                   );
                 } else {
                   return TextField(
-                    minLines: minLines,
                     maxLines: maxLines,
                     readOnly: readOnly,
                     enabled: enabled,
