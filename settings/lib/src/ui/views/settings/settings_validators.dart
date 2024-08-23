@@ -3,8 +3,8 @@ import 'package:fzregex/utils/pattern.dart';
 import 'package:settings/src/constants.dart';
 
 class SettingsValidators {
-  static const Pattern decimalNumber = r'^-?\d+(\.\d+)?$';
-  static const Pattern csvUpTo4 = r'^([^,\s]+)(,[^,\s]+){0,3}$';
+  static const Pattern _decimalNumber = r'^-?\d+(\.\d+)?$';
+  static const Pattern _csvUpTo4 = r'^([^,\s]+)(,[^,\s]+){0,3}$';
 
   static String? validateUrl(String? value) {
     if (value != null && value.isNotEmpty) {
@@ -130,7 +130,7 @@ class SettingsValidators {
     double end,
   ) {
     if (value != null && value.isNotEmpty) {
-      if (Fzregex.hasMatch(value, decimalNumber)) {
+      if (Fzregex.hasMatch(value, _decimalNumber)) {
         final doubleValue = double.parse(value);
         if (doubleValue < start || doubleValue > end) {
           return 'Please enter a number between $start and $end.';
@@ -169,8 +169,20 @@ class SettingsValidators {
 
   static String? validateStop(String? value) {
     if (value != null && value.isNotEmpty) {
-      if (!Fzregex.hasMatch(value, csvUpTo4)) {
+      if (!Fzregex.hasMatch(value, _csvUpTo4)) {
         return 'Please enter up to 4 comma-separated values without space.';
+      }
+    }
+
+    return null;
+  }
+
+  static String? validatePromptTemplate(String? value) {
+    if (value != null && value.isNotEmpty) {
+      if (!value.contains(contextPlaceholder) ||
+          !value.contains(instructionPlaceholder)) {
+        return '''
+Please enter prompt template with $contextPlaceholder and $instructionPlaceholder.''';
       }
     }
 

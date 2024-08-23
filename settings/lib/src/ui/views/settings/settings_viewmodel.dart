@@ -460,4 +460,20 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     );
     _stream = value;
   }
+
+  Future<void> editPromptTemplate() async {
+    await _dialogService.showCustomDialog(
+      variant: DialogType.promptTemplate,
+      title: 'Edit Prompt Template',
+      description: 'Prompt template for the LLM.',
+    );
+  }
+
+  Future<void> editSystemPrompt() async {
+    await _dialogService.showCustomDialog(
+      variant: DialogType.systemPrompt,
+      title: 'Edit System Prompt',
+      description: 'Custom instructions for the chatbot.',
+    );
+  }
 }

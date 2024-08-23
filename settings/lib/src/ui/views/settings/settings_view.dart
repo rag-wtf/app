@@ -364,6 +364,28 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           controller: stopController,
                           textInputType: TextInputType.text,
                         ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.edit_outlined,
+                            color: iconColor,
+                          ),
+                          title: Text(
+                            'Edit System Prompt',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          onTap: () => viewModel.editSystemPrompt(),
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.edit_outlined,
+                            color: iconColor,
+                          ),
+                          title: Text(
+                            'Edit Prompt Template',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          onTap: () => viewModel.editPromptTemplate(),
+                        ),
                         SwitchListTile(
                           title: Text(
                             'Streaming',

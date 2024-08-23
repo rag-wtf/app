@@ -58,7 +58,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () => completer(DialogResponse(confirmed: true)),
+                  onPressed: () => completer(DialogResponse()),
                 ),
               ],
             ),
