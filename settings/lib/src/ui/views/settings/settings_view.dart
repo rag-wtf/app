@@ -220,6 +220,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             'Compressed',
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
+                          controlAffinity: ListTileControlAffinity.leading,
                           value: viewModel.embeddingsCompressed,
                           onChanged: (value) async {
                             await viewModel.setEmbeddingsCompressed(value);
@@ -395,6 +396,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             'Streaming',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
+                          controlAffinity: ListTileControlAffinity.leading,
                           value: viewModel.stream,
                           onChanged: (value) async {
                             await viewModel.setStream(value);
