@@ -82,6 +82,8 @@ import 'package:stacked/stacked_annotations.dart';
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   const SettingsView({
+    required this.showSystemPromptDialogFunction,
+    required this.showPromptTemplateDialogFunction,
     super.key,
     this.tablePrefix = 'main',
     this.hasConnectDatabase = false,
@@ -93,6 +95,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     String tablePrefix,
     String dimensions,
   )? redefineEmbeddingIndexFunction;
+  final Future<void> Function() showSystemPromptDialogFunction;
+  final Future<void> Function() showPromptTemplateDialogFunction;
 
   @override
   Widget builder(
@@ -373,7 +377,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             'Edit System Prompt',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          onTap: () => viewModel.editSystemPrompt(),
+                          onTap: showSystemPromptDialogFunction,
                         ),
                         ListTile(
                           leading: Icon(
@@ -384,7 +388,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             'Edit Prompt Template',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          onTap: () => viewModel.editPromptTemplate(),
+                          onTap: showPromptTemplateDialogFunction,
                         ),
                         SwitchListTile(
                           title: Text(

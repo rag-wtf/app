@@ -5,4 +5,6 @@ export 'src/constants.dart';
 export 'src/services/setting.dart';
 export 'src/services/setting_repository.dart';
 export 'src/services/setting_service.dart';
+export 'src/ui/dialogs/prompt_template/prompt_template_dialog.dart';
+export 'src/ui/dialogs/system_prompt/system_prompt_dialog.dart';
 export 'src/ui/views/settings/settings_view.dart';

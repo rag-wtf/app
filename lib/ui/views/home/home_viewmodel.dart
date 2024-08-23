@@ -124,6 +124,22 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
+  Future<void> showPromptTemplateDialog() async {
+    await _dialogService.showCustomDialog(
+      variant: DialogType.promptTemplate,
+      title: 'Edit Prompt Template',
+      description: 'Prompt template for the LLM.',
+    );
+  }
+
+  Future<void> showSystemPromptDialog() async {
+    await _dialogService.showCustomDialog(
+      variant: DialogType.systemPrompt,
+      title: 'Edit System Prompt',
+      description: 'Custom instructions for the chatbot.',
+    );
+  }
+
   Future<void> disconnect() async {
     await _connectionSettingService.disconnect();
     await connectDatabase();

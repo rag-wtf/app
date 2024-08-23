@@ -10,11 +10,15 @@ import 'app.locator.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.dart';
 import 'package:document/src/ui/dialogs/embedding/embedding_dialog.dart';
 import 'package:document/src/ui/dialogs/info_alert/info_alert_dialog.dart';
+import 'package:settings/src/ui/dialogs/prompt_template/prompt_template_dialog.dart';
+import 'package:settings/src/ui/dialogs/system_prompt/system_prompt_dialog.dart';
 
 enum DialogType {
   infoAlert,
   connection,
   embedding,
+  systemPrompt,
+  promptTemplate,
 }
 
 void setupDialogUi() {
@@ -27,6 +31,10 @@ void setupDialogUi() {
         ConnectionDialog(request: request, completer: completer),
     DialogType.embedding: (context, request, completer) =>
         EmbeddingDialog(request: request, completer: completer),
+    DialogType.systemPrompt: (context, request, completer) =>
+        SystemPromptDialog(request: request, completer: completer),
+    DialogType.promptTemplate: (context, request, completer) =>
+        PromptTemplateDialog(request: request, completer: completer),
   };
 
   dialogService.registerCustomDialogBuilders(builders);

@@ -5,9 +5,9 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i5;
 
-import 'package:flutter/foundation.dart' as _i5;
+import 'package:flutter/foundation.dart' as _i6;
 import 'package:flutter/material.dart' as _i4;
 import 'package:flutter/material.dart';
 import 'package:settings/src/ui/views/settings/settings_view.dart' as _i3;
@@ -46,11 +46,12 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i3.SettingsView: (data) {
-      final args = data.getArgs<SettingsViewArguments>(
-        orElse: () => const SettingsViewArguments(),
-      );
+      final args = data.getArgs<SettingsViewArguments>(nullOk: false);
       return _i4.MaterialPageRoute<dynamic>(
         builder: (context) => _i3.SettingsView(
+            showSystemPromptDialogFunction: args.showSystemPromptDialogFunction,
+            showPromptTemplateDialogFunction:
+                args.showPromptTemplateDialogFunction,
             key: args.key,
             tablePrefix: args.tablePrefix,
             hasConnectDatabase: args.hasConnectDatabase,
@@ -70,32 +71,42 @@ class StackedRouter extends _i1.RouterBase {
 
 class SettingsViewArguments {
   const SettingsViewArguments({
+    required this.showSystemPromptDialogFunction,
+    required this.showPromptTemplateDialogFunction,
     this.key,
     this.tablePrefix = 'main',
     this.hasConnectDatabase = false,
     this.redefineEmbeddingIndexFunction,
   });
 
-  final _i5.Key? key;
+  final _i5.Future<void> Function() showSystemPromptDialogFunction;
+
+  final _i5.Future<void> Function() showPromptTemplateDialogFunction;
+
+  final _i6.Key? key;
 
   final String tablePrefix;
 
   final bool hasConnectDatabase;
 
-  final _i6.Future<String?> Function(
+  final _i5.Future<String?> Function(
     String,
     String,
   )? redefineEmbeddingIndexFunction;
 
   @override
   String toString() {
-    return '{"key": "$key", "tablePrefix": "$tablePrefix", "hasConnectDatabase": "$hasConnectDatabase", "redefineEmbeddingIndexFunction": "$redefineEmbeddingIndexFunction"}';
+    return '{"showSystemPromptDialogFunction": "$showSystemPromptDialogFunction", "showPromptTemplateDialogFunction": "$showPromptTemplateDialogFunction", "key": "$key", "tablePrefix": "$tablePrefix", "hasConnectDatabase": "$hasConnectDatabase", "redefineEmbeddingIndexFunction": "$redefineEmbeddingIndexFunction"}';
   }
 
   @override
   bool operator ==(covariant SettingsViewArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key &&
+    return other.showSystemPromptDialogFunction ==
+            showSystemPromptDialogFunction &&
+        other.showPromptTemplateDialogFunction ==
+            showPromptTemplateDialogFunction &&
+        other.key == key &&
         other.tablePrefix == tablePrefix &&
         other.hasConnectDatabase == hasConnectDatabase &&
         other.redefineEmbeddingIndexFunction == redefineEmbeddingIndexFunction;
@@ -103,7 +114,9 @@ class SettingsViewArguments {
 
   @override
   int get hashCode {
-    return key.hashCode ^
+    return showSystemPromptDialogFunction.hashCode ^
+        showPromptTemplateDialogFunction.hashCode ^
+        key.hashCode ^
         tablePrefix.hashCode ^
         hasConnectDatabase.hashCode ^
         redefineEmbeddingIndexFunction.hashCode;
@@ -126,10 +139,12 @@ extension NavigatorStateExtension on _i7.NavigationService {
   }
 
   Future<dynamic> navigateToSettingsView({
-    _i5.Key? key,
+    required _i5.Future<void> Function() showSystemPromptDialogFunction,
+    required _i5.Future<void> Function() showPromptTemplateDialogFunction,
+    _i6.Key? key,
     String tablePrefix = 'main',
     bool hasConnectDatabase = false,
-    _i6.Future<String?> Function(
+    _i5.Future<String?> Function(
       String,
       String,
     )? redefineEmbeddingIndexFunction,
@@ -141,6 +156,8 @@ extension NavigatorStateExtension on _i7.NavigationService {
   }) async {
     return navigateTo<dynamic>(Routes.settingsView,
         arguments: SettingsViewArguments(
+            showSystemPromptDialogFunction: showSystemPromptDialogFunction,
+            showPromptTemplateDialogFunction: showPromptTemplateDialogFunction,
             key: key,
             tablePrefix: tablePrefix,
             hasConnectDatabase: hasConnectDatabase,
@@ -166,10 +183,12 @@ extension NavigatorStateExtension on _i7.NavigationService {
   }
 
   Future<dynamic> replaceWithSettingsView({
-    _i5.Key? key,
+    required _i5.Future<void> Function() showSystemPromptDialogFunction,
+    required _i5.Future<void> Function() showPromptTemplateDialogFunction,
+    _i6.Key? key,
     String tablePrefix = 'main',
     bool hasConnectDatabase = false,
-    _i6.Future<String?> Function(
+    _i5.Future<String?> Function(
       String,
       String,
     )? redefineEmbeddingIndexFunction,
@@ -181,6 +200,8 @@ extension NavigatorStateExtension on _i7.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.settingsView,
         arguments: SettingsViewArguments(
+            showSystemPromptDialogFunction: showSystemPromptDialogFunction,
+            showPromptTemplateDialogFunction: showPromptTemplateDialogFunction,
             key: key,
             tablePrefix: tablePrefix,
             hasConnectDatabase: hasConnectDatabase,

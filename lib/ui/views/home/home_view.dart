@@ -236,6 +236,10 @@ class RightWidget extends StatelessWidget {
                   SettingsView(
                     redefineEmbeddingIndexFunction:
                         viewModel.redefineEmbeddingIndexFunction,
+                    showSystemPromptDialogFunction:
+                        viewModel.showSystemPromptDialog,
+                    showPromptTemplateDialogFunction:
+                        viewModel.showPromptTemplateDialog,
                   ),
                   const RagConsoleView(),
                 ],

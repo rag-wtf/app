@@ -83,6 +83,8 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     StackedDialog(classType: InfoAlertDialog),
     StackedDialog(classType: ConnectionDialog),
     StackedDialog(classType: EmbeddingDialog),
+    StackedDialog(classType: SystemPromptDialog),
+    StackedDialog(classType: PromptTemplateDialog),
     // @stacked-dialog
   ],
   logger: StackedLogger(),
