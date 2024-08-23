@@ -59,7 +59,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              request.title ?? 'Hello Stacked Dialog!!',
+              request.title ?? 'Connection',
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
@@ -112,7 +112,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               child: ListView(
                 children: [
                   InputField(
-                    hintText: 'New connection',
+                    hintText: 'Name',
                     controller: nameController,
                     errorText: viewModel.nameValidationMessage,
                     // REF: https://gist.github.com/slightfoot/f0b753606c97d8a2c06659803c12d858
@@ -257,15 +257,17 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                 ],
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (viewModel.validate()) {
-                        return completer(
-                          DialogResponse(
-                            confirmed: await viewModel.connectAndSave(),
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: viewModel.hasAnyValidationMessage
+                        ? null
+                        : () async {
+                            if (viewModel.validate()) {
+                              return completer(
+                                DialogResponse(
+                                  confirmed: await viewModel.connectAndSave(),
+                                ),
+                              );
+                            }
+                          },
                     child: const Text('Connect'),
                   ),
                 ),

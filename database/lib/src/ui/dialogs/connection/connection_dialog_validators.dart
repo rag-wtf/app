@@ -3,6 +3,7 @@ import 'package:fzregex/utils/pattern.dart';
 
 class ConnectionDialogValidators {
   static const Pattern alphanumericUnderscore = r'^[a-zA-Z0-9_]+$';
+  static const Pattern name = r"^[a-zA-Z0-9' ]+$";
 
   static String? _validateUrl(String? value) {
     if (value != null && value.isNotEmpty) {
@@ -33,7 +34,7 @@ class ConnectionDialogValidators {
 
   static String? validateConnectionName(String? value) {
     if (value != null && value.isNotEmpty) {
-      if (!Fzregex.hasMatch(value, FzPattern.name)) {
+      if (!Fzregex.hasMatch(value, name)) {
         return 'Please enter valid name.';
       }
     } else {

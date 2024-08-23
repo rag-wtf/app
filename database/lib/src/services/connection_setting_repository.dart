@@ -19,11 +19,7 @@ class ConnectionSettingRepository {
   static const connectionCounterKey = 'connectionCounterKey';
 
   Future<String> createConnectionKey() async {
-    final connectionKeyCounterFromStorage =
-        await _storage.read(key: connectionCounterKey);
-    final connectionKeyCounter = connectionKeyCounterFromStorage != null
-        ? int.parse(connectionKeyCounterFromStorage) + 1
-        : 0;
+    final connectionKeyCounter = await getConnectionCounter();
     await _storage.write(
       key: connectionCounterKey,
       value: connectionKeyCounter.toString(),
@@ -34,6 +30,15 @@ class ConnectionSettingRepository {
     final connectionKey = connectionKeys != null ? '$connectionKeys,$key' : key;
     await _storage.write(key: connectionKeysKey, value: connectionKey);
     return key;
+  }
+
+  Future<int> getConnectionCounter() async {
+    final connectionCounterFromStorage =
+        await _storage.read(key: connectionCounterKey);
+    final connectionCounter = connectionCounterFromStorage != null
+        ? int.parse(connectionCounterFromStorage) + 1
+        : 1;
+    return connectionCounter;
   }
 
   Future<void> deleteConnectionKey(String connectionKey) async {

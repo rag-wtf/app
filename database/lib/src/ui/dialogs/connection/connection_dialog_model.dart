@@ -43,7 +43,7 @@ class ConnectionDialogModel extends FormViewModel {
 
   Future<void> initialise() async {
     _log.d('initialise()');
-    clearForm();
+    await _clearForm();
     connectionKeySelected = newConnectionKey;
     connectionNames =
         await _connectionSettingRepository.getAllConnectionNames();
@@ -56,11 +56,21 @@ class ConnectionDialogModel extends FormViewModel {
     );
   }
 
+  Future<void> initialiseName() async {
+    final counter = await _connectionSettingRepository.getConnectionCounter();
+    nameValue = 'New RAG $counter';
+  }
+
+  Future<void> _clearForm() async {
+    clearForm();
+    await initialiseName();
+  }
+
   Future<void> onConnectionSelected(String connectionKey) async {
     _log.d('connectionKey $connectionKey');
     connectionKeySelected = connectionKey;
     if (connectionKey == newConnectionKey) {
-      clearForm();
+      await _clearForm();
     } else {
       final connectionSettings = await _connectionSettingRepository
           .getAllConnectionSettings(connectionKey);
@@ -232,7 +242,7 @@ class ConnectionDialogModel extends FormViewModel {
       );
       connectionKeySelected = newConnectionKey;
 
-      clearForm();
+      await _clearForm();
     }
   }
 }
