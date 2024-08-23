@@ -145,7 +145,7 @@ class MessageBar extends StatelessWidget {
             color: messageBarColor,
             padding: const EdgeInsets.symmetric(
               vertical: 8,
-              horizontal: 8,
+              horizontal: 16,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,10 +162,6 @@ class MessageBar extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: messageBarHintText,
                       hintMaxLines: 1,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 10,
-                      ),
                       hintStyle: messageBarHintStyle,
                       fillColor: Theme.of(context).colorScheme.surface,
                       filled: true,
