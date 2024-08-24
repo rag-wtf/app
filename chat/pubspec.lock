@@ -405,6 +405,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fzregex:
+    dependency: transitive
+    description:
+      name: fzregex
+      sha256: "6ff6548330e94d98d591b62532dd8b824ccce27f730ad834152c7c1115d54e83"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   get:
     dependency: transitive
     description:
@@ -626,6 +634,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.4"
+  mutex:
+    dependency: transitive
+    description:
+      name: mutex
+      sha256: "8827da25de792088eb33e572115a5eb0d61d61a3c01acbc8bcbe76ed78f1a1f2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   nested:
     dependency: transitive
     description:
@@ -930,10 +946,10 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_wasm
-      sha256: "5626162e74c635a49f761703effacd4753f86cb7d792b211f87c507b7698813b"
+      sha256: "14845440a230cf0eed302e5e472e6cd209450306f479f4a80869b6d35b89ce28"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.16+11"
+    version: "1.0.0-beta.16+12"
   sync_http:
     dependency: transitive
     description:
@@ -1097,10 +1113,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
+      sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.4"
+    version: "14.2.5"
   watcher:
     dependency: transitive
     description:

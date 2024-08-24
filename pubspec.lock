@@ -661,6 +661,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  mutex:
+    dependency: transitive
+    description:
+      name: mutex
+      sha256: "8827da25de792088eb33e572115a5eb0d61d61a3c01acbc8bcbe76ed78f1a1f2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   nested:
     dependency: transitive
     description:
@@ -1044,10 +1052,10 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_wasm
-      sha256: "5626162e74c635a49f761703effacd4753f86cb7d792b211f87c507b7698813b"
+      sha256: "14845440a230cf0eed302e5e472e6cd209450306f479f4a80869b6d35b89ce28"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.16+11"
+    version: "1.0.0-beta.16+12"
   term_glyph:
     dependency: transitive
     description:

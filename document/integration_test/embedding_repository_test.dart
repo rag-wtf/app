@@ -88,8 +88,7 @@ void main({bool wasm = false}) {
       );
       await repository.createEmbedding(defaultTablePrefix, embedding);
       const expected = '''
-Cannot change dimensions,
-There are existing embeddings in the database.''';
+Cannot change dimensions, there are existing embeddings in the database.''';
 
       // Act
       final result =
