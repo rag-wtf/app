@@ -22,9 +22,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<ModelRepository>(classType: ModelRepository),
     LazySingleton<Surreal>(
-      classType: SurrealWasm,
+      classType: SurrealWasmMutex,
       asType: Surreal,
-      resolveUsing: SurrealWasm.getInstance,
+      resolveUsing: SurrealWasmMutex.getInstance,
     ),
     LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
     LazySingleton<ConnectionSettingRepository>(

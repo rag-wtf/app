@@ -19,16 +19,6 @@ void main() {
       // Assert
       expect(
         await repository.createConnectionKey(),
-        '${ConnectionSetting.connectionKey}0',
-      );
-      expect(
-        await storage.read(
-          key: ConnectionSettingRepository.connectionCounterKey,
-        ),
-        '0',
-      );
-      expect(
-        await repository.createConnectionKey(),
         '${ConnectionSetting.connectionKey}1',
       );
       expect(
@@ -36,6 +26,16 @@ void main() {
           key: ConnectionSettingRepository.connectionCounterKey,
         ),
         '1',
+      );
+      expect(
+        await repository.createConnectionKey(),
+        '${ConnectionSetting.connectionKey}2',
+      );
+      expect(
+        await storage.read(
+          key: ConnectionSettingRepository.connectionCounterKey,
+        ),
+        '2',
       );
       expect(await repository.getAllConnectionKeys(), hasLength(2));
     });
@@ -48,20 +48,20 @@ void main() {
       await repository.createConnectionKey();
       await repository.createConnectionKey();
       final expected = [
-        '${ConnectionSetting.connectionKey}0',
-        '${ConnectionSetting.connectionKey}2',
+        '${ConnectionSetting.connectionKey}1',
+        '${ConnectionSetting.connectionKey}3',
       ];
 
       // Act & Assert
       await repository
-          .deleteConnectionKey('${ConnectionSetting.connectionKey}1');
+          .deleteConnectionKey('${ConnectionSetting.connectionKey}2');
       expect(await repository.getAllConnectionKeys(), equals(expected));
 
       await repository
-          .deleteConnectionKey('${ConnectionSetting.connectionKey}0');
+          .deleteConnectionKey('${ConnectionSetting.connectionKey}1');
       expect(
         await repository.getAllConnectionKeys(),
-        equals(['${ConnectionSetting.connectionKey}2']),
+        equals(['${ConnectionSetting.connectionKey}3']),
       );
     });
 
@@ -71,7 +71,7 @@ void main() {
 
       // Act
       await repository
-          .deleteConnectionKey('${ConnectionSetting.connectionKey}0');
+          .deleteConnectionKey('${ConnectionSetting.connectionKey}1');
 
       // Assert
       expect(
