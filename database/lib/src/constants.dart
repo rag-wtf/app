@@ -5,3 +5,5 @@ const surrealNamespace = 'surreal';
 const surrealDatabase = 'surreal';
 const surrealUsername = 'root';
 const surrealPassword = 'root';
+
+const dialogMaxWidth = 840.0;

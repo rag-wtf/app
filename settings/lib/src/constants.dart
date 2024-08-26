@@ -47,4 +47,4 @@ const appTitle = 'RAG.WTF';
 const appTablePrefix = '__app';
 const defaultThemeMode = ThemeMode.system;
 const themeModeKey = 'THEME_MODE';
-const envKey = 'ENV_KEY';
+const dialogMaxWidth = 840.0;

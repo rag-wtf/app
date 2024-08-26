@@ -1,10 +1,12 @@
 // ignore_for_file: strict_raw_type, inference_failure_on_function_return_type
 
+import 'package:database/src/constants.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/ui/common/ui_helpers.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_model.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_validators.dart';
+import 'package:database/src/ui/widgets/common/adaptive_dialog.dart';
 import 'package:database/src/ui/widgets/common/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -49,9 +51,11 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
     final showClearTextButton = viewModel.connectionKeySelected !=
         ConnectionDialogModel.newConnectionKey;
     final showDeleteButton = showClearTextButton;
-    return Dialog(
+    return AdaptiveDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
+      maxWidth: dialogMaxWidth,
+      maxHeight: 620,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
@@ -75,7 +79,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                 softWrap: true,
               ),
             ],
-            verticalSpaceTiny,
+            verticalSpaceSmall,
             if (viewModel
                 .hasErrorForKey(ConnectionDialogModel.connectErrorKey)) ...[
               Container(
@@ -244,7 +248,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                 ],
               ),
             ),
-            verticalSpaceTiny,
+            verticalSpaceSmall,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

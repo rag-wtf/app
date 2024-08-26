@@ -29,7 +29,7 @@ class InputField extends StatelessWidget {
   final bool showClearTextButton;
   final bool enabled;
   final bool readOnly;
-  final int maxLines;
+  final int? maxLines;
 
   static const double kdDesktopMaxContentWidth = 1150;
 

@@ -1,5 +1,6 @@
 import 'package:database/database.dart';
 import 'package:flutter/material.dart';
+import 'package:settings/settings.dart';
 import 'package:settings/src/ui/common/app_colors.dart';
 import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/dialogs/prompt_template/prompt_template_dialog.form.dart';
@@ -36,7 +37,8 @@ class PromptTemplateDialog extends StackedView<PromptTemplateDialogModel>
     PromptTemplateDialogModel viewModel,
     Widget? child,
   ) {
-    return Dialog(
+    return AdaptiveDialog(
+      maxWidth: dialogMaxWidth,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       child: Padding(
