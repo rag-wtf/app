@@ -8,7 +8,7 @@ import 'package:rag_console/rag_console.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 
-const largeScreenWidth = 800.0;
+const largeScreenWidth = 840.0;
 const mediumScreenWidth = 600.0;
 
 class HomeView extends StatefulWidget {

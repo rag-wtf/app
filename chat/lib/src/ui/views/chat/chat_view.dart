@@ -12,9 +12,9 @@ import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 class ChatView extends StackedView<ChatViewModel> {
   ChatView({
     required this.showDialogFunction,
-    super.key,
     this.tablePrefix = 'main',
     this.leftWidgetTabController,
+    super.key,
   });
   final String tablePrefix;
   final _scrollController = ScrollController();
@@ -35,6 +35,31 @@ class ChatView extends StackedView<ChatViewModel> {
             child: InfiniteList(
               scrollController: _scrollController,
               itemCount: viewModel.messages.length,
+              centerEmpty: true,
+              emptyBuilder: (context) => Wrap(
+                runSpacing: 8,
+                spacing: 8,
+                children: List<Widget>.generate(
+                  4,
+                  (int index) {
+                    return Container(
+                      width: 120,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 0.5),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text('Hello World Card $index'),
+                        ),
+                        onTap: () {},
+                      ),
+                    );
+                  },
+                ),
+              ),
               isLoading: viewModel.isBusy,
               onFetchData: viewModel.fetchMessages,
               reverse: true,
