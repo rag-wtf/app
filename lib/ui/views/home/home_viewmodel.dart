@@ -79,6 +79,7 @@ class HomeViewModel extends BaseViewModel {
       _embeddingRepository.redefineEmbeddingIndex;
 
   Future<void> initialise() async {
+    setBusy(true);
     final packageInfo = await PackageInfo.fromPlatform();
     _appName = packageInfo.appName;
     _version = packageInfo.version;

@@ -33,7 +33,7 @@ import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 import 'package:surrealdb_js/src/surrealdb_js.dart';
-import 'package:surrealdb_wasm/src/surreal_wasm_mutex.dart';
+import 'package:surrealdb_wasm/src/surreal_wasm.dart';
 
 final locator = StackedLocator.instance;
 
@@ -68,7 +68,7 @@ Future<void> setupLocator({
       () => HttpStreamResponseService());
   locator.registerLazySingleton(() => SettingService());
   locator.registerLazySingleton(() => SettingRepository());
-  locator.registerLazySingleton<Surreal>(() => SurrealWasmMutex.getInstance());
+  locator.registerLazySingleton<Surreal>(() => SurrealWasm.getInstance());
   locator.registerLazySingleton(() => FlutterSecureStorage());
   locator.registerLazySingleton(() => ConnectionSettingRepository());
   locator.registerLazySingleton(() => ConnectionSettingService());
