@@ -143,11 +143,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       generationApiKeyValue = generationApiKeyVal.value;
     }
 
-    final promptTemplate = _settingService.get(promptTemplateKey);
-    if (promptTemplate.id != null) {
-      promptTemplateValue = promptTemplate.value;
-    }
-
     final temperature = _settingService.get(temperatureKey);
     if (temperature.id != null) {
       temperatureValue = temperature.value;
@@ -207,7 +202,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     generationModelValue = empty;
     generationApiUrlValue = empty;
     generationApiKeyValue = empty;
-    promptTemplateValue = empty;
     temperatureValue = empty;
     topPValue = empty;
     repetitionPenaltyValue = empty;
@@ -386,16 +380,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         tablePrefix,
         generationApiKey,
         generationApiKeyValue!,
-      );
-    }
-  }
-
-  Future<void> setPromptTemplate() async {
-    if (promptTemplateValue != null && !hasPromptTemplateValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        promptTemplateKey,
-        promptTemplateValue!,
       );
     }
   }

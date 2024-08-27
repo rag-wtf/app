@@ -57,7 +57,6 @@ import 'package:stacked/stacked_annotations.dart';
       validator: SettingsValidators.validateGenerationApiUrl,
     ),
     FormTextField(name: 'generationApiKey'),
-    FormTextField(name: 'promptTemplate'),
     FormTextField(
       name: 'temperature',
       validator: SettingsValidators.validateTemperature,
@@ -452,7 +451,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     generationModelController.addListener(viewModel.setGenerationModel);
     generationApiUrlController.addListener(viewModel.setGenerationApiUrl);
     generationApiKeyController.addListener(viewModel.setGenerationApiKey);
-    promptTemplateController.addListener(viewModel.setPromptTemplate);
     temperatureController.addListener(viewModel.setTemperature);
     topPController.addListener(viewModel.setTopP);
     repetitionPenaltyController.addListener(viewModel.setRepetitionPenalty);
