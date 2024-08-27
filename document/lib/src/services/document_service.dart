@@ -261,14 +261,18 @@ class DocumentService with ListenableServiceMixin {
     int pageSize = 20,
     bool ascendingOrder = false,
   }) async {
-    final items = await _documentRepository.getAllDocuments(
-      tablePrefix,
-      page: page,
-      pageSize: pageSize,
-      ascendingOrder: ascendingOrder,
-    );
     final total = await _documentRepository.getTotal(tablePrefix);
-    return DocumentList(items, total);
+    if (total > 0) {
+      final items = await _documentRepository.getAllDocuments(
+        tablePrefix,
+        page: page,
+        pageSize: pageSize,
+        ascendingOrder: ascendingOrder,
+      );
+      return DocumentList(items, total);
+    } else {
+      return const DocumentList([], 0);
+    }
   }
 
   bool _isGzFile(List<int> fileBytes) {
