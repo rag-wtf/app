@@ -18,10 +18,10 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   const DocumentListView({
     super.key,
     this.tablePrefix = 'main',
-    this.hasConnectDatabase = false,
+    this.inPackage = false,
   });
   final String tablePrefix;
-  final bool hasConnectDatabase;
+  final bool inPackage;
 
   @override
   Widget builder(
@@ -72,7 +72,7 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   ) =>
       DocumentListViewModel(
         tablePrefix,
-        hasConnectDatabase: hasConnectDatabase,
+        inPackage: inPackage,
       );
 
   @override

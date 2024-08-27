@@ -85,11 +85,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     required this.showPromptTemplateDialogFunction,
     super.key,
     this.tablePrefix = 'main',
-    this.hasConnectDatabase = false,
+    this.inPackage = false,
     this.redefineEmbeddingIndexFunction,
   });
   final String tablePrefix;
-  final bool hasConnectDatabase;
+  final bool inPackage;
   final Future<String?> Function(
     String tablePrefix,
     String dimensions,
@@ -427,7 +427,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
       SettingsViewModel(
         tablePrefix,
         redefineEmbeddingIndexFunction,
-        hasConnectDatabase: hasConnectDatabase,
+        inPackage: inPackage,
       );
 
   @override

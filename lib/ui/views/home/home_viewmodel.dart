@@ -79,22 +79,16 @@ class HomeViewModel extends BaseViewModel {
       _embeddingRepository.redefineEmbeddingIndex;
 
   Future<void> initialise() async {
-    setBusy(true);
     final packageInfo = await PackageInfo.fromPlatform();
     _appName = packageInfo.appName;
     _version = packageInfo.version;
     _buildNumber = packageInfo.buildNumber;
-    await connectDatabase();
-    await _settingService.initialise(tablePrefix);
-    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
-    await _documentService.initialise(tablePrefix, dimensions);
-    await _chatService.initialise(tablePrefix);
-    _totalChats = await _chatRepository.getTotal(tablePrefix);
-    setBusy(false);
+    await _connectDatabase();
   }
 
-  Future<void> connectDatabase() async {
+  Future<void> _connectDatabase() async {
     var confirmed = false;
+    setBusy(true);
     if (!await _connectionSettingService.autoConnect()) {
       while (!confirmed) {
         final response = await _dialogService.showCustomDialog(
@@ -106,6 +100,12 @@ class HomeViewModel extends BaseViewModel {
         confirmed = response?.confirmed ?? false;
       }
     }
+    await _settingService.initialise(tablePrefix);
+    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
+    await _documentService.initialise(tablePrefix, dimensions);
+    await _chatService.initialise(tablePrefix);
+    _totalChats = await _chatRepository.getTotal(tablePrefix);
+    setBusy(false);
   }
 
   Future<void> deleteAllData() async {
@@ -142,6 +142,7 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> disconnect() async {
     await _connectionSettingService.disconnect();
-    await connectDatabase();
+    _settingService.clear();
+    await _connectDatabase();
   }
 }

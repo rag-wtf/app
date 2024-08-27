@@ -8,10 +8,10 @@ class MainView extends StackedView<MainViewModel> {
   const MainView({
     super.key,
     this.tablePrefix = 'main',
-    this.hasConnectDatabase = false,
+    this.inPackage = false,
   });
   final String tablePrefix;
-  final bool hasConnectDatabase;
+  final bool inPackage;
 
   @override
   Widget builder(
@@ -40,7 +40,7 @@ class MainView extends StackedView<MainViewModel> {
   MainViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      MainViewModel(tablePrefix, hasConnectDatabase: hasConnectDatabase);
+      MainViewModel(tablePrefix, inPackage: inPackage);
 
   @override
   Future<void> onViewModelReady(MainViewModel viewModel) async {

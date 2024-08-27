@@ -12,10 +12,10 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   SettingsViewModel(
     this.tablePrefix,
     this.redefineEmbeddingIndexFunction, {
-    required this.hasConnectDatabase,
+    required this.inPackage,
   });
   final String tablePrefix;
-  final bool hasConnectDatabase;
+  final bool inPackage;
   final _log = getLogger('SettingsViewModel');
   final _isPanelExpanded = List.filled(4, true);
   final _settingService = locator<SettingService>();
@@ -55,13 +55,15 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> initialise() async {
     _log.d(
-      'tablePrefix: $tablePrefix, hasConnectDatabase: $hasConnectDatabase',
+      'tablePrefix: $tablePrefix, inPackage: $inPackage',
     );
-    if (hasConnectDatabase) {
+    if (inPackage) {
       await connectDatabase();
     }
     setBusy(true);
-    await _settingService.initialise(tablePrefix);
+    if (inPackage) {
+      await _settingService.initialise(tablePrefix);
+    }
     _settingService.clearFormValuesFunction = clearFormValues;
     _stream = bool.parse(_settingService.get(streamKey).value);
     _embeddingsCompressed = bool.parse(

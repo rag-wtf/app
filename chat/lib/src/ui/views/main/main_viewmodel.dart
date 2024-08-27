@@ -9,9 +9,9 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class MainViewModel extends BaseViewModel {
-  MainViewModel(this.tablePrefix, {required this.hasConnectDatabase});
+  MainViewModel(this.tablePrefix, {required this.inPackage});
   final String tablePrefix;
-  final bool hasConnectDatabase;
+  final bool inPackage;
   final _dialogService = locator<DialogService>();
   final _connectionSettingService = locator<ConnectionSettingService>();
   final _settingService = locator<SettingService>();
@@ -20,11 +20,11 @@ class MainViewModel extends BaseViewModel {
 
   Future<void> initialise() async {
     _log.d('init() tablePrefix: $tablePrefix');
-    if (hasConnectDatabase) {
+    if (inPackage) {
       await connectDatabase();
+      await _settingService.initialise(tablePrefix);
+      await _chatService.initialise(tablePrefix);
     }
-    await _settingService.initialise(tablePrefix);
-    await _chatService.initialise(tablePrefix);
   }
 
   Future<void> connectDatabase() async {

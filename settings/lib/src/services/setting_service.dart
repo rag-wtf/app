@@ -37,51 +37,53 @@ class SettingService with ListenableServiceMixin {
   }
 
   void _initialiseEnvironmentVariables() {
-    _enviromentVariables[splitApiUrlKey] =
-        const String.fromEnvironment(splitApiUrlKey);
-    _enviromentVariables[chunkSizeKey] =
-        const String.fromEnvironment(chunkSizeKey);
-    _enviromentVariables[chunkOverlapKey] =
-        const String.fromEnvironment(chunkOverlapKey);
-    _enviromentVariables[embeddingsModelKey] =
-        const String.fromEnvironment(embeddingsModelKey);
-    _enviromentVariables[embeddingsApiUrlKey] =
-        const String.fromEnvironment(embeddingsApiUrlKey);
-    _enviromentVariables[embeddingsApiKey] =
-        const String.fromEnvironment(embeddingsApiKey);
-    _enviromentVariables[embeddingsDimensionsKey] =
-        const String.fromEnvironment(embeddingsDimensionsKey);
-    _enviromentVariables[embeddingsApiBatchSizeKey] =
-        const String.fromEnvironment(embeddingsApiBatchSizeKey);
-    _enviromentVariables[embeddingsCompressedKey] =
-        const String.fromEnvironment(embeddingsCompressedKey);
-    _enviromentVariables[searchTypeKey] =
-        const String.fromEnvironment(searchTypeKey);
-    _enviromentVariables[searchIndexKey] =
-        const String.fromEnvironment(searchIndexKey);
-    _enviromentVariables[searchThresholdKey] =
-        const String.fromEnvironment(searchThresholdKey);
-    _enviromentVariables[retrieveTopNResultsKey] =
-        const String.fromEnvironment(retrieveTopNResultsKey);
-    _enviromentVariables[generationModelKey] =
-        const String.fromEnvironment(generationModelKey);
-    _enviromentVariables[generationApiUrlKey] =
-        const String.fromEnvironment(generationApiUrlKey);
-    _enviromentVariables[generationApiKey] =
-        const String.fromEnvironment(generationApiKey);
-    _enviromentVariables[systemPromptKey] =
-        const String.fromEnvironment(systemPromptKey);
-    _enviromentVariables[promptTemplateKey] =
-        const String.fromEnvironment(promptTemplateKey);
-    _enviromentVariables[temperatureKey] =
-        const String.fromEnvironment(temperatureKey);
-    _enviromentVariables[topPKey] = const String.fromEnvironment(topPKey);
-    _enviromentVariables[repetitionPenaltyKey] =
-        const String.fromEnvironment(repetitionPenaltyKey);
-    _enviromentVariables[maxTokensKey] =
-        const String.fromEnvironment(maxTokensKey);
-    _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);
-    _enviromentVariables[streamKey] = const String.fromEnvironment(streamKey);
+    if (_enviromentVariables.isEmpty) {
+      _enviromentVariables[splitApiUrlKey] =
+          const String.fromEnvironment(splitApiUrlKey);
+      _enviromentVariables[chunkSizeKey] =
+          const String.fromEnvironment(chunkSizeKey);
+      _enviromentVariables[chunkOverlapKey] =
+          const String.fromEnvironment(chunkOverlapKey);
+      _enviromentVariables[embeddingsModelKey] =
+          const String.fromEnvironment(embeddingsModelKey);
+      _enviromentVariables[embeddingsApiUrlKey] =
+          const String.fromEnvironment(embeddingsApiUrlKey);
+      _enviromentVariables[embeddingsApiKey] =
+          const String.fromEnvironment(embeddingsApiKey);
+      _enviromentVariables[embeddingsDimensionsKey] =
+          const String.fromEnvironment(embeddingsDimensionsKey);
+      _enviromentVariables[embeddingsApiBatchSizeKey] =
+          const String.fromEnvironment(embeddingsApiBatchSizeKey);
+      _enviromentVariables[embeddingsCompressedKey] =
+          const String.fromEnvironment(embeddingsCompressedKey);
+      _enviromentVariables[searchTypeKey] =
+          const String.fromEnvironment(searchTypeKey);
+      _enviromentVariables[searchIndexKey] =
+          const String.fromEnvironment(searchIndexKey);
+      _enviromentVariables[searchThresholdKey] =
+          const String.fromEnvironment(searchThresholdKey);
+      _enviromentVariables[retrieveTopNResultsKey] =
+          const String.fromEnvironment(retrieveTopNResultsKey);
+      _enviromentVariables[generationModelKey] =
+          const String.fromEnvironment(generationModelKey);
+      _enviromentVariables[generationApiUrlKey] =
+          const String.fromEnvironment(generationApiUrlKey);
+      _enviromentVariables[generationApiKey] =
+          const String.fromEnvironment(generationApiKey);
+      _enviromentVariables[systemPromptKey] =
+          const String.fromEnvironment(systemPromptKey);
+      _enviromentVariables[promptTemplateKey] =
+          const String.fromEnvironment(promptTemplateKey);
+      _enviromentVariables[temperatureKey] =
+          const String.fromEnvironment(temperatureKey);
+      _enviromentVariables[topPKey] = const String.fromEnvironment(topPKey);
+      _enviromentVariables[repetitionPenaltyKey] =
+          const String.fromEnvironment(repetitionPenaltyKey);
+      _enviromentVariables[maxTokensKey] =
+          const String.fromEnvironment(maxTokensKey);
+      _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);
+      _enviromentVariables[streamKey] = const String.fromEnvironment(streamKey);
+    }
   }
 
   Future<void> initialise(String tablePrefix) async {
@@ -126,6 +128,10 @@ class SettingService with ListenableServiceMixin {
     await initialise(tablePrefix);
     clearFormValuesFunction?.call();
     notifyListeners();
+  }
+
+  void clear() {
+    _settings.clear();
   }
 
   Future<void> set(String tablePrefix, String key, String value) async {

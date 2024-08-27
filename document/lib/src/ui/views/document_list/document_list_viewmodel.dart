@@ -10,9 +10,9 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class DocumentListViewModel extends ReactiveViewModel {
-  DocumentListViewModel(this.tablePrefix, {required this.hasConnectDatabase});
+  DocumentListViewModel(this.tablePrefix, {required this.inPackage});
   final String tablePrefix;
-  final bool hasConnectDatabase;
+  final bool inPackage;
 
   final _documentService = locator<DocumentService>();
   final _settingService = locator<SettingService>();
@@ -28,12 +28,12 @@ class DocumentListViewModel extends ReactiveViewModel {
 
   Future<void> initialise() async {
     _log.d('initialise() tablePrefix: $tablePrefix');
-    if (hasConnectDatabase) {
+    if (inPackage) {
       await connectDatabase();
+      await _settingService.initialise(tablePrefix);
+      final dimensions = _settingService.get(embeddingsDimensionsKey).value;
+      await _documentService.initialise(tablePrefix, dimensions);
     }
-    await _settingService.initialise(tablePrefix);
-    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
-    await _documentService.initialise(tablePrefix, dimensions);
   }
 
   Future<void> connectDatabase() async {

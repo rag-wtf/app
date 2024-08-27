@@ -16,8 +16,9 @@ import 'package:stacked/stacked.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class RagConsoleViewModel extends BaseViewModel {
-  RagConsoleViewModel(this.tablePrefix);
+  RagConsoleViewModel(this.tablePrefix, {required this.inPackage});
   final String tablePrefix;
+  final bool inPackage;
   final _settingService = locator<SettingService>();
   final _db = locator<Surreal>();
   final _dio = locator<Dio>();
@@ -106,10 +107,12 @@ Example:
   Future<void> initialise() async {
     setBusy(true);
     _log.d('initialise() tablePrefix: $tablePrefix');
-    await _settingService.initialise(tablePrefix);
-    final dimensions = _settingService.get(embeddingsDimensionsKey).value;
-    await _documentService.initialise(tablePrefix, dimensions);
-    await _chatService.initialise(tablePrefix);
+    if (inPackage) {
+      await _settingService.initialise(tablePrefix);
+      final dimensions = _settingService.get(embeddingsDimensionsKey).value;
+      await _documentService.initialise(tablePrefix, dimensions);
+      await _chatService.initialise(tablePrefix);
+    }
     _initMessages();
     _surrealVersion = await _db.version();
     final lastConnectionKey =

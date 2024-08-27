@@ -54,7 +54,7 @@ class StackedRouter extends _i1.RouterBase {
                 args.showPromptTemplateDialogFunction,
             key: args.key,
             tablePrefix: args.tablePrefix,
-            hasConnectDatabase: args.hasConnectDatabase,
+            inPackage: args.inPackage,
             redefineEmbeddingIndexFunction:
                 args.redefineEmbeddingIndexFunction),
         settings: data,
@@ -75,7 +75,7 @@ class SettingsViewArguments {
     required this.showPromptTemplateDialogFunction,
     this.key,
     this.tablePrefix = 'main',
-    this.hasConnectDatabase = false,
+    this.inPackage = false,
     this.redefineEmbeddingIndexFunction,
   });
 
@@ -87,7 +87,7 @@ class SettingsViewArguments {
 
   final String tablePrefix;
 
-  final bool hasConnectDatabase;
+  final bool inPackage;
 
   final _i5.Future<String?> Function(
     String,
@@ -96,7 +96,7 @@ class SettingsViewArguments {
 
   @override
   String toString() {
-    return '{"showSystemPromptDialogFunction": "$showSystemPromptDialogFunction", "showPromptTemplateDialogFunction": "$showPromptTemplateDialogFunction", "key": "$key", "tablePrefix": "$tablePrefix", "hasConnectDatabase": "$hasConnectDatabase", "redefineEmbeddingIndexFunction": "$redefineEmbeddingIndexFunction"}';
+    return '{"showSystemPromptDialogFunction": "$showSystemPromptDialogFunction", "showPromptTemplateDialogFunction": "$showPromptTemplateDialogFunction", "key": "$key", "tablePrefix": "$tablePrefix", "inPackage": "$inPackage", "redefineEmbeddingIndexFunction": "$redefineEmbeddingIndexFunction"}';
   }
 
   @override
@@ -108,7 +108,7 @@ class SettingsViewArguments {
             showPromptTemplateDialogFunction &&
         other.key == key &&
         other.tablePrefix == tablePrefix &&
-        other.hasConnectDatabase == hasConnectDatabase &&
+        other.inPackage == inPackage &&
         other.redefineEmbeddingIndexFunction == redefineEmbeddingIndexFunction;
   }
 
@@ -118,7 +118,7 @@ class SettingsViewArguments {
         showPromptTemplateDialogFunction.hashCode ^
         key.hashCode ^
         tablePrefix.hashCode ^
-        hasConnectDatabase.hashCode ^
+        inPackage.hashCode ^
         redefineEmbeddingIndexFunction.hashCode;
   }
 }
@@ -143,7 +143,7 @@ extension NavigatorStateExtension on _i7.NavigationService {
     required _i5.Future<void> Function() showPromptTemplateDialogFunction,
     _i6.Key? key,
     String tablePrefix = 'main',
-    bool hasConnectDatabase = false,
+    bool inPackage = false,
     _i5.Future<String?> Function(
       String,
       String,
@@ -160,7 +160,7 @@ extension NavigatorStateExtension on _i7.NavigationService {
             showPromptTemplateDialogFunction: showPromptTemplateDialogFunction,
             key: key,
             tablePrefix: tablePrefix,
-            hasConnectDatabase: hasConnectDatabase,
+            inPackage: inPackage,
             redefineEmbeddingIndexFunction: redefineEmbeddingIndexFunction),
         id: routerId,
         preventDuplicates: preventDuplicates,
@@ -187,7 +187,7 @@ extension NavigatorStateExtension on _i7.NavigationService {
     required _i5.Future<void> Function() showPromptTemplateDialogFunction,
     _i6.Key? key,
     String tablePrefix = 'main',
-    bool hasConnectDatabase = false,
+    bool inPackage = false,
     _i5.Future<String?> Function(
       String,
       String,
@@ -204,7 +204,7 @@ extension NavigatorStateExtension on _i7.NavigationService {
             showPromptTemplateDialogFunction: showPromptTemplateDialogFunction,
             key: key,
             tablePrefix: tablePrefix,
-            hasConnectDatabase: hasConnectDatabase,
+            inPackage: inPackage,
             redefineEmbeddingIndexFunction: redefineEmbeddingIndexFunction),
         id: routerId,
         preventDuplicates: preventDuplicates,

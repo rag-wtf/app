@@ -4,8 +4,16 @@ import 'package:rag_console/src/ui/views/rag_console/rag_console_viewmodel.dart'
 import 'package:stacked/stacked.dart';
 
 class RagConsoleView extends StackedView<RagConsoleViewModel> {
-  const RagConsoleView({super.key, this.tablePrefix = 'main'});
+  const RagConsoleView({
+    super.key,
+    this.tablePrefix = 'main',
+    this.inPackage = false,
+  });
   final String tablePrefix;
+  final bool inPackage;
+
+  @override
+  String get title => 'RAG Console';
 
   @override
   Widget builder(
@@ -34,7 +42,7 @@ ${RagConsoleViewModel.helpMessageHint}
   RagConsoleViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      RagConsoleViewModel(tablePrefix);
+      RagConsoleViewModel(tablePrefix, inPackage: inPackage);
 
   @override
   Future<void> onViewModelReady(RagConsoleViewModel viewModel) async {
