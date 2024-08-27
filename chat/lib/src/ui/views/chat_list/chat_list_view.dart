@@ -21,6 +21,11 @@ class ChatListView extends StackedView<ChatListViewModel> {
     return Scaffold(
       body: InfiniteList(
         itemCount: viewModel.chats.length,
+        centerEmpty: true,
+        emptyBuilder: (context) => Text(
+          'No chats',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         isLoading: viewModel.isBusy,
         onFetchData: viewModel.fetchChats,
         hasReachedMax: viewModel.hasReachedMax,
