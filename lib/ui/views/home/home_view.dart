@@ -47,8 +47,11 @@ class _HomeViewState extends State<HomeView>
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, viewModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (viewModel.totalChats > 0) {
+          if (viewModel.totalChats > 0 && _leftWidgetTabController.index == 0) {
             _leftWidgetTabController.animateTo(1);
+          } else if (viewModel.totalChats == 0 &&
+              _leftWidgetTabController.index == 1) {
+            _leftWidgetTabController.animateTo(0);
           }
         });
 
