@@ -1,5 +1,6 @@
 import 'package:database/src/app/app.locator.dart';
 import 'package:database/src/app/app.logger.dart';
+import 'package:database/src/constants.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/services/connection_setting_repository.dart';
 import 'package:database/src/services/connection_setting_service.dart';
@@ -58,7 +59,7 @@ class ConnectionDialogModel extends FormViewModel {
 
   Future<void> initialiseName() async {
     final counter = await _connectionSettingRepository.getConnectionCounter();
-    nameValue = 'New RAG $counter';
+    nameValue = '$defaultName $counter';
   }
 
   Future<void> _clearForm() async {

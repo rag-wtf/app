@@ -7,3 +7,4 @@ const surrealUsername = 'root';
 const surrealPassword = 'root';
 
 const dialogMaxWidth = 840.0;
+const defaultName = 'New RAG';

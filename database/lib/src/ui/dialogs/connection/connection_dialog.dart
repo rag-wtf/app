@@ -17,6 +17,7 @@ import 'package:stacked_services/stacked_services.dart';
   fields: [
     FormTextField(
       name: 'name',
+      initialValue: defaultName,
       validator: ConnectionDialogValidators.validateConnectionName,
     ),
     FormTextField(name: 'addressPort'),
