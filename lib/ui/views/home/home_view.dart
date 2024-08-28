@@ -61,7 +61,10 @@ class _HomeViewState extends State<HomeView>
               key: scaffoldKey,
               resizeToAvoidBottomInset: true,
               appBar: AppBar(
-                title: const Text(appTitle),
+                title: Text(
+                  viewModel.isBusy ? appTitle : viewModel.appName,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 leading: constraints.maxWidth < mediumScreenWidth
                     ? Builder(
                         builder: (context) => IconButton(

@@ -105,6 +105,19 @@ class ConnectionSettingService {
     await _storage.delete(key: ConnectionSetting.autoConnectKey);
   }
 
+  Future<String?> getCurrentConnectionName() async {
+    String? name;
+    final lastConnectionKey =
+        await _storage.read(key: ConnectionSetting.lastConnectionKey);
+    if (lastConnectionKey != null) {
+      final connectionSetting = await _connectionSettingRepository
+          .getConnectionSetting(lastConnectionKey, ConnectionSetting.nameKey);
+      name = connectionSetting?.value;
+    }
+    _log.d('lastConnectionKey $lastConnectionKey, name $name');
+    return name;
+  }
+
   Future<bool> isReady() async {
     try {
       return (await _db.version()).isNotEmpty;

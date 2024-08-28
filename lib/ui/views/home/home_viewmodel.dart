@@ -81,15 +81,14 @@ class HomeViewModel extends BaseViewModel {
   Future<void> initialise() async {
     setBusy(true);
     final packageInfo = await PackageInfo.fromPlatform();
-    _appName = packageInfo.appName;
     _version = packageInfo.version;
     _buildNumber = packageInfo.buildNumber;
     await _connectDatabase();
+    setBusy(false);
   }
 
   Future<void> _connectDatabase() async {
     var confirmed = false;
-    setBusy(true);
     if (!await _connectionSettingService.autoConnect()) {
       while (!confirmed) {
         final response = await _dialogService.showCustomDialog(
@@ -101,12 +100,13 @@ class HomeViewModel extends BaseViewModel {
         confirmed = response?.confirmed ?? false;
       }
     }
+    _appName =
+        await _connectionSettingService.getCurrentConnectionName() ?? appTitle;
     await _settingService.initialise(tablePrefix);
     final dimensions = _settingService.get(embeddingsDimensionsKey).value;
     await _documentService.initialise(tablePrefix, dimensions);
     await _chatService.initialise(tablePrefix);
     _totalChats = await _chatRepository.getTotal(tablePrefix);
-    setBusy(false);
   }
 
   Future<void> deleteAllData() async {
@@ -142,8 +142,10 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> disconnect() async {
+    setBusy(true);
     await _connectionSettingService.disconnect();
     _settingService.clear();
     await _connectDatabase();
+    setBusy(false);
   }
 }
