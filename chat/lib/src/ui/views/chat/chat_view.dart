@@ -3,6 +3,7 @@
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
 import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
+import 'package:chat/src/ui/widgets/new_chat_panel.dart';
 import 'package:document/document.dart';
 
 import 'package:flutter/material.dart';
@@ -36,29 +37,8 @@ class ChatView extends StackedView<ChatViewModel> {
               scrollController: _scrollController,
               itemCount: viewModel.messages.length,
               centerEmpty: true,
-              emptyBuilder: (context) => Wrap(
-                runSpacing: 8,
-                spacing: 8,
-                children: List<Widget>.generate(
-                  4,
-                  (int index) {
-                    return Container(
-                      width: 120,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 0.5),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text('Hello World Card $index'),
-                        ),
-                        onTap: () {},
-                      ),
-                    );
-                  },
-                ),
+              emptyBuilder: (context) => NewChatPanel(
+                (text) => _onSend(viewModel, text),
               ),
               isLoading: viewModel.isBusy,
               onFetchData: viewModel.fetchMessages,

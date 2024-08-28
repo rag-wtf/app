@@ -25,6 +25,7 @@ const maxTokensKey = 'MAX_TOKENS';
 const stopKey = 'STOP';
 const streamKey = 'STREAM';
 const userIdKey = 'USER_ID';
+const promptsKey = 'PROMPTS';
 
 const undefined = 'undefined';
 const splitApiUriPath = '/split';
