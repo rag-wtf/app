@@ -20,7 +20,7 @@ class PromptWidget extends StatelessWidget {
       height: height,
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 0.5),
+        border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(

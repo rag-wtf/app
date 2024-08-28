@@ -19,7 +19,6 @@ class DocumentItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final fileSizeInMB = documentItem.item.originFileSize / megaBytes;
     return Card(
-      color: Theme.of(context).colorScheme.surface,
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
       child: Stack(
         children: [

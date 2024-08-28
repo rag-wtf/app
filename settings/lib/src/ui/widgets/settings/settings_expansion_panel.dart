@@ -24,6 +24,7 @@ class SettingsExpansionPanel {
         padding: const EdgeInsets.only(left: 15, right: 15),
         child: body,
       ),
+      backgroundColor: Colors.transparent,
       isExpanded: isExpanded,
       canTapOnHeader: true,
     );

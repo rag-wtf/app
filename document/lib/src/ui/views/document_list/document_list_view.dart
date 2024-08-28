@@ -45,8 +45,8 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
                 if (viewModel.items.isEmpty)
                   DocumentUploadZoneWidget(
                     icon: const Icon(
-                      Icons.upload,
-                      size: 128,
+                      Icons.file_upload_outlined,
+                      size: 64,
                       color: Colors.grey,
                     ),
                     message: uploadFileZoneMessage,
@@ -60,7 +60,8 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
       floatingActionButton: viewModel.items.isNotEmpty
           ? FloatingActionButton(
               onPressed: () async => viewModel.addItem(await pickFile()),
-              child: const Icon(Icons.upload_file_outlined),
+              backgroundColor: Theme.of(context).cardColor,
+              child: const Icon(Icons.file_upload_outlined),
             )
           : null,
     );

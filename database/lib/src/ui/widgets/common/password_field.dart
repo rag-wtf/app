@@ -48,6 +48,7 @@ class _PasswordFieldState extends State<PasswordField> {
         prefixIcon: widget.prefixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         suffixIcon: IconButton(
           icon: Icon(

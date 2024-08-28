@@ -1,6 +1,7 @@
 import 'package:chat/chat.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
+import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 import 'package:rag/ui/widgets/clear_data_widget.dart';
 import 'package:rag/ui/widgets/common/brightness_button.dart';
@@ -62,7 +63,10 @@ class _HomeViewState extends State<HomeView>
                     ? Builder(
                         builder: (context) => IconButton(
                           onPressed: () => Scaffold.of(context).openDrawer(),
-                          icon: const Icon(Icons.menu_open),
+                          icon: Icon(
+                            Icons.menu,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                         ),
                       )
                     : null,
@@ -70,18 +74,21 @@ class _HomeViewState extends State<HomeView>
                   const BrightnessButton(
                     showTooltipBelow: false,
                   ),
-                  if (constraints.maxWidth < largeScreenWidth)
+                  if (constraints.maxWidth < largeScreenWidth) ...[
+                    horizontalSpaceTiny,
                     Builder(
                       builder: (context) => IconButton(
                         onPressed: () => Scaffold.of(context).openEndDrawer(),
                         icon: const Icon(Icons.settings),
                       ),
                     ),
-                  const VerticalDivider(),
+                  ],
+                  horizontalSpaceTiny,
                   IconButton(
                     onPressed: viewModel.disconnect,
                     icon: const Icon(Icons.exit_to_app),
                   ),
+                  horizontalSpaceTiny,
                 ],
               ),
               body: viewModel.isBusy

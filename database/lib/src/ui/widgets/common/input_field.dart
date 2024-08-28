@@ -78,6 +78,7 @@ class InputField extends StatelessWidget {
                       prefixIcon: prefixIcon,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.grey),
                       ),
                       suffixIcon: suffixIcon ??
                           (Focus.of(context).hasFocus &&

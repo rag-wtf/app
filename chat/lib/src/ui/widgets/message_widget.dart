@@ -16,9 +16,6 @@ class MessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      color: message.role == Role.user
-          ? Theme.of(context).colorScheme.surface
-          : Colors.transparent,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

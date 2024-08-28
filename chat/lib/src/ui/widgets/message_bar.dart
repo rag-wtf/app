@@ -49,7 +49,7 @@ class MessageBar extends StatelessWidget {
     this.messageBarColor = const Color(0xffF4F4F5),
     this.sendButtonColor = Colors.blue,
     this.isSendButtonBusy = false,
-    this.messageBarHintText = 'Type your message here',
+    this.messageBarHintText = 'Message',
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.onTextChanged,
     this.onTapCloseReply,
@@ -163,18 +163,16 @@ class MessageBar extends StatelessWidget {
                       hintText: messageBarHintText,
                       hintMaxLines: 1,
                       hintStyle: messageBarHintStyle,
-                      fillColor: Theme.of(context).colorScheme.surface,
+                      fillColor: Theme.of(context).cardTheme.color,
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: textFieldBorderRadius,
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                        ),
+                        borderSide: BorderSide.none,
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: textFieldBorderRadius,
-                        borderSide: const BorderSide(
-                          color: Colors.black26,
+                        borderSide: BorderSide(
+                          color: Colors.grey[700]!,
                         ),
                       ),
                       prefixIcon: prefixIcon,

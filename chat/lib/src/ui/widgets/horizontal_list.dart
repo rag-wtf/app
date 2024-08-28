@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chat/src/ui/common/ui_helpers.dart';
 import 'package:chat/src/ui/widgets/markdown_widget.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class HorizontalList extends StatelessWidget {
             'Sources:',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
+          verticalSpaceTiny,
           Container(
             color: Colors.transparent,
             height: 95,
@@ -40,30 +42,35 @@ class HorizontalList extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: embeddings!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    child: Container(
-                      margin: index == 0
-                          ? const EdgeInsets.only(right: itemMargin)
-                          : const EdgeInsets.symmetric(horizontal: itemMargin),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: itemPadding),
-                      width: itemWidth,
-                      color: Theme.of(context).colorScheme.surface,
-                      child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(
-                          scrollbars: false,
-                          physics: const NeverScrollableScrollPhysics(),
-                        ),
-                        child: SingleChildScrollView(
-                          child: MarkdownWidget(
-                            embeddings![index].content,
-                            selectable: false,
-                            textStyle: const TextStyle(fontSize: 12),
+                  return Card(
+                    margin: index == 0
+                        ? const EdgeInsets.only(right: itemMargin)
+                        : const EdgeInsets.symmetric(
+                            horizontal: itemMargin,
+                          ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: itemPadding),
+                        width: itemWidth,
+                        //color: Theme.of(context).colorScheme.surface,
+                        child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context).copyWith(
+                            scrollbars: false,
+                            physics: const NeverScrollableScrollPhysics(),
+                          ),
+                          child: SingleChildScrollView(
+                            child: MarkdownWidget(
+                              embeddings![index].content,
+                              selectable: false,
+                              textStyle: const TextStyle(fontSize: 12),
+                            ),
                           ),
                         ),
                       ),
+                      onTap: () async => showDialogFunction(embeddings![index]),
                     ),
-                    onTap: () async => showDialogFunction(embeddings![index]),
                   );
                 },
               ),
@@ -86,7 +93,7 @@ class HorizontalList extends StatelessWidget {
                           color: Colors.grey[300],
                         ),
                         indicatorDecoration: BoxDecoration(
-                          color: Colors.blue,
+                          color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
