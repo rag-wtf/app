@@ -75,6 +75,8 @@ class DocumentService with ListenableServiceMixin {
     if (!await isSchemaCreated(tablePrefix)) {
       await createSchema(tablePrefix, dimensions);
     }
+    _total = -1;
+    _items.clear();
   }
 
   bool get hasReachedMax {

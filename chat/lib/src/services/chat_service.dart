@@ -105,6 +105,11 @@ class ChatService with ListenableServiceMixin {
     if (!await isSchemaCreated(tablePrefix)) {
       await createSchema(tablePrefix);
     }
+    _chats.clear();
+    _messages.clear();
+    _chatIndex = -1;
+    _totalChats = -1;
+    _totalMessages = -1;
   }
 
   void newChat() {
