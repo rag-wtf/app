@@ -91,7 +91,7 @@ class _HomeViewState extends State<HomeView>
                     onPressed: viewModel.disconnect,
                     icon: const Icon(Icons.exit_to_app),
                   ),
-                  horizontalSpaceTiny,
+                  horizontalSpaceSmall,
                 ],
               ),
               body: viewModel.isBusy
