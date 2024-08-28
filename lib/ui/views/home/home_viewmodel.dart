@@ -95,7 +95,7 @@ class HomeViewModel extends BaseViewModel {
         final response = await _dialogService.showCustomDialog(
           variant: DialogType.connection,
           title: 'Connection',
-          description: 'Create database connection',
+          description: 'Create database connection for RAG',
         );
 
         confirmed = response?.confirmed ?? false;
