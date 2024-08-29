@@ -71,7 +71,6 @@ class ChatView extends StackedView<ChatViewModel> {
               buttonPadding = const EdgeInsets.all(4);
               buttonIconSize = 24;
             }
-            debugPrint('buttonIconSize $buttonIconSize');
             return MessageBar(
               isSendButtonBusy: viewModel.isGenerating,
               sendButtonColor: Theme.of(context).colorScheme.primary,
