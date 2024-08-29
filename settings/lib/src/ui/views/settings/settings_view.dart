@@ -104,6 +104,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     Widget? child,
   ) {
     final iconColor = Theme.of(context).textTheme.displaySmall?.color;
+    final isDense = MediaQuery.sizeOf(context).width < 600;
     return Scaffold(
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
@@ -115,6 +116,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     body: Column(
                       children: [
                         InputField(
+                          isDense: isDense,
                           labelText: 'API URL',
                           prefixIcon: Icon(
                             Icons.http_outlined,
@@ -126,6 +128,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.url,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Chunk Size',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -137,6 +140,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Chunk Overlap',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -156,6 +160,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     body: Column(
                       children: [
                         InputField(
+                          isDense: isDense,
                           labelText: 'Model',
                           prefixIcon: Icon(
                             Icons.api_outlined,
@@ -167,6 +172,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.text,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'API URL',
                           prefixIcon: Icon(
                             Icons.http_outlined,
@@ -179,6 +185,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.url,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'API Key',
                           prefixIcon: Icon(
                             Icons.lock_outlined,
@@ -191,6 +198,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.none,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Dimensions',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -203,6 +211,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Batch Size',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -234,7 +243,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     body: Column(
                       children: [
                         /* 
-                        InputField(
+                        InputField( isDense: isDense,
                           labelText: 'Search Type',
                           prefixIcon: Icon(
                             Icons.search_outlined,
@@ -246,6 +255,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         */
                         InputField(
+                          isDense: isDense,
                           labelText: 'Search Threshold',
                           prefixIcon: Icon(
                             Icons.manage_search_outlined,
@@ -257,6 +267,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Top N',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -277,6 +288,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                     body: Column(
                       children: [
                         InputField(
+                          isDense: isDense,
                           labelText: 'Model',
                           prefixIcon: Icon(
                             Icons.api_outlined,
@@ -288,6 +300,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.text,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'API URL',
                           prefixIcon: Icon(
                             Icons.http_outlined,
@@ -301,6 +314,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.url,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'API Key',
                           prefixIcon: Icon(
                             Icons.lock_outlined,
@@ -313,6 +327,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.none,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Max Tokens',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -324,6 +339,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Temperature',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -335,6 +351,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Repetition Penalty',
                           prefixIcon: Icon(
                             Icons.repeat,
@@ -347,6 +364,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Top P',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
@@ -358,6 +376,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           textInputType: TextInputType.number,
                         ),
                         InputField(
+                          isDense: isDense,
                           labelText: 'Stop',
                           prefixIcon: Icon(
                             Icons.stop_outlined,

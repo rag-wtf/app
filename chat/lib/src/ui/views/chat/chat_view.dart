@@ -57,23 +57,43 @@ class ChatView extends StackedView<ChatViewModel> {
         const SizedBox(
           height: 5,
         ),
-        MessageBar(
-          isSendButtonBusy: viewModel.isGenerating,
-          sendButtonColor: Theme.of(context).colorScheme.primary,
-          onSend: (text) async => _onSend(viewModel, text),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(8),
-            child: IconButton(
-              padding: const EdgeInsets.all(5),
-              onPressed: viewModel.newChat,
-              icon: Icon(
-                Icons.add,
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
+        LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            EdgeInsetsGeometry buttonMargin;
+            EdgeInsetsGeometry buttonPadding;
+            double buttonIconSize;
+            if (constraints.maxWidth < 600) {
+              buttonMargin = const EdgeInsets.all(4);
+              buttonPadding = const EdgeInsets.all(2);
+              buttonIconSize = 20;
+            } else {
+              buttonMargin = const EdgeInsets.all(8);
+              buttonPadding = const EdgeInsets.all(4);
+              buttonIconSize = 24;
+            }
+            debugPrint('buttonIconSize $buttonIconSize');
+            return MessageBar(
+              isSendButtonBusy: viewModel.isGenerating,
+              sendButtonColor: Theme.of(context).colorScheme.primary,
+              sendButtonMargin: buttonMargin,
+              sendButtonPadding: buttonPadding,
+              sendButtonIconSize: buttonIconSize,
+              onSend: (text) async => _onSend(viewModel, text),
+              prefixIcon: Padding(
+                padding: buttonMargin,
+                child: IconButton(
+                  padding: buttonPadding,
+                  onPressed: viewModel.newChat,
+                  icon: Icon(
+                    Icons.add,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: buttonIconSize,
+                  ),
+                ),
               ),
-            ),
-          ),
-          messageBarColor: Colors.transparent,
+              messageBarColor: Colors.transparent,
+            );
+          },
         ),
       ],
     );

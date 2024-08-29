@@ -36,8 +36,10 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
     EmbeddingDialogModel viewModel,
     Widget? child,
   ) {
+    final isDense = MediaQuery.sizeOf(context).width < 600;
     return AdaptiveDialog(
       maxWidth: dialogMaxWidth,
+      maxHeight: 600,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       child: Padding(
@@ -68,23 +70,25 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
             if (viewModel.isBusy)
               const Center(child: CircularProgressIndicator())
             else
-              SingleChildScrollView(
-                child: Column(
+              Expanded(
+                child: ListView(
                   children: [
-                    /* InputField(
-                        labelText: 'ID',
-                        prefixIcon: Icon(
-                          Icons.fingerprint,
-                          color: iconColor,
-                        ),
-                        errorText: viewModel.idValidationMessage,
-                        controller: idController,
-                        textInputType: TextInputType.text,
-                        readOnly: true,
-                      ),
-                      verticalSpaceTiny,
-                      */
+                    /* InputField( 
+                            isDense: isDense,
+                            labelText: 'ID',
+                            prefixIcon: Icon(
+                              Icons.fingerprint,
+                              color: iconColor,
+                            ),
+                            errorText: viewModel.idValidationMessage,
+                            controller: idController,
+                            textInputType: TextInputType.text,
+                            readOnly: true,
+                          ),
+                          verticalSpaceTiny,
+                          */
                     InputField(
+                      isDense: isDense,
                       labelText: 'Content',
                       errorText: viewModel.contentValidationMessage,
                       controller: contentController,
@@ -94,6 +98,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
                     ),
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Embedding',
                       errorText: viewModel.embeddingValidationMessage,
                       controller: embeddingController,
@@ -102,6 +107,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
                     ),
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Metadata',
                       errorText: viewModel.metadataValidationMessage,
                       controller: metadataController,
@@ -110,6 +116,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
                     ),
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Score',
                       errorText: viewModel.scoreValidationMessage,
                       controller: scoreController,
@@ -118,6 +125,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
                     ),
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Created',
                       errorText: viewModel.createdValidationMessage,
                       controller: createdController,
@@ -126,6 +134,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
                     ),
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Updated',
                       errorText: viewModel.updatedValidationMessage,
                       controller: updatedController,

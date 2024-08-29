@@ -17,6 +17,7 @@ class InputField extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.maxLines = 1,
+    this.isDense,
   });
   final TextEditingController controller;
   final String? labelText;
@@ -30,6 +31,7 @@ class InputField extends StatelessWidget {
   final bool enabled;
   final bool readOnly;
   final int? maxLines;
+  final bool? isDense;
 
   static const double kdDesktopMaxContentWidth = 1150;
 
@@ -50,6 +52,7 @@ class InputField extends StatelessWidget {
                     errorText: errorText,
                     hintText: hintText,
                     prefixIcon: prefixIcon,
+                    isDense: isDense,
                   );
                 } else {
                   return TextField(
@@ -58,6 +61,7 @@ class InputField extends StatelessWidget {
                     enabled: enabled,
                     controller: controller,
                     decoration: InputDecoration(
+                      isDense: isDense,
                       label: labelText != null
                           ? Text(
                               labelText!,

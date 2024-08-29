@@ -48,6 +48,9 @@ class MessageBar extends StatelessWidget {
     this.replyCloseColor = Colors.black12,
     this.messageBarColor = const Color(0xffF4F4F5),
     this.sendButtonColor = Colors.blue,
+    this.sendButtonMargin = const EdgeInsets.all(8),
+    this.sendButtonPadding = const EdgeInsets.all(4),
+    this.sendButtonIconSize = 24,
     this.isSendButtonBusy = false,
     this.messageBarHintText = 'Message',
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
@@ -66,6 +69,9 @@ class MessageBar extends StatelessWidget {
   final String messageBarHintText;
   final TextStyle messageBarHintStyle;
   final Color sendButtonColor;
+  final EdgeInsetsGeometry sendButtonMargin;
+  final EdgeInsetsGeometry sendButtonPadding;
+  final double sendButtonIconSize;
   final bool isSendButtonBusy;
   final void Function(String)? onTextChanged;
   final void Function(String) onSend;
@@ -160,6 +166,7 @@ class MessageBar extends StatelessWidget {
                     maxLines: null,
                     onChanged: onTextChanged,
                     decoration: InputDecoration(
+                      isDense: true,
                       hintText: messageBarHintText,
                       hintMaxLines: 1,
                       hintStyle: messageBarHintStyle,
@@ -177,20 +184,23 @@ class MessageBar extends StatelessWidget {
                       ),
                       prefixIcon: prefixIcon,
                       suffixIcon: isSendButtonBusy
-                          ? const AvatarBrick(
+                          ? AvatarBrick(
                               isLoading: true,
-                              size: Size(32, 32),
+                              size: Size(
+                                sendButtonIconSize + 8,
+                                sendButtonIconSize + 8,
+                              ),
                               backgroundColor: Colors.transparent,
                             )
                           : Padding(
-                              padding: const EdgeInsets.all(8),
+                              padding: sendButtonMargin,
                               child: IconButton(
-                                padding: const EdgeInsets.all(5),
+                                padding: sendButtonPadding,
                                 onPressed: _send,
                                 icon: Icon(
                                   Icons.send,
                                   color: sendButtonColor,
-                                  size: 24,
+                                  size: sendButtonIconSize,
                                 ),
                               ),
                             ),

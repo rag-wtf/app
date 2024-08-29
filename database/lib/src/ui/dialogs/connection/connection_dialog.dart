@@ -52,6 +52,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
     final showClearTextButton = viewModel.connectionKeySelected !=
         ConnectionDialogModel.newConnectionKey;
     final showDeleteButton = showClearTextButton;
+    final isDense = MediaQuery.sizeOf(context).width < 600;
     return AdaptiveDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
@@ -117,6 +118,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               child: ListView(
                 children: [
                   InputField(
+                    isDense: isDense,
                     hintText: 'Name',
                     controller: nameController,
                     errorText: viewModel.nameValidationMessage,
@@ -147,6 +149,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   ),
                   verticalSpaceTiny,
                   InputField(
+                    isDense: isDense,
                     prefixIcon: Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: SizedBox(
@@ -205,6 +208,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   ),
                   verticalSpaceTiny,
                   InputField(
+                    isDense: isDense,
                     labelText: 'Namespace',
                     controller: namespaceController,
                     errorText: viewModel.namespaceValidationMessage,
@@ -212,6 +216,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   ),
                   verticalSpaceTiny,
                   InputField(
+                    isDense: isDense,
                     labelText: 'Database',
                     controller: databaseController,
                     errorText: viewModel.databaseValidationMessage,
@@ -221,6 +226,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                       viewModel.protocol != 'indxdb') ...[
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Username',
                       controller: usernameController,
                       errorText: viewModel.usernameValidationMessage,
@@ -228,6 +234,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     ),
                     verticalSpaceTiny,
                     InputField(
+                      isDense: isDense,
                       labelText: 'Password',
                       controller: passwordController,
                       errorText: viewModel.passwordValidationMessage,

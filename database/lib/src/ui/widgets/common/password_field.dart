@@ -8,6 +8,7 @@ class PasswordField extends StatefulWidget {
     this.errorText,
     this.hintText = '',
     this.prefixIcon,
+    this.isDense,
   });
 
   final TextEditingController controller;
@@ -15,6 +16,7 @@ class PasswordField extends StatefulWidget {
   final String? errorText;
   final String? hintText;
   final Widget? prefixIcon;
+  final bool? isDense;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -34,6 +36,7 @@ class _PasswordFieldState extends State<PasswordField> {
     return TextField(
       controller: widget.controller,
       decoration: InputDecoration(
+        isDense: widget.isDense,
         label: widget.labelText != null
             ? Text(
                 widget.labelText!,
