@@ -31,11 +31,7 @@ class DocumentRepository {
     if (document.file != null) {
       payload['file'] = document.file;
     }
-    final validationErrors = Document.validate(payload);
-    final isValid = validationErrors == null;
-    if (!isValid) {
-      return document.copyWith(errors: validationErrors);
-    }
+
     final fullTableName = '${tablePrefix}_${Document.tableName}';
     final sql = 'CREATE ONLY $fullTableName CONTENT \$content;';
     _log.d('txn: $txn, payload: $payload');
@@ -100,11 +96,6 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
   ]) async {
     if (await _db.select(document.id!) == null) return null;
     final payload = document.toJson();
-    final validationErrors = Document.validate(payload);
-    final isValid = validationErrors == null;
-    if (!isValid) {
-      return document.copyWith(errors: validationErrors);
-    }
     final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE \$content;';
     _log.d('txn: $txn, id: $id, payload: $payload');

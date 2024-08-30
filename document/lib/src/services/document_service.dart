@@ -156,7 +156,6 @@ class DocumentService with ListenableServiceMixin {
             document,
             txn,
           );
-
           await _embeddingRepository.createEmbeddings(
             tablePrefix,
             embeddings,
@@ -438,7 +437,6 @@ class DocumentService with ListenableServiceMixin {
       contentMimeType: responseData?['mime_type'] as String,
       status: DocumentStatus.indexing,
       splitted: now,
-      updated: now,
     );
     final batchResults = await _batchService.execute<Embedding, dynamic>(
       embeddings,
@@ -449,7 +447,11 @@ class DocumentService with ListenableServiceMixin {
           document,
           values,
         );
+        _log.d('txnResults.runtimeType ${txnResults.runtimeType}');
+        _log.d('txnResults $txnResults');
         final results = txnResults! as List;
+        _log.d('results[1].runtimeType ${results[1].runtimeType}');
+
         return results[1] as List;
       },
     );

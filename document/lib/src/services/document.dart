@@ -3,7 +3,6 @@
 import 'dart:typed_data';
 import 'package:document/src/services/null_json_converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_schema/json_schema.dart';
 part 'document.freezed.dart';
 part 'document.g.dart';
 
@@ -24,7 +23,6 @@ sealed class Document with _$Document {
     @NullDateTimeJsonConverter() DateTime? splitted,
     @NullDateTimeJsonConverter() DateTime? done, // completed/failed/canceled
     @JsonKey(includeFromJson: false, includeToJson: false)
-    List<ValidationError>? errors,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<List<int>>? byteData,
     @JsonKey(includeToJson: false) DateTime? created,
@@ -77,91 +75,6 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
     UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
 );
 ''';
-
-  static const _jsonSchema = {
-    r'$ref': '#/definitions/document',
-    'definitions': {
-      'document': {
-        'type': 'object',
-        'properties': {
-          'id': {
-            'type': 'string',
-          },
-          'compressedFileSize': {
-            'type': 'number',
-          },
-          'content': {
-            'type': 'string',
-          },
-          'fileMimeType': {
-            'type': 'string',
-          },
-          'contentMimeType': {
-            'type': 'string',
-            'minLength': 1,
-          },
-          'created': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-          'errorMessage': {
-            'type': 'string',
-          },
-          'file': {
-            'type': 'array',
-            'items': {
-              'type': 'integer',
-              'minimum': 0,
-              'maximum': 255,
-            },
-          },
-          'name': {
-            'type': 'string',
-          },
-          'originFileSize': {
-            'type': 'number',
-          },
-          'status': {
-            'type': 'string',
-          },
-          'metadata': {
-            'type': 'object',
-          },
-          'updated': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-          'splitted': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-          'done': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-        },
-        'required': [
-          'compressedFileSize',
-          'fileMimeType',
-          'name',
-          'originFileSize',
-          'status',
-        ],
-        'additionalProperties': false,
-      },
-    },
-    r'$schema': 'http://json-schema.org/draft-07/schema#',
-  };
-
-  static final jsonSchema = JsonSchema.create(_jsonSchema);
-
-  static List<ValidationError>? validate(Map<String, dynamic> json) {
-    final results = jsonSchema.validate(json);
-    if (!results.isValid) {
-      return results.errors;
-    }
-    return null;
-  }
 }
 
 enum DocumentStatus {

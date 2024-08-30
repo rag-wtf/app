@@ -66,31 +66,6 @@ void main({bool wasm = false}) {
       // Assert
       expect(result.id, isNotNull);
     });
-
-    test('should have validation errors', () async {
-      // Arrange
-      const fileContent = 'Hello world!';
-      final document = Document(
-        compressedFileSize: 100,
-        fileMimeType: 'text/plain',
-        contentMimeType: '',
-        errorMessage: '',
-        file: utf8.encode(fileContent),
-        name: 'Test Document',
-        originFileSize: 200,
-        status: DocumentStatus.created,
-      );
-
-      // Act
-      final result =
-          await repository.createDocument(defaultTablePrefix, document);
-
-      // Assert
-      expect(
-        result.errors?.first.toString(),
-        '/contentMimeType: minLength violated ( vs 1)',
-      );
-    });
   });
 
   group('getAllDocuments', () {
