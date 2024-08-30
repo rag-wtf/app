@@ -1,8 +1,11 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'dart:typed_data';
-import 'package:document/src/services/null_json_converters.dart';
+
+import 'package:document/src/services/js_date.dart';
+import 'package:document/src/services/js_date_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 part 'document.freezed.dart';
 part 'document.g.dart';
 
@@ -20,8 +23,8 @@ sealed class Document with _$Document {
     @JsonKey(includeToJson: false) Uint8List? file,
     Object? metadata,
     String? errorMessage,
-    @NullDateTimeJsonConverter() DateTime? splitted,
-    @NullDateTimeJsonConverter() DateTime? done, // completed/failed/canceled
+    @JSDateJsonConverter() DateTime? splitted,
+    @JSDateJsonConverter() DateTime? done, // completed/failed/canceled
     @JsonKey(includeFromJson: false, includeToJson: false)
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<List<int>>? byteData,
