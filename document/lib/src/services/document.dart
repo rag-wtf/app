@@ -3,6 +3,7 @@
 import 'dart:typed_data';
 
 import 'package:document/src/services/date_time_json_converter.dart';
+import 'package:document/src/services/null_json_converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
 part 'document.freezed.dart';
@@ -22,7 +23,7 @@ sealed class Document with _$Document {
     @JsonKey(includeToJson: false) Uint8List? file,
     Object? metadata,
     String? errorMessage,
-    @DateTimeJsonConverter() DateTime? splitted,
+    @NullDateTimeJsonConverter() DateTime? splitted,
     @DateTimeJsonConverter() DateTime? indexed,
     @DateTimeJsonConverter() DateTime? done, // completed/failed/canceled
     @JsonKey(includeFromJson: false, includeToJson: false)
@@ -70,9 +71,9 @@ DEFINE FIELD file ON {prefix}_$tableName TYPE option<bytes>;
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD status ON {prefix}_$tableName TYPE string;
-DEFINE FIELD splitted ON {prefix}_$tableName TYPE option<datetime>;
-DEFINE FIELD indexed ON {prefix}_$tableName TYPE option<datetime>;
-DEFINE FIELD done ON {prefix}_$tableName TYPE option<datetime>;
+DEFINE FIELD splitted ON {prefix}_$tableName TYPE datetime DEFAULT time::from::unix(0);
+DEFINE FIELD indexed ON {prefix}_$tableName TYPE datetime DEFAULT time::from::unix(0);
+DEFINE FIELD done ON {prefix}_$tableName TYPE datetime DEFAULT time::from::unix(0);
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();

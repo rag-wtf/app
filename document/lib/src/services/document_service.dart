@@ -369,16 +369,11 @@ class DocumentService with ListenableServiceMixin {
     String? errorMessage,
   ) async {
     _log.e(errorMessage);
-    final now = DateTime.now();
-    documentItem.item = (await _documentRepository.updateDocument(
-      documentItem.item.copyWith(
-        status: DocumentStatus.failed,
-        errorMessage: errorMessage,
-        done: now,
-      ),
-    ))!;
-    _log.d('updatedDocument ${documentItem.item}');
-    notifyListeners();
+    await updateDocumentDoneStatus(
+      documentItem,
+      DocumentStatus.failed,
+      errorMessage,
+    );
   }
 
   void _onProgress(
@@ -506,7 +501,7 @@ class DocumentService with ListenableServiceMixin {
       vectors,
     );
 
-    await _updateDocumentStatus(
+    await updateDocumentDoneStatus(
       documentItem,
       DocumentStatus.completed,
     );
@@ -518,21 +513,48 @@ class DocumentService with ListenableServiceMixin {
     // Handle the error in here
     if (error is DioException) {
       if (error.type == DioExceptionType.cancel) {
-        final now = DateTime.now();
-        documentItem.item = (await _documentRepository.updateDocument(
-          documentItem.item.copyWith(
-            status: DocumentStatus.canceled,
-            done: now,
-            updated: now,
-          ),
-        ))!;
-
-        notifyListeners();
+        await updateDocumentDoneStatus(documentItem, DocumentStatus.canceled);
       } else {
         await _handleError(documentItem, error.message);
       }
     } else {
       await _handleError(documentItem, error.toString());
     }
+  }
+
+  Future<void> updateDocumentDoneStatus(
+    DocumentItem documentItem,
+    DocumentStatus status, [
+    String? errorMessage,
+  ]) async {
+    final now = DateTime.now();
+
+    documentItem.item = (errorMessage == null
+        ? await _documentRepository.updateDocument(
+            documentItem.item.copyWith(
+              status: status,
+              done: now,
+            ),
+          )
+        : await _documentRepository.updateDocument(
+            documentItem.item.copyWith(
+              status: status,
+              errorMessage: errorMessage,
+              done: now,
+            ),
+          ))!;
+
+    notifyListeners();
+  }
+
+  Future<void> updateDocumentIndexingStatus(DocumentItem documentItem) async {
+    final now = DateTime.now();
+    documentItem.item = (await _documentRepository.updateDocument(
+      documentItem.item.copyWith(
+        status: DocumentStatus.indexing,
+        splitted: now,
+      ),
+    ))!;
+    notifyListeners();
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:document/document.dart';
 import 'package:document/src/app/app.locator.dart';
+import 'package:document/src/services/document_item.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
@@ -14,6 +15,7 @@ void main({bool wasm = false}) {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   final db = locator<Surreal>();
   final documentService = locator<DocumentService>();
+  final repository = locator<DocumentRepository>();
   const tablePrefix = 'doc_service';
 
   setUpAll(() async {
@@ -202,5 +204,58 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
 
     // Assert
     expect(content, equals(str));
+  });
+
+  group('should update document status and date', () {
+    test('updateDocumentIndexingStatus', () async {
+      final document = Document(
+        compressedFileSize: 100,
+        fileMimeType: 'text/plain',
+        contentMimeType: 'text/plain',
+        file: utf8.encode('Hello World!'),
+        name: 'Test Document',
+        originFileSize: 200,
+        status: DocumentStatus.created,
+      );
+      final created =
+          await repository.createDocument(defaultTablePrefix, document);
+      final oldSplitted = created.splitted;
+      final documentItem = DocumentItem(defaultTablePrefix, created);
+
+      // Act
+      await documentService.updateDocumentIndexingStatus(documentItem);
+
+      // Assert
+      expect(documentItem.item.status, equals(DocumentStatus.indexing));
+      expect(documentItem.item.splitted!.isAfter(oldSplitted!), isTrue);
+    });
+  });
+
+  test('updateDocumentDoneStatus', () async {
+    final document = Document(
+      compressedFileSize: 100,
+      fileMimeType: 'text/plain',
+      contentMimeType: 'text/plain',
+      file: utf8.encode('Hello World!'),
+      name: 'Test Document',
+      originFileSize: 200,
+      status: DocumentStatus.created,
+    );
+    final created =
+        await repository.createDocument(defaultTablePrefix, document);
+    final oldDone = created.done;
+    final documentItem = DocumentItem(defaultTablePrefix, created);
+    const errorMessage = 'Failed to update status';
+    // Act
+    await documentService.updateDocumentDoneStatus(
+      documentItem,
+      DocumentStatus.failed,
+      errorMessage,
+    );
+
+    // Assert
+    expect(documentItem.item.status, equals(DocumentStatus.failed));
+    expect(documentItem.item.errorMessage, equals(errorMessage));
+    expect(documentItem.item.done!.isAfter(oldDone!), isTrue);
   });
 }
