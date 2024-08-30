@@ -1,8 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'dart:typed_data';
-
-import 'package:document/src/services/date_time_json_converter.dart';
 import 'package:document/src/services/null_json_converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_schema/json_schema.dart';
@@ -24,7 +22,6 @@ sealed class Document with _$Document {
     Object? metadata,
     String? errorMessage,
     @NullDateTimeJsonConverter() DateTime? splitted,
-    @NullDateTimeJsonConverter() DateTime? indexed,
     @NullDateTimeJsonConverter() DateTime? done, // completed/failed/canceled
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
@@ -50,7 +47,6 @@ sealed class Document with _$Document {
       metadata: json['metadata'],
       errorMessage: json['errorMessage'] as String?,
       splitted: json['splitted'] as DateTime?,
-      indexed: json['indexed'] as DateTime?,
       done: json['done'] as DateTime?,
       created: json['created'] as DateTime,
       updated: json['updated'] as DateTime,
@@ -72,7 +68,6 @@ DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD originFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD status ON {prefix}_$tableName TYPE string;
 DEFINE FIELD splitted ON {prefix}_$tableName TYPE datetime DEFAULT time::from::unix(0);
-DEFINE FIELD indexed ON {prefix}_$tableName TYPE datetime DEFAULT time::from::unix(0);
 DEFINE FIELD done ON {prefix}_$tableName TYPE datetime DEFAULT time::from::unix(0);
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
@@ -137,10 +132,6 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
             'format': 'date-time',
           },
           'splitted': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-          'indexed': {
             'type': 'string',
             'format': 'date-time',
           },
