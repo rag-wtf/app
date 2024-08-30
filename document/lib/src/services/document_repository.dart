@@ -106,10 +106,6 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
       return document.copyWith(errors: validationErrors);
     }
     final id = payload.remove('id') as String;
-    //if (payload['splitted'] != null) {
-    //_log.d('payload["splitted"] ${payload['splitted']}');
-    //  payload['splitted'] = document.splitted;
-    //}
     final sql = 'UPDATE ONLY $id MERGE \$content;';
     _log.d('txn: $txn, id: $id, payload: $payload');
     if (txn == null) {

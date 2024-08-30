@@ -24,8 +24,8 @@ sealed class Document with _$Document {
     Object? metadata,
     String? errorMessage,
     @NullDateTimeJsonConverter() DateTime? splitted,
-    @DateTimeJsonConverter() DateTime? indexed,
-    @DateTimeJsonConverter() DateTime? done, // completed/failed/canceled
+    @NullDateTimeJsonConverter() DateTime? indexed,
+    @NullDateTimeJsonConverter() DateTime? done, // completed/failed/canceled
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<ValidationError>? errors,
     @JsonKey(includeFromJson: false, includeToJson: false)
