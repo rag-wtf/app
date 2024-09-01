@@ -139,6 +139,8 @@ class DocumentService with ListenableServiceMixin {
     List<Embedding> embeddings, [
     Transaction? txn,
   ]) async {
+    _log.d('***** start');
+    Object? result;
     final documentEmbeddings = <DocumentEmbedding>[];
     for (final embedding in embeddings) {
       documentEmbeddings.add(
@@ -150,7 +152,8 @@ class DocumentService with ListenableServiceMixin {
     }
 
     if (txn == null) {
-      return _db.transaction(
+      result = await _db.transaction(
+        showSql: true,
         (txn) async {
           await _documentRepository.updateDocument(
             document,
@@ -176,8 +179,10 @@ class DocumentService with ListenableServiceMixin {
         documentEmbeddings,
         txn,
       );
-      return null;
     }
+
+    _log.d('***** end');
+    return result;
   }
 
   Future<Object?> _updateEmbeddings(
@@ -447,12 +452,11 @@ class DocumentService with ListenableServiceMixin {
           document,
           values,
         );
-        _log.d('txnResults.runtimeType ${txnResults.runtimeType}');
         _log.d('txnResults $txnResults');
         final results = txnResults! as List;
-        _log.d('results[1].runtimeType ${results[1].runtimeType}');
-
-        return results[1] as List;
+        final embeddingsResult = results[1] as Map;
+        _log.d('embeddingsResult.runtimeType ${embeddingsResult.runtimeType}');
+        return embeddingsResult['result'] as List;
       },
     );
 

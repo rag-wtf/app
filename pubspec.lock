@@ -1043,11 +1043,10 @@ packages:
   surrealdb_js:
     dependency: "direct main"
     description:
-      name: surrealdb_js
-      sha256: a0a87941a1eb4ca3b94728d46f6604aad17acc4c345cccd6ee9d43d81fb959e7
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0-beta.20+4"
+      path: "../surrealdb_js"
+      relative: true
+    source: path
+    version: "1.0.0-beta.20"
   surrealdb_wasm:
     dependency: "direct main"
     description:
@@ -1272,5 +1271,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.5.0-259.0.dev <4.0.0"
+  dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.22.0"

@@ -2,9 +2,8 @@
 
 import 'dart:typed_data';
 
-import 'package:document/src/services/js_date.dart';
-import 'package:document/src/services/js_date_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:surrealdb_js/surrealdb_js.dart';
 
 part 'document.freezed.dart';
 part 'document.g.dart';
