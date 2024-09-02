@@ -146,6 +146,7 @@ CONTENT ${jsonEncode(payload)};''';
   ]) async {
     if (txn == null) {
       final results = (await _db.transaction(
+        timeout: Duration(seconds: embeddings.length),
         (txn) async {
           for (final embedding in embeddings) {
             await updateEmbedding(

@@ -9,4 +9,3 @@ const defaultPageSize = 10;
 const defaultAscendingOrder = false;
 const chunkSizeQueryString = 'q_chunk_size';
 const chunkOverlapQueryString = 'q_chunk_overlap';
-const defaultDbBatchSize = 20;

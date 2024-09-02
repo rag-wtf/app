@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/constants.dart';
-import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding.dart';
@@ -31,7 +30,6 @@ class DocumentService with ListenableServiceMixin {
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
   final _apiService = locator<DocumentApiService>();
-  final _batchService = locator<BatchService>();
   final _settingService = locator<SettingService>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
@@ -200,14 +198,10 @@ class DocumentService with ListenableServiceMixin {
         embedding: vectors[i],
       );
     }
-    final batchResults = await _batchService.execute<Embedding, dynamic>(
-        embeddings, defaultDbBatchSize, (values) async {
-      return _embeddingRepository.updateEmbeddings(
-        values,
-        txn,
-      );
-    });
-    return batchResults;
+    return _embeddingRepository.updateEmbeddings(
+      embeddings,
+      txn,
+    );
   }
 
   Future<Document> createDocument(String tablePrefix, Document document) async {
@@ -443,29 +437,24 @@ class DocumentService with ListenableServiceMixin {
       status: DocumentStatus.indexing,
       splitted: now,
     );
-    final batchResults = await _batchService.execute<Embedding, dynamic>(
-      embeddings,
-      defaultDbBatchSize,
-      (values) async {
-        final txnResults = await updateDocumentAndCreateEmbeddings(
-          documentItem.tablePrefix,
-          document,
-          values,
-        );
-        _log.d('txnResults $txnResults');
-        final results = txnResults! as List;
-        final embeddingsResult = results[1] as Map;
-        _log.d('embeddingsResult.runtimeType ${embeddingsResult.runtimeType}');
-        return embeddingsResult['result'] as List;
-      },
-    );
 
+    final txnResults = await updateDocumentAndCreateEmbeddings(
+      documentItem.tablePrefix,
+      document,
+      embeddings,
+    );
+    _log.d('txnResults $txnResults');
+    final results = txnResults! as List;
+    final documentResultMap = results[0] as Map;
+    documentItem.item = Document.fromJson(
+      Map<String, dynamic>.from(documentResultMap['result'] as Map),
+    );
+    final embeddingsResultsMap = results[1] as Map;
+    final embeddingsResults = embeddingsResultsMap['result'] as List;
     assert(
-      batchResults.length == embeddings.length,
+      embeddingsResults.length == embeddings.length,
       'Length of the document embeddings result should equals to embeddings',
     );
-    documentItem.item = document;
-    _log.d('2. documentItem.hashCode ${documentItem.hashCode}');
     notifyListeners();
     return embeddings;
   }
