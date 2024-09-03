@@ -12,7 +12,6 @@ class RagConsoleView extends StackedView<RagConsoleViewModel> {
   final String tablePrefix;
   final bool inPackage;
 
-  @override
   String get title => 'RAG Console';
 
   @override

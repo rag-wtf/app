@@ -15,6 +15,7 @@ import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
+import 'package:mutex/mutex.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
@@ -33,6 +34,7 @@ class DocumentService with ListenableServiceMixin {
   final _settingService = locator<SettingService>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
+  final _mutex = Mutex();
 
   int _total = -1;
   final _items = <DocumentItem>[];
@@ -199,6 +201,7 @@ class DocumentService with ListenableServiceMixin {
       );
     }
     return _embeddingRepository.updateEmbeddings(
+      tablePrefix,
       embeddings,
       txn,
     );
@@ -390,9 +393,11 @@ class DocumentService with ListenableServiceMixin {
     final embeddings = await _splitted(documentItem, responseData).timeout(
       Duration(seconds: max((responseData?['items'] as List).length, 600)),
     );
-    await _indexing(documentItem, embeddings).timeout(
-      Duration(seconds: max(embeddings.length, 900)),
-    );
+    await _mutex.protect(() async {
+      await _indexing(documentItem, embeddings).timeout(
+        Duration(seconds: max(embeddings.length, 900)),
+      );
+    });
   }
 
   Future<List<Embedding>> _splitted(

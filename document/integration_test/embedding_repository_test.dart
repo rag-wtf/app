@@ -343,7 +343,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       results[2] = results[2].copyWith(embedding: testData['twenty']!);
 
       // Act
-      final txnResults = await repository.updateEmbeddings(results);
+      final txnResults = await repository.updateEmbeddings(
+        defaultTablePrefix,
+        results,
+      );
 
       // Assert
       expect(txnResults, hasLength(embeddings.length));

@@ -115,7 +115,9 @@ class ConnectionDialogModel extends FormViewModel {
       case 'http':
       case 'https':
         validationMessage = ConnectionDialogValidators.validateAddressPort(
-            _protocol, addressPortValue);
+          _protocol,
+          addressPortValue,
+        );
         if (validationMessage != null && validationMessage.isNotEmpty) {
           fieldsValidationMessages[AddressPortValueKey] = validationMessage;
           notifyListeners();

@@ -45,6 +45,21 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     }
   }
 
+  Future<Object?> rebuildEmbeddingIndex(
+    String tablePrefix, [
+    Transaction? txn,
+  ]) async {
+    _log.d('rebuildEmbeddingIndex($tablePrefix)');
+    final sql = Embedding.rebuildEmbeddingsMtreeIndex
+        .replaceAll('{prefix}', tablePrefix);
+    if (txn == null) {
+      return _db.query(sql);
+    } else {
+      txn.query(sql);
+      return null;
+    }
+  }
+
   Future<Embedding> createEmbedding(
     String tablePrefix,
     Embedding embedding, [
@@ -141,6 +156,7 @@ CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<List<dynamic>> updateEmbeddings(
+    String tablePrefix,
     List<Embedding> embeddings, [
     Transaction? txn,
   ]) async {
@@ -154,6 +170,7 @@ CONTENT ${jsonEncode(payload)};''';
               txn,
             );
           }
+          await rebuildEmbeddingIndex(tablePrefix, txn);
         },
       ))!;
 
@@ -165,6 +182,7 @@ CONTENT ${jsonEncode(payload)};''';
           txn,
         );
       }
+      await rebuildEmbeddingIndex(tablePrefix, txn);
       return List.empty();
     }
   }
@@ -223,7 +241,7 @@ SELECT * FROM (
 WHERE score >= $threshold
 ORDER BY score DESC;
 ''';
-
+    _log.d('sql $sql');
     final results = (await _db.query(
       sql,
     ))! as List;

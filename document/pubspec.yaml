@@ -23,6 +23,7 @@ dependencies:
   logger:
   mime: ^1.0.5
   mime_type: ^1.0.0
+  mutex: ^3.1.0
   responsive_builder: ^0.7.0
   settings:
     path: ../settings

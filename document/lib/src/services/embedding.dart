@@ -61,6 +61,10 @@ REMOVE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
 $_defineEmbeddingsMtreeIndex
 ''';
 
+  static const rebuildEmbeddingsMtreeIndex = '''
+REBUILD INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
+''';
+
   static const _jsonSchema = {
     r'$ref': '#/definitions/embedding',
     'definitions': {
