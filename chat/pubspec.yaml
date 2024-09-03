@@ -22,7 +22,6 @@ dependencies:
   freezed_annotation: ^2.4.1
   http: ^1.2.2
   json_annotation: ^4.9.0
-  json_schema: ^5.1.7
   logger:
   markdown_widget: ^2.3.2+3
   responsive_builder: ^0.7.0

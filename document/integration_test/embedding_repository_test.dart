@@ -135,27 +135,6 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Assert
       expect(result.id, isNotNull);
     });
-
-    test('should have validation errors', () async {
-      // Arrange
-      final embedding = Embedding(
-        content: 'apple',
-        embedding: testData['apple']!,
-        metadata: {'id': 'customId1'},
-      );
-
-      // Act
-      final payload = embedding.toJson();
-      // ignore: cascade_invocations
-      payload.remove('content');
-      final result = Embedding.validate(payload);
-
-      // Assert
-      expect(
-        result?.first.message.startsWith('required prop missing: content'),
-        isTrue,
-      );
-    });
   });
 
   group('createEmbeddings', () {
@@ -235,29 +214,6 @@ Cannot change dimensions, there are existing embeddings in the database.''';
 
       // Clean up
       await db.delete('${defaultTablePrefix}_${Embedding.tableName}');
-    });
-
-    test('should have validation errors', () async {
-      // Arrange
-      final embedding = Embedding(
-        content: '',
-        embedding: testData['apple']!,
-        metadata: {'id': 'customId1'},
-      );
-
-      // Act
-      final result = await repository.createEmbeddings(
-        defaultTablePrefix,
-        [embedding],
-      );
-
-      // Assert
-      expect(
-        result.first.errors?.first.message.startsWith(
-          'minLength violated',
-        ),
-        isTrue,
-      );
     });
   });
 
@@ -347,6 +303,8 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         defaultTablePrefix,
         results,
       );
+
+      txnResults.remove(txnResults.last); // remove rebuild index result
 
       // Assert
       expect(txnResults, hasLength(embeddings.length));

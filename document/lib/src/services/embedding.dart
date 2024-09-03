@@ -1,6 +1,5 @@
 // ignore_for_file: invalid_annotation_target
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_schema/json_schema.dart';
 part 'embedding.freezed.dart';
 part 'embedding.g.dart';
 
@@ -10,10 +9,8 @@ sealed class Embedding with _$Embedding {
     required String content,
     required List<double> embedding,
     String? id,
-    @JsonKey(includeToJson: false) double? score,
-    @JsonKey(includeFromJson: false, includeToJson: false)
-    List<ValidationError>? errors,
     Object? metadata,
+    @JsonKey(includeToJson: false) double? score,
     @JsonKey(includeToJson: false) DateTime? created,
     @JsonKey(includeToJson: false) DateTime? updated,
   }) = _Embedding;
@@ -64,62 +61,4 @@ $_defineEmbeddingsMtreeIndex
   static const rebuildEmbeddingsMtreeIndex = '''
 REBUILD INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
 ''';
-
-  static const _jsonSchema = {
-    r'$ref': '#/definitions/embedding',
-    'definitions': {
-      'embedding': {
-        'type': 'object',
-        'properties': {
-          'id': {
-            'type': 'string',
-          },
-          'content': {
-            'type': 'string',
-            'minLength': 1,
-          },
-          'embedding': {
-            'type': 'array',
-            'items': {
-              'type': 'number',
-              'format': 'float',
-            },
-            'description':
-                'An array of float numbers representing embedding data.',
-          },
-          'metadata': {
-            'type': 'object',
-          },
-          'created': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-          'updated': {
-            'type': 'string',
-            'format': 'date-time',
-          },
-          'score': {
-            'type': 'number',
-            'format': 'float',
-          },
-        },
-        'required': [
-          'content',
-          'embedding',
-        ],
-        'additionalProperties': false,
-      },
-    },
-    r'$schema': 'http://json-schema.org/draft-07/schema#',
-  };
-
-  static final jsonSchema = JsonSchema.create(_jsonSchema);
-
-  static List<ValidationError>? validate(Map<String, dynamic> json) {
-    final results = jsonSchema.validate(json);
-    if (!results.isValid) {
-      return results.errors;
-    }
-    return null;
-  }
 }

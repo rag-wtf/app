@@ -66,12 +66,6 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     Transaction? txn,
   ]) async {
     final payload = embedding.toJson();
-    final validationErrors = Embedding.validate(payload);
-    final isValid = validationErrors == null;
-    if (!isValid) {
-      return embedding.copyWith(errors: validationErrors);
-    }
-
     final sql = '''
 CREATE ONLY ${tablePrefix}_${Embedding.tableName} 
 CONTENT ${jsonEncode(payload)};''';
@@ -94,20 +88,7 @@ CONTENT ${jsonEncode(payload)};''';
     List<Embedding> embeddings, [
     Transaction? txn,
   ]) async {
-    final payloads = <Map<String, dynamic>>[];
-    for (var i = 0; i < embeddings.length; i++) {
-      final embedding = embeddings[i];
-      final payload = embedding.toJson();
-      final validationErrors = Embedding.validate(payload);
-      final isValid = validationErrors == null;
-      if (isValid) {
-        payloads.add(payload);
-      } else {
-        embeddings[i] = embedding.copyWith(errors: validationErrors);
-        return embeddings;
-      }
-    }
-
+    final payloads = embeddings.map((embedding) => embedding.toJson()).toList();
     final sql = 'INSERT INTO ${tablePrefix}_${Embedding.tableName} \$payloads;';
     final bindings = {'payloads': payloads};
 
@@ -194,11 +175,6 @@ CONTENT ${jsonEncode(payload)};''';
     if (await _db.select(embedding.id!) == null) return null;
 
     final payload = embedding.toJson();
-    final validationErrors = Embedding.validate(payload);
-    final isValid = validationErrors == null;
-    if (!isValid) {
-      return embedding.copyWith(errors: validationErrors);
-    }
     final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
     if (txn == null) {
