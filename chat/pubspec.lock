@@ -507,7 +507,7 @@ packages:
     source: hosted
     version: "4.9.0"
   json_schema:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: json_schema
       sha256: b183ba828374365a89b81246c06a9a636935897d509cd846998bbc0d9bd0a2cf
@@ -938,10 +938,10 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_js
-      sha256: a0a87941a1eb4ca3b94728d46f6604aad17acc4c345cccd6ee9d43d81fb959e7
+      sha256: "6dd93aa78f6ae9af2808c4bb1b3fa6b26a36c2c9b1de216c9a866847e134f2db"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.20+4"
+    version: "1.0.0-beta.20+5"
   surrealdb_wasm:
     dependency: "direct main"
     description:

@@ -788,10 +788,10 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_js
-      sha256: a0a87941a1eb4ca3b94728d46f6604aad17acc4c345cccd6ee9d43d81fb959e7
+      sha256: "6dd93aa78f6ae9af2808c4bb1b3fa6b26a36c2c9b1de216c9a866847e134f2db"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.20+4"
+    version: "1.0.0-beta.20+5"
   surrealdb_wasm:
     dependency: "direct main"
     description:
