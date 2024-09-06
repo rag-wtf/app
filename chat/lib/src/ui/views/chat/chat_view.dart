@@ -3,10 +3,11 @@
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
 import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
-import 'package:chat/src/ui/widgets/new_chat_panel.dart';
+import 'package:chat/src/ui/widgets/prompt_panel.dart';
 import 'package:document/document.dart';
 
 import 'package:flutter/material.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
@@ -37,9 +38,16 @@ class ChatView extends StackedView<ChatViewModel> {
               scrollController: _scrollController,
               itemCount: viewModel.messages.length,
               centerEmpty: true,
-              emptyBuilder: (context) => NewChatPanel(
-                (text) => _onSend(viewModel, text),
-              ),
+              emptyBuilder: (context) {
+                return Column(
+                  children: [
+                    if (const String.fromEnvironment(promptsKey).isNotEmpty)
+                      PromptPanel(
+                        (text) => _onSend(viewModel, text),
+                      ),
+                  ],
+                );
+              },
               isLoading: viewModel.isBusy,
               onFetchData: viewModel.fetchMessages,
               reverse: true,

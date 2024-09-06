@@ -4,8 +4,8 @@ import 'package:chat/src/ui/widgets/prompt_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:settings/settings.dart';
 
-class NewChatPanel extends StatelessWidget {
-  NewChatPanel(this.onSend, {super.key});
+class PromptPanel extends StatelessWidget {
+  PromptPanel(this.onSend, {super.key});
   final prompts = const String.fromEnvironment(promptsKey).split(',');
   final void Function(String) onSend;
 
