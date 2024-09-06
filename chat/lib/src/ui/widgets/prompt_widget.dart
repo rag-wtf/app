@@ -29,7 +29,8 @@ class PromptWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Text(
             text,
-            overflow: TextOverflow.clip,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
           ),
         ),
       ),
