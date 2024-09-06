@@ -36,7 +36,9 @@ const instructionPlaceholder = '{instruction}';
 const litellm = 'litellm';
 
 const defaultTablePrefix = 'main';
-const defaultEmbeddingsDimensions = 384;
+const defaultEmbeddingsDimensions = '384';
+const defaultStream = 'true';
+const defaultEmbeddingsCompressed = 'true';
 const surrealIndxdbEndpoint = 'indxdb://surreal';
 const surrealHttpEndpoint = 'http://127.0.0.1:8000/rpc';
 const surrealNamespace = 'surreal';

@@ -88,7 +88,7 @@ class DocumentApiService {
     String apiUrl,
     String apiKey,
     List<String> chunkedTexts, {
-    int dimensions = defaultEmbeddingsDimensions,
+    required int dimensions,
     int batchSize = 100,
     bool compressed = true,
   }) async {

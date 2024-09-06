@@ -50,12 +50,18 @@ class SettingService with ListenableServiceMixin {
           const String.fromEnvironment(embeddingsApiUrlKey);
       _enviromentVariables[embeddingsApiKey] =
           const String.fromEnvironment(embeddingsApiKey);
-      _enviromentVariables[embeddingsDimensionsKey] =
-          const String.fromEnvironment(embeddingsDimensionsKey);
+      _enviromentVariables[embeddingsDimensionsKey] = 
+          const String.fromEnvironment(
+            embeddingsDimensionsKey, 
+            defaultValue: defaultEmbeddingsDimensions,
+          );
       _enviromentVariables[embeddingsApiBatchSizeKey] =
           const String.fromEnvironment(embeddingsApiBatchSizeKey);
-      _enviromentVariables[embeddingsCompressedKey] =
-          const String.fromEnvironment(embeddingsCompressedKey);
+      _enviromentVariables[embeddingsCompressedKey] = 
+          const String.fromEnvironment(
+            embeddingsCompressedKey, 
+            defaultValue: defaultEmbeddingsCompressed,
+          );
       _enviromentVariables[searchTypeKey] =
           const String.fromEnvironment(searchTypeKey);
       _enviromentVariables[searchIndexKey] =
@@ -82,7 +88,10 @@ class SettingService with ListenableServiceMixin {
       _enviromentVariables[maxTokensKey] =
           const String.fromEnvironment(maxTokensKey);
       _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);
-      _enviromentVariables[streamKey] = const String.fromEnvironment(streamKey);
+      _enviromentVariables[streamKey] = const String.fromEnvironment(
+        streamKey, 
+        defaultValue: defaultStream,
+      );
     }
   }
 

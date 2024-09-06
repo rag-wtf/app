@@ -251,7 +251,7 @@ class ChatApiService {
     String embeddingsApiKey,
     String model,
     String input, {
-    int dimensions = defaultEmbeddingsDimensions,
+    required int dimensions,
     bool compressed = true,
   }) async {
     final response = await dio.post<Map<String, dynamic>>(
