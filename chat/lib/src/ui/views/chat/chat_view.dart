@@ -40,6 +40,7 @@ class ChatView extends StackedView<ChatViewModel> {
               centerEmpty: true,
               emptyBuilder: (context) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (const String.fromEnvironment(promptsKey).isNotEmpty)
                       PromptPanel(
