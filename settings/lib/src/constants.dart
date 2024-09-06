@@ -27,7 +27,6 @@ const streamKey = 'STREAM';
 const userIdKey = 'USER_ID';
 const promptsKey = 'PROMPTS';
 
-const undefined = 'undefined';
 const splitApiUriPath = '/split';
 const embeddingsApiUriPath = '/embeddings';
 const generationApiUriPath = '/chat/completions';
@@ -36,9 +35,13 @@ const instructionPlaceholder = '{instruction}';
 const litellm = 'litellm';
 
 const defaultTablePrefix = 'main';
+const defaultChunkSize = '500';
+const defaultChunkOverlap = '50';
 const defaultEmbeddingsDimensions = '384';
-const defaultStream = 'true';
+const defaultEmbeddingsApiBatchSize = '50';
 const defaultEmbeddingsCompressed = 'true';
+const defaultSearchThreshold = '0.6';
+const defaultRetrieveTopNResults = '3';
 const defaultSystemPrompt = '''
 You are a helpful assistant that will follow user instructions closely.''';
 const defaultPromptTemplate = '''
@@ -49,6 +52,12 @@ If the available information is insufficient or inadequate, just tell the user y
 Question: {instruction}
 
 Answer: ''';
+const defaultTemperature = '0.7';
+const defaultTopP = '0.95';
+const defaultRepetitionPenalty = '1.1';
+const defaultMaxTokens = '256';
+const defaultStream = 'true';
+
 const surrealIndxdbEndpoint = 'indxdb://surreal';
 const surrealHttpEndpoint = 'http://127.0.0.1:8000/rpc';
 const surrealNamespace = 'surreal';

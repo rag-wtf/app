@@ -32,7 +32,7 @@ class SettingService with ListenableServiceMixin {
     final value = _enviromentVariables[key];
     return Setting(
       key: key,
-      value: value != null && value.isNotEmpty ? value : undefined,
+      value: value!,
     );
   }
 
@@ -40,10 +40,14 @@ class SettingService with ListenableServiceMixin {
     if (_enviromentVariables.isEmpty) {
       _enviromentVariables[splitApiUrlKey] =
           const String.fromEnvironment(splitApiUrlKey);
-      _enviromentVariables[chunkSizeKey] =
-          const String.fromEnvironment(chunkSizeKey);
-      _enviromentVariables[chunkOverlapKey] =
-          const String.fromEnvironment(chunkOverlapKey);
+      _enviromentVariables[chunkSizeKey] = const String.fromEnvironment(
+        chunkSizeKey,
+        defaultValue: defaultChunkSize,
+      );
+      _enviromentVariables[chunkOverlapKey] = const String.fromEnvironment(
+        chunkOverlapKey,
+        defaultValue: defaultChunkOverlap,
+      );
       _enviromentVariables[embeddingsModelKey] =
           const String.fromEnvironment(embeddingsModelKey);
       _enviromentVariables[embeddingsApiUrlKey] =
@@ -56,7 +60,10 @@ class SettingService with ListenableServiceMixin {
             defaultValue: defaultEmbeddingsDimensions,
           );
       _enviromentVariables[embeddingsApiBatchSizeKey] =
-          const String.fromEnvironment(embeddingsApiBatchSizeKey);
+          const String.fromEnvironment(
+        embeddingsApiBatchSizeKey,
+        defaultValue: defaultEmbeddingsApiBatchSize,
+      );
       _enviromentVariables[embeddingsCompressedKey] = 
           const String.fromEnvironment(
             embeddingsCompressedKey, 
@@ -66,10 +73,15 @@ class SettingService with ListenableServiceMixin {
           const String.fromEnvironment(searchTypeKey);
       _enviromentVariables[searchIndexKey] =
           const String.fromEnvironment(searchIndexKey);
-      _enviromentVariables[searchThresholdKey] =
-          const String.fromEnvironment(searchThresholdKey);
+      _enviromentVariables[searchThresholdKey] = const String.fromEnvironment(
+        searchThresholdKey,
+        defaultValue: defaultSearchThreshold,
+      );
       _enviromentVariables[retrieveTopNResultsKey] =
-          const String.fromEnvironment(retrieveTopNResultsKey);
+          const String.fromEnvironment(
+        retrieveTopNResultsKey,
+        defaultValue: defaultRetrieveTopNResults,
+      );
       _enviromentVariables[generationModelKey] =
           const String.fromEnvironment(generationModelKey);
       _enviromentVariables[generationApiUrlKey] =
@@ -84,13 +96,22 @@ class SettingService with ListenableServiceMixin {
         promptTemplateKey,
         defaultValue: defaultPromptTemplate,
       );
-      _enviromentVariables[temperatureKey] =
-          const String.fromEnvironment(temperatureKey);
-      _enviromentVariables[topPKey] = const String.fromEnvironment(topPKey);
-      _enviromentVariables[repetitionPenaltyKey] =
-          const String.fromEnvironment(repetitionPenaltyKey);
-      _enviromentVariables[maxTokensKey] =
-          const String.fromEnvironment(maxTokensKey);
+      _enviromentVariables[temperatureKey] = const String.fromEnvironment(
+        temperatureKey,
+        defaultValue: defaultTemperature,
+      );
+      _enviromentVariables[topPKey] = const String.fromEnvironment(
+        topPKey,
+        defaultValue: defaultTopP,
+      );
+      _enviromentVariables[repetitionPenaltyKey] = const String.fromEnvironment(
+        repetitionPenaltyKey,
+        defaultValue: defaultRepetitionPenalty,
+      );
+      _enviromentVariables[maxTokensKey] = const String.fromEnvironment(
+        maxTokensKey,
+        defaultValue: defaultMaxTokens,
+      );
       _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);
       _enviromentVariables[streamKey] = const String.fromEnvironment(
         streamKey, 
