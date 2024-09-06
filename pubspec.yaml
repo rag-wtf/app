@@ -51,7 +51,5 @@ dependency_overrides:
     path: very_good_infinite_list
 
 flutter:
-  assets:
-    - assets/
   uses-material-design: true
   generate: true
