@@ -76,10 +76,14 @@ class SettingService with ListenableServiceMixin {
           const String.fromEnvironment(generationApiUrlKey);
       _enviromentVariables[generationApiKey] =
           const String.fromEnvironment(generationApiKey);
-      _enviromentVariables[systemPromptKey] =
-          const String.fromEnvironment(systemPromptKey);
-      _enviromentVariables[promptTemplateKey] =
-          const String.fromEnvironment(promptTemplateKey);
+      _enviromentVariables[systemPromptKey] = const String.fromEnvironment(
+        systemPromptKey,
+        defaultValue: defaultSystemPrompt,
+      );
+      _enviromentVariables[promptTemplateKey] = const String.fromEnvironment(
+        promptTemplateKey,
+        defaultValue: defaultPromptTemplate,
+      );
       _enviromentVariables[temperatureKey] =
           const String.fromEnvironment(temperatureKey);
       _enviromentVariables[topPKey] = const String.fromEnvironment(topPKey);
