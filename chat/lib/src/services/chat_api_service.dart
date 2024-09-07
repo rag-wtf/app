@@ -254,6 +254,8 @@ class ChatApiService {
     required int dimensions,
     bool compressed = true,
   }) async {
+    final embeddingInput = getEmbeddingInput(input);
+    _log.d('embeddingInput ${jsonEncode(embeddingInput)}');
     final response = await dio.post<Map<String, dynamic>>(
       embeddingsApiUrl,
       options: Options(
@@ -266,10 +268,13 @@ class ChatApiService {
       ),
       data: {
         'model': model,
-        'input': getEmbeddingInput(input),
+        'input': embeddingInput,
         'dimensions': dimensions,
       },
     );
-    return response.data;
+    
+    final embeddingOutput = response.data;
+    _log.d('embeddingOutput ${jsonEncode(embeddingOutput)}');
+    return embeddingOutput;
   }
 }
