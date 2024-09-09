@@ -125,11 +125,20 @@ class DocumentService with ListenableServiceMixin {
     }
   }
 
-  Future<void> clearData(String tablePrefix) async {
+  Future<void> clearData(
+    String tablePrefix, {
+    required bool clearSettings,
+  }) async {
     _total = -1;
     _items.clear();
     await _documentRepository.deleteAllDocuments(tablePrefix);
     await _embeddingRepository.deleteAllEmbeddings(tablePrefix);
+    if (clearSettings) {
+      await _embeddingRepository.redefineEmbeddingIndex(
+        tablePrefix,
+        defaultEmbeddingsDimensions,
+      );
+    }
     notifyListeners();
   }
 

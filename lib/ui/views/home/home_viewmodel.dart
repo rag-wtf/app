@@ -110,10 +110,11 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> deleteAllData() async {
-    if (!isKeepSettings) {
+    final clearSettings = !isKeepSettings;
+    if (clearSettings) {
       await _settingService.clearData(tablePrefix);
     }
-    await _documentService.clearData(tablePrefix);
+    await _documentService.clearData(tablePrefix, clearSettings: clearSettings);
     await _chatService.clearData(tablePrefix);
   }
 
