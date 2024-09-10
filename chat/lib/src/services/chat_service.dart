@@ -41,6 +41,9 @@ class ChatService with ListenableServiceMixin {
         _settingService.get(retrieveTopNResultsKey).value,
       );
   String get _promptTemplate => _settingService.get(promptTemplateKey).value;
+  double get _searchThreshold => double.parse(
+        _settingService.get(searchThresholdKey).value,
+      );
   String get _searchType => _settingService.get(searchTypeKey).value;
   double get _temperature => double.parse(
         _settingService.get(temperatureKey).value,
@@ -600,7 +603,7 @@ class ChatService with ListenableServiceMixin {
       tablePrefix,
       queryVector,
       _k,
-      0.5,
+      _searchThreshold,
     );
     return embeddings;
   }

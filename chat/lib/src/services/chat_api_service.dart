@@ -10,7 +10,6 @@ import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:dio/dio.dart';
-import 'package:settings/settings.dart';
 
 enum ApiKeyType { header, body }
 
