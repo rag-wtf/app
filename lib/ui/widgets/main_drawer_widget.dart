@@ -11,10 +11,12 @@ class MainDrawerWidget extends StatefulWidget {
   const MainDrawerWidget({
     required this.child,
     required this.controller,
+    required this.logoutFunction,
     super.key,
   });
   final Widget child;
   final ZoomDrawerController controller;
+  final Future<void> Function() logoutFunction;
   @override
   State<MainDrawerWidget> createState() => _MainDrawerWidgetState();
 }
@@ -143,7 +145,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                     }
                   },
                 ),
-                                ListTile(
+                ListTile(
                   leading: Icon(
                     Icons.info_outline,
                     color: textAndIconColor,
@@ -173,6 +175,20 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                       children: aboutBoxChildren,
                     );
                   },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.logout_outlined,
+                    color: textAndIconColor,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: listTileTextStyle,
+                  ),
+                  onTap: () async {
+                    await widget.controller.close!();
+                    await widget.logoutFunction();
+                  } ,
                 ),
               ],
             ),

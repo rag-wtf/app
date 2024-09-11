@@ -59,6 +59,7 @@ class _HomeViewState extends State<HomeView>
 
         return MainDrawerWidget(
           controller: _zoomDrawerController,
+          logoutFunction: viewModel.disconnect,
           child: LayoutBuilder(
             builder: (context, constraints) {
               return Scaffold(
@@ -90,11 +91,6 @@ class _HomeViewState extends State<HomeView>
                         ),
                       ),
                     ],
-                    horizontalSpaceTiny,
-                    IconButton(
-                      onPressed: viewModel.disconnect,
-                      icon: const Icon(Icons.exit_to_app),
-                    ),
                     horizontalSpaceTiny,
                     IconButton(
                       icon: const Icon(Icons.info_outline),
