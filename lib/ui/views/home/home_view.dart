@@ -1,10 +1,12 @@
 import 'package:chat/chat.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 import 'package:rag/ui/widgets/clear_data_widget.dart';
 import 'package:rag/ui/widgets/common/brightness_button.dart';
+import 'package:rag/ui/widgets/main_drawer_widget.dart';
 import 'package:rag_console/rag_console.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -23,6 +25,7 @@ class _HomeViewState extends State<HomeView>
     with SingleTickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _leftWidgetTabController;
+  final _zoomDrawerController = ZoomDrawerController();
 
   @override
   void initState() {
@@ -55,95 +58,103 @@ class _HomeViewState extends State<HomeView>
           }
         });
 
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            return Scaffold(
-              key: scaffoldKey,
-              resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                title: Text(
-                  viewModel.isBusy ? appTitle : viewModel.appName,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                leading: constraints.maxWidth < mediumScreenWidth
-                    ? Builder(
-                        builder: (context) => IconButton(
-                          onPressed: () => Scaffold.of(context).openDrawer(),
-                          icon: Icon(
-                            Icons.menu,
-                            color: Theme.of(context).iconTheme.color,
+        return MainDrawerWidget(
+          controller: _zoomDrawerController,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Scaffold(
+                key: scaffoldKey,
+                resizeToAvoidBottomInset: true,
+                appBar: AppBar(
+                  title: Text(
+                    viewModel.isBusy ? appTitle : viewModel.appName,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  leading: constraints.maxWidth < mediumScreenWidth
+                      ? Builder(
+                          builder: (context) => IconButton(
+                            onPressed: () => Scaffold.of(context).openDrawer(),
+                            icon: Icon(
+                              Icons.menu,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                           ),
+                        )
+                      : null,
+                  actions: [
+                    const BrightnessButton(
+                      showTooltipBelow: false,
+                    ),
+                    if (constraints.maxWidth < largeScreenWidth) ...[
+                      horizontalSpaceTiny,
+                      Builder(
+                        builder: (context) => IconButton(
+                          onPressed: () => Scaffold.of(context).openEndDrawer(),
+                          icon: const Icon(Icons.settings),
+                        ),
+                      ),
+                    ],
+                    horizontalSpaceTiny,
+                    IconButton(
+                      onPressed: viewModel.disconnect,
+                      icon: const Icon(Icons.exit_to_app),
+                    ),
+                    horizontalSpaceTiny,
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: _zoomDrawerController.toggle,
+                    ),
+                    horizontalSpaceSmall,
+                  ],
+                ),
+                body: viewModel.isBusy
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : SafeArea(
+                        child: Column(
+                          children: [
+                            Flexible(
+                              flex: 96,
+                              child: BodyWidget(
+                                viewModel,
+                                constraints.maxWidth,
+                                closeDrawer,
+                                _leftWidgetTabController,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 4,
+                              child: Center(
+                                child: Text(
+                                  '${viewModel.version} ${viewModel.buildNumber}',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                drawer: constraints.maxWidth < mediumScreenWidth
+                    ? Drawer(
+                        child: LeftWidget(
+                          viewModel,
+                          closeDrawer,
+                          _leftWidgetTabController,
                         ),
                       )
                     : null,
-                actions: [
-                  const BrightnessButton(
-                    showTooltipBelow: false,
-                  ),
-                  if (constraints.maxWidth < largeScreenWidth) ...[
-                    horizontalSpaceTiny,
-                    Builder(
-                      builder: (context) => IconButton(
-                        onPressed: () => Scaffold.of(context).openEndDrawer(),
-                        icon: const Icon(Icons.settings),
-                      ),
-                    ),
-                  ],
-                  horizontalSpaceTiny,
-                  IconButton(
-                    onPressed: viewModel.disconnect,
-                    icon: const Icon(Icons.exit_to_app),
-                  ),
-                  horizontalSpaceSmall,
-                ],
-              ),
-              body: viewModel.isBusy
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : SafeArea(
-                      child: Column(
-                        children: [
-                          Flexible(
-                            flex: 96,
-                            child: BodyWidget(
-                              viewModel,
-                              constraints.maxWidth,
-                              closeDrawer,
-                              _leftWidgetTabController,
-                            ),
-                          ),
-                          Flexible(
-                            flex: 4,
-                            child: Center(
-                              child: Text(
-                                '${viewModel.version} ${viewModel.buildNumber}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-              drawer: constraints.maxWidth < mediumScreenWidth
-                  ? Drawer(
-                      child: LeftWidget(
-                        viewModel,
-                        closeDrawer,
-                        _leftWidgetTabController,
-                      ),
-                    )
-                  : null,
-              endDrawer: constraints.maxWidth < largeScreenWidth
-                  ? Drawer(
-                      child: RightWidget(
-                        viewModel,
-                        _leftWidgetTabController,
-                      ),
-                    )
-                  : null,
-            );
-          },
+                endDrawer: constraints.maxWidth < largeScreenWidth
+                    ? Drawer(
+                        child: RightWidget(
+                          viewModel,
+                          _leftWidgetTabController,
+                        ),
+                      )
+                    : null,
+              );
+            },
+          ),
         );
       },
       viewModelBuilder: HomeViewModel.new,

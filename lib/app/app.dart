@@ -166,6 +166,7 @@ class App extends StatelessWidget {
       statusBarColorBuilder: (theme) => theme?.colorScheme.secondary,
       navigationBarColorBuilder: (theme) => theme?.colorScheme.secondary,
       builder: (context, regularTheme, darkTheme, themeMode) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: appTitle,
         theme: regularTheme,
         darkTheme: darkTheme,
