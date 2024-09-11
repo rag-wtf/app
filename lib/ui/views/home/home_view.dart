@@ -5,7 +5,6 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 import 'package:rag/ui/widgets/clear_data_widget.dart';
-import 'package:rag/ui/widgets/common/brightness_button.dart';
 import 'package:rag/ui/widgets/main_drawer_widget.dart';
 import 'package:rag_console/rag_console.dart';
 import 'package:settings/settings.dart';
@@ -82,9 +81,6 @@ class _HomeViewState extends State<HomeView>
                         )
                       : null,
                   actions: [
-                    const BrightnessButton(
-                      showTooltipBelow: false,
-                    ),
                     if (constraints.maxWidth < largeScreenWidth) ...[
                       horizontalSpaceTiny,
                       Builder(

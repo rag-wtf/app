@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:settings/settings.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawerWidget extends StatefulWidget {
@@ -87,6 +88,63 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                 verticalSpaceMedium,
                 ListTile(
                   leading: Icon(
+                    Icons.share_outlined,
+                    color: textAndIconColor,
+                  ),
+                  title: Text(
+                    'Share',
+                    style: listTileTextStyle,
+                  ),
+                  onTap: () async {
+                    final result = await Share.share(
+                      'Check out our app at https://',
+                      subject: '$appSubTitle: $appTitle',
+                    );
+
+                    if (result.status == ShareResultStatus.success) {
+                      await showDialog(
+                        // ignore: use_build_context_synchronously
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const ThankYouDialog();
+                        },
+                      );
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    isDarkMode
+                        ? Icons.dark_mode_outlined
+                        : Icons.light_mode_outlined,
+                    color: textAndIconColor,
+                  ),
+                  title: Text(
+                    '${isDarkMode ? 'Dark' : 'Light'} Mode',
+                    style: listTileTextStyle,
+                  ),
+                  onTap: () async {
+                    getThemeManager(context).toggleDarkLightTheme();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.source_outlined,
+                    color: textAndIconColor,
+                  ),
+                  title: Text(
+                    'GitHub',
+                    style: listTileTextStyle,
+                  ),
+                  onTap: () async {
+                    final url = Uri.parse(gitHubRepoUrl);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    }
+                  },
+                ),
+                                ListTile(
+                  leading: Icon(
                     Icons.info_outline,
                     color: textAndIconColor,
                   ),
@@ -114,48 +172,6 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           '\u{a9}${DateTime.now().year} Lim Chee Kin',
                       children: aboutBoxChildren,
                     );
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.share_outlined,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    'Share',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    final result = await Share.share(
-                      'Check out our app at https://',
-                      subject: '$appSubTitle: $appTitle',
-                    );
-
-                    if (result.status == ShareResultStatus.success) {
-                      await showDialog(
-                        // ignore: use_build_context_synchronously
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const ThankYouDialog();
-                        },
-                      );
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.source_outlined,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    'GitHub',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    final url = Uri.parse(gitHubRepoUrl);
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url);
-                    }
                   },
                 ),
               ],
