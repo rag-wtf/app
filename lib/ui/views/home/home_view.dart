@@ -93,7 +93,7 @@ class _HomeViewState extends State<HomeView>
                     ],
                     horizontalSpaceTiny,
                     IconButton(
-                      icon: const Icon(Icons.info_outline),
+                      icon: const Icon(Icons.more_vert_outlined),
                       onPressed: _zoomDrawerController.toggle,
                     ),
                     horizontalSpaceSmall,
