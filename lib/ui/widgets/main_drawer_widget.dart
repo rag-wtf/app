@@ -37,6 +37,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
     final listTileTextStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
           color: textAndIconColor,
         );
+        
     return ZoomDrawer(
       isRtl: true,
       controller: widget.controller,
@@ -107,7 +108,8 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                       context: context,
                       applicationIcon: const FlutterLogo(),
                       applicationName: appTitle,
-                      applicationVersion: packageInfo.version,
+                      applicationVersion: '''
+${packageInfo.version} ${packageInfo.buildNumber}''',
                       applicationLegalese:
                           '\u{a9}${DateTime.now().year} Lim Chee Kin',
                       children: aboutBoxChildren,
