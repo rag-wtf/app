@@ -33,8 +33,12 @@ import 'package:stacked/stacked_annotations.dart';
     ),
     FormTextField(
       name: 'embeddingsApiBatchSize',
-      validator: SettingsValidators.validateEmbeddingsApiBatchSize,
+      validator: SettingsValidators.validateEmbeddingsBatchSize,
     ),
+    FormTextField(
+      name: 'embeddingsDatabaseBatchSize',
+      validator: SettingsValidators.validateEmbeddingsBatchSize,
+    ),    
     FormTextField(
       name: 'searchType',
       validator: SettingsValidators.validateSearchType,
@@ -188,7 +192,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           isDense: isDense,
                           labelText: 'API Key',
                           prefixIcon: Icon(
-                            Icons.lock_outlined,
+                            Icons.key_outlined,
                             color: iconColor,
                           ),
                           hintText: '*' * 32,
@@ -212,7 +216,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         InputField(
                           isDense: isDense,
-                          labelText: 'Batch Size',
+                          labelText: 'API Batch Size',
                           prefixIcon: Icon(
                             Icons.numbers_outlined,
                             color: iconColor,
@@ -221,6 +225,19 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           errorText:
                               viewModel.embeddingsApiBatchSizeValidationMessage,
                           controller: embeddingsApiBatchSizeController,
+                          textInputType: TextInputType.number,
+                        ),
+                        InputField(
+                          isDense: isDense,
+                          labelText: 'Database Batch Size',
+                          prefixIcon: Icon(
+                            Icons.numbers_outlined,
+                            color: iconColor,
+                          ),
+                          hintText: '10 to 500',
+                          errorText:
+                              viewModel.embeddingsDatabaseBatchSizeValidationMessage,
+                          controller: embeddingsDatabaseBatchSizeController,
                           textInputType: TextInputType.number,
                         ),
                         CheckboxOrSwitchListTile(
@@ -317,7 +334,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           isDense: isDense,
                           labelText: 'API Key',
                           prefixIcon: Icon(
-                            Icons.lock_outlined,
+                            Icons.key_outlined,
                             color: iconColor,
                           ),
                           hintText: '*' * 32,
@@ -463,6 +480,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
         .addListener(viewModel.setEmbeddingsDimensions);
     embeddingsApiBatchSizeController
         .addListener(viewModel.setEmbeddingsApiBatchSize);
+    embeddingsDatabaseBatchSizeController
+        .addListener(viewModel.setEmbeddingsDatabaseBatchSize);    
     searchTypeController.addListener(viewModel.setSearchType);
     searchIndexController.addListener(viewModel.setSearchIndex);
     searchThresholdController.addListener(viewModel.setSearchThreshold);

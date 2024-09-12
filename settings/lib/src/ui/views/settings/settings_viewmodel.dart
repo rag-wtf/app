@@ -110,6 +110,12 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
     }
 
+    final embeddingsDatabaseBatchSize =
+        _settingService.get(embeddingsDatabaseBatchSizeKey);
+    if (embeddingsDatabaseBatchSize.id != null) {
+      embeddingsDatabaseBatchSizeValue = embeddingsDatabaseBatchSize.value;
+    }
+
     final searchType = _settingService.get(searchTypeKey);
     if (searchType.id != null) {
       searchTypeValue = searchType.value;
@@ -197,6 +203,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     embeddingsApiKeyValue = empty;
     embeddingsDimensionsValue = empty;
     embeddingsApiBatchSizeValue = empty;
+    embeddingsDatabaseBatchSizeValue = empty;
     searchTypeValue = empty;
     searchIndexValue = empty;
     searchThresholdValue = empty;
@@ -309,6 +316,17 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         tablePrefix,
         embeddingsApiBatchSizeKey,
         embeddingsApiBatchSizeValue!,
+      );
+    }
+  }
+
+  Future<void> setEmbeddingsDatabaseBatchSize() async {
+    if (embeddingsDatabaseBatchSizeValue != null &&
+        !hasEmbeddingsDatabaseBatchSizeValidationMessage) {
+      await _settingService.set(
+        tablePrefix,
+        embeddingsDatabaseBatchSizeKey,
+        embeddingsDatabaseBatchSizeValue!,
       );
     }
   }

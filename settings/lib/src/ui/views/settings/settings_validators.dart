@@ -75,7 +75,7 @@ class SettingsValidators {
     return null;
   }
 
-  static String? validateEmbeddingsApiBatchSize(String? value) {
+  static String? validateEmbeddingsBatchSize(String? value) {
     return _validateIntegerRange(value, 10, 500);
   }
 

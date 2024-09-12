@@ -64,6 +64,11 @@ class SettingService with ListenableServiceMixin {
         embeddingsApiBatchSizeKey,
         defaultValue: defaultEmbeddingsApiBatchSize,
       );
+      _enviromentVariables[embeddingsDatabaseBatchSizeKey] =
+          const String.fromEnvironment(
+        embeddingsDatabaseBatchSizeKey,
+        defaultValue: defaultEmbeddingsDatabaseBatchSize,
+      );
       _enviromentVariables[embeddingsCompressedKey] = 
           const String.fromEnvironment(
             embeddingsCompressedKey, 

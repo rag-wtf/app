@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/constants.dart';
+import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_api_service.dart';
 import 'package:document/src/services/document_embedding.dart';
@@ -31,6 +32,7 @@ class DocumentService with ListenableServiceMixin {
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
   final _apiService = locator<DocumentApiService>();
+  final _batchService = locator<BatchService>();
   final _settingService = locator<SettingService>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
@@ -209,11 +211,19 @@ class DocumentService with ListenableServiceMixin {
         embedding: vectors[i],
       );
     }
-    return _embeddingRepository.updateEmbeddings(
-      tablePrefix,
-      embeddings,
-      txn,
-    );
+    
+    final batchSize = int.parse(
+            _settingService.get(embeddingsDatabaseBatchSizeKey).value,
+          );
+    final batchResults = await _batchService.execute<Embedding, dynamic>(
+        embeddings, batchSize, (values) async {
+      return _embeddingRepository.updateEmbeddings(
+        tablePrefix,
+        values,
+        txn,
+      );
+    });    
+    return batchResults;
   }
 
   Future<Document> createDocument(String tablePrefix, Document document) async {
