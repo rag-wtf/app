@@ -96,7 +96,6 @@ class _HomeViewState extends State<HomeView>
                       icon: const Icon(Icons.more_vert_outlined),
                       onPressed: _zoomDrawerController.toggle,
                     ),
-                    horizontalSpaceSmall,
                   ],
                 ),
                 body: viewModel.isBusy
