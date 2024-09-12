@@ -29,7 +29,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
 
     var slideWidth = width * 0.3;
     if (width < 600) {
-      slideWidth = width * 0.7;
+      slideWidth = width * 0.8;
     } else if (width < 840) {
       slideWidth = width * 0.5;
     } else {
@@ -55,37 +55,35 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
         backgroundColor: isDarkMode ? Colors.white : Colors.black,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const FlutterLogo(
-                            size: 32,
-                          ),
-                          horizontalSpaceSmall,
-                          Text(
-                            appTitle,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
-                                  color: textAndIconColor,
-                                ),
-                          ),
-                        ],
-                      ),
-                      Icon(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const FlutterLogo(
+                          size: 32,
+                        ),
+                        horizontalSpaceSmall,
+                        Text(
+                          appTitle,
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: textAndIconColor,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Icon(
                         Icons.close,
                         color: textAndIconColor,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 verticalSpaceMedium,
                 ListTile(
