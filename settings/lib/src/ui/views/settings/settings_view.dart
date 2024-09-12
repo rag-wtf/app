@@ -223,7 +223,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           controller: embeddingsApiBatchSizeController,
                           textInputType: TextInputType.number,
                         ),
-                        SwitchListTile(
+                        CheckboxOrSwitchListTile(
                           title: Text(
                             'Compressed',
                             style: Theme.of(context).textTheme.titleSmall,
@@ -409,7 +409,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           ),
                           onTap: showPromptTemplateDialogFunction,
                         ),
-                        SwitchListTile(
+                        CheckboxOrSwitchListTile(
                           title: Text(
                             'Streaming',
                             style: Theme.of(context).textTheme.titleMedium,

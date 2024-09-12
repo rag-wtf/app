@@ -7,6 +7,7 @@ import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_model.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_validators.dart';
 import 'package:database/src/ui/widgets/common/adaptive_dialog.dart';
+import 'package:database/src/ui/widgets/common/checkbox_or_switch_list_tile.dart';
 import 'package:database/src/ui/widgets/common/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -242,7 +243,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     ),
                   ],
                   verticalSpaceTiny,
-                  SwitchListTile(
+                  CheckboxOrSwitchListTile(
                     title: Text(
                       'Auto-Connect',
                       style: Theme.of(context).textTheme.titleMedium,
