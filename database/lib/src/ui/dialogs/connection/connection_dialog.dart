@@ -245,7 +245,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   verticalSpaceTiny,
                   CheckboxOrSwitchListTile(
                     title: Text(
-                      'Auto-Connect',
+                      'Remember password',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
@@ -281,7 +281,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                               );
                             }
                           },
-                    child: const Text('Connect'),
+                    child: const Text('Login'),
                   ),
                 ),
               ],
