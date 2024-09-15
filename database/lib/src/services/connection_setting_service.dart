@@ -102,7 +102,28 @@ class ConnectionSettingService {
 
   Future<void> disconnect() async {
     await _db.close();
+    await deletePassword();
     await _storage.delete(key: ConnectionSetting.autoConnectKey);
+  }
+
+  Future<void> deletePassword() async {
+    var autoConnect = false;
+
+    final autoConnectValue =
+        await _storage.read(key: ConnectionSetting.autoConnectKey);
+
+    if (autoConnectValue != null) {
+      autoConnect = bool.parse(autoConnectValue);
+    }
+
+    if (autoConnect) {
+      final lastConnectionKey =
+          await _storage.read(key: ConnectionSetting.lastConnectionKey);
+      await _connectionSettingRepository.deleteConnectionSetting(
+        lastConnectionKey!,
+        ConnectionSetting.passwordKey,
+      );
+    }
   }
 
   Future<String?> getCurrentConnectionName() async {
@@ -116,13 +137,5 @@ class ConnectionSettingService {
     }
     _log.d('lastConnectionKey $lastConnectionKey, name $name');
     return name;
-  }
-
-  Future<bool> isReady() async {
-    try {
-      return (await _db.version()).isNotEmpty;
-    } catch (_) {
-      return false;
-    }
   }
 }

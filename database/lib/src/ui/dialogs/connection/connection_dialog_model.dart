@@ -223,11 +223,13 @@ class ConnectionDialogModel extends FormViewModel {
       ConnectionSetting.usernameKey,
       usernameValue!,
     );
-    await _connectionSettingRepository.createConnectionSetting(
-      connectionKey,
-      ConnectionSetting.passwordKey,
-      passwordValue!,
-    );
+    if (autoConnect) {
+      await _connectionSettingRepository.createConnectionSetting(
+        connectionKey,
+        ConnectionSetting.passwordKey,
+        passwordValue!,
+      );
+    }
 
     await _storage.write(
       key: ConnectionSetting.lastConnectionKey,
