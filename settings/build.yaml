@@ -5,3 +5,4 @@ targets:
         options:
           include_if_null: false
           explicit_to_json: true
+          field_rename: snake

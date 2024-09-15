@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:database/database.dart';
+import 'package:flutter/services.dart';
 import 'package:settings/src/app/app.dialogs.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:stacked/stacked.dart';
@@ -37,6 +41,20 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   bool _embeddingsCompressed = true;
   bool get embeddingsCompressed => _embeddingsCompressed;
 
+  late List<LlmProvider> _llmProviders;
+  List<LlmProvider> get llmProviders => _llmProviders;
+  String get llmProvider => _settingService.get(llmProviderKey).value;
+  LlmProvider? get llmProviderSelected {
+    final value = _settingService.get(llmProviderKey).value;
+    if (llmProvider.isEmpty) {
+      return null;
+    } else {
+      return llmProviders.firstWhere(
+        (llmProvider) => llmProvider.name == value,
+      );
+    }
+  }
+
   // ignore: avoid_positional_boolean_parameters
   Future<void> setEmbeddingsCompressed(bool value) async {
     await _settingService.set(
@@ -61,6 +79,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       await connectDatabase();
     }
     setBusy(true);
+    await loadLlmProviders();
     if (inPackage) {
       await _settingService.initialise(tablePrefix);
     }
@@ -69,6 +88,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     _embeddingsCompressed = bool.parse(
       _settingService.get(embeddingsCompressedKey).value,
     );
+
     final splitApiUrl = _settingService.get(splitApiUrlKey);
     if (splitApiUrl.id != null) {
       splitApiUrlValue = splitApiUrl.value;
@@ -176,6 +196,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       stopValue = stop.value;
     }
     setBusy(false);
+  }
+
+  Future<void> loadLlmProviders() async {
+    final json = await rootBundle.loadString('packages/settings/assets/json/llm_providers.json');
+    _llmProviders = List<Map<String, dynamic>>.from(
+      jsonDecode(json) as List,
+    ).map(LlmProvider.fromJson).toList();
   }
 
   Future<void> connectDatabase() async {
@@ -463,5 +490,98 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _stream = value;
+  }
+
+  Future<void> setLlmProvider(String value) async {
+    await _settingService.set(
+      tablePrefix,
+      llmProviderKey,
+      value,
+    );
+    if (value.isNotEmpty) {
+      final llmProvider = llmProviderSelected!;
+      _log.d('llmProviderSelected ${llmProvider.toJson()}');
+      await _settingService.set(
+        tablePrefix,
+        embeddingsModelKey,
+        llmProvider.embeddings.model,
+      );
+      embeddingsModelValue = llmProvider.embeddings.model;
+
+      final embeddingsApiUrl = '${llmProvider.baseUrl}$embeddingsApiUriPath';
+      await _settingService.set(
+        tablePrefix,
+        embeddingsApiUrlKey,
+        embeddingsApiUrl,
+      );
+      embeddingsApiUrlValue = embeddingsApiUrl;
+      
+      final embeddingModel = llmProvider.embeddings.models.firstWhere(
+        (model) => llmProvider.embeddings.model == model.name,
+        orElse: EmbeddingModel.nullObject,
+      );
+      if (llmProvider.embeddings.dimensions != null) {
+        embeddingsDimensionsValue = llmProvider.embeddings.dimensions.toString();
+      } else {
+        if (embeddingModel.name != 'null') {
+          embeddingsDimensionsValue = embeddingModel.dimensions.toString();
+        }
+      }
+      await setEmbeddingsDimensions();
+
+      await _settingService.set(
+        tablePrefix,
+        generationModelKey,
+        llmProvider.chatCompletions.model,
+      );
+      generationModelValue = llmProvider.chatCompletions.model;
+
+      final generationApiUrl = '${llmProvider.baseUrl}$generationApiUriPath'; 
+      await _settingService.set(
+        tablePrefix,
+        generationApiUrlKey,
+        generationApiUrl,
+      );
+      generationApiUrlValue = generationApiUrl;
+
+      await _settingService.set(
+        tablePrefix,
+        temperatureKey,
+        llmProvider.chatCompletions.temperature.toString(),
+      );
+      temperatureValue = llmProvider.chatCompletions.temperature.toString();
+
+      await _settingService.set(
+        tablePrefix,
+        maxTokensKey,
+        llmProvider.chatCompletions.maxTokens.toString(),
+      );
+      maxTokensValue = llmProvider.chatCompletions.maxTokens.toString();
+
+      await _settingService.set(
+        tablePrefix,
+        topPKey,
+        llmProvider.chatCompletions.topP.toString(),
+      );
+      topPValue = llmProvider.chatCompletions.topP.toString();
+
+      await _settingService.set(
+        tablePrefix,
+        repetitionPenaltyKey,
+        llmProvider.chatCompletions.frequencyPenalty.toString(),
+      );
+      repetitionPenaltyValue =
+          llmProvider.chatCompletions.frequencyPenalty.toString();
+
+      if (llmProvider.chatCompletions.stop.isNotEmpty) {
+        final stop = llmProvider.chatCompletions.stop.join(',');
+        await _settingService.set(
+          tablePrefix,
+          stopKey,
+          stop,
+        );
+        stopValue = stop;
+      }
+    }
   }
 }

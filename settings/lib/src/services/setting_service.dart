@@ -38,6 +38,8 @@ class SettingService with ListenableServiceMixin {
 
   void _initialiseEnvironmentVariables() {
     if (_enviromentVariables.isEmpty) {
+      _enviromentVariables[llmProviderKey] =
+          const String.fromEnvironment(llmProviderKey);
       _enviromentVariables[splitApiUrlKey] =
           const String.fromEnvironment(splitApiUrlKey);
       _enviromentVariables[chunkSizeKey] = const String.fromEnvironment(

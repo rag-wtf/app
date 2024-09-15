@@ -1,0 +1,96 @@
+[
+  {
+    "name": "OpenAI",
+    "base_url": "https://api.openai.com/v1",
+    "embeddings": {
+      "model": "text-embedding-3-large",
+      "dimensions": 256,
+      "models": [
+        {
+          "name": "text-embedding-ada-002",
+          "dimensions": 1536,
+          "context_length": 8191
+        },
+        {
+          "name": "text-embedding-3-small",
+          "dimensions": 1536,
+          "context_length": 8191
+        },
+        {
+          "name": "text-embedding-3-large",
+          "dimensions": 3072,
+          "context_length": 8191
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "gpt-4o-mini",
+      "temperature": 0.7,
+      "max_tokens": 256,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "gpt-4o-mini",
+          "context_length": 131072
+        },
+        {
+          "name": "gpt-4o",
+          "context_length": 131072
+        }
+      ]
+    }
+  },
+  {
+    "name": "Ollama",
+    "base_url": "http://localhost:11434/v1",
+    "embeddings": {
+      "model": "nomic-embed-text",
+      "models": [
+        {
+          "name": "nomic-embed-text",
+          "dimensions": 768,
+          "context_length": 8192
+        },
+        {
+          "name": "mxbai-embed-large",
+          "dimensions": 1024,
+          "context_length": 512
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "llama3.1",
+      "temperature": 0.7,
+      "max_tokens": 256,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "llama3.1",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral",
+          "context_length": 32768
+        },
+        {
+          "name": "qwen2",
+          "context_length": 131072
+        },
+        {
+          "name": "phi3.5",
+          "context_length": 131072
+        },
+        {
+          "name": "gemma2",
+          "context_length": 8192
+        }
+      ]
+    }
+  }
+]

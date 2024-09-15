@@ -38,7 +38,7 @@ import 'package:stacked/stacked_annotations.dart';
     FormTextField(
       name: 'embeddingsDatabaseBatchSize',
       validator: SettingsValidators.validateEmbeddingsBatchSize,
-    ),    
+    ),
     FormTextField(
       name: 'searchType',
       validator: SettingsValidators.validateSearchType,
@@ -113,344 +113,388 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: ExpansionPanelList(
+              child: Column(
                 children: [
-                  SettingsExpansionPanel(
-                    headerText: 'Splitting',
-                    body: Column(
-                      children: [
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'API URL',
-                          prefixIcon: Icon(
-                            Icons.http_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: 'https://www.example.com/split',
-                          errorText: viewModel.splitApiUrlValidationMessage,
-                          controller: splitApiUrlController,
-                          textInputType: TextInputType.url,
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        isDense: isDense,
+                        label: Text(
+                          'LLM Provider',
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Chunk Size',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '100 to 2000',
-                          errorText: viewModel.chunkSizeValidationMessage,
-                          controller: chunkSizeController,
-                          textInputType: TextInputType.number,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Chunk Overlap',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
+                      ),
+                      value: viewModel.llmProvider,
+                      items: viewModel.llmProviders.map(
+                        (llmProvider) {
+                          return DropdownMenuItem(
+                            value: llmProvider.name,
+                            child: Text(llmProvider.name),
+                          );
+                        },
+                      ).toList()
+                        ..insert(
+                          0,
+                          const DropdownMenuItem(
+                            value: '',
+                            child: Text('Please select'),
                           ),
-                          hintText: '10 to 400',
-                          errorText: viewModel.chunkOverlapValidationMessage,
-                          controller: chunkOverlapController,
-                          textInputType: TextInputType.number,
                         ),
-                      ],
+                      onChanged: (value) async {
+                        await viewModel.setLlmProvider(value!);
+                      },
                     ),
-                    isExpanded: viewModel.isPanelExpanded(0),
-                  ).build(context),
-                  SettingsExpansionPanel(
-                    headerText: 'Indexing',
-                    body: Column(
-                      children: [
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Model',
-                          prefixIcon: Icon(
-                            Icons.api_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: 'text-embedding-3-large',
-                          errorText: viewModel.embeddingsModelValidationMessage,
-                          controller: embeddingsModelController,
-                          textInputType: TextInputType.text,
+                  ),
+                  ExpansionPanelList(
+                    children: [
+                      SettingsExpansionPanel(
+                        headerText: 'Splitting',
+                        body: Column(
+                          children: [
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'API URL',
+                              prefixIcon: Icon(
+                                Icons.http_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: 'https://www.example.com/split',
+                              errorText: viewModel.splitApiUrlValidationMessage,
+                              controller: splitApiUrlController,
+                              textInputType: TextInputType.url,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Chunk Size',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '100 to 2000',
+                              errorText: viewModel.chunkSizeValidationMessage,
+                              controller: chunkSizeController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Chunk Overlap',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '10 to 400',
+                              errorText:
+                                  viewModel.chunkOverlapValidationMessage,
+                              controller: chunkOverlapController,
+                              textInputType: TextInputType.number,
+                            ),
+                          ],
                         ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'API URL',
-                          prefixIcon: Icon(
-                            Icons.http_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: 'https://api.openai.com/v1/embeddings',
-                          errorText:
-                              viewModel.embeddingsApiUrlValidationMessage,
-                          controller: embeddingsApiUrlController,
-                          textInputType: TextInputType.url,
+                        isExpanded: viewModel.isPanelExpanded(0),
+                      ).build(context),
+                      SettingsExpansionPanel(
+                        headerText: 'Indexing',
+                        body: Column(
+                          children: [
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Model',
+                              prefixIcon: Icon(
+                                Icons.api_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: 'text-embedding-3-large',
+                              errorText:
+                                  viewModel.embeddingsModelValidationMessage,
+                              controller: embeddingsModelController,
+                              textInputType: TextInputType.text,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'API URL',
+                              prefixIcon: Icon(
+                                Icons.http_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: 'https://api.openai.com/v1/embeddings',
+                              errorText:
+                                  viewModel.embeddingsApiUrlValidationMessage,
+                              controller: embeddingsApiUrlController,
+                              textInputType: TextInputType.url,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'API Key',
+                              prefixIcon: Icon(
+                                Icons.key_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '*' * 32,
+                              errorText:
+                                  viewModel.embeddingsApiKeyValidationMessage,
+                              controller: embeddingsApiKeyController,
+                              textInputType: TextInputType.none,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Dimensions',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '256',
+                              errorText: viewModel
+                                  .embeddingsDimensionsValidationMessage,
+                              controller: embeddingsDimensionsController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'API Batch Size',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '10 to 500',
+                              errorText: viewModel
+                                  .embeddingsApiBatchSizeValidationMessage,
+                              controller: embeddingsApiBatchSizeController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Database Batch Size',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '10 to 500',
+                              errorText: viewModel
+                                  .embeddingsDatabaseBatchSizeValidationMessage,
+                              controller: embeddingsDatabaseBatchSizeController,
+                              textInputType: TextInputType.number,
+                            ),
+                            CheckboxOrSwitchListTile(
+                              title: Text(
+                                'Compressed',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              controlAffinity: ListTileControlAffinity.leading,
+                              value: viewModel.embeddingsCompressed,
+                              onChanged: (value) async {
+                                await viewModel.setEmbeddingsCompressed(value);
+                              },
+                            ),
+                          ],
                         ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'API Key',
-                          prefixIcon: Icon(
-                            Icons.key_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '*' * 32,
-                          errorText:
-                              viewModel.embeddingsApiKeyValidationMessage,
-                          controller: embeddingsApiKeyController,
-                          textInputType: TextInputType.none,
+                        isExpanded: viewModel.isPanelExpanded(1),
+                      ).build(context),
+                      SettingsExpansionPanel(
+                        headerText: 'Retrieval',
+                        body: Column(
+                          children: [
+                            /* 
+                            InputField( isDense: isDense,
+                              labelText: 'Search Type',
+                              prefixIcon: Icon(
+                                Icons.search_outlined,
+                                color: iconColor,
+                              ),
+                              errorText: viewModel.searchTypeValidationMessage,
+                              controller: searchTypeController,
+                              textInputType: TextInputType.text,
+                            ),
+                            */
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Search Threshold',
+                              prefixIcon: Icon(
+                                Icons.manage_search_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '0.5 to 0.9',
+                              errorText:
+                                  viewModel.searchThresholdValidationMessage,
+                              controller: searchThresholdController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Top N',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '1 to 30',
+                              errorText: viewModel
+                                  .retrieveTopNResultsValidationMessage,
+                              controller: retrieveTopNResultsController,
+                              textInputType: TextInputType.number,
+                            ),
+                          ],
                         ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Dimensions',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '256',
-                          errorText:
-                              viewModel.embeddingsDimensionsValidationMessage,
-                          controller: embeddingsDimensionsController,
-                          textInputType: TextInputType.number,
+                        isExpanded: viewModel.isPanelExpanded(2),
+                      ).build(context),
+                      SettingsExpansionPanel(
+                        headerText: 'Generation',
+                        body: Column(
+                          children: [
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Model',
+                              prefixIcon: Icon(
+                                Icons.api_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: 'gpt-4o-mini',
+                              errorText:
+                                  viewModel.generationModelValidationMessage,
+                              controller: generationModelController,
+                              textInputType: TextInputType.text,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'API URL',
+                              prefixIcon: Icon(
+                                Icons.http_outlined,
+                                color: iconColor,
+                              ),
+                              hintText:
+                                  'https://api.openai.com/v1/chat/completions',
+                              errorText:
+                                  viewModel.generationApiUrlValidationMessage,
+                              controller: generationApiUrlController,
+                              textInputType: TextInputType.url,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'API Key',
+                              prefixIcon: Icon(
+                                Icons.key_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '*' * 32,
+                              errorText:
+                                  viewModel.generationApiKeyValidationMessage,
+                              controller: generationApiKeyController,
+                              textInputType: TextInputType.none,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Max Tokens',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: 'Half the size of context windows',
+                              errorText: viewModel.maxTokensValidationMessage,
+                              controller: maxTokensController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Temperature',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '0 to 1',
+                              errorText: viewModel.temperatureValidationMessage,
+                              controller: temperatureController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Repetition Penalty',
+                              prefixIcon: Icon(
+                                Icons.repeat,
+                                color: iconColor,
+                              ),
+                              hintText: '-2 to 2',
+                              errorText:
+                                  viewModel.repetitionPenaltyValidationMessage,
+                              controller: repetitionPenaltyController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Top P',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: '0 to 1',
+                              errorText: viewModel.topPValidationMessage,
+                              controller: topPController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
+                              labelText: 'Stop',
+                              prefixIcon: Icon(
+                                Icons.stop_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: 'User,</s>',
+                              errorText: viewModel.stopValidationMessage,
+                              controller: stopController,
+                              textInputType: TextInputType.text,
+                            ),
+                            ListTile(
+                              leading: Icon(
+                                Icons.edit_outlined,
+                                color: iconColor,
+                              ),
+                              title: Text(
+                                'Edit System Prompt',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              onTap: showSystemPromptDialogFunction,
+                            ),
+                            ListTile(
+                              leading: Icon(
+                                Icons.edit_outlined,
+                                color: iconColor,
+                              ),
+                              title: Text(
+                                'Edit Prompt Template',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              onTap: showPromptTemplateDialogFunction,
+                            ),
+                            CheckboxOrSwitchListTile(
+                              title: Text(
+                                'Streaming',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              controlAffinity: ListTileControlAffinity.leading,
+                              value: viewModel.stream,
+                              onChanged: (value) async {
+                                await viewModel.setStream(value);
+                              },
+                            ),
+                          ],
                         ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'API Batch Size',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '10 to 500',
-                          errorText:
-                              viewModel.embeddingsApiBatchSizeValidationMessage,
-                          controller: embeddingsApiBatchSizeController,
-                          textInputType: TextInputType.number,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Database Batch Size',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '10 to 500',
-                          errorText:
-                              viewModel.embeddingsDatabaseBatchSizeValidationMessage,
-                          controller: embeddingsDatabaseBatchSizeController,
-                          textInputType: TextInputType.number,
-                        ),
-                        CheckboxOrSwitchListTile(
-                          title: Text(
-                            'Compressed',
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: viewModel.embeddingsCompressed,
-                          onChanged: (value) async {
-                            await viewModel.setEmbeddingsCompressed(value);
-                          },
-                        ),
-                      ],
-                    ),
-                    isExpanded: viewModel.isPanelExpanded(1),
-                  ).build(context),
-                  SettingsExpansionPanel(
-                    headerText: 'Retrieval',
-                    body: Column(
-                      children: [
-                        /* 
-                        InputField( isDense: isDense,
-                          labelText: 'Search Type',
-                          prefixIcon: Icon(
-                            Icons.search_outlined,
-                            color: iconColor,
-                          ),
-                          errorText: viewModel.searchTypeValidationMessage,
-                          controller: searchTypeController,
-                          textInputType: TextInputType.text,
-                        ),
-                        */
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Search Threshold',
-                          prefixIcon: Icon(
-                            Icons.manage_search_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '0.5 to 0.9',
-                          errorText: viewModel.searchThresholdValidationMessage,
-                          controller: searchThresholdController,
-                          textInputType: TextInputType.number,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Top N',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '1 to 30',
-                          errorText:
-                              viewModel.retrieveTopNResultsValidationMessage,
-                          controller: retrieveTopNResultsController,
-                          textInputType: TextInputType.number,
-                        ),
-                      ],
-                    ),
-                    isExpanded: viewModel.isPanelExpanded(2),
-                  ).build(context),
-                  SettingsExpansionPanel(
-                    headerText: 'Generation',
-                    body: Column(
-                      children: [
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Model',
-                          prefixIcon: Icon(
-                            Icons.api_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: 'gpt-4o-mini',
-                          errorText: viewModel.generationModelValidationMessage,
-                          controller: generationModelController,
-                          textInputType: TextInputType.text,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'API URL',
-                          prefixIcon: Icon(
-                            Icons.http_outlined,
-                            color: iconColor,
-                          ),
-                          hintText:
-                              'https://api.openai.com/v1/chat/completions',
-                          errorText:
-                              viewModel.generationApiUrlValidationMessage,
-                          controller: generationApiUrlController,
-                          textInputType: TextInputType.url,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'API Key',
-                          prefixIcon: Icon(
-                            Icons.key_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '*' * 32,
-                          errorText:
-                              viewModel.generationApiKeyValidationMessage,
-                          controller: generationApiKeyController,
-                          textInputType: TextInputType.none,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Max Tokens',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: 'Half the size of context windows',
-                          errorText: viewModel.maxTokensValidationMessage,
-                          controller: maxTokensController,
-                          textInputType: TextInputType.number,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Temperature',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '0 to 1',
-                          errorText: viewModel.temperatureValidationMessage,
-                          controller: temperatureController,
-                          textInputType: TextInputType.number,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Repetition Penalty',
-                          prefixIcon: Icon(
-                            Icons.repeat,
-                            color: iconColor,
-                          ),
-                          hintText: '-2 to 2',
-                          errorText:
-                              viewModel.repetitionPenaltyValidationMessage,
-                          controller: repetitionPenaltyController,
-                          textInputType: TextInputType.number,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Top P',
-                          prefixIcon: Icon(
-                            Icons.numbers_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: '0 to 1',
-                          errorText: viewModel.topPValidationMessage,
-                          controller: topPController,
-                          textInputType: TextInputType.number,
-                        ),
-                        InputField(
-                          isDense: isDense,
-                          labelText: 'Stop',
-                          prefixIcon: Icon(
-                            Icons.stop_outlined,
-                            color: iconColor,
-                          ),
-                          hintText: 'User,</s>',
-                          errorText: viewModel.stopValidationMessage,
-                          controller: stopController,
-                          textInputType: TextInputType.text,
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.edit_outlined,
-                            color: iconColor,
-                          ),
-                          title: Text(
-                            'Edit System Prompt',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          onTap: showSystemPromptDialogFunction,
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.edit_outlined,
-                            color: iconColor,
-                          ),
-                          title: Text(
-                            'Edit Prompt Template',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          onTap: showPromptTemplateDialogFunction,
-                        ),
-                        CheckboxOrSwitchListTile(
-                          title: Text(
-                            'Streaming',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: viewModel.stream,
-                          onChanged: (value) async {
-                            await viewModel.setStream(value);
-                          },
-                        ),
-                      ],
-                    ),
-                    isExpanded: viewModel.isPanelExpanded(3),
-                  ).build(context),
+                        isExpanded: viewModel.isPanelExpanded(3),
+                      ).build(context),
+                    ],
+                    expansionCallback: (panelIndex, isExpanded) {
+                      viewModel.setPanelExpanded(
+                        panelIndex,
+                        isExpanded: isExpanded,
+                      );
+                    },
+                    expandedHeaderPadding: EdgeInsets.zero,
+                    elevation: 0,
+                    materialGapSize: 0,
+                  ),
                 ],
-                expansionCallback: (panelIndex, isExpanded) {
-                  viewModel.setPanelExpanded(
-                    panelIndex,
-                    isExpanded: isExpanded,
-                  );
-                },
-                expandedHeaderPadding: EdgeInsets.zero,
-                elevation: 0,
-                materialGapSize: 0,
               ),
             ),
     );
@@ -481,7 +525,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     embeddingsApiBatchSizeController
         .addListener(viewModel.setEmbeddingsApiBatchSize);
     embeddingsDatabaseBatchSizeController
-        .addListener(viewModel.setEmbeddingsDatabaseBatchSize);    
+        .addListener(viewModel.setEmbeddingsDatabaseBatchSize);
     searchTypeController.addListener(viewModel.setSearchType);
     searchIndexController.addListener(viewModel.setSearchIndex);
     searchThresholdController.addListener(viewModel.setSearchThreshold);

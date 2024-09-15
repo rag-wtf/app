@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const llmProviderKey = 'LLM_PROVIDER';
 const splitApiUrlKey = 'SPLIT_API_URL';
 const chunkSizeKey = 'CHUNK_SIZE';
 const chunkOverlapKey = 'CHUNK_OVERLAP';

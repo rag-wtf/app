@@ -21,7 +21,7 @@ class SettingsExpansionPanel {
         );
       },
       body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        padding: const EdgeInsets.only(left: 16, right: 16),
         child: body,
       ),
       backgroundColor: Colors.transparent,
