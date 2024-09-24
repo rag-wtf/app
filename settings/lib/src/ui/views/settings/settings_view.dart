@@ -1,4 +1,3 @@
-import 'package:database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
@@ -6,6 +5,7 @@ import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:settings/src/ui/widgets/settings/settings_expansion_panel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import 'package:ui/ui.dart';
 
 @FormView(
   fields: [

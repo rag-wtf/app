@@ -22,6 +22,8 @@ dependencies:
   stacked_services: ^1.5.0
   surrealdb_js: ^1.0.0-beta.20+5
   surrealdb_wasm: ^1.0.0-beta.16+13
+  ui:
+    path: ../ui
   ulid: ^2.0.0
 
 dev_dependencies:

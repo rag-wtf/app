@@ -6,13 +6,11 @@ import 'package:database/src/ui/common/ui_helpers.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_model.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_validators.dart';
-import 'package:database/src/ui/widgets/common/adaptive_dialog.dart';
-import 'package:database/src/ui/widgets/common/checkbox_or_switch_list_tile.dart';
-import 'package:database/src/ui/widgets/common/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:ui/ui.dart';
 
 @FormView(
   fields: [

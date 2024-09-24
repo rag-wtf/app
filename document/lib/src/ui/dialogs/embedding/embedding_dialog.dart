@@ -1,4 +1,3 @@
-import 'package:database/database.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/ui/common/ui_helpers.dart';
 import 'package:document/src/ui/dialogs/embedding/embedding_dialog.form.dart';
@@ -8,6 +7,7 @@ import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:ui/ui.dart';
 
 @FormView(
   fields: [
