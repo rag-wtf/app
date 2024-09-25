@@ -122,3 +122,9 @@ chromedriver
 **/*.form.dart
 **/*.mocks.dart
 lib/gen/
+
+# aider.chat files
+.aider*
+.venv/
+
+
