@@ -33,13 +33,13 @@ sealed class Embedding with _$Embedding {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD content ON {prefix}_$tableName TYPE string;
 DEFINE FIELD embedding ON {prefix}_$tableName TYPE array<float>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
-$_defineEmbeddingsMtreeIndex
+$defineEmbeddingsMtreeIndex
 DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName 
 WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
     UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
@@ -47,15 +47,10 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
 ''';
 
   // 65535 is the maximum value of an unsigned 16-bit integer
-  static const _defineEmbeddingsMtreeIndex = '''
-DEFINE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
+  static const defineEmbeddingsMtreeIndex = '''
+DEFINE INDEX OVERWRITE {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
 FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32
 CAPACITY 65535;
-''';
-
-  static const redefineEmbeddingsMtreeIndex = '''
-REMOVE INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
-$_defineEmbeddingsMtreeIndex
 ''';
 
   static const rebuildEmbeddingsMtreeIndex = '''

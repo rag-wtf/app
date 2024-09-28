@@ -32,7 +32,7 @@ class EmbeddingRepository {
     String dimensions,
   ) async {
     _log.d('redefineEmbeddingIndex($tablePrefix, $dimensions)');
-    final sql = Embedding.redefineEmbeddingsMtreeIndex
+    final sql = Embedding.defineEmbeddingsMtreeIndex
         .replaceAll('{prefix}', tablePrefix)
         .replaceFirst('{dimensions}', dimensions);
     final total = await getTotal(tablePrefix);
@@ -212,7 +212,7 @@ CONTENT ${jsonEncode(payload)};''';
 SELECT * FROM (
   SELECT *, vector::similarity::cosine(embedding, $vector) AS score
   FROM ${tablePrefix}_${Embedding.tableName}
-  WHERE embedding <$k> $vector
+  WHERE embedding <|$k|> $vector
 )
 WHERE score >= $threshold
 ORDER BY score DESC;

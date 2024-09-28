@@ -2997,7 +2997,7 @@ sealed class DocumentEmbedding with _$DocumentEmbedding {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Document.tableName}>;
 DEFINE FIELD out ON {prefix}_$tableName TYPE record<{prefix}_${Embedding.tableName}>;
 DEFINE INDEX {prefix}_${tableName}_unique_index 
@@ -3044,7 +3044,7 @@ sealed class Embedding with _$Embedding {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD content ON {prefix}_$tableName TYPE string;
 DEFINE FIELD embedding ON {prefix}_$tableName TYPE array<float>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
@@ -3214,7 +3214,7 @@ sealed class Document with _$Document {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD compressedFileSize ON {prefix}_$tableName TYPE number;
 DEFINE FIELD content ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD fileMimeType ON {prefix}_$tableName TYPE string;

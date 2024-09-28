@@ -90,9 +90,8 @@ void main({bool wasm = false}) {
 
   test('should create document embedding', () async {
     // Arrange
-    final ulid = Ulid();
     final document = Document(
-      id: '${tablePrefix}_${Document.tableName}:$ulid',
+      id: Ulid().toString(),
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -102,7 +101,7 @@ void main({bool wasm = false}) {
       status: DocumentStatus.created,
     );
     final embedding = Embedding(
-      id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       content: 'apple',
       embedding: testData['apple']!,
     );
@@ -143,7 +142,7 @@ void main({bool wasm = false}) {
   test('should create document embeddings', () async {
     // Arrange
     final document = Document(
-      id: '${tablePrefix}_${Document.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -154,31 +153,31 @@ void main({bool wasm = false}) {
 
     final embeddings = [
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -234,7 +233,7 @@ void main({bool wasm = false}) {
   test('should retrieve embeddings of given document Id', () async {
     // Arrange
     final document1 = Document(
-      id: '${tablePrefix}_${Document.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -246,7 +245,7 @@ void main({bool wasm = false}) {
 
     // Arrange
     final document2 = Document(
-      id: '${tablePrefix}_${Document.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       compressedFileSize: 100,
       fileMimeType: 'text/plain',
       contentMimeType: 'text/plain',
@@ -258,13 +257,13 @@ void main({bool wasm = false}) {
 
     final embeddings1 = [
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
@@ -272,19 +271,19 @@ void main({bool wasm = false}) {
     ];
     final embeddings2 = [
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},

@@ -28,8 +28,10 @@ class DocumentEmbeddingRepository {
     DocumentEmbedding documentEmbedding, [
     Transaction? txn,
   ]) async {
-    final documentId = documentEmbedding.documentId;
-    final embeddingId = documentEmbedding.embeddingId;
+    final documentId = 
+      '${tablePrefix}_${Document.tableName}:${documentEmbedding.documentId}';
+    final embeddingId =
+      '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
 
     final sql = '''
 RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddingId;''';
@@ -59,8 +61,10 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
   ]) async {
     final sqlBuffer = StringBuffer();
     for (final documentEmbedding in documentEmbeddings) {
-      final documentId = documentEmbedding.documentId;
-      final embeddingId = documentEmbedding.embeddingId;
+      final documentId = 
+        '${tablePrefix}_${Document.tableName}:${documentEmbedding.documentId}';
+      final embeddingId =
+        '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${DocumentEmbedding.tableName}';
       sqlBuffer.write('RELATE ONLY $documentId->$fullTableName->$embeddingId;');
     }
@@ -91,10 +95,11 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
     final documentEmbeddingTableName =
         '${tablePrefix}_${DocumentEmbedding.tableName}';
     final documentTableName = '${tablePrefix}_${Document.tableName}';
+    final documentRecordId = '$documentTableName:$documentId';
     final sql = '''
 SELECT ->$documentEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
 AS Embedding FROM $documentTableName 
-WHERE array::first(array::distinct(->$documentEmbeddingTableName<-$documentTableName)) == $documentId;
+WHERE array::first(array::distinct(->$documentEmbeddingTableName<-$documentTableName)) = $documentRecordId;
 ''';
 
     final results = (await _db.query(

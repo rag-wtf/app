@@ -24,7 +24,7 @@ sealed class DocumentEmbedding with _$DocumentEmbedding {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Document.tableName}>;
 DEFINE FIELD out ON {prefix}_$tableName TYPE record<{prefix}_${Embedding.tableName}>;
 DEFINE INDEX {prefix}_${tableName}_unique_index 
