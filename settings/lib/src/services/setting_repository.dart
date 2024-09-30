@@ -89,7 +89,7 @@ LIMIT 1
   Future<Setting?> updateSetting(Setting setting) async {
     if (await _db.select(setting.id!) == null) return null;
 
-    final payload = setting.copyWith(updated: DateTime.now()).toJson();
+    final payload = setting.toJson();
     final id = payload.remove('id') as String;
     final result = await _db.query(
       'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',

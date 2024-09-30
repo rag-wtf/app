@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:settings/src/services/date_time_json_converter.dart';
 part 'setting.freezed.dart';
 part 'setting.g.dart';
 
@@ -9,8 +8,8 @@ sealed class Setting with _$Setting {
     required String key,
     required String value,
     String? id,
-    @DateTimeJsonConverter() DateTime? created,
-    @DateTimeJsonConverter() DateTime? updated,
+    @JsonKey(includeToJson: false) DateTime? created,
+    @JsonKey(includeToJson: false) DateTime? updated,
   }) = _Setting;
 
   factory Setting.fromJson(Map<String, dynamic> json) {
@@ -27,10 +26,14 @@ sealed class Setting with _$Setting {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD key ON {prefix}_$tableName TYPE string;
 DEFINE FIELD value ON {prefix}_$tableName TYPE string;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName 
+WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
+    UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
+);
 ''';
 }
