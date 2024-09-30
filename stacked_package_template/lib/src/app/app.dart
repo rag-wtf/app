@@ -17,9 +17,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<ModelRepository>(classType: ModelRepository),
     LazySingleton<Surreal>(
-      classType: SurrealWasmMutex,
+      classType: SurrealWasm,
       asType: Surreal,
-      resolveUsing: SurrealWasmMutex.getInstance,
+      resolveUsing: SurrealWasm.getInstance,
     ),
 // @stacked-service
   ],
