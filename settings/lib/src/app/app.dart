@@ -25,9 +25,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<SettingRepository>(classType: SettingRepository),
 
     LazySingleton<Surreal>(
-      classType: SurrealWasmMutex,
+      classType: SurrealWasm,
       asType: Surreal,
-      resolveUsing: SurrealWasmMutex.getInstance,
+      resolveUsing: SurrealWasm.getInstance,
     ),
     LazySingleton<FlutterSecureStorage>(classType: FlutterSecureStorage),
     LazySingleton<ConnectionSettingRepository>(
