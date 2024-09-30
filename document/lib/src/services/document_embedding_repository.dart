@@ -28,8 +28,11 @@ class DocumentEmbeddingRepository {
     DocumentEmbedding documentEmbedding, [
     Transaction? txn,
   ]) async {
-    final documentId = 
-      '${tablePrefix}_${Document.tableName}:${documentEmbedding.documentId}';
+    final fullDocumentTableName = '${tablePrefix}_${Document.tableName}';
+    final documentId =
+        documentEmbedding.documentId.startsWith(fullDocumentTableName)
+            ? documentEmbedding.documentId
+            : '$fullDocumentTableName:${documentEmbedding.documentId}';
     final embeddingId =
       '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
 
@@ -60,9 +63,12 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
     Transaction? txn,
   ]) async {
     final sqlBuffer = StringBuffer();
+    final fullDocumentTableName = '${tablePrefix}_${Document.tableName}';
     for (final documentEmbedding in documentEmbeddings) {
-      final documentId = 
-        '${tablePrefix}_${Document.tableName}:${documentEmbedding.documentId}';
+      final documentId =
+          documentEmbedding.documentId.startsWith(fullDocumentTableName)
+              ? documentEmbedding.documentId
+              : '$fullDocumentTableName:${documentEmbedding.documentId}';
       final embeddingId =
         '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${DocumentEmbedding.tableName}';

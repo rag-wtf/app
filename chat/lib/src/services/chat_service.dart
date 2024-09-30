@@ -71,6 +71,7 @@ class ChatService with ListenableServiceMixin {
   int _chatIndex = -1;
   int _totalChats = -1;
   int _totalMessages = -1;
+  late String _tablePrefix;
   final _log = getLogger('ChatService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
@@ -355,9 +356,7 @@ class ChatService with ListenableServiceMixin {
 
   Future<void> _onMessageTextResponseCompleted() async {
     isGeneratingMessage = false;
-    var tablePrefix = _messages.first.id!;
-    tablePrefix = tablePrefix.substring(0, tablePrefix.indexOf('_'));
-    await _addMessageWithChat(tablePrefix, _messages.first);
+    await _addMessageWithChat(_tablePrefix, _messages.first);
     notifyListeners();
   }
 
@@ -379,7 +378,7 @@ class ChatService with ListenableServiceMixin {
     _messages.insert(
       0,
       Message(
-        id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         authorId: defaultAgentId,
         role: Role.agent,
         text: '',
@@ -438,7 +437,7 @@ class ChatService with ListenableServiceMixin {
     final now = DateTime.now();
     _log.d('addMessage: _chatIndex $_chatIndex');
     final message = Message(
-      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       authorId: authorId,
       role: role,
       text: text,
@@ -450,7 +449,7 @@ class ChatService with ListenableServiceMixin {
     bool isTxnSucess;
     if (_chatIndex == -1) {
       final chat = Chat(
-        id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         name: newChatName,
         created: now,
         updated: now,
@@ -609,6 +608,7 @@ class ChatService with ListenableServiceMixin {
   }
 
   Future<String> _rag(String tablePrefix, String input) async {
+    _tablePrefix = tablePrefix; // used by _onMessageTextResponseCompleted()
     final embeddings = await _retrieve(tablePrefix, input);
     String prompt;
     if (embeddings.isNotEmpty) {

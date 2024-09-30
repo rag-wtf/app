@@ -436,7 +436,6 @@ class DocumentService with ListenableServiceMixin {
     }
 
     final now = DateTime.now();
-    final fullTableName = '${documentItem.tablePrefix}_${Embedding.tableName}';
     final dimensions = int.parse(
       _settingService.get(embeddingsDimensionsKey).value,
     );
@@ -445,7 +444,7 @@ class DocumentService with ListenableServiceMixin {
       documentItems
           .map(
             (item) => Embedding(
-              id: '$fullTableName:${Ulid()}',
+              id: Ulid().toString(),
               content: item['content'] as String,
               embedding: emptyEmbedding,
               metadata: item['metadata'],

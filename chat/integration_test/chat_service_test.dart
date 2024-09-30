@@ -90,7 +90,7 @@ void main({bool wasm = false}) {
     final chats = List.generate(
       5,
       (index) => Chat(
-        id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         name: 'chat$index',
         updated: DateTime.now().add(Duration(seconds: index)),
       ).toJson(),
