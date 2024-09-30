@@ -58,11 +58,11 @@ void main({bool wasm = false}) {
   test('should create chat and message', () async {
     // Arrange
     final chat = Chat(
-      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       name: 'chat 1',
     );
     final message = Message(
-      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       authorId: '$userIdPrefix${Ulid()}',
       role: Role.user,
       text: 'user message 1',

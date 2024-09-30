@@ -77,7 +77,7 @@ CONTENT ${jsonEncode(payload)};''';
   ]) async {
     if (await _db.select(message.id!) == null) return null;
 
-    final payload = message.copyWith(updated: DateTime.now()).toJson();
+    final payload = message.toJson();
     final id = payload.remove('id') as String;
     final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
     if (txn == null) {

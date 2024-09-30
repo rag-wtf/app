@@ -18,8 +18,8 @@ sealed class Message with _$Message {
     int? share,
     bool? pinned,
     Object? metadata,
-    @DateTimeJsonConverter() DateTime? created,
-    @DateTimeJsonConverter() DateTime? updated,
+    @JsonKey(includeToJson: false) DateTime? created,
+    @JsonKey(includeToJson: false) DateTime? updated,
     Status? status,
     @JsonKey(includeFromJson: false, includeToJson: false)
     List<Embedding>? embeddings,
@@ -48,8 +48,8 @@ sealed class Message with _$Message {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
-DEFINE FIELD authorId ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
+DEFINE FIELD authorId ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD role ON {prefix}_$tableName TYPE string;
 DEFINE FIELD text ON {prefix}_$tableName TYPE string;
 DEFINE FIELD type ON {prefix}_$tableName TYPE string;
@@ -60,6 +60,10 @@ DEFINE FIELD pinned ON {prefix}_$tableName TYPE option<bool>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName 
+WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
+    UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
+);
 ''';
 }
 

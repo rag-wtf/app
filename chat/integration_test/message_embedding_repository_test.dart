@@ -93,16 +93,15 @@ void main({bool wasm = false}) {
 
   test('should create message embedding', () async {
     // Arrange
-    final ulid = Ulid();
     final message = Message(
-      id: '${tablePrefix}_${Message.tableName}:$ulid',
+      id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
       text: 'user message 1',
       type: MessageType.text,
     );
     final embedding = Embedding(
-      id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       content: 'apple',
       embedding: testData['apple']!,
     );
@@ -140,16 +139,12 @@ void main({bool wasm = false}) {
       await db.select('${tablePrefix}_${MessageEmbedding.tableName}'),
       isNotNull,
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Message.tableName}');
-    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 
   test('should create message embeddings', () async {
     // Arrange
     final message = Message(
-      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
       text: 'user message 1',
@@ -158,31 +153,31 @@ void main({bool wasm = false}) {
 
     final embeddings = [
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -235,16 +230,12 @@ void main({bool wasm = false}) {
       await db.select('${tablePrefix}_${MessageEmbedding.tableName}'),
       hasLength(messageEmbeddings.length),
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Message.tableName}');
-    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 
   test('should retrieve embeddings of given message Id', () async {
     // Arrange
     final message1 = Message(
-      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
       text: 'user message 1',
@@ -253,7 +244,7 @@ void main({bool wasm = false}) {
 
     // Arrange
     final message2 = Message(
-      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
       text: 'user message 2',
@@ -262,13 +253,13 @@ void main({bool wasm = false}) {
 
     final embeddings1 = [
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'apple',
         embedding: testData['apple']!,
         metadata: {'id': 'customId1'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'ten',
         embedding: testData['ten']!,
         metadata: {'id': 'customId2'},
@@ -276,19 +267,19 @@ void main({bool wasm = false}) {
     ];
     final embeddings2 = [
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'twenty',
         embedding: testData['twenty']!,
         metadata: {'id': 'customId3'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'two',
         embedding: testData['two']!,
         metadata: {'id': 'customId4'},
       ),
       Embedding(
-        id: '${tablePrefix}_${Embedding.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         content: 'banana',
         embedding: testData['banana']!,
         metadata: {'id': 'customId5'},
@@ -371,9 +362,5 @@ void main({bool wasm = false}) {
       ),
       hasLength(messageEmbeddings2.length),
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Message.tableName}');
-    await db.delete('${tablePrefix}_${Embedding.tableName}');
   });
 }

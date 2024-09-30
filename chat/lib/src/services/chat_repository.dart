@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:chat/src/app/app.locator.dart';
+import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class ChatRepository {
   final _db = locator<Surreal>();
+  final _log = getLogger('ChatRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -19,6 +21,7 @@ class ChatRepository {
     Transaction? txn,
   ]) async {
     final sqlSchema = Chat.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    _log.d(sqlSchema);
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
@@ -38,6 +41,7 @@ SET name=\$name,
 */
     final sql = '''
 CREATE ONLY ${tablePrefix}_${Chat.tableName} CONTENT ${jsonEncode(payload)};''';
+    _log.d(sql);
     if (txn == null) {
       final result = await _db.query(sql);
 
@@ -95,12 +99,11 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
   Future<Chat?> updateChat(Chat chat) async {
     if (await _db.select(chat.id!) == null) return null;
 
-    final payload = chat.copyWith(updated: DateTime.now()).toJson();
+    final payload = chat.toJson();
     final id = payload.remove('id') as String;
-    final result = await _db.query(
-      'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
-    );
-
+    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)}';
+    _log.d(sql);
+    final result = await _db.query(sql);
     return Chat.fromJson(
       Map<String, dynamic>.from(
         result! as Map,

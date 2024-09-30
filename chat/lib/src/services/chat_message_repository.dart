@@ -1,5 +1,6 @@
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
+import 'package:chat/src/services/chat.dart';
 import 'package:chat/src/services/chat_message.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
@@ -28,8 +29,8 @@ class ChatMessageRepository {
     ChatMessage chatMessage, [
     Transaction? txn,
   ]) async {
-    final chatId = chatMessage.chatId;
-    final messageId = chatMessage.messageId;
+    final chatId =  '${tablePrefix}_${Chat.tableName}:${chatMessage.chatId}';
+    final messageId = '${tablePrefix}_${Message.tableName}:${chatMessage.messageId}';
 
     final sql = '''
 RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
@@ -59,8 +60,9 @@ RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
   ]) async {
     final sqlBuffer = StringBuffer();
     for (final chatMessage in chatMessages) {
-      final chatId = chatMessage.chatId;
-      final messageId = chatMessage.messageId;
+      final chatId = '${tablePrefix}_${Chat.tableName}:${chatMessage.chatId}';
+      final messageId =
+          '${tablePrefix}_${Message.tableName}:${chatMessage.messageId}';
       final fullTableName = '${tablePrefix}_${ChatMessage.tableName}';
       sqlBuffer.write('RELATE ONLY $chatId->$fullTableName->$messageId;');
     }
@@ -92,15 +94,16 @@ RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
     bool ascendingOrder = false,
   }) async {
     final chatMessageTableName = '${tablePrefix}_${ChatMessage.tableName}';
+    final chatRecordId = '${tablePrefix}_${Chat.tableName}:$chatId';
     final sql = '''
 LET \$messages = (SELECT out AS id FROM $chatMessageTableName
-WHERE in = '$chatId');
+WHERE in = $chatRecordId);
 SELECT count() FROM \$messages.*.id GROUP ALL;
 SELECT * FROM \$messages.*.id
 ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
 ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}
 ''';
-
+    _log.d(sql);
     final results = (await _db.query(
       sql,
     ))! as List;

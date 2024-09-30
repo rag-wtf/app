@@ -30,8 +30,10 @@ class MessageEmbeddingRepository {
     MessageEmbedding messageEmbedding, [
     Transaction? txn,
   ]) async {
-    final messageId = messageEmbedding.messageId;
-    final embeddingId = messageEmbedding.embeddingId;
+    final messageId =
+        '${tablePrefix}_${Message.tableName}:${messageEmbedding.messageId}';
+    final embeddingId =
+        '${tablePrefix}_${Embedding.tableName}:${messageEmbedding.embeddingId}';
 
     final sql = '''
 RELATE ONLY $messageId->${tablePrefix}_${MessageEmbedding.tableName}->$embeddingId
@@ -63,8 +65,10 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
   ]) async {
     final sqlBuffer = StringBuffer();
     for (final messageEmbedding in messageEmbeddings) {
-      final messageId = messageEmbedding.messageId;
-      final embeddingId = messageEmbedding.embeddingId;
+      final messageId =
+        '${tablePrefix}_${Message.tableName}:${messageEmbedding.messageId}';
+      final embeddingId =
+        '${tablePrefix}_${Embedding.tableName}:${messageEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${MessageEmbedding.tableName}';
       sqlBuffer.write('''
 RELATE ONLY $messageId->$fullTableName->$embeddingId
@@ -98,11 +102,12 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
     final messageEmbeddingTableName =
         '${tablePrefix}_${MessageEmbedding.tableName}';
     final messageTableName = '${tablePrefix}_${Message.tableName}';
+    final messageRecordId = '${tablePrefix}_${Message.tableName}:$messageId';
     final sql = '''
 SELECT ->$messageEmbeddingTableName.* AS MessageEmbedding,
 ->$messageEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
 AS Embedding FROM $messageTableName 
-WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableName)) == $messageId;
+WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableName)) == $messageRecordId;
 ''';
 
     _log.d('sql $sql');

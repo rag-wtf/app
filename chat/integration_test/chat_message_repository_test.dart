@@ -31,6 +31,11 @@ void main({bool wasm = false}) {
     await db.close();
   });
 
+  tearDown(() async {
+    await chatRepository.deleteAllChats(tablePrefix);
+    await messageRepository.deleteAllMessages(tablePrefix);
+  });
+
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
@@ -50,7 +55,7 @@ void main({bool wasm = false}) {
 
     test('should create schemas and return true', () async {
       // Act
-      await db.transaction(
+      await db.transaction(showSql: true,
         (txn) async {
           if (!await chatRepository.isSchemaCreated(tablePrefix)) {
             await chatRepository.createSchema(tablePrefix, txn);
@@ -86,11 +91,11 @@ void main({bool wasm = false}) {
   test('should create chat message', () async {
     // Arrange
     final chat = Chat(
-      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       name: 'chat 1',
     );
     final message = Message(
-      id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       authorId: '$userIdPrefix${Ulid()}',
       role: Role.user,
       text: 'user message 1',
@@ -99,7 +104,7 @@ void main({bool wasm = false}) {
     );
 
     // Act
-    final txnResults = await db.transaction(
+    final txnResults = await db.transaction(showSql: true,
       (txn) async {
         await chatRepository.createChat(
           tablePrefix,
@@ -129,27 +134,23 @@ void main({bool wasm = false}) {
       await db.select('${tablePrefix}_${ChatMessage.tableName}'),
       isNotNull,
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Chat.tableName}');
-    await db.delete('${tablePrefix}_${Message.tableName}');
   });
 
   test('should retrieve messages of given chat Id', () async {
     // Arrange
     final chat1 = Chat(
-      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       name: 'chat 1',
     );
 
     final chat2 = Chat(
-      id: '${tablePrefix}_${Chat.tableName}:${Ulid()}',
+      id: Ulid().toString(),
       name: 'chat 2',
     );
 
     final messages1 = [
       Message(
-        id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
         text: 'user message 1 of 1',
@@ -157,7 +158,7 @@ void main({bool wasm = false}) {
         metadata: {'id': 'customId'},
       ),
       Message(
-        id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
         text: 'user message 2 of 1',
@@ -167,7 +168,7 @@ void main({bool wasm = false}) {
     ];
     final messages2 = [
       Message(
-        id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
         text: 'user message 1 of 2',
@@ -175,7 +176,7 @@ void main({bool wasm = false}) {
         metadata: {'id': 'customId'},
       ),
       Message(
-        id: '${tablePrefix}_${Message.tableName}:${Ulid()}',
+        id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
         text: 'user message 2 of 2',
@@ -254,9 +255,5 @@ void main({bool wasm = false}) {
       messageList.items,
       hasLength(chatMessages2.length),
     );
-
-    // Clean up
-    await db.delete('${tablePrefix}_${Chat.tableName}');
-    await db.delete('${tablePrefix}_${Message.tableName}');
   });
 }

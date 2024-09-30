@@ -1,4 +1,5 @@
-import 'package:chat/src/services/date_time_json_converter.dart';
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat.freezed.dart';
@@ -13,8 +14,8 @@ sealed class Chat with _$Chat {
     int? share,
     bool? pinned,
     Object? metadata,
-    @DateTimeJsonConverter() DateTime? created,
-    @DateTimeJsonConverter() DateTime? updated,
+    @JsonKey(includeToJson: false) DateTime? created,
+    @JsonKey(includeToJson: false) DateTime? updated,
   }) = _Chat;
 
   factory Chat.fromJson(Map<String, dynamic> json) {
@@ -34,7 +35,7 @@ sealed class Chat with _$Chat {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;
 DEFINE FIELD vote ON {prefix}_$tableName TYPE number DEFAULT 0;
 DEFINE FIELD share ON {prefix}_$tableName TYPE number DEFAULT 0;
@@ -42,6 +43,10 @@ DEFINE FIELD pinned ON {prefix}_$tableName TYPE option<bool>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
+DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName 
+WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
+    UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
+);
 ''';
 }
 

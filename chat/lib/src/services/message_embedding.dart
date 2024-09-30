@@ -28,7 +28,7 @@ sealed class MessageEmbedding with _$MessageEmbedding {
 
   static const sqlSchema = '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
-DEFINE FIELD id ON {prefix}_$tableName TYPE record;
+DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Message.tableName}>;
 DEFINE FIELD out ON {prefix}_$tableName TYPE record<{prefix}_${Embedding.tableName}>;
 DEFINE FIELD searchType ON {prefix}_$tableName TYPE string;

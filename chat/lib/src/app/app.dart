@@ -67,9 +67,9 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       asType: StreamResponseService,
     ),
     LazySingleton<Surreal>(
-      classType: SurrealWasmMutex,
+      classType: SurrealWasm,
       asType: Surreal,
-      resolveUsing: SurrealWasmMutex.getInstance,
+      resolveUsing: SurrealWasm.getInstance,
     ),
 
 // @stacked-service
