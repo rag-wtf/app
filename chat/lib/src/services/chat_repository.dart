@@ -96,12 +96,17 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
         : null;
   }
 
-  Future<Chat?> updateChat(Chat chat) async {
-    if (await _db.select(chat.id!) == null) return null;
-
-    final payload = chat.toJson();
-    final id = payload.remove('id') as String;
-    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)}';
+  Future<Chat?> updateChat(String tablePrefix, Chat chat) async {
+    final fullChatTableName = '${tablePrefix}_${Chat.tableName}';
+    final chatId = chat.id!.startsWith(fullChatTableName)
+        ? chat.id!
+        : '$fullChatTableName:${chat.id!}';
+    if (!((await _db.query('RETURN record::exists(r"$chatId")'))!
+        as bool)) {
+      return null;
+    }
+    final payload = chat.toJson()..remove('id');
+    final sql = 'UPDATE ONLY $chatId MERGE ${jsonEncode(payload)}';
     _log.d(sql);
     final result = await _db.query(sql);
     return Chat.fromJson(

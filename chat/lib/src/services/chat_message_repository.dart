@@ -94,7 +94,10 @@ RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
     bool ascendingOrder = false,
   }) async {
     final chatMessageTableName = '${tablePrefix}_${ChatMessage.tableName}';
-    final chatRecordId = '${tablePrefix}_${Chat.tableName}:$chatId';
+    final fullChatTableName = '${tablePrefix}_${Chat.tableName}';
+    final chatRecordId = chatId.startsWith(fullChatTableName)
+        ? chatId
+        : '$fullChatTableName:$chatId';
     final sql = '''
 LET \$messages = (SELECT out AS id FROM $chatMessageTableName
 WHERE in = $chatRecordId);

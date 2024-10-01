@@ -78,6 +78,7 @@ class ChatService with ListenableServiceMixin {
     final results = await _db.query('INFO FOR DB');
     final result = Map<String, dynamic>.from(results! as Map);
     final tables = Map<String, dynamic>.from(result['tables'] as Map);
+    _log.d('tables $tables');
     return tables.containsKey('${tablePrefix}_${Chat.tableName}') &&
         tables.containsKey('${tablePrefix}_${Message.tableName}') &&
         tables.containsKey('${tablePrefix}_${ChatMessage.tableName}') &&
@@ -370,7 +371,7 @@ class ChatService with ListenableServiceMixin {
 
   Future<void> _onChatNameResponseCompleted() async {
     final chat = _chats[_chatIndex];
-    await _chatRepository.updateChat(chat);
+    await _chatRepository.updateChat(_tablePrefix, chat);
   }
 
   void _addLoadingMessage(String tablePrefix) {
@@ -510,7 +511,7 @@ class ChatService with ListenableServiceMixin {
           );
         }
       } else {
-        await _updateChatName(text);
+        await _updateChatName(tablePrefix, text);
       }
     }
   }
@@ -543,6 +544,7 @@ class ChatService with ListenableServiceMixin {
   }
 
   Future<void> _updateChatName(
+    String tablePrefix,
     String generatedText,
   ) async {
     if (_chats[_chatIndex].name == newChatName) {
@@ -564,6 +566,7 @@ class ChatService with ListenableServiceMixin {
 
       if (generatedChatName.isNotEmpty) {
         final updatedChat = await _chatRepository.updateChat(
+          tablePrefix,
           _chats[_chatIndex].copyWith(
             name: generatedChatName,
           ),

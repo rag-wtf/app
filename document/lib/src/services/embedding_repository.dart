@@ -142,11 +142,12 @@ CONTENT ${jsonEncode(payload)};''';
     Transaction? txn,
   ]) async {
     if (txn == null) {
-      final results = (await _db.transaction(
+      final results = (await _db.transaction(showSql: true,
         timeout: Duration(seconds: embeddings.length),
         (txn) async {
           for (final embedding in embeddings) {
             await updateEmbedding(
+              tablePrefix,
               embedding,
               txn,
             );
@@ -159,6 +160,7 @@ CONTENT ${jsonEncode(payload)};''';
     } else {
       for (final embedding in embeddings) {
         await updateEmbedding(
+          tablePrefix,
           embedding,
           txn,
         );
@@ -169,14 +171,22 @@ CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<Embedding?> updateEmbedding(
+    String tablePrefix,
     Embedding embedding, [
     Transaction? txn,
   ]) async {
-    if (await _db.select(embedding.id!) == null) return null;
+    final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';
+    final embeddingId = embedding.id!.startsWith(fullEmbeddingTableName)
+        ? embedding.id!
+        : '$fullEmbeddingTableName:${embedding.id!}';
+    if (!((await _db.query('RETURN record::exists(r"$embeddingId")'))!
+        as bool)) {
+      return null;
+    }
 
     final payload = embedding.toJson();
-    final id = payload.remove('id') as String;
-    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
+    payload.remove('id') as String;
+    final sql = 'UPDATE ONLY $embeddingId MERGE ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await _db.query(sql);
       return Embedding.fromJson(

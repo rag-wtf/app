@@ -67,8 +67,11 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
     for (final messageEmbedding in messageEmbeddings) {
       final messageId =
         '${tablePrefix}_${Message.tableName}:${messageEmbedding.messageId}';
+      final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';   
       final embeddingId =
-        '${tablePrefix}_${Embedding.tableName}:${messageEmbedding.embeddingId}';
+          messageEmbedding.embeddingId.startsWith(fullEmbeddingTableName)
+              ? messageEmbedding.embeddingId
+              : '$fullEmbeddingTableName:${messageEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${MessageEmbedding.tableName}';
       sqlBuffer.write('''
 RELATE ONLY $messageId->$fullTableName->$embeddingId
@@ -102,12 +105,15 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
     final messageEmbeddingTableName =
         '${tablePrefix}_${MessageEmbedding.tableName}';
     final messageTableName = '${tablePrefix}_${Message.tableName}';
-    final messageRecordId = '${tablePrefix}_${Message.tableName}:$messageId';
+    final messageRecordId = messageId.startsWith(messageTableName)
+        ? messageId
+        : '$messageTableName:$messageId';
     final sql = '''
-SELECT ->$messageEmbeddingTableName.* AS MessageEmbedding,
-->$messageEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
-AS Embedding FROM $messageTableName 
-WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableName)) == $messageRecordId;
+LET \$message_embeddings = SELECT out AS id, score FROM $messageEmbeddingTableName 
+WHERE in = $messageRecordId
+ORDER BY score DESC;
+SELECT * FROM \$message_embeddings;
+SELECT * FROM \$message_embeddings.*.id;
 ''';
 
     _log.d('sql $sql');
@@ -116,9 +122,9 @@ WHERE array::first(array::distinct(->$messageEmbeddingTableName<-$messageTableNa
       sql,
     ))! as List;
     if (results.isNotEmpty) {
-      final result = Map<String, dynamic>.from(results.first as Map);
-      final embeddings = result['Embedding'] as List;
-      final messageEmbeddings = result['MessageEmbedding'] as List;
+      final messageEmbeddings = results[1] as List;
+      final embeddings = results[2] as List;
+      
 
       return embeddings.asMap().entries.map(
         (entry) {

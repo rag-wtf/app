@@ -334,6 +334,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Act
       final updatedMetadata = {'id': 'customId3'};
       final updated = await repository.updateEmbedding(
+        defaultTablePrefix,
         created.copyWith(metadata: updatedMetadata),
       );
 
@@ -350,7 +351,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         metadata: {'id': 'customId2'},
       );
       // Act & Assert
-      expect(await repository.updateEmbedding(embedding), isNull);
+      expect(
+        await repository.updateEmbedding(defaultTablePrefix, embedding),
+        isNull,
+      );
     });
   });
 

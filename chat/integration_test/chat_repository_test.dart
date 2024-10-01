@@ -130,7 +130,10 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
 
       // Act
       const name1 = 'name one';
-      await repository.updateChat(created.copyWith(name: name1));
+      await repository.updateChat(
+        defaultTablePrefix,
+        created.copyWith(name: name1),
+      );
       final updated = await repository.getChatById(created.id!);
       
       // Assert
@@ -146,7 +149,7 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
         name: 'name1',
       );
       // Act & Assert
-      expect(await repository.updateChat(chat), isNull);
+      expect(await repository.updateChat(defaultTablePrefix, chat), isNull);
     });
   });
 

@@ -217,6 +217,7 @@ class DocumentService with ListenableServiceMixin {
           );
     final batchResults = await _batchService.execute<Embedding, dynamic>(
         embeddings, batchSize, (values) async {
+      _log.d('values $values');    
       return _embeddingRepository.updateEmbeddings(
         tablePrefix,
         values,
