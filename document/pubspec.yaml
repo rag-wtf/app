@@ -30,7 +30,7 @@ dependencies:
   stacked: ^3.4.3
   stacked_services: ^1.5.0
   surrealdb_js: ^1.0.1+7
-  surrealdb_wasm: ^1.0.0-beta.16+13
+  surrealdb_wasm: ^1.0.0-beta.22+14
   ui:
     path: ../ui
   ulid: ^2.0.0
@@ -51,8 +51,8 @@ dev_dependencies:
 
 dependency_overrides:
   meta: ^1.15.0
-  surrealdb_wasm:
-    path: ../../surrealdb_wasm
+  #surrealdb_wasm:
+#    path: ../../surrealdb_wasm
   
 flutter:
   uses-material-design: true
