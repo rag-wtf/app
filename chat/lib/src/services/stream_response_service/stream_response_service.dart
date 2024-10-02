@@ -19,8 +19,10 @@ class StreamResponseService {
         final choice = Map<String, dynamic>.from(choices[0] as Map);
         if (choice['finish_reason'] == null) {
           final delta = Map<String, dynamic>.from(choice['delta'] as Map);
-          final content = delta['content'] as String;
-          sink.add(content);
+          if (delta['content'] != null) {
+            final content = delta['content'] as String;
+            sink.add(content);
+          }
         }
       }
     },
