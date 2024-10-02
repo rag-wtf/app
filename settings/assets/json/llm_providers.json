@@ -83,6 +83,53 @@
     }
   },
   {
+    "name": "Mistral AI",
+    "base_url": "https://api.mistral.ai/v1",
+    "embeddings": {
+      "model": "mistral-embed",
+      "dimensions": 1024,
+      "dimensions_enabled": false,
+      "models": [
+        {
+          "name": "mistral-embed",
+          "dimensions": 1024,
+          "context_length": 8000
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "open-mistral-nemo-2407",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 1.0,
+      "frequency_penalty_enabled": false,
+      "presence_penalty_enabled": false,
+      "stop": [],
+      "models": [
+        {
+          "name": "open-mistral-nemo-2407",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral-large-2407",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral-small-2409",
+          "context_length": 131072
+        },
+        {
+          "name": "codestral-2405",
+          "context_length": 32768
+        },
+        {
+          "name": "pixtral-12b-2409",
+          "context_length": 131072
+        }
+      ]
+    }
+  },
+  {
     "name": "Ollama",
     "base_url": "http://localhost:11434/v1",
     "embeddings": {

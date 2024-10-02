@@ -34,6 +34,7 @@ sealed class EmbeddingModel with _$EmbeddingModel {
     required String name,
     required int dimensions,
     required int contextLength,
+    @Default(true) bool dimensionsEnabled,
   }) = _EmbeddingModel;
 
   factory EmbeddingModel.nullObject() {
@@ -55,10 +56,12 @@ sealed class ChatCompletions with _$ChatCompletions {
     required double temperature,
     required int maxTokens,
     required double topP,
-    required double frequencyPenalty,
-    required double presencePenalty,
     required List<String> stop,
     required List<ChatModel> models,
+    double? frequencyPenalty,
+    double? presencePenalty,
+    @Default(true) bool frequencyPenaltyEnabled,
+    @Default(true) bool presencePenaltyEnabled,    
   }) = _ChatCompletions;
 
   factory ChatCompletions.fromJson(Map<String, dynamic> json) =>
