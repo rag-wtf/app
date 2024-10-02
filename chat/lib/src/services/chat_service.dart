@@ -49,9 +49,18 @@ class ChatService with ListenableServiceMixin {
         _settingService.get(temperatureKey).value,
       );
   double get _topP => double.parse(_settingService.get(topPKey).value);
+  bool get _frequencyPenaltyEnabled => bool.parse(
+        _settingService.get(frequencyPenaltyEnabledKey).value,
+      );
   double get _frequencyPenalty => double.parse(
         _settingService.get(frequencyPenaltyKey).value,
       );
+  bool get _presencePenaltyEnabled => bool.parse(
+        _settingService.get(presencePenaltyEnabledKey).value,
+      );
+  double get _presencePenalty => double.parse(
+        _settingService.get(presencePenaltyKey).value,
+      );      
   int get _maxTokens => int.parse(_settingService.get(maxTokensKey).value);
   String get _stop => _settingService.get(stopKey).value;
 
@@ -415,12 +424,15 @@ class ChatService with ListenableServiceMixin {
           _generationApiKey,
           _model,
           _frequencyPenalty,
+          _presencePenalty,
           _maxTokens,
           _stop,
           _temperature,
           _topP,
           _onChatNameResponse,
           onDone: _onChatNameResponseCompleted,
+          frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
+          presencePenaltyEnabled: _presencePenaltyEnabled, 
         );
       }
     } else {
@@ -532,6 +544,7 @@ class ChatService with ListenableServiceMixin {
       _generationApiKey,
       _model,
       _frequencyPenalty,
+      _presencePenalty,
       _maxTokens,
       _stop,
       _temperature,
@@ -540,6 +553,8 @@ class ChatService with ListenableServiceMixin {
       onDone: onDone,
       onError: onError,
       cancelOnError: cancelOnError,
+      frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
+      presencePenaltyEnabled: _presencePenaltyEnabled, 
     );
   }
 
@@ -558,10 +573,13 @@ class ChatService with ListenableServiceMixin {
         _generationApiKey,
         _model,
         _frequencyPenalty,
+        _presencePenalty,
         _maxTokens,
         _stop,
         _temperature,
         _topP,
+        frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
+        presencePenaltyEnabled: _presencePenaltyEnabled, 
       );
 
       if (generatedChatName.isNotEmpty) {
@@ -597,6 +615,9 @@ class ChatService with ListenableServiceMixin {
       ),
       compressed: bool.parse(
         _settingService.get(embeddingsCompressedKey).value,
+      ),
+      embeddingsDimensionsEnabled: bool.parse(
+        _settingService.get(embeddingsDimensionsEnabledKey).value,
       ),
     );
     final embedding = (responseData?['data'] as List).first as Map;
@@ -644,10 +665,13 @@ class ChatService with ListenableServiceMixin {
         _generationApiKey,
         _model,
         _frequencyPenalty,
+        _presencePenalty,
         _maxTokens,
         _stop,
         _temperature,
         _topP,
+        frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
+        presencePenaltyEnabled: _presencePenaltyEnabled,
       );
       return generatedText;
     }

@@ -44,11 +44,14 @@ class ChatApiService {
     String generationApiKey,
     String model,
     double frequencyPenalty,
+    double presencePenalty,
     int maxTokens,
     String stop,
     double temperature,
-    double topP,
-  ) async {
+    double topP, {
+    bool frequencyPenaltyEnabled = true,  
+    bool presencePenaltyEnabled = true,
+  }) async {
     final response = await dio.post<Map<String, dynamic>>(
       generationApiUrl,
       options: Options(
@@ -69,7 +72,10 @@ class ChatApiService {
         generationApiUrl,
         generationApiKey,
         model,
+        frequencyPenaltyEnabled,
         frequencyPenalty,
+        presencePenaltyEnabled,
+        presencePenalty,
         maxTokens,
         stop,
         temperature,
@@ -96,15 +102,18 @@ class ChatApiService {
     String generationApiUrl,
     String generationApiKey,
     String model,
+    bool frequencyPenaltyEnabled,
     double frequencyPenalty,
+    bool presencePenaltyEnabled,
+    double presencePenalty,
     int maxTokens,
     String stop,
     double temperature,
     double topP,
   ) {
-    return {
+    final data = {
       'model': model,
-      'frequency_penalty': frequencyPenalty,
+      '': frequencyPenalty,
       'max_tokens': maxTokens,
       if (stop.isNotEmpty) ...{'stop': stop.split(',')},
       'temperature': temperature,
@@ -121,6 +130,16 @@ class ChatApiService {
         generationApiKey,
       ),
     };
+
+    if (frequencyPenaltyEnabled) {
+      data['frequency_penalty'] = frequencyPenalty;
+    }
+
+    if (presencePenaltyEnabled) {
+      data['presence_penalty'] = presencePenalty;
+    }
+
+    return data;
   }
 
   Future<void> generateStream(
@@ -132,6 +151,7 @@ class ChatApiService {
     String generationApiKey,
     String model,
     double frequencyPenalty,
+    double presencePenalty,
     int maxTokens,
     String stop,
     double temperature,
@@ -140,6 +160,8 @@ class ChatApiService {
     Function? onError,
     void Function()? onDone,
     bool? cancelOnError,
+    bool frequencyPenaltyEnabled = true,  
+    bool presencePenaltyEnabled = true,
   }) async {
     //generationApiUrl = 'http://localhost:11434/v1/chat/completions';
     //model = 'tinyllama';
@@ -160,7 +182,10 @@ class ChatApiService {
       generationApiUrl,
       generationApiKey,
       model,
+      frequencyPenaltyEnabled,
       frequencyPenalty,
+      presencePenaltyEnabled,
+      presencePenalty,
       maxTokens,
       stop,
       temperature,
@@ -252,9 +277,15 @@ class ChatApiService {
     String input, {
     required int dimensions,
     bool compressed = true,
+    bool embeddingsDimensionsEnabled = true,
   }) async {
     final embeddingInput = getEmbeddingInput(input);
     _log.d('embeddingInput ${jsonEncode(embeddingInput)}');
+    final data = {'model': model, 'input': embeddingInput};
+    if (embeddingsDimensionsEnabled) {
+      data['dimensions'] = dimensions;
+    }
+
     final response = await dio.post<Map<String, dynamic>>(
       embeddingsApiUrl,
       options: Options(
@@ -265,13 +296,9 @@ class ChatApiService {
         },
         requestEncoder: compressed ? _gzipEncoderFunction : null,
       ),
-      data: {
-        'model': model,
-        'input': embeddingInput,
-        'dimensions': dimensions,
-      },
+      data: data,
     );
-    
+
     final embeddingOutput = response.data;
     _log.d('embeddingOutput ${jsonEncode(embeddingOutput)}');
     return embeddingOutput;

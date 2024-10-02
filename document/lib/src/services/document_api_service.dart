@@ -10,7 +10,6 @@ import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:settings/settings.dart';
 
 class DocumentApiService {
   final _gzipEncoder = locator<GZipEncoder>();
@@ -91,11 +90,16 @@ class DocumentApiService {
     required int dimensions,
     int batchSize = 100,
     bool compressed = true,
+    bool embeddingsDimensionsEnabled = true,
   }) async {
     final embeddings = await _batchService.execute<String, List<double>>(
       chunkedTexts,
       batchSize,
       (values) async {
+        final data = {'model': model, 'input': values};
+        if (embeddingsDimensionsEnabled) {
+          data['dimensions'] = dimensions;
+        }             
         // Send the batch and add the future to the list
         final response = await dio.post<Map<String, dynamic>>(
           apiUrl,
@@ -108,11 +112,7 @@ class DocumentApiService {
             sendTimeout: const Duration(seconds: 600),
             receiveTimeout: const Duration(seconds: 600),
           ),
-          data: {
-            'model': model,
-            'input': values,
-            'dimensions': dimensions,
-          },
+          data: data,
         ).timeout(
           const Duration(seconds: 900),
         );
