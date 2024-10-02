@@ -94,6 +94,13 @@ class SettingsValidators {
     return null;
   }
 
+  static String? validateEmbeddingsModelContextLength(String? value) {
+    return _validateMinimumValue(
+      value,
+      int.parse(defaultEmbeddingsModelContextLength),
+    );
+  }
+
   static String? validateEmbeddingsDimensions(String? value) {
     return _validateMinimumValue(value, 256);
   }
@@ -149,6 +156,13 @@ class SettingsValidators {
 
   static String? validateRetrieveTopNResults(String? value) {
     return _validateIntegerRange(value, 1, 30);
+  }
+
+  static String? validateGenerationModelContextLength(String? value) {
+    return _validateMinimumValue(
+      value,
+      int.parse(defaultGenerationModelContextLength),
+    );
   }
 
   static String? validateTemperature(String? value) {

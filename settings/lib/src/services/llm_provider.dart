@@ -23,6 +23,7 @@ sealed class Embeddings with _$Embeddings {
     required String model,
     required List<EmbeddingModel> models,
     int? dimensions,
+    @Default(true) bool dimensionsEnabled,
   }) = _Embeddings;
 
   factory Embeddings.fromJson(Map<String, dynamic> json) =>
@@ -35,7 +36,6 @@ sealed class EmbeddingModel with _$EmbeddingModel {
     required String name,
     required int dimensions,
     required int contextLength,
-    @Default(true) bool dimensionsEnabled,
   }) = _EmbeddingModel;
 
   factory EmbeddingModel.nullObject() {
@@ -75,6 +75,13 @@ sealed class ChatModel with _$ChatModel {
     required String name,
     required int contextLength,
   }) = _ChatModel;
+
+  factory ChatModel.nullObject() {
+    return const ChatModel(
+      name: 'null',
+      contextLength: 0,
+    );
+  }
 
   factory ChatModel.fromJson(Map<String, dynamic> json) =>
       _$ChatModelFromJson(json);

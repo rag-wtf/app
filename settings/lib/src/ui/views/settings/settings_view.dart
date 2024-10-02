@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:settings/src/constants.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
@@ -22,6 +23,10 @@ import 'package:ui/ui.dart';
       validator: SettingsValidators.validateChunkOverlap,
     ),
     FormTextField(name: 'embeddingsModel'),
+    FormTextField(
+      name: 'embeddingsModelContextLength',
+      validator: SettingsValidators.validateEmbeddingsModelContextLength,
+    ),
     FormTextField(
       name: 'embeddingsApiUrl',
       validator: SettingsValidators.validateEmbeddingsApiUrl,
@@ -57,6 +62,10 @@ import 'package:ui/ui.dart';
     ),
     FormTextField(name: 'generationModel'),
     FormTextField(
+      name: 'generationModelContextLength',
+      validator: SettingsValidators.validateGenerationModelContextLength,
+    ),
+    FormTextField(
       name: 'generationApiUrl',
       validator: SettingsValidators.validateGenerationApiUrl,
     ),
@@ -73,6 +82,10 @@ import 'package:ui/ui.dart';
       name: 'frequencyPenalty',
       validator: SettingsValidators.validateFrequencyPenalty,
     ),
+    FormTextField(
+      name: 'presencePenalty',
+      validator: SettingsValidators.validateFrequencyPenalty,
+    ),    
     FormTextField(
       name: 'maxTokens',
       validator: SettingsValidators.validateMaxTokens,
@@ -217,6 +230,20 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             ),
                             InputField(
                               isDense: isDense,
+                              labelText: 'Context Length',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: defaultEmbeddingsModelContextLength,
+                              errorText: viewModel
+                                .embeddingsModelContextLengthValidationMessage,
+                              controller:
+                                  embeddingsModelContextLengthController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
                               labelText: 'API URL',
                               prefixIcon: Icon(
                                 Icons.http_outlined,
@@ -235,24 +262,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                 Icons.key_outlined,
                                 color: iconColor,
                               ),
-                              hintText: '*' * 32,
+                              hintText: '*' * 48,
                               errorText:
                                   viewModel.embeddingsApiKeyValidationMessage,
                               controller: embeddingsApiKeyController,
                               textInputType: TextInputType.none,
-                            ),
-                            InputField(
-                              isDense: isDense,
-                              labelText: 'Dimensions',
-                              prefixIcon: Icon(
-                                Icons.numbers_outlined,
-                                color: iconColor,
-                              ),
-                              hintText: '256',
-                              errorText: viewModel
-                                  .embeddingsDimensionsValidationMessage,
-                              controller: embeddingsDimensionsController,
-                              textInputType: TextInputType.number,
                             ),
                             InputField(
                               isDense: isDense,
@@ -280,16 +294,47 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               controller: embeddingsDatabaseBatchSizeController,
                               textInputType: TextInputType.number,
                             ),
-                            CheckboxOrSwitchListTile(
-                              title: Text(
-                                'Compressed',
-                                style: Theme.of(context).textTheme.titleSmall,
+                            InputField(
+                              readOnly: !viewModel.embeddingsDimensionsEnabled,
+                              isDense: isDense,
+                              labelText: 'Dimensions',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
                               ),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              value: viewModel.embeddingsCompressed,
-                              onChanged: (value) async {
-                                await viewModel.setEmbeddingsCompressed(value);
-                              },
+                              suffixIcon: CheckboxOrSwitch(
+                                value: viewModel.embeddingsDimensionsEnabled,
+                                onChanged: (value) async {
+                                  await viewModel
+                                      .setEmbeddingsDimensionsEnabled(value);
+                                },
+                              ),
+                              hintText: '256',
+                              errorText: viewModel
+                                  .embeddingsDimensionsValidationMessage,
+                              controller: embeddingsDimensionsController,
+                              textInputType: TextInputType.number,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Compressed',
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  CheckboxOrSwitch(
+                                    value: viewModel.embeddingsCompressed,
+                                    onChanged: (value) async {
+                                      await viewModel
+                                          .setEmbeddingsCompressed(value);
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -360,6 +405,20 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             ),
                             InputField(
                               isDense: isDense,
+                              labelText: 'Context Length',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              hintText: defaultGenerationModelContextLength,
+                              errorText: viewModel
+                                .generationModelContextLengthValidationMessage,
+                              controller:
+                                  generationModelContextLengthController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              isDense: isDense,
                               labelText: 'API URL',
                               prefixIcon: Icon(
                                 Icons.http_outlined,
@@ -379,7 +438,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                 Icons.key_outlined,
                                 color: iconColor,
                               ),
-                              hintText: '*' * 32,
+                              hintText: '*' * 48,
                               errorText:
                                   viewModel.generationApiKeyValidationMessage,
                               controller: generationApiKeyController,
@@ -392,7 +451,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                 Icons.numbers_outlined,
                                 color: iconColor,
                               ),
-                              hintText: 'Half the size of context windows',
+                              hintText: 'Half of the Context Length',
                               errorText: viewModel.maxTokensValidationMessage,
                               controller: maxTokensController,
                               textInputType: TextInputType.number,
@@ -411,19 +470,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             ),
                             InputField(
                               isDense: isDense,
-                              labelText: 'Frequency Penalty',
-                              prefixIcon: Icon(
-                                Icons.repeat,
-                                color: iconColor,
-                              ),
-                              hintText: '-2 to 2',
-                              errorText:
-                                  viewModel.frequencyPenaltyValidationMessage,
-                              controller: frequencyPenaltyController,
-                              textInputType: TextInputType.number,
-                            ),
-                            InputField(
-                              isDense: isDense,
                               labelText: 'Top P',
                               prefixIcon: Icon(
                                 Icons.numbers_outlined,
@@ -438,7 +484,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               isDense: isDense,
                               labelText: 'Stop',
                               prefixIcon: Icon(
-                                Icons.stop_outlined,
+                                Icons.stop_circle_outlined,
                                 color: iconColor,
                               ),
                               hintText: 'User,</s>',
@@ -446,9 +492,71 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               controller: stopController,
                               textInputType: TextInputType.text,
                             ),
+                            InputField(
+                              readOnly: !viewModel.frequencyPenaltyEnabled,
+                              isDense: isDense,
+                              labelText: 'Frequency Penalty',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              suffixIcon: CheckboxOrSwitch(
+                                value: viewModel.frequencyPenaltyEnabled,
+                                onChanged: (value) async {
+                                  await viewModel
+                                      .setFrequencyPenaltyEnabled(value);
+                                },
+                              ),
+                              hintText: '-2 to 2',
+                              errorText:
+                                  viewModel.frequencyPenaltyValidationMessage,
+                              controller: frequencyPenaltyController,
+                              textInputType: TextInputType.number,
+                            ),
+                            InputField(
+                              readOnly: !viewModel.presencePenaltyEnabled,
+                              isDense: isDense,
+                              labelText: 'Presence Penalty',
+                              prefixIcon: Icon(
+                                Icons.numbers_outlined,
+                                color: iconColor,
+                              ),
+                              suffixIcon: CheckboxOrSwitch(
+                                value: viewModel.presencePenaltyEnabled,
+                                onChanged: (value) async {
+                                  await viewModel
+                                      .setPresencePenaltyEnabled(value);
+                                },
+                              ),
+                              hintText: '-2 to 2',
+                              errorText:
+                                  viewModel.presencePenaltyValidationMessage,
+                              controller: presencePenaltyController,
+                              textInputType: TextInputType.number,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Streaming',
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  CheckboxOrSwitch(
+                                    value: viewModel.stream,
+                                    onChanged: (value) async {
+                                      await viewModel.setStream(value);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                             ListTile(
                               leading: Icon(
-                                Icons.edit_outlined,
+                                Icons.edit_note_outlined,
                                 color: iconColor,
                               ),
                               title: Text(
@@ -459,7 +567,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             ),
                             ListTile(
                               leading: Icon(
-                                Icons.edit_outlined,
+                                Icons.edit_note_outlined,
                                 color: iconColor,
                               ),
                               title: Text(
@@ -468,17 +576,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               ),
                               onTap: showPromptTemplateDialogFunction,
                             ),
-                            CheckboxOrSwitchListTile(
-                              title: Text(
-                                'Streaming',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              value: viewModel.stream,
-                              onChanged: (value) async {
-                                await viewModel.setStream(value);
-                              },
-                            ),
+                            
                           ],
                         ),
                         isExpanded: viewModel.isPanelExpanded(3),
@@ -518,6 +616,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     chunkSizeController.addListener(viewModel.setChunkSize);
     chunkOverlapController.addListener(viewModel.setChunkOverlap);
     embeddingsModelController.addListener(viewModel.setEmbeddingsModel);
+    embeddingsModelContextLengthController
+        .addListener(viewModel.setEmbeddingsModelContextLength);
     embeddingsApiUrlController.addListener(viewModel.setEmbeddingsApiUrl);
     embeddingsApiKeyController.addListener(viewModel.setEmbeddingsApiKey);
     embeddingsDimensionsController
@@ -531,11 +631,14 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     searchThresholdController.addListener(viewModel.setSearchThreshold);
     retrieveTopNResultsController.addListener(viewModel.setRetrieveTopNResults);
     generationModelController.addListener(viewModel.setGenerationModel);
+    generationModelContextLengthController
+        .addListener(viewModel.setGenerationModelContextLength);
     generationApiUrlController.addListener(viewModel.setGenerationApiUrl);
     generationApiKeyController.addListener(viewModel.setGenerationApiKey);
     temperatureController.addListener(viewModel.setTemperature);
     topPController.addListener(viewModel.setTopP);
     frequencyPenaltyController.addListener(viewModel.setFrequencyPenalty);
+    presencePenaltyController.addListener(viewModel.setPresencePenalty);
     maxTokensController.addListener(viewModel.setMaxTokens);
     stopController.addListener(viewModel.setStop);
   }

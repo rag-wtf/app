@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_positional_boolean_parameters
+
 import 'dart:convert';
 
 import 'package:database/database.dart';
@@ -41,6 +43,15 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   bool _embeddingsCompressed = true;
   bool get embeddingsCompressed => _embeddingsCompressed;
 
+  bool _embeddingsDimensionsEnabled = true;
+  bool get embeddingsDimensionsEnabled => _embeddingsDimensionsEnabled;
+
+  bool _frequencyPenaltyEnabled = true;
+  bool get frequencyPenaltyEnabled => _frequencyPenaltyEnabled;
+
+  bool _presencePenaltyEnabled = true;
+  bool get presencePenaltyEnabled => _presencePenaltyEnabled;  
+
   late List<LlmProvider> _llmProviders;
   List<LlmProvider> get llmProviders => _llmProviders;
   String get llmProvider => _settingService.get(llmProviderKey).value;
@@ -55,7 +66,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
-  // ignore: avoid_positional_boolean_parameters
   Future<void> setEmbeddingsCompressed(bool value) async {
     await _settingService.set(
       tablePrefix,
@@ -63,6 +73,33 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _embeddingsCompressed = value;
+  }
+
+  Future<void> setEmbeddingsDimensionsEnabled(bool value) async {
+    await _settingService.set(
+      tablePrefix,
+      embeddingsDimensionsEnabledKey,
+      value.toString(),
+    );
+    _embeddingsDimensionsEnabled = value;
+  }
+
+  Future<void> setFrequencyPenaltyEnabled(bool value) async {
+    await _settingService.set(
+      tablePrefix,
+      frequencyPenaltyEnabledKey,
+      value.toString(),
+    );
+    _frequencyPenaltyEnabled = value;
+  }
+
+  Future<void> setPresencePenaltyEnabled(bool value) async {
+    await _settingService.set(
+      tablePrefix,
+      presencePenaltyEnabledKey,
+      value.toString(),
+    );
+    _presencePenaltyEnabled = value;
   }
 
   void setPanelExpanded(int index, {required bool isExpanded}) {
@@ -88,6 +125,15 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     _embeddingsCompressed = bool.parse(
       _settingService.get(embeddingsCompressedKey).value,
     );
+    _embeddingsDimensionsEnabled = bool.parse(
+      _settingService.get(embeddingsDimensionsEnabledKey).value,
+    );
+    _frequencyPenaltyEnabled = bool.parse(
+      _settingService.get(frequencyPenaltyEnabledKey).value,
+    );
+    _presencePenaltyEnabled = bool.parse(
+      _settingService.get(presencePenaltyEnabledKey).value,
+    );
 
     final splitApiUrl = _settingService.get(splitApiUrlKey);
     if (splitApiUrl.id != null) {
@@ -107,6 +153,11 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     final embeddingsModel = _settingService.get(embeddingsModelKey);
     if (embeddingsModel.id != null) {
       embeddingsModelValue = embeddingsModel.value;
+    }
+
+    final embeddingsModelContextLength = _settingService.get(embeddingsModelContextLengthKey);
+    if (embeddingsModelContextLength.id != null) {
+      embeddingsModelContextLengthValue = embeddingsModelContextLength.value;
     }
 
     final embeddingsApiUrl = _settingService.get(embeddingsApiUrlKey);
@@ -161,6 +212,12 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       generationModelValue = generationModel.value;
     }
 
+    final generationModelContextLength =
+        _settingService.get(generationModelContextLengthKey);
+    if (generationModelContextLength.id != null) {
+      generationModelContextLengthValue = generationModelContextLength.value;
+    }
+
     final generationApiUrl = _settingService.get(generationApiUrlKey);
     if (generationApiUrl.id != null) {
       generationApiUrlValue = generationApiUrl.value;
@@ -184,6 +241,11 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     final frequencyPenalty = _settingService.get(frequencyPenaltyKey);
     if (frequencyPenalty.id != null) {
       frequencyPenaltyValue = frequencyPenalty.value;
+    }
+
+    final presencePenalty = _settingService.get(presencePenaltyKey);
+    if (presencePenalty.id != null) {
+      presencePenaltyValue = presencePenalty.value;
     }
 
     final maxTokens = _settingService.get(maxTokensKey);
@@ -226,6 +288,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     chunkSizeValue = empty;
     chunkOverlapValue = empty;
     embeddingsModelValue = empty;
+    embeddingsModelContextLengthValue = empty;
     embeddingsApiUrlValue = empty;
     embeddingsApiKeyValue = empty;
     embeddingsDimensionsValue = empty;
@@ -236,11 +299,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     searchThresholdValue = empty;
     retrieveTopNResultsValue = empty;
     generationModelValue = empty;
+    generationModelContextLengthValue = empty;
     generationApiUrlValue = empty;
     generationApiKeyValue = empty;
     temperatureValue = empty;
     topPValue = empty;
     frequencyPenaltyValue = empty;
+    presencePenaltyValue = empty;
     maxTokensValue = empty;
     stopValue = empty;
   }
@@ -281,6 +346,17 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         tablePrefix,
         embeddingsModelKey,
         embeddingsModelValue!,
+      );
+    }
+  }
+
+  Future<void> setEmbeddingsModelContextLength() async {
+    if (embeddingsModelContextLengthValue != null &&
+        !hasEmbeddingsModelContextLengthValidationMessage) {
+      await _settingService.set(
+        tablePrefix,
+        embeddingsModelContextLengthKey,
+        embeddingsModelContextLengthValue!,
       );
     }
   }
@@ -409,6 +485,17 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
+  Future<void> setGenerationModelContextLength() async {
+    if (generationModelContextLengthValue != null &&
+        !hasGenerationModelContextLengthValidationMessage) {
+      await _settingService.set(
+        tablePrefix,
+        generationModelContextLengthKey,
+        generationModelContextLengthValue!,
+      );
+    }
+  }
+
   Future<void> setGenerationApiUrl() async {
     if (generationApiUrlValue != null &&
         !hasGenerationApiUrlValidationMessage) {
@@ -462,6 +549,17 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
+  Future<void> setPresencePenalty() async {
+    if (presencePenaltyValue != null &&
+        !hasPresencePenaltyValidationMessage) {
+      await _settingService.set(
+        tablePrefix,
+        presencePenaltyKey,
+        presencePenaltyValue!,
+      );
+    }
+  }
+
   Future<void> setMaxTokens() async {
     if (maxTokensValue != null && !hasMaxTokensValidationMessage) {
       await _settingService.set(
@@ -482,7 +580,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
-  // ignore: avoid_positional_boolean_parameters
   Future<void> setStream(bool value) async {
     await _settingService.set(
       tablePrefix,
@@ -508,6 +605,21 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       );
       embeddingsModelValue = llmProvider.embeddings.model;
 
+      final embeddingModel = llmProvider.embeddings.models.firstWhere(
+        (model) => llmProvider.embeddings.model == model.name,
+        orElse: EmbeddingModel.nullObject,
+      );
+
+      if (embeddingModel.name != 'null') {
+        await _settingService.set(
+          tablePrefix,
+          embeddingsModelContextLengthKey,
+          embeddingModel.contextLength.toString(),
+        );
+        embeddingsModelContextLengthValue =
+            embeddingModel.contextLength.toString();
+      }
+
       final embeddingsApiUrl = '${llmProvider.baseUrl}$embeddingsApiUriPath';
       await _settingService.set(
         tablePrefix,
@@ -515,19 +627,21 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         embeddingsApiUrl,
       );
       embeddingsApiUrlValue = embeddingsApiUrl;
-      
-      final embeddingModel = llmProvider.embeddings.models.firstWhere(
-        (model) => llmProvider.embeddings.model == model.name,
-        orElse: EmbeddingModel.nullObject,
-      );
-      if (llmProvider.embeddings.dimensions != null) {
-        embeddingsDimensionsValue = llmProvider.embeddings.dimensions.toString();
-      } else {
-        if (embeddingModel.name != 'null') {
-          embeddingsDimensionsValue = embeddingModel.dimensions.toString();
+
+      if (llmProvider.embeddings.dimensionsEnabled) {
+        if (llmProvider.embeddings.dimensions != null) {
+          embeddingsDimensionsValue =
+              llmProvider.embeddings.dimensions.toString();
+        } else {
+          if (embeddingModel.name != 'null') {
+            embeddingsDimensionsValue = embeddingModel.dimensions.toString();
+          }
         }
+        await setEmbeddingsDimensions();
       }
-      await setEmbeddingsDimensions();
+      await setEmbeddingsDimensionsEnabled(
+        llmProvider.embeddings.dimensionsEnabled,
+      );
 
       await _settingService.set(
         tablePrefix,
@@ -535,6 +649,21 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         llmProvider.chatCompletions.model,
       );
       generationModelValue = llmProvider.chatCompletions.model;
+
+      final generationModel = llmProvider.chatCompletions.models.firstWhere(
+        (model) => llmProvider.chatCompletions.model == model.name,
+        orElse: ChatModel.nullObject,
+      );
+
+      if (generationModel.name != 'null') {
+        await _settingService.set(
+          tablePrefix,
+          generationModelContextLengthKey,
+          generationModel.contextLength.toString(),
+        );
+        generationModelContextLengthValue =
+            generationModel.contextLength.toString();
+      }
 
       final generationApiUrl = '${llmProvider.baseUrl}$generationApiUriPath'; 
       await _settingService.set(
@@ -565,13 +694,32 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       );
       topPValue = llmProvider.chatCompletions.topP.toString();
 
-      await _settingService.set(
-        tablePrefix,
-        frequencyPenaltyKey,
-        llmProvider.chatCompletions.frequencyPenalty.toString(),
+      if (llmProvider.chatCompletions.frequencyPenaltyEnabled) {
+        await _settingService.set(
+          tablePrefix,
+          frequencyPenaltyKey,
+          llmProvider.chatCompletions.frequencyPenalty.toString(),
+        );
+        frequencyPenaltyValue =
+            llmProvider.chatCompletions.frequencyPenalty.toString();
+      } 
+      await setFrequencyPenaltyEnabled(
+        llmProvider.chatCompletions.frequencyPenaltyEnabled,
       );
-      frequencyPenaltyValue =
-          llmProvider.chatCompletions.frequencyPenalty.toString();
+
+      if (llmProvider.chatCompletions.presencePenaltyEnabled) {
+        await _settingService.set(
+          tablePrefix,
+          presencePenaltyKey,
+          llmProvider.chatCompletions.presencePenalty.toString(),
+        );
+        presencePenaltyValue =
+            llmProvider.chatCompletions.presencePenalty.toString();
+      }
+      await setPresencePenaltyEnabled(
+        llmProvider.chatCompletions.presencePenaltyEnabled,
+      );
+           
 
       if (llmProvider.chatCompletions.stop.isNotEmpty) {
         final stop = llmProvider.chatCompletions.stop.join(',');

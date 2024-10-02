@@ -52,6 +52,11 @@ class SettingService with ListenableServiceMixin {
       );
       _enviromentVariables[embeddingsModelKey] =
           const String.fromEnvironment(embeddingsModelKey);
+      _enviromentVariables[embeddingsModelContextLengthKey] =
+          const String.fromEnvironment(
+        embeddingsModelContextLengthKey,
+        defaultValue: defaultEmbeddingsModelContextLength,
+      );    
       _enviromentVariables[embeddingsApiUrlKey] =
           const String.fromEnvironment(embeddingsApiUrlKey);
       _enviromentVariables[embeddingsApiKey] =
@@ -61,6 +66,11 @@ class SettingService with ListenableServiceMixin {
             embeddingsDimensionsKey, 
             defaultValue: defaultEmbeddingsDimensions,
           );
+      _enviromentVariables[embeddingsDimensionsEnabledKey] = 
+          const String.fromEnvironment(
+            embeddingsDimensionsEnabledKey, 
+            defaultValue: defaultEmbeddingsDimensionsEnabled,
+          );          
       _enviromentVariables[embeddingsApiBatchSizeKey] =
           const String.fromEnvironment(
         embeddingsApiBatchSizeKey,
@@ -91,6 +101,11 @@ class SettingService with ListenableServiceMixin {
       );
       _enviromentVariables[generationModelKey] =
           const String.fromEnvironment(generationModelKey);
+      _enviromentVariables[generationModelContextLengthKey] =
+          const String.fromEnvironment(
+        generationModelContextLengthKey,
+        defaultValue: defaultGenerationModelContextLength,
+      );
       _enviromentVariables[generationApiUrlKey] =
           const String.fromEnvironment(generationApiUrlKey);
       _enviromentVariables[generationApiKey] =
@@ -115,6 +130,20 @@ class SettingService with ListenableServiceMixin {
         frequencyPenaltyKey,
         defaultValue: defaultFrequencyPenalty,
       );
+      _enviromentVariables[frequencyPenaltyEnabledKey] =
+          const String.fromEnvironment(
+        frequencyPenaltyEnabledKey,
+        defaultValue: defaultFrequencyPenaltyEnabled,
+      ); 
+      _enviromentVariables[presencePenaltyKey] = const String.fromEnvironment(
+        presencePenaltyKey,
+        defaultValue: defaultPresencePenalty,
+      );
+      _enviromentVariables[presencePenaltyEnabledKey] =
+          const String.fromEnvironment(
+        presencePenaltyEnabledKey,
+        defaultValue: defaultPresencePenaltyEnabled,
+      );           
       _enviromentVariables[maxTokensKey] = const String.fromEnvironment(
         maxTokensKey,
         defaultValue: defaultMaxTokens,
