@@ -22,7 +22,7 @@ const systemPromptKey = 'SYSTEM_PROMPT';
 const promptTemplateKey = 'PROMPT_TEMPLATE';
 const temperatureKey = 'TEMPERATURE';
 const topPKey = 'TOP_P';
-const repetitionPenaltyKey = 'REPETITION_PENALTY';
+const frequencyPenaltyKey = 'FREQUENCY_PENALTY';
 const maxTokensKey = 'MAX_TOKENS';
 const stopKey = 'STOP';
 const streamKey = 'STREAM';
@@ -57,7 +57,7 @@ Question: {instruction}
 Answer: ''';
 const defaultTemperature = '0.7';
 const defaultTopP = '0.95';
-const defaultRepetitionPenalty = '1.1';
+const defaultFrequencyPenalty = '0';
 const defaultMaxTokens = '256';
 const defaultStream = 'true';
 

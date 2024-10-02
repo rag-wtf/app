@@ -111,9 +111,9 @@ class SettingService with ListenableServiceMixin {
         topPKey,
         defaultValue: defaultTopP,
       );
-      _enviromentVariables[repetitionPenaltyKey] = const String.fromEnvironment(
-        repetitionPenaltyKey,
-        defaultValue: defaultRepetitionPenalty,
+      _enviromentVariables[frequencyPenaltyKey] = const String.fromEnvironment(
+        frequencyPenaltyKey,
+        defaultValue: defaultFrequencyPenalty,
       );
       _enviromentVariables[maxTokensKey] = const String.fromEnvironment(
         maxTokensKey,

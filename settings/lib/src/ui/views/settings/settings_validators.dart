@@ -159,7 +159,7 @@ class SettingsValidators {
     return _validateDoubleRange(value, 0, 1);
   }
 
-  static String? validateRepetitionPenalty(String? value) {
+  static String? validateFrequencyPenalty(String? value) {
     return _validateDoubleRange(value, -2, 2);
   }
 

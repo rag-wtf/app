@@ -49,8 +49,8 @@ class ChatService with ListenableServiceMixin {
         _settingService.get(temperatureKey).value,
       );
   double get _topP => double.parse(_settingService.get(topPKey).value);
-  double get _repetitionPenalty => double.parse(
-        _settingService.get(repetitionPenaltyKey).value,
+  double get _frequencyPenalty => double.parse(
+        _settingService.get(frequencyPenaltyKey).value,
       );
   int get _maxTokens => int.parse(_settingService.get(maxTokensKey).value);
   String get _stop => _settingService.get(stopKey).value;
@@ -414,7 +414,7 @@ class ChatService with ListenableServiceMixin {
           _generationApiUrl,
           _generationApiKey,
           _model,
-          _repetitionPenalty,
+          _frequencyPenalty,
           _maxTokens,
           _stop,
           _temperature,
@@ -531,7 +531,7 @@ class ChatService with ListenableServiceMixin {
       _generationApiUrl,
       _generationApiKey,
       _model,
-      _repetitionPenalty,
+      _frequencyPenalty,
       _maxTokens,
       _stop,
       _temperature,
@@ -557,7 +557,7 @@ class ChatService with ListenableServiceMixin {
         _generationApiUrl,
         _generationApiKey,
         _model,
-        _repetitionPenalty,
+        _frequencyPenalty,
         _maxTokens,
         _stop,
         _temperature,
@@ -643,7 +643,7 @@ class ChatService with ListenableServiceMixin {
         _generationApiUrl,
         _generationApiKey,
         _model,
-        _repetitionPenalty,
+        _frequencyPenalty,
         _maxTokens,
         _stop,
         _temperature,

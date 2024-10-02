@@ -70,8 +70,8 @@ import 'package:ui/ui.dart';
       validator: SettingsValidators.validateTopP,
     ),
     FormTextField(
-      name: 'repetitionPenalty',
-      validator: SettingsValidators.validateRepetitionPenalty,
+      name: 'frequencyPenalty',
+      validator: SettingsValidators.validateFrequencyPenalty,
     ),
     FormTextField(
       name: 'maxTokens',
@@ -411,15 +411,15 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             ),
                             InputField(
                               isDense: isDense,
-                              labelText: 'Repetition Penalty',
+                              labelText: 'Frequency Penalty',
                               prefixIcon: Icon(
                                 Icons.repeat,
                                 color: iconColor,
                               ),
                               hintText: '-2 to 2',
                               errorText:
-                                  viewModel.repetitionPenaltyValidationMessage,
-                              controller: repetitionPenaltyController,
+                                  viewModel.frequencyPenaltyValidationMessage,
+                              controller: frequencyPenaltyController,
                               textInputType: TextInputType.number,
                             ),
                             InputField(
@@ -535,7 +535,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     generationApiKeyController.addListener(viewModel.setGenerationApiKey);
     temperatureController.addListener(viewModel.setTemperature);
     topPController.addListener(viewModel.setTopP);
-    repetitionPenaltyController.addListener(viewModel.setRepetitionPenalty);
+    frequencyPenaltyController.addListener(viewModel.setFrequencyPenalty);
     maxTokensController.addListener(viewModel.setMaxTokens);
     stopController.addListener(viewModel.setStop);
   }

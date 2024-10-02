@@ -181,9 +181,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       topPValue = topP.value;
     }
 
-    final repetitionPenalty = _settingService.get(repetitionPenaltyKey);
-    if (repetitionPenalty.id != null) {
-      repetitionPenaltyValue = repetitionPenalty.value;
+    final frequencyPenalty = _settingService.get(frequencyPenaltyKey);
+    if (frequencyPenalty.id != null) {
+      frequencyPenaltyValue = frequencyPenalty.value;
     }
 
     final maxTokens = _settingService.get(maxTokensKey);
@@ -240,7 +240,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     generationApiKeyValue = empty;
     temperatureValue = empty;
     topPValue = empty;
-    repetitionPenaltyValue = empty;
+    frequencyPenaltyValue = empty;
     maxTokensValue = empty;
     stopValue = empty;
   }
@@ -451,13 +451,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
-  Future<void> setRepetitionPenalty() async {
-    if (repetitionPenaltyValue != null &&
-        !hasRepetitionPenaltyValidationMessage) {
+  Future<void> setFrequencyPenalty() async {
+    if (frequencyPenaltyValue != null &&
+        !hasFrequencyPenaltyValidationMessage) {
       await _settingService.set(
         tablePrefix,
-        repetitionPenaltyKey,
-        repetitionPenaltyValue!,
+        frequencyPenaltyKey,
+        frequencyPenaltyValue!,
       );
     }
   }
@@ -567,10 +567,10 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
       await _settingService.set(
         tablePrefix,
-        repetitionPenaltyKey,
+        frequencyPenaltyKey,
         llmProvider.chatCompletions.frequencyPenalty.toString(),
       );
-      repetitionPenaltyValue =
+      frequencyPenaltyValue =
           llmProvider.chatCompletions.frequencyPenalty.toString();
 
       if (llmProvider.chatCompletions.stop.isNotEmpty) {
