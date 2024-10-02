@@ -44,6 +44,45 @@
     }
   },
   {
+    "name": "Gemini via LiteLLM",
+    "base_url": "http://localhost:4000/v1",
+    "embeddings": {
+      "model": "text-embedding-004",
+      "dimensions": 768,
+      "models": [
+        {
+          "name": "text-embedding-004",
+          "dimensions": 768,
+          "context_length": 2048
+        },
+        {
+          "name": "text-multilingual-embedding-002",
+          "dimensions": 768,
+          "context_length": 8192
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "gemini-1.5-flash",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "gemini-1.5-flash",
+          "context_length": 1000000
+        },
+        {
+          "name": "gemini-1.5-pro",
+          "context_length": 2000000
+        }
+      ]
+    }
+  },
+  {
     "name": "Ollama",
     "base_url": "http://localhost:11434/v1",
     "embeddings": {
