@@ -6,6 +6,7 @@ part 'llm_provider.g.dart';
 @freezed
 sealed class LlmProvider with _$LlmProvider {
   const factory LlmProvider({
+    required String id,
     required String name,
     required String baseUrl,
     required Embeddings embeddings,

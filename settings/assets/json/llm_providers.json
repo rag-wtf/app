@@ -1,5 +1,6 @@
 [
   {
+    "id": "openai",
     "name": "OpenAI",
     "base_url": "https://api.openai.com/v1",
     "embeddings": {
@@ -44,6 +45,7 @@
     }
   },
   {
+    "id": "gemini",
     "name": "Gemini via LiteLLM",
     "base_url": "http://localhost:4000/v1",
     "embeddings": {
@@ -83,6 +85,7 @@
     }
   },
   {
+    "id": "mistral",
     "name": "Mistral AI",
     "base_url": "https://api.mistral.ai/v1",
     "embeddings": {
@@ -130,6 +133,65 @@
     }
   },
   {
+    "id": "cohere",
+    "name": "Cohere via LiteLLM",
+    "base_url": "http://localhost:4000/v1",
+    "embeddings": {
+      "model": "embed-english-v3.0",
+      "dimensions": 1024,
+      "models": [
+        {
+          "name": "embed-english-v3.0",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "embed-english-light-v3.0",
+          "dimensions": 384,
+          "context_length": 512
+        },
+        {
+          "name": "embed-multilingual-v3.0",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "embed-multilingual-light-v3.0",
+          "dimensions": 384,
+          "context_length": 512
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "command-r",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "command-r",
+          "context_length": 131072
+        },        
+        {
+          "name": "command-r-08-2024",
+          "context_length": 131072
+        },        
+        {
+          "name": "command-r-plus",
+          "context_length": 131072
+        },
+        {
+          "name": "command-r-plus-08-2024",
+          "context_length": 131072
+        }
+      ]
+    }
+  },  
+  {
+    "id": "ollama",
     "name": "Ollama",
     "base_url": "http://localhost:11434/v1",
     "embeddings": {
