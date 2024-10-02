@@ -80,7 +80,7 @@ class CheckboxOrSwitchListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the current screen width
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     // Determine which widget to display based on the screen width
     if (screenWidth < screenWidthBreakpoint) {
