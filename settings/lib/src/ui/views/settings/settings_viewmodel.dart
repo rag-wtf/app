@@ -628,17 +628,15 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       );
       embeddingsApiUrlValue = embeddingsApiUrl;
 
-      if (llmProvider.embeddings.dimensionsEnabled) {
-        if (llmProvider.embeddings.dimensions != null) {
-          embeddingsDimensionsValue =
-              llmProvider.embeddings.dimensions.toString();
-        } else {
-          if (embeddingModel.name != 'null') {
-            embeddingsDimensionsValue = embeddingModel.dimensions.toString();
-          }
+      if (llmProvider.embeddings.dimensions != null) {
+        embeddingsDimensionsValue =
+            llmProvider.embeddings.dimensions.toString();
+      } else {
+        if (embeddingModel.name != 'null') {
+          embeddingsDimensionsValue = embeddingModel.dimensions.toString();
         }
-        await setEmbeddingsDimensions();
       }
+      await setEmbeddingsDimensions();      
       await setEmbeddingsDimensionsEnabled(
         llmProvider.embeddings.dimensionsEnabled,
       );
