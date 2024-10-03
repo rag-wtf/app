@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/services/setting.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:stacked/stacked.dart';
@@ -15,6 +19,8 @@ class SettingService with ListenableServiceMixin {
   final _settingRepository = locator<SettingRepository>();
   void Function()? clearFormValuesFunction;
   final _log = getLogger('SettingService');
+  late Map<String, LlmProvider> _llmProviders;
+  Map<String, LlmProvider> get llmProviders => _llmProviders;
 
   Setting get(String key) {
     Setting setting;
@@ -159,6 +165,7 @@ class SettingService with ListenableServiceMixin {
   Future<void> initialise(String tablePrefix) async {
     if (_settings.isEmpty) {
       _initialiseEnvironmentVariables();
+      await _loadLlmProviders();
       final isSchemaCreated =
           await _settingRepository.isSchemaCreated(tablePrefix);
       _log.d('isSchemaCreated $isSchemaCreated');
@@ -188,6 +195,17 @@ class SettingService with ListenableServiceMixin {
     }
   }
 
+  Future<void> _loadLlmProviders() async {
+    final json = await rootBundle.loadString('packages/settings/assets/json/llm_providers.json');
+    final llmProviderMaps = List<Map<String, dynamic>>.from(
+      jsonDecode(json) as List,
+    );
+    _llmProviders = {
+      for (final llmProviderMap in llmProviderMaps)
+        llmProviderMap['id'] as String: LlmProvider.fromJson(llmProviderMap),
+    };
+  }
+  
   Future<void> clearData(String tablePrefix) async {
     await _settingRepository.deleteAllSettings(tablePrefix);
     await _settingRepository.createSetting(

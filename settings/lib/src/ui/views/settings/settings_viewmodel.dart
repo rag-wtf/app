@@ -1,9 +1,5 @@
 // ignore_for_file: avoid_positional_boolean_parameters
-
-import 'dart:convert';
-
 import 'package:database/database.dart';
-import 'package:flutter/services.dart';
 import 'package:settings/src/app/app.dialogs.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
@@ -52,17 +48,14 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   bool _presencePenaltyEnabled = true;
   bool get presencePenaltyEnabled => _presencePenaltyEnabled;  
 
-  late List<LlmProvider> _llmProviders;
-  List<LlmProvider> get llmProviders => _llmProviders;
-  String get llmProvider => _settingService.get(llmProviderKey).value;
+  String get llmProviderId => _settingService.get(llmProviderKey).value;
+  Map<String, LlmProvider> get llmProviders => _settingService.llmProviders;
+
   LlmProvider? get llmProviderSelected {
-    final value = _settingService.get(llmProviderKey).value;
-    if (llmProvider.isEmpty) {
+    if (llmProviderId.isEmpty) {
       return null;
     } else {
-      return llmProviders.firstWhere(
-        (llmProvider) => llmProvider.name == value,
-      );
+      return llmProviders[llmProviderId];
     }
   }
 
@@ -116,7 +109,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       await connectDatabase();
     }
     setBusy(true);
-    await loadLlmProviders();
     if (inPackage) {
       await _settingService.initialise(tablePrefix);
     }
@@ -155,7 +147,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsModelValue = embeddingsModel.value;
     }
 
-    final embeddingsModelContextLength = _settingService.get(embeddingsModelContextLengthKey);
+    final embeddingsModelContextLength =
+        _settingService.get(embeddingsModelContextLengthKey);
     if (embeddingsModelContextLength.id != null) {
       embeddingsModelContextLengthValue = embeddingsModelContextLength.value;
     }
@@ -258,13 +251,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       stopValue = stop.value;
     }
     setBusy(false);
-  }
-
-  Future<void> loadLlmProviders() async {
-    final json = await rootBundle.loadString('packages/settings/assets/json/llm_providers.json');
-    _llmProviders = List<Map<String, dynamic>>.from(
-      jsonDecode(json) as List,
-    ).map(LlmProvider.fromJson).toList();
   }
 
   Future<void> connectDatabase() async {

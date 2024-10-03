@@ -10,11 +10,13 @@ import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:dio/dio.dart';
+import 'package:settings/settings.dart';
 
 enum ApiKeyType { header, body }
 
 class ChatApiService {
   final _gzipEncoder = locator<GZipEncoder>();
+  final _settingService = locator<SettingService>();
   final _streamResponseService = locator<StreamResponseService>();
   final _log = getLogger('ChatApiService');
 
@@ -255,11 +257,17 @@ class ChatApiService {
     return messagesMap;
   }
 
-  dynamic getEmbeddingInput(String input) {
+  dynamic getEmbeddingInput(String model, String input) {
+    dynamic embeddingInput;
     try {
-      return jsonDecode(input);
+      embeddingInput = jsonDecode(input);
     } catch (e) {
-      return input;
+      embeddingInput = input;
+    }
+    if (embeddingInput is String && _isCohereEmbeddingModel(model)) {
+      return [embeddingInput];
+    } else {
+      return embeddingInput;
     }
   }
 
@@ -278,11 +286,14 @@ class ChatApiService {
     bool compressed = true,
     bool embeddingsDimensionsEnabled = true,
   }) async {
-    final embeddingInput = getEmbeddingInput(input);
+    final embeddingInput = getEmbeddingInput(model, input);
     _log.d('embeddingInput ${jsonEncode(embeddingInput)}');
     final data = {'model': model, 'input': embeddingInput};
     if (embeddingsDimensionsEnabled) {
       data['dimensions'] = dimensions;
+    }
+    if (_isCohereEmbeddingModel(model)) {
+      data['input_type'] = 'search_query';
     }
 
     final response = await dio.post<Map<String, dynamic>>(
@@ -301,5 +312,10 @@ class ChatApiService {
     final embeddingOutput = response.data;
     _log.d('embeddingOutput ${jsonEncode(embeddingOutput)}');
     return embeddingOutput;
+  }
+
+  bool _isCohereEmbeddingModel(String embeddingModel) {
+    final models = _settingService.llmProviders['cohere']?.embeddings.models;
+    return models?.firstWhere((model) => model.name == embeddingModel) != null;
   }
 }

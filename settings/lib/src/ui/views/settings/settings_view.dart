@@ -143,20 +143,20 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           borderSide: const BorderSide(color: Colors.grey),
                         ),
                       ),
-                      value: viewModel.llmProvider,
-                      items: viewModel.llmProviders.map(
-                        (llmProvider) {
-                          return DropdownMenuItem(
-                            value: llmProvider.name,
-                            child: Text(llmProvider.name),
-                          );
-                        },
-                      ).toList()
+                      value: viewModel.llmProviderId,
+                      items: viewModel.llmProviders.entries
+                          .map(
+                            (llmProviderEntry) => DropdownMenuItem(
+                              value: llmProviderEntry.key,
+                              child: Text(llmProviderEntry.value.name),
+                            ),
+                          )
+                          .toList()
                         ..insert(
                           0,
                           const DropdownMenuItem(
                             value: '',
-                            child: Text('Please select'),
+                            child: Text('Select a LLM provider'),
                           ),
                         ),
                       onChanged: (value) async {
