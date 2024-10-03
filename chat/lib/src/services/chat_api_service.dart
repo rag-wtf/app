@@ -113,7 +113,6 @@ class ChatApiService {
   ) {
     final data = {
       'model': model,
-      '': frequencyPenalty,
       'max_tokens': maxTokens,
       if (stop.isNotEmpty) ...{'stop': stop.split(',')},
       'temperature': temperature,
