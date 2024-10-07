@@ -946,10 +946,10 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_wasm
-      sha256: cdab217a2544360a66f35ee545162eae843bc7421294e9780d0a77b9bbbb801b
+      sha256: b107c80c16f7a763c2a09c2e7930db7cf7df2c0fc1ca8d4e24f53678c7f4d2a1
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.22+14"
+    version: "1.0.1+15"
   sync_http:
     dependency: transitive
     description:
