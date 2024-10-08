@@ -614,6 +614,16 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       );
       embeddingsApiUrlValue = embeddingsApiUrl;
 
+      final maxBatchSize = llmProvider.embeddings.maxBatchSize;
+      if (maxBatchSize != null) {
+        await _settingService.set(
+          tablePrefix,
+          embeddingsApiBatchSizeKey,
+          maxBatchSize.toString(),
+        );
+        embeddingsApiBatchSizeValue = maxBatchSize.toString();
+      }
+
       if (llmProvider.embeddings.dimensions != null) {
         embeddingsDimensionsValue =
             llmProvider.embeddings.dimensions.toString();

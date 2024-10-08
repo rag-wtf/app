@@ -23,6 +23,7 @@ sealed class Embeddings with _$Embeddings {
     required String model,
     required List<EmbeddingModel> models,
     int? dimensions,
+    int? maxBatchSize,
     @Default(true) bool dimensionsEnabled,
   }) = _Embeddings;
 
