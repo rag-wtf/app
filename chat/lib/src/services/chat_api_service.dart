@@ -316,6 +316,6 @@ class ChatApiService {
 
   bool _isCohereEmbeddingModel(String embeddingModel) {
     final models = _settingService.llmProviders['cohere']?.embeddings.models;
-    return models?.firstWhere((model) => model.name == embeddingModel) != null;
+    return models?.any((model) => model.name == embeddingModel) ?? false;
   }
 }
