@@ -10,7 +10,6 @@ dependencies:
   archive: ^3.6.1
   chat:
     path: chat
-  confirm_dialog: ^1.0.3
   database:
     path: database  
   dio: ^5.6.0
@@ -34,6 +33,8 @@ dependencies:
   stacked_themes: ^0.3.13
   surrealdb_js: ^1.0.1+7
   surrealdb_wasm: ^1.0.1+15
+  ui:
+    path: ui
   url_launcher: ^6.3.0
 
 dev_dependencies:

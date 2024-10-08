@@ -7,6 +7,7 @@
 import 'package:stacked_services/stacked_services.dart';
 
 import 'app.locator.dart';
+import '../ui/dialogs/confirm_dialog.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.dart';
 import 'package:document/src/ui/dialogs/embedding/embedding_dialog.dart';
 import 'package:document/src/ui/dialogs/info_alert/info_alert_dialog.dart';
@@ -19,6 +20,7 @@ enum DialogType {
   embedding,
   systemPrompt,
   promptTemplate,
+  confirm,
 }
 
 void setupDialogUi() {
@@ -35,6 +37,8 @@ void setupDialogUi() {
         SystemPromptDialog(request: request, completer: completer),
     DialogType.promptTemplate: (context, request, completer) =>
         PromptTemplateDialog(request: request, completer: completer),
+    DialogType.confirm: (context, request, completer) =>
+        ConfirmDialog(request: request, completer: completer),
   };
 
   dialogService.registerCustomDialogBuilders(builders);

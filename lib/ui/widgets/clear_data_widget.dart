@@ -1,4 +1,3 @@
-import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:rag/ui/views/home/home_viewmodel.dart';
 
@@ -47,12 +46,7 @@ class _ClearDataWidgetState extends State<ClearDataWidget> {
         FilledButton.icon(
           style: FilledButton.styleFrom(backgroundColor: Colors.red),
           onPressed: () async {
-            if (await confirm(
-              content: const Text('''
-Data deleted permanently will not able to recover.
-Are you sure you want to continue?'''),
-              context,
-            )) {
+            if (await widget.viewModel.showClearDataDialog()) {
               await widget.viewModel.deleteAllData();
               widget.leftWidgetTabController.animateTo(0);
             }

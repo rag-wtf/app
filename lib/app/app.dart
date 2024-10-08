@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rag/app/app.router.dart';
 import 'package:rag/l10n/arb/app_localizations.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
+import 'package:rag/ui/dialogs/confirm_dialog.dart';
 import 'package:rag/ui/views/home/home_view.dart';
 import 'package:rag/ui/views/startup/startup_view.dart';
 import 'package:settings/settings.dart';
@@ -85,6 +86,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     StackedDialog(classType: EmbeddingDialog),
     StackedDialog(classType: SystemPromptDialog),
     StackedDialog(classType: PromptTemplateDialog),
+    StackedDialog(classType: ConfirmDialog),
     // @stacked-dialog
   ],
   logger: StackedLogger(),
