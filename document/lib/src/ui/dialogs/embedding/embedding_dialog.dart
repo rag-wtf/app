@@ -161,7 +161,9 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
     final embedding = request.data as Embedding;
     idController.text = embedding.id.toString();
     contentController.text = embedding.content;
-    embeddingController.text = embedding.embedding.join(', ');
+    if (embedding.embedding != null && embedding.embedding!.isNotEmpty) {
+      embeddingController.text = embedding.embedding!.join(', ');
+    }
     metadataController.text = embedding.metadata.toString();
     createdController.text = embedding.created.toString();
     updatedController.text = embedding.updated.toString();

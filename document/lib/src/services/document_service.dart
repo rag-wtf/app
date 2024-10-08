@@ -437,17 +437,12 @@ class DocumentService with ListenableServiceMixin {
     }
 
     final now = DateTime.now();
-    final dimensions = int.parse(
-      _settingService.get(embeddingsDimensionsKey).value,
-    );
-    final emptyEmbedding = List<double>.filled(dimensions, 0);
     final embeddings = List<Embedding>.from(
       documentItems
           .map(
             (item) => Embedding(
               id: Ulid().toString(),
               content: item['content'] as String,
-              embedding: emptyEmbedding,
               metadata: item['metadata'],
             ),
           )

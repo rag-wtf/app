@@ -7,7 +7,7 @@ part 'embedding.g.dart';
 sealed class Embedding with _$Embedding {
   const factory Embedding({
     required String content,
-    required List<double> embedding,
+    List<double>? embedding,
     String? id,
     Object? metadata,
     @JsonKey(includeToJson: false) double? score,
@@ -35,7 +35,7 @@ sealed class Embedding with _$Embedding {
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD content ON {prefix}_$tableName TYPE string;
-DEFINE FIELD embedding ON {prefix}_$tableName TYPE array<float>;
+DEFINE FIELD embedding ON {prefix}_$tableName TYPE option<array<float>>;
 DEFINE FIELD metadata ON {prefix}_$tableName TYPE option<object>;
 DEFINE FIELD created ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
 DEFINE FIELD updated ON {prefix}_$tableName TYPE datetime DEFAULT time::now();
