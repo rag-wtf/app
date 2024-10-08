@@ -29,7 +29,7 @@ class MainView extends StackedView<MainViewModel> {
           ),
           Flexible(
             flex: 6,
-            child: ChatView(showDialogFunction: viewModel.showEmbeddingDialog),
+            child: ChatView(showEmbeddingDialogFunction: viewModel.showEmbeddingDialog),
           ),
         ],
       ),

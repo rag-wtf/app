@@ -13,7 +13,8 @@ import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
   ChatView({
-    required this.showDialogFunction,
+    required this.showEmbeddingDialogFunction,
+    required this.showNewChatDialogFunction,
     this.tablePrefix = 'main',
     this.leftWidgetTabController,
     super.key,
@@ -21,7 +22,8 @@ class ChatView extends StackedView<ChatViewModel> {
   final String tablePrefix;
   final _scrollController = ScrollController();
   final TabController? leftWidgetTabController;
-  final Future<void> Function(Embedding embedding) showDialogFunction;
+  final Future<void> Function(Embedding embedding) showEmbeddingDialogFunction;
+  final Future<bool> Function() showNewChatDialogFunction;
 
   @override
   Widget builder(
@@ -57,7 +59,7 @@ class ChatView extends StackedView<ChatViewModel> {
               itemBuilder: (context, index) {
                 return MessageWidget(
                   viewModel.messages[index],
-                  showDialogFunction,
+                  showEmbeddingDialogFunction,
                 );
               },
             ),
@@ -96,7 +98,7 @@ class ChatView extends StackedView<ChatViewModel> {
                   padding: buttonPadding,
                   onPressed: disabledNewChatButton
                           ? null
-                          : viewModel.newChat,
+                          : () async => _newChat(viewModel),
                   icon: Icon(
                     Icons.add,
                     color: disabledNewChatButton
@@ -129,6 +131,17 @@ class ChatView extends StackedView<ChatViewModel> {
     leftWidgetTabController?.animateTo(1);
     _scrollToBottom();
     await viewModel.addMessage(viewModel.userId, text);
+  }
+
+  Future<void> _newChat(ChatViewModel viewModel) async {    
+    if (viewModel.isGenerating && viewModel.isStreaming) {
+      if (await showNewChatDialogFunction()) {
+        await viewModel.stop();
+        viewModel.newChat();
+      }
+    } else {
+      viewModel.newChat();
+    }
   }
 
   void _scrollToBottom() {

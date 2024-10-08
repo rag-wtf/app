@@ -137,13 +137,24 @@ class HomeViewModel extends BaseViewModel {
   Future<bool> showClearDataDialog() async {
     final response = await _dialogService.showCustomDialog(
       variant: DialogType.confirm,
-      title: 'Clear Data',
+      title: 'Clear data',
       description: '''
 Data deleted permanently will not able to recover.
 Are you sure you want to continue?''',
     );
     return response?.confirmed ?? false;
   }
+
+  Future<bool> showNewChatDialog() async {
+    final response = await _dialogService.showCustomDialog(
+      variant: DialogType.confirm,
+      title: 'New chat',
+      description: '''
+Starting a new chat will stop the current conversation.
+Are you sure you want to proceed?''',
+    );
+    return response?.confirmed ?? false;
+  }  
 
   Future<void> showSystemPromptDialog() async {
     await _dialogService.showCustomDialog(
