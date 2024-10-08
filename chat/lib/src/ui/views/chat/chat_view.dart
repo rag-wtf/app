@@ -80,6 +80,8 @@ class ChatView extends StackedView<ChatViewModel> {
               buttonPadding = const EdgeInsets.all(4);
               buttonIconSize = 24;
             }
+            final disabledNewChatButton =
+                viewModel.isGenerating && !viewModel.isStreaming;
             return MessageBar(
               isSendButtonBusy: viewModel.isGenerating,
               sendButtonColor: Theme.of(context).colorScheme.primary,
@@ -87,14 +89,19 @@ class ChatView extends StackedView<ChatViewModel> {
               sendButtonPadding: buttonPadding,
               sendButtonIconSize: buttonIconSize,
               onSend: (text) async => _onSend(viewModel, text),
+              onStop: viewModel.isStreaming ? viewModel.stop : null,
               prefixIcon: Padding(
                 padding: buttonMargin,
                 child: IconButton(
                   padding: buttonPadding,
-                  onPressed: viewModel.newChat,
+                  onPressed: disabledNewChatButton
+                          ? null
+                          : viewModel.newChat,
                   icon: Icon(
                     Icons.add,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: disabledNewChatButton
+                        ? Colors.grey
+                        : Theme.of(context).colorScheme.primary,
                     size: buttonIconSize,
                   ),
                 ),

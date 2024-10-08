@@ -10,6 +10,7 @@ import 'package:chat/src/services/message.dart';
 import 'package:chat/src/services/message_embedding.dart';
 import 'package:chat/src/services/message_embedding_repository.dart';
 import 'package:chat/src/services/message_repository.dart';
+import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:settings/settings.dart';
@@ -25,7 +26,7 @@ class ChatService with ListenableServiceMixin {
   bool isGeneratingMessage = false;
   List<Chat> get chats => _chats.toList();
   List<Message> get messages => _messages.toList();
-  bool get _isStreaming => bool.parse(
+  bool get isStreaming => bool.parse(
         _settingService.get(streamKey).value,
       );
   String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
@@ -81,6 +82,7 @@ class ChatService with ListenableServiceMixin {
   int _totalChats = -1;
   int _totalMessages = -1;
   late String _tablePrefix;
+  StreamResponseService? _streamResponseService;
   final _log = getLogger('ChatService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
@@ -510,7 +512,7 @@ class ChatService with ListenableServiceMixin {
       if (role == Role.user) {
         isGeneratingMessage = true;
         _addLoadingMessage(tablePrefix); // messages[0] status is sending
-        if (_isStreaming) {
+        if (isStreaming) {
           await _rag(tablePrefix, text);
         } else {
           final generatedText = await _rag(tablePrefix, text);
@@ -535,7 +537,7 @@ class ChatService with ListenableServiceMixin {
     void Function()? onDone,
     bool? cancelOnError,
   }) async {
-    await _chatApiService.generateStream(
+    _streamResponseService = await _chatApiService.generateStream(
       messages,
       defaultChatWindow,
       _systemPrompt,
@@ -647,7 +649,7 @@ class ChatService with ListenableServiceMixin {
       prompt = input;
     }
 
-    if (_isStreaming) {
+    if (isStreaming) {
       await generateMessageText(
         prompt,
         _onMessageTextResponse,
@@ -674,6 +676,14 @@ class ChatService with ListenableServiceMixin {
         presencePenaltyEnabled: _presencePenaltyEnabled,
       );
       return generatedText;
+    }
+  }
+
+  Future<void> stopGenerating() async {
+    if (_streamResponseService != null) {
+        await _streamResponseService!.cancel();
+        _streamResponseService = null;
+        await _onMessageTextResponseCompleted();
     }
   }
 }

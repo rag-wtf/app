@@ -21,6 +21,8 @@ class ChatViewModel extends ReactiveViewModel {
 
   bool get isGenerating => _chatService.isGeneratingMessage;
 
+  bool get isStreaming => _chatService.isStreaming;
+
   Future<void> addMessage(
     String authorId,
     String text,
@@ -40,5 +42,10 @@ class ChatViewModel extends ReactiveViewModel {
 
   void newChat() {
     _chatService.newChat();
+  }
+
+  Future<void> stop() async {
+    await _chatService.stopGenerating();
+    notifyListeners();
   }
 }

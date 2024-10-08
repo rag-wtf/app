@@ -143,7 +143,7 @@ class ChatApiService {
     return data;
   }
 
-  Future<void> generateStream(
+  Future<StreamResponseService> generateStream(
     List<chat_message.Message> messages,
     int chatWindow,
     String systemPrompt,
@@ -204,6 +204,8 @@ class ChatApiService {
       onDone: onDone,
       cancelOnError: cancelOnError,
     );
+    
+    return _streamResponseService;
   }
 
   List<Map<String, dynamic>> _getMessages(

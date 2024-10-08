@@ -57,6 +57,7 @@ class MessageBar extends StatelessWidget {
     this.onTextChanged,
     this.onTapCloseReply,
     this.prefixIcon,
+    this.onStop,
   });
   final bool replying;
   final String replyingTo;
@@ -75,6 +76,7 @@ class MessageBar extends StatelessWidget {
   final bool isSendButtonBusy;
   final void Function(String)? onTextChanged;
   final void Function(String) onSend;
+  final void Function()? onStop;
   final void Function()? onTapCloseReply;
   final Widget? prefixIcon;
   static final textFieldBorderRadius = BorderRadius.circular(30);
@@ -184,13 +186,24 @@ class MessageBar extends StatelessWidget {
                       ),
                       prefixIcon: prefixIcon,
                       suffixIcon: isSendButtonBusy
-                          ? AvatarBrick(
+                          ? onStop == null ? AvatarBrick(
                               isLoading: true,
                               size: Size(
                                 sendButtonIconSize + 8,
                                 sendButtonIconSize + 8,
                               ),
                               backgroundColor: Colors.transparent,
+                            ) : Padding(
+                              padding: sendButtonMargin,
+                              child: IconButton(
+                                padding: sendButtonPadding,
+                                onPressed: onStop,
+                                icon: Icon(
+                                  Icons.stop,
+                                  color: sendButtonColor,
+                                  size: sendButtonIconSize,
+                                ),
+                              ),
                             )
                           : Padding(
                               padding: sendButtonMargin,
