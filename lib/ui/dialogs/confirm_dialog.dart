@@ -22,50 +22,55 @@ class ConfirmDialog extends StackedView<BaseViewModel> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              request.title ?? 'Confirm Dialog',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            if (request.description != null) ...[
-              verticalSpaceMedium,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 400,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                request.description!,
+                request.title ?? 'Confirm Dialog',
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
                 ),
-                maxLines: 3,
-                softWrap: true,
               ),
-            ],
-            verticalSpaceMedium,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    completer(DialogResponse());
-                  },
-                  child: const Text('No'),
-                ),
-                horizontalSpaceSmall,
-                ElevatedButton(
-                  onPressed: () async {
-                    completer(DialogResponse(confirmed: true));
-                  },
-                  child: const Text('Yes'),
+              if (request.description != null) ...[
+                verticalSpaceMedium,
+                Text(
+                  request.description!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                  maxLines: 3,
+                  softWrap: true,
                 ),
               ],
-            ),
-          ],
+              verticalSpaceMedium,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      completer(DialogResponse());
+                    },
+                    child: const Text('No'),
+                  ),
+                  horizontalSpaceSmall,
+                  ElevatedButton(
+                    onPressed: () async {
+                      completer(DialogResponse(confirmed: true));
+                    },
+                    child: const Text('Yes'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
