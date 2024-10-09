@@ -4,7 +4,6 @@ import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
-import 'package:settings/src/ui/widgets/settings/settings_expansion_panel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:ui/ui.dart';
@@ -172,7 +171,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                   ),
                   ExpansionPanelList(
                     children: [
-                      SettingsExpansionPanel(
+                      SimpleExpansionPanel(
                         headerText: 'Splitting',
                         body: Column(
                           children: [
@@ -217,7 +216,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         isExpanded: viewModel.isPanelExpanded(0),
                       ).build(context),
-                      SettingsExpansionPanel(
+                      SimpleExpansionPanel(
                         headerText: 'Indexing',
                         body: Column(
                           children: [
@@ -358,7 +357,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         isExpanded: viewModel.isPanelExpanded(1),
                       ).build(context),
-                      SettingsExpansionPanel(
+                      SimpleExpansionPanel(
                         headerText: 'Retrieval',
                         body: Column(
                           children: [
@@ -404,7 +403,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         isExpanded: viewModel.isPanelExpanded(2),
                       ).build(context),
-                      SettingsExpansionPanel(
+                      SimpleExpansionPanel(
                         headerText: 'Generation',
                         body: Column(
                           children: [

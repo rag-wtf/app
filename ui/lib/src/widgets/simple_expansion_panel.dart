@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SettingsExpansionPanel {
-  const SettingsExpansionPanel({
+class SimpleExpansionPanel {
+  const SimpleExpansionPanel({
     required this.headerText,
     required this.body,
     required this.isExpanded,
