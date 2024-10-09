@@ -116,35 +116,23 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
             Expanded(
               child: ListView(
                 children: [
-                  InputField(
+                  InputFieldDropdown<ConnectionSetting>(
                     isDense: isDense,
                     hintText: 'Name',
                     controller: nameController,
                     errorText: viewModel.nameValidationMessage,
-                    // REF: https://gist.github.com/slightfoot/f0b753606c97d8a2c06659803c12d858
-                    suffixIcon: PopupMenuButton<String>(
-                      icon: const Icon(Icons.arrow_drop_down),
-                      onSelected: (String connectionNameKey) async {
-                        final connectionKey = connectionNameKey ==
-                                ConnectionDialogModel.newConnectionKey
-                            ? connectionNameKey
-                            : connectionNameKey.substring(
-                                0,
-                                connectionNameKey.indexOf('_'),
-                              );
-                        await viewModel.onConnectionSelected(connectionKey);
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return viewModel.connectionNames
-                            .map<PopupMenuItem<String>>(
-                                (ConnectionSetting name) {
-                          return PopupMenuItem(
-                            value: name.key,
-                            child: Text(name.value),
-                          );
-                        }).toList();
-                      },
-                    ),
+                    isLoading: viewModel.isBusy,
+                    items: viewModel.connectionNames,
+                    getItemValue: (ConnectionSetting name) => name.key,
+                    getItemDisplayText: (ConnectionSetting name) => name.value,
+                    onSelected: (ConnectionSetting selectedName) async {
+                      final connectionKey = selectedName.key ==
+                              ConnectionDialogModel.newConnectionKey
+                          ? selectedName.key
+                          : selectedName.key
+                              .substring(0, selectedName.key.indexOf('_'));
+                      await viewModel.onConnectionSelected(connectionKey);
+                    },
                   ),
                   verticalSpaceTiny,
                   InputField(
