@@ -52,6 +52,10 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
         ConnectionDialogModel.newConnectionKey;
     final showDeleteButton = showClearTextButton;
     final isDense = MediaQuery.sizeOf(context).width < 600;
+    final notMemAndIndxDB = viewModel.protocol != 'mem' &&
+                      viewModel.protocol != 'indxdb';
+    final checkboxLabel =
+        notMemAndIndxDB ? 'Remember password' : 'Connect automatically';
     return AdaptiveDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
@@ -182,6 +186,8 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                             if (viewModel.protocol == 'mem' ||
                                 viewModel.protocol == 'indxdb') {
                               addressPortController.clear();
+                              usernameController.clear();
+                              passwordController.clear();
                             }
                           },
                         ),
@@ -209,8 +215,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     errorText: viewModel.databaseValidationMessage,
                     showClearTextButton: showClearTextButton,
                   ),
-                  if (viewModel.protocol != 'mem' &&
-                      viewModel.protocol != 'indxdb') ...[
+                  if (notMemAndIndxDB) ...[
                     verticalSpaceTiny,
                     InputField(
                       isDense: isDense,
@@ -231,7 +236,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                   verticalSpaceTiny,
                   CheckboxOrSwitchListTile(
                     title: Text(
-                      'Remember password',
+                      checkboxLabel,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
@@ -245,30 +250,28 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
             ),
             verticalSpaceSmall,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 if (showDeleteButton) ...[
                   ElevatedButton(
                     onPressed: viewModel.delete,
                     child: const Text('Delete'),
                   ),
-                  horizontalSpaceMedium,
+                  horizontalSpaceSmall,
                 ],
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: viewModel.hasAnyValidationMessage
-                        ? null
-                        : () async {
-                            if (viewModel.validate()) {
-                              return completer(
-                                DialogResponse(
-                                  confirmed: await viewModel.connectAndSave(),
-                                ),
-                              );
-                            }
-                          },
-                    child: const Text('Login'),
-                  ),
+                ElevatedButton(
+                  onPressed: viewModel.hasAnyValidationMessage
+                      ? null
+                      : () async {
+                          if (viewModel.validate()) {
+                            return completer(
+                              DialogResponse(
+                                confirmed: await viewModel.connectAndSave(),
+                              ),
+                            );
+                          }
+                        },
+                  child: const Text('Login'),
                 ),
               ],
             ),
