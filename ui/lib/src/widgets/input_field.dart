@@ -185,7 +185,7 @@ class InputField extends StatelessWidget {
           if (errorText != null) ...[
             const SizedBox(height: 5),
             Padding(
-              padding: const EdgeInsets.only(left: 16),
+              padding: const EdgeInsets.only(left: 8),
               child: Text(
                 errorText!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(

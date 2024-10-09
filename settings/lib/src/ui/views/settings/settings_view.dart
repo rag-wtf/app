@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
@@ -122,6 +123,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   ) {
     final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     final isDense = MediaQuery.sizeOf(context).width < 600;
+    final embeddingModels = viewModel.llmProviderSelected?.embeddings.models;
     return Scaffold(
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
@@ -215,8 +217,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         headerText: 'Indexing',
                         body: Column(
                           children: [
-                            InputField(
-                              isDense: isDense,
+                            InputFieldDropdown<EmbeddingModel>(
                               labelText: 'Model',
                               prefixIcon: Icon(
                                 Icons.api_outlined,
@@ -227,6 +228,18 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                   viewModel.embeddingsModelValidationMessage,
                               controller: embeddingsModelController,
                               textInputType: TextInputType.text,
+                              items: embeddingModels,
+                              getItemValue: (model) => model.name,
+                              getItemDisplayText: (model) => model.name,
+                              onSelected: (model) async {
+                                await viewModel.onEmbeddingModelSelected(model);
+                              },
+                              defaultValue: embeddingModels?.firstWhere(
+                                      (model) =>
+                                          embeddingsModelController.text ==
+                                          model.name,
+                                      orElse: EmbeddingModel.nullObject,
+                                    ),
                             ),
                             InputField(
                               isDense: isDense,

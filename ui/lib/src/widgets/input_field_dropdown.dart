@@ -62,8 +62,6 @@ import 'package:ui/src/widgets/input_field.dart';
 ///                         when the dropdown is closed.
 /// - **dropdownMaxHeight**: The maximum height of the dropdown.
 ///                          Defaults to `300.0`.
-/// - **showClearTextButton**: Whether to show a clear text button.
-///                            Defaults to `false`.
 /// - **inputFormatters**: A list of [TextInputFormatter] to apply to the
 ///                        input field.
 /// - **textInputType**: The type of keyboard to display for the input field.
@@ -99,8 +97,6 @@ class InputFieldDropdown<T> extends StatelessWidget {
   /// The [maxLines] defaults to `1`.
   ///
   /// The [loadingText] defaults to 'Loading...'.
-  ///
-  /// The [showClearTextButton] defaults to `false`.
   const InputFieldDropdown({
     required this.controller,
     super.key,
@@ -125,7 +121,6 @@ class InputFieldDropdown<T> extends StatelessWidget {
     this.onDropdownOpened,
     this.onDropdownClosed,
     this.dropdownMaxHeight = 300.0,
-    this.showClearTextButton = false,
     this.inputFormatters,
     this.textInputType,
     this.maxLines = 1,
@@ -199,9 +194,6 @@ class InputFieldDropdown<T> extends StatelessWidget {
   /// The maximum height of the dropdown. Defaults to `300.0`.
   final double dropdownMaxHeight;
 
-  /// Whether to show a clear text button. Defaults to `false`.
-  final bool showClearTextButton;
-
   /// A list of [TextInputFormatter] to apply to the input field.
   final List<TextInputFormatter>? inputFormatters;
 
@@ -213,6 +205,7 @@ class InputFieldDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showPopupMenuButton = items != null && items!.isNotEmpty;
     return InputField(
       controller: controller,
       labelText: labelText,
@@ -220,44 +213,38 @@ class InputFieldDropdown<T> extends StatelessWidget {
       errorText: errorText,
       isDense: isDense,
       prefixIcon: prefixIcon,
-      suffixIcon: isLoading
-          ? const Padding(
-              padding: EdgeInsets.all(8),
-              child: SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
-          : PopupMenuButton<T>(
-              icon: Icon(suffixIcon),
-              onOpened: onDropdownOpened,
-              onCanceled: onDropdownClosed,
-              onSelected: onSelected,
-              itemBuilder: (BuildContext context) {
-                if (items == null || items!.isEmpty) {
-                  return [
-                    const PopupMenuItem(
-                      enabled: false,
-                      child: Text('No options available'),
-                    ),
-                  ];
-                }
-                return items!.map((T item) {
-                  return PopupMenuItem<T>(
-                    value: item,
-                    child: Text(
-                      getItemDisplayText?.call(item) ?? '',
-                      style: dropdownTextStyle ??
-                          Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  );
-                }).toList();
-              },
-              constraints: BoxConstraints(maxHeight: dropdownMaxHeight),
-              initialValue: defaultValue,
-            ),
-      showClearTextButton: showClearTextButton,
+      suffixIcon: showPopupMenuButton
+          ? isLoading
+              ? const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : PopupMenuButton<T>(
+                  icon: Icon(suffixIcon),
+                  onOpened: onDropdownOpened,
+                  onCanceled: onDropdownClosed,
+                  onSelected: onSelected,
+                  itemBuilder: (BuildContext context) {
+                    return items!.map((T item) {
+                      return PopupMenuItem<T>(
+                        value: item,
+                        child: Text(
+                          getItemDisplayText?.call(item) ?? '',
+                          style: dropdownTextStyle ??
+                              Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      );
+                    }).toList();
+                  },
+                  constraints: BoxConstraints(maxHeight: dropdownMaxHeight),
+                  initialValue: defaultValue,
+                )
+          : null,
+      showClearTextButton: !showPopupMenuButton,
       enabled: enabled && !isLoading,
       readOnly: readOnly,
       textInputType: textInputType,

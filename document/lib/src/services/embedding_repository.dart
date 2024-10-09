@@ -32,14 +32,14 @@ class EmbeddingRepository {
     String dimensions,
   ) async {
     _log.d('redefineEmbeddingIndex($tablePrefix, $dimensions)');
-    final sql = Embedding.defineEmbeddingsMtreeIndex
-        .replaceAll('{prefix}', tablePrefix)
-        .replaceFirst('{dimensions}', dimensions);
     final total = await getTotal(tablePrefix);
     if (total > 0) {
       return '''
 Cannot change dimensions, there are existing embeddings in the database.''';
     } else {
+      final sql = Embedding.defineEmbeddingsMtreeIndex
+          .replaceAll('{prefix}', tablePrefix)
+          .replaceFirst('{dimensions}', dimensions);      
       await _db.query(sql);
       return null;
     }

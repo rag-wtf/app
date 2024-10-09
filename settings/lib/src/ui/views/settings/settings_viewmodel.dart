@@ -583,28 +583,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     );
     if (value.isNotEmpty) {
       final llmProvider = llmProviderSelected!;
-      _log.d('llmProviderSelected ${llmProvider.toJson()}');
+      _log.d('llmProviderSelected $llmProvider');
       await _settingService.set(
         tablePrefix,
         embeddingsModelKey,
         llmProvider.embeddings.model,
       );
       embeddingsModelValue = llmProvider.embeddings.model;
-
-      final embeddingModel = llmProvider.embeddings.models.firstWhere(
-        (model) => llmProvider.embeddings.model == model.name,
-        orElse: EmbeddingModel.nullObject,
-      );
-
-      if (embeddingModel.name != 'null') {
-        await _settingService.set(
-          tablePrefix,
-          embeddingsModelContextLengthKey,
-          embeddingModel.contextLength.toString(),
-        );
-        embeddingsModelContextLengthValue =
-            embeddingModel.contextLength.toString();
-      }
 
       final embeddingsApiUrl = '${llmProvider.baseUrl}$embeddingsApiUriPath';
       await _settingService.set(
@@ -624,15 +609,12 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         embeddingsApiBatchSizeValue = maxBatchSize.toString();
       }
 
-      if (llmProvider.embeddings.dimensions != null) {
-        embeddingsDimensionsValue =
-            llmProvider.embeddings.dimensions.toString();
-      } else {
-        if (embeddingModel.name != 'null') {
-          embeddingsDimensionsValue = embeddingModel.dimensions.toString();
-        }
-      }
-      await setEmbeddingsDimensions();      
+      final embeddingModel = llmProvider.embeddings.models.firstWhere(
+        (model) => llmProvider.embeddings.model == model.name,
+        orElse: EmbeddingModel.nullObject,
+      );
+
+      await setEmbeddingsModelContextLengthAndDimensions(embeddingModel);
       await setEmbeddingsDimensionsEnabled(
         llmProvider.embeddings.dimensionsEnabled,
       );
@@ -723,6 +705,56 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
           stop,
         );
         stopValue = stop;
+      }
+    }
+  }
+
+  Future<void> setEmbeddingsModelContextLengthAndDimensions(
+    EmbeddingModel embeddingModel,
+  ) async {
+    if (embeddingModel.name != 'null') {
+      await _settingService.set(
+        tablePrefix,
+        embeddingsModelContextLengthKey,
+        embeddingModel.contextLength.toString(),
+      );
+      embeddingsModelContextLengthValue =
+          embeddingModel.contextLength.toString();
+    }
+
+    if (embeddingModel.name != 'null' &&
+        llmProviderSelected?.embeddings.model != embeddingModel.name) {
+      embeddingsDimensionsValue = embeddingModel.dimensions.toString();
+    } else if (llmProviderSelected?.embeddings.dimensions != null) {
+      embeddingsDimensionsValue =
+          llmProviderSelected!.embeddings.dimensions.toString();
+    }    
+    await setEmbeddingsDimensions();
+  }
+
+  Future<void> onEmbeddingModelSelected(EmbeddingModel model) async {
+    _log.d(model);
+    if (model.name != embeddingsModelValue) {
+      String? redefineEmbeddingIndexError;
+      if (redefineEmbeddingIndexFunction != null) {
+        redefineEmbeddingIndexError = await redefineEmbeddingIndexFunction!(
+          tablePrefix,
+          model.dimensions.toString(),
+        );
+      }
+      _log.d('redefineEmbeddingIndexError $redefineEmbeddingIndexError');
+      if (redefineEmbeddingIndexError != null) {
+        fieldsValidationMessages[EmbeddingsModelValueKey] =
+            redefineEmbeddingIndexError.replaceFirst('dimensions', 'model');
+        notifyListeners();        
+      } else {
+        await _settingService.set(
+          tablePrefix,
+          embeddingsModelKey,
+          model.name,
+        );
+        embeddingsModelValue = model.name;
+        await setEmbeddingsModelContextLengthAndDimensions(model);  
       }
     }
   }
