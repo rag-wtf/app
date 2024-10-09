@@ -124,6 +124,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     final isDense = MediaQuery.sizeOf(context).width < 600;
     final embeddingModels = viewModel.llmProviderSelected?.embeddings.models;
+    final generationModels =
+        viewModel.llmProviderSelected?.chatCompletions.models;
     return Scaffold(
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
@@ -231,9 +233,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               items: embeddingModels,
                               getItemValue: (model) => model.name,
                               getItemDisplayText: (model) => model.name,
-                              onSelected: (model) async {
-                                await viewModel.onEmbeddingModelSelected(model);
-                              },
+                              onSelected: viewModel.onEmbeddingModelSelected,
                               defaultValue: embeddingModels?.firstWhere(
                                       (model) =>
                                           embeddingsModelController.text ==
@@ -403,8 +403,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         headerText: 'Generation',
                         body: Column(
                           children: [
-                            InputField(
-                              isDense: isDense,
+                            InputFieldDropdown<ChatModel>(
                               labelText: 'Model',
                               prefixIcon: Icon(
                                 Icons.api_outlined,
@@ -415,7 +414,17 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                   viewModel.generationModelValidationMessage,
                               controller: generationModelController,
                               textInputType: TextInputType.text,
-                            ),
+                              items: generationModels,
+                              getItemValue: (model) => model.name,
+                              getItemDisplayText: (model) => model.name,
+                              onSelected: viewModel.onGenerationModelSelected,
+                              defaultValue: generationModels?.firstWhere(
+                                      (model) =>
+                                          generationModelController.text ==
+                                          model.name,
+                                      orElse: ChatModel.nullObject,
+                                    ),
+                            ),                         
                             InputField(
                               isDense: isDense,
                               labelText: 'Context Length',

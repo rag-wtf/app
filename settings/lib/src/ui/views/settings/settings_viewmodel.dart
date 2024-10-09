@@ -631,15 +631,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         orElse: ChatModel.nullObject,
       );
 
-      if (generationModel.name != 'null') {
-        await _settingService.set(
-          tablePrefix,
-          generationModelContextLengthKey,
-          generationModel.contextLength.toString(),
-        );
-        generationModelContextLengthValue =
-            generationModel.contextLength.toString();
-      }
+      await setGenerationModelContextLengthWith(generationModel);
 
       final generationApiUrl = '${llmProvider.baseUrl}$generationApiUriPath'; 
       await _settingService.set(
@@ -709,6 +701,20 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     }
   }
 
+  Future<void> setGenerationModelContextLengthWith(
+    ChatModel generationModel,
+  ) async {
+    if (generationModel.name != 'null') {
+      await _settingService.set(
+        tablePrefix,
+        generationModelContextLengthKey,
+        generationModel.contextLength.toString(),
+      );
+      generationModelContextLengthValue =
+          generationModel.contextLength.toString();
+    }
+  }
+
   Future<void> setEmbeddingsModelContextLengthAndDimensions(
     EmbeddingModel embeddingModel,
   ) async {
@@ -756,6 +762,22 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         embeddingsModelValue = model.name;
         await setEmbeddingsModelContextLengthAndDimensions(model);  
       }
+    }
+  }
+
+  Future<void> onGenerationModelSelected(ChatModel model) async {
+    _log.d(model);
+    if (model.name != generationModelValue) {
+      await _settingService.set(
+        tablePrefix,
+        generationModelKey,
+        model.name,
+      );
+      generationModelValue = model.name;
+
+      await setGenerationModelContextLengthWith(model);
+
+      notifyListeners();
     }
   }
 }
