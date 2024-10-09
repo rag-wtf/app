@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rag/ui/common/app_colors.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:ui/ui.dart';
 
 class ConfirmDialog extends StackedView<BaseViewModel> {
   const ConfirmDialog({
@@ -21,7 +19,7 @@ class ConfirmDialog extends StackedView<BaseViewModel> {
     BaseViewModel viewModel,
     Widget? child,
   ) {
-    return AdaptiveDialog(
+    return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       child: Padding(
