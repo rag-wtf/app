@@ -126,6 +126,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     final embeddingModels = viewModel.llmProviderSelected?.embeddings.models;
     final generationModels =
         viewModel.llmProviderSelected?.chatCompletions.models;
+    final switchHorizontalPadding =
+        MediaQuery.sizeOf(context).width < 600 ? 0.0 : 4.0;    
     return Scaffold(
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
@@ -329,7 +331,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               textInputType: TextInputType.number,
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(4),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: switchHorizontalPadding,
+                              ),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -337,7 +342,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                   Text(
                                     'Compressed',
                                     style:
-                                        Theme.of(context).textTheme.titleMedium,
+                                        Theme.of(context).textTheme.titleSmall,
                                   ),
                                   CheckboxOrSwitch(
                                     value: viewModel.embeddingsCompressed,
@@ -557,7 +562,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               textInputType: TextInputType.number,
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(4),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: switchHorizontalPadding,
+                              ),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -565,7 +573,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                                   Text(
                                     'Streaming',
                                     style:
-                                        Theme.of(context).textTheme.titleMedium,
+                                        Theme.of(context).textTheme.titleSmall,
                                   ),
                                   CheckboxOrSwitch(
                                     value: viewModel.stream,
