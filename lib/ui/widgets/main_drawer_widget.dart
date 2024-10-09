@@ -40,7 +40,8 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
     final listTileTextStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
           color: textAndIconColor,
         );
-        
+    const expansionTileChildrenPadding = EdgeInsets.only(left: 36);    
+
     return ZoomDrawer(
       isRtl: true,
       controller: widget.controller,
@@ -128,10 +129,13 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(
-                    Icons.source_outlined,
-                    color: textAndIconColor,
-                  ),
+                  leading: Image.asset(
+                      isDarkMode
+                          ? 'images/github_light.png'
+                          : 'images/github_dark.png',
+                      width: 24,
+                      height: 24,
+                      ),
                   title: Text(
                     'GitHub',
                     style: listTileTextStyle,
@@ -186,7 +190,98 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                   onTap: () async {
                     await widget.controller.close!();
                     await widget.logoutFunction();
-                  } ,
+                  },
+                ),
+                ExpansionTile(
+                  leading: Icon(
+                    Icons.workspaces_outline,
+                    color: textAndIconColor,
+                  ),
+                  title: Text(
+                    'Related Projects',
+                    style: listTileTextStyle,
+                  ),
+                  childrenPadding: expansionTileChildrenPadding,
+                  children: [
+                    ListTile(
+                      leading: Image.asset('images/pubdev.png', width: 24, height: 24),
+                      title: Text(
+                        'surrealdb_js',
+                        style: listTileTextStyle,
+                      ),
+                      onTap: () async {
+                        final url = Uri.parse('https://pub.dev/packages/surrealdb_js');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: Image.asset('images/pubdev.png', width: 24, height: 24),
+                      title: Text(
+                        'surrealdb_wasm',
+                        style: listTileTextStyle,
+                      ),
+                      onTap: () async {
+                        final url = Uri.parse('https://pub.dev/packages/surrealdb_wasm');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: Image.asset('images/pypi.png', width: 24, height: 24),
+                      title: Text(
+                        'open-text-embeddings',
+                        style: listTileTextStyle,
+                      ),
+                      onTap: () async {
+                        final url = Uri.parse('https://pypi.org/project/open-text-embeddings/');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  leading: Icon(
+                    Icons.flash_on_outlined,
+                    color: textAndIconColor,
+                  ),
+                  title: Text(
+                    'Powered By',
+                    style: listTileTextStyle,
+                  ),
+                  childrenPadding: expansionTileChildrenPadding,
+                  children: [
+                    ListTile(
+                      leading: const FlutterLogo(size: 24),
+                      title: Text(
+                        'Flutter',
+                        style: listTileTextStyle,
+                      ),
+                      onTap: () async {
+                        final url = Uri.parse('https://flutter.dev');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: Image.asset('images/surrealdb.png', width: 24, height: 24),
+                      title: Text(
+                        'SurrealDB',
+                        style: listTileTextStyle,
+                      ),
+                      onTap: () async {
+                        final url = Uri.parse('https://surrealdb.com');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
