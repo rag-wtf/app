@@ -49,8 +49,7 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
   // 65535 is the maximum value of an unsigned 16-bit integer
   static const defineEmbeddingsMtreeIndex = '''
 DEFINE INDEX OVERWRITE {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
-FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32
-CAPACITY 65535;
+FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32;
 ''';
 
   static const rebuildEmbeddingsMtreeIndex = '''
