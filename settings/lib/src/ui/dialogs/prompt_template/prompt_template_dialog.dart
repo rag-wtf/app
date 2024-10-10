@@ -86,7 +86,7 @@ class PromptTemplateDialog extends StackedView<PromptTemplateDialogModel>
             ),
             verticalSpaceMedium,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
@@ -94,6 +94,7 @@ class PromptTemplateDialog extends StackedView<PromptTemplateDialogModel>
                   },
                   child: const Text('Cancel'),
                 ),
+                horizontalSpaceSmall,
                 ElevatedButton(
                   onPressed: viewModel.hasAnyValidationMessage
                       ? null

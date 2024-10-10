@@ -82,7 +82,7 @@ class SystemPromptDialog extends StackedView<SystemPromptDialogModel>
             ),
             verticalSpaceMedium,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
@@ -90,6 +90,7 @@ class SystemPromptDialog extends StackedView<SystemPromptDialogModel>
                   },
                   child: const Text('Cancel'),
                 ),
+                horizontalSpaceSmall,
                 ElevatedButton(
                   onPressed: () async {
                     await viewModel.save();

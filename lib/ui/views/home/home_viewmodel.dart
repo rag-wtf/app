@@ -130,7 +130,7 @@ class HomeViewModel extends BaseViewModel {
     await _dialogService.showCustomDialog(
       variant: DialogType.promptTemplate,
       title: 'Edit Prompt Template',
-      description: 'Prompt template for the LLM.',
+      description: 'Prompt template of the LLM.',
     );
   }
 
