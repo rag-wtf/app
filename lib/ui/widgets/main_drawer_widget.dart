@@ -29,9 +29,9 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
 
     var slideWidth = width * 0.3;
     if (width < 600) {
-      slideWidth = width * 0.8;
+      slideWidth = width * 0.9;
     } else if (width < 840) {
-      slideWidth = width * 0.5;
+      slideWidth = width * 0.6;
     } else {
       slideWidth = width * 0.3;
     }
@@ -40,7 +40,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
     final listTileTextStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
           color: textAndIconColor,
         );
-    const expansionTileChildrenPadding = EdgeInsets.only(left: 36);    
+    const expansionTileChildrenPadding = EdgeInsets.only(left: 16);    
 
     return ZoomDrawer(
       isRtl: true,
@@ -86,202 +86,210 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                     ),
                   ],
                 ),
-                verticalSpaceMedium,
-                ListTile(
-                  leading: Icon(
-                    Icons.share_outlined,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    'Share',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    final result = await Share.share(
-                      'Check out our app at https://',
-                      subject: '$appSubTitle: $appTitle',
-                    );
-
-                    if (result.status == ShareResultStatus.success) {
-                      await showDialog(
-                        // ignore: use_build_context_synchronously
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const ThankYouDialog();
+                verticalSpaceSmall,
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.share_outlined,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          'Share',
+                          style: listTileTextStyle,
+                        ),
+                        onTap: () async {
+                          final result = await Share.share(
+                            'Check out our app at https://',
+                            subject: '$appSubTitle: $appTitle',
+                          );
+                      
+                          if (result.status == ShareResultStatus.success) {
+                            await showDialog(
+                              // ignore: use_build_context_synchronously
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const ThankYouDialog();
+                              },
+                            );
+                          }
                         },
-                      );
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    isDarkMode
-                        ? Icons.dark_mode_outlined
-                        : Icons.light_mode_outlined,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    '${isDarkMode ? 'Dark' : 'Light'} Mode',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    getThemeManager(context).toggleDarkLightTheme();
-                  },
-                ),
-                ListTile(
-                  leading: Image.asset(
-                      isDarkMode
-                          ? 'images/github_light.png'
-                          : 'images/github_dark.png',
-                      width: 24,
-                      height: 24,
                       ),
-                  title: Text(
-                    'GitHub',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    final url = Uri.parse(gitHubRepoUrl);
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url);
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.info_outline,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    'About Us',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    final aboutBoxChildren = <Widget>[
-                      verticalSpaceMedium,
-                      Text(
-                        appSubTitle,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      ListTile(
+                        leading: Icon(
+                          isDarkMode
+                              ? Icons.dark_mode_outlined
+                              : Icons.light_mode_outlined,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          '${isDarkMode ? 'Dark' : 'Light'} Mode',
+                          style: listTileTextStyle,
+                        ),
+                        onTap: () async {
+                          getThemeManager(context).toggleDarkLightTheme();
+                        },
                       ),
-                    ];
-                    final packageInfo = await PackageInfo.fromPlatform();
-                    showAboutDialog(
-                      // ignore: use_build_context_synchronously
-                      context: context,
-                      applicationIcon: const FlutterLogo(),
-                      applicationName: appTitle,
-                      applicationVersion: '''
-${packageInfo.version} ${packageInfo.buildNumber}''',
-                      applicationLegalese:
-                          '\u{a9}${DateTime.now().year} Lim Chee Kin',
-                      children: aboutBoxChildren,
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.logout_outlined,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    'Logout',
-                    style: listTileTextStyle,
-                  ),
-                  onTap: () async {
-                    await widget.controller.close!();
-                    await widget.logoutFunction();
-                  },
-                ),
-                ExpansionTile(
-                  leading: Icon(
-                    Icons.workspaces_outline,
-                    color: textAndIconColor,
-                  ),
-                  title: Text(
-                    'Related Projects',
-                    style: listTileTextStyle,
-                  ),
-                  childrenPadding: expansionTileChildrenPadding,
-                  children: [
-                    ListTile(
-                      leading: Image.asset('images/pubdev.png', width: 24, height: 24),
-                      title: Text(
-                        'surrealdb_js',
-                        style: listTileTextStyle,
+                      ListTile(
+                        leading: Image.asset(
+                            isDarkMode
+                                ? 'images/github_light.png'
+                                : 'images/github_dark.png',
+                            width: 24,
+                            height: 24,
+                            ),
+                        title: Text(
+                          'GitHub',
+                          style: listTileTextStyle,
+                        ),
+                        onTap: () async {
+                          final url = Uri.parse(gitHubRepoUrl);
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          }
+                        },
                       ),
-                      onTap: () async {
-                        final url = Uri.parse('https://pub.dev/packages/surrealdb_js');
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: Image.asset('images/pubdev.png', width: 24, height: 24),
-                      title: Text(
-                        'surrealdb_wasm',
-                        style: listTileTextStyle,
+                      ListTile(
+                        leading: Icon(
+                          Icons.info_outline,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          'About Us',
+                          style: listTileTextStyle,
+                        ),
+                        onTap: () async {
+                          final aboutBoxChildren = <Widget>[
+                            verticalSpaceMedium,
+                            Text(
+                              appSubTitle,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ];
+                          final packageInfo = await PackageInfo.fromPlatform();
+                          showAboutDialog(
+                            // ignore: use_build_context_synchronously
+                            context: context,
+                            applicationIcon: const FlutterLogo(),
+                            applicationName: appTitle,
+                            applicationVersion: '''
+                      ${packageInfo.version} ${packageInfo.buildNumber}''',
+                            applicationLegalese:
+                                '\u{a9}${DateTime.now().year} Lim Chee Kin',
+                            children: aboutBoxChildren,
+                          );
+                        },
                       ),
-                      onTap: () async {
-                        final url = Uri.parse('https://pub.dev/packages/surrealdb_wasm');
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: Image.asset('images/pypi.png', width: 24, height: 24),
-                      title: Text(
-                        'open-text-embeddings',
-                        style: listTileTextStyle,
+                      ListTile(
+                        leading: Icon(
+                          Icons.logout_outlined,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          'Logout',
+                          style: listTileTextStyle,
+                        ),
+                        onTap: () async {
+                          await widget.controller.close!();
+                          await widget.logoutFunction();
+                        },
                       ),
-                      onTap: () async {
-                        final url = Uri.parse('https://pypi.org/project/open-text-embeddings/');
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                ExpansionTile(
-                  leading: Icon(
-                    Icons.flash_on_outlined,
-                    color: textAndIconColor,
+                      ExpansionTile(
+                        leading: Icon(
+                          Icons.workspaces_outline,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          'Related Projects',
+                          style: listTileTextStyle,
+                        ),
+                        childrenPadding: expansionTileChildrenPadding,
+                        shape: const Border(),
+                        children: [
+                          ListTile(
+                            leading: Image.asset('images/pubdev.png', width: 24, height: 24),
+                            title: Text(
+                              'surrealdb_js',
+                              style: listTileTextStyle,
+                            ),
+                            onTap: () async {
+                              final url = Uri.parse('https://pub.dev/packages/surrealdb_js');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              }
+                            },
+                          ),
+                          ListTile(
+                            leading: Image.asset('images/pubdev.png', width: 24, height: 24),
+                            title: Text(
+                              'surrealdb_wasm',
+                              style: listTileTextStyle,
+                            ),
+                            onTap: () async {
+                              final url = Uri.parse('https://pub.dev/packages/surrealdb_wasm');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              }
+                            },
+                          ),
+                          ListTile(
+                            leading: Image.asset('images/pypi.png', width: 24, height: 24),
+                            title: Text(
+                              'open-text-embeddings',
+                              style: listTileTextStyle,
+                            ),
+                            onTap: () async {
+                              final url = Uri.parse('https://pypi.org/project/open-text-embeddings/');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      ExpansionTile(
+                        leading: Icon(
+                          Icons.flash_on_outlined,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          'Powered By',
+                          style: listTileTextStyle,
+                        ),
+                        childrenPadding: expansionTileChildrenPadding,
+                        shape: const Border(),
+                        children: [
+                          ListTile(
+                            leading: const FlutterLogo(size: 24),
+                            title: Text(
+                              'Flutter',
+                              style: listTileTextStyle,
+                            ),
+                            onTap: () async {
+                              final url = Uri.parse('https://flutter.dev');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              }
+                            },
+                          ),
+                          ListTile(
+                            leading: Image.asset('images/surrealdb.png', width: 24, height: 24),
+                            title: Text(
+                              'SurrealDB',
+                              style: listTileTextStyle,
+                            ),
+                            onTap: () async {
+                              final url = Uri.parse('https://surrealdb.com');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  title: Text(
-                    'Powered By',
-                    style: listTileTextStyle,
-                  ),
-                  childrenPadding: expansionTileChildrenPadding,
-                  children: [
-                    ListTile(
-                      leading: const FlutterLogo(size: 24),
-                      title: Text(
-                        'Flutter',
-                        style: listTileTextStyle,
-                      ),
-                      onTap: () async {
-                        final url = Uri.parse('https://flutter.dev');
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: Image.asset('images/surrealdb.png', width: 24, height: 24),
-                      title: Text(
-                        'SurrealDB',
-                        style: listTileTextStyle,
-                      ),
-                      onTap: () async {
-                        final url = Uri.parse('https://surrealdb.com');
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                    ),
-                  ],
                 ),
               ],
             ),
