@@ -134,8 +134,8 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                       ListTile(
                         leading: Image.asset(
                             isDarkMode
-                                ? 'images/github_light.png'
-                                : 'images/github_dark.png',
+                                ? 'assets/images/github_light.png'
+                                : 'assets/images/github_dark.png',
                             width: 24,
                             height: 24,
                             ),
@@ -208,7 +208,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                         shape: const Border(),
                         children: [
                           ListTile(
-                            leading: Image.asset('images/pubdev.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/pubdev.png', width: 24, height: 24),
                             title: Text(
                               'surrealdb_js',
                               style: listTileTextStyle,
@@ -221,7 +221,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                             },
                           ),
                           ListTile(
-                            leading: Image.asset('images/pubdev.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/pubdev.png', width: 24, height: 24),
                             title: Text(
                               'surrealdb_wasm',
                               style: listTileTextStyle,
@@ -234,7 +234,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                             },
                           ),
                           ListTile(
-                            leading: Image.asset('images/pypi.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/pypi.png', width: 24, height: 24),
                             title: Text(
                               'open-text-embeddings',
                               style: listTileTextStyle,
@@ -274,7 +274,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                             },
                           ),
                           ListTile(
-                            leading: Image.asset('images/surrealdb.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/surrealdb.png', width: 24, height: 24),
                             title: Text(
                               'SurrealDB',
                               style: listTileTextStyle,
