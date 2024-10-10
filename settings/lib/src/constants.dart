@@ -81,7 +81,7 @@ const surrealUsername = 'root';
 const surrealPassword = 'root';
 
 const appTitle = 'RAG.WTF';
-const appSubTitle = 'Your Everyday AI Buddy';
+const appSubTitle = 'RAG for everyone';
 const gitHubRepoUrl = 'https://github.com/limcheekin/rag';
 const appTablePrefix = '__app';
 const defaultThemeMode = ThemeMode.system;
