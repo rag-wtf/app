@@ -27,8 +27,8 @@ if ! touch "$output_file" 2>/dev/null; then
     exit 1
 fi
 
-# Create or overwrite the output file
-echo "# Combined Text Files for LLM Analysis" > "$output_file"
+# Create output file
+touch "$output_file"
 
 # Define supported source code file extensions with their corresponding language tags
 declare -A file_extensions=(
@@ -65,17 +65,14 @@ combine_text_files() {
                 continue
             fi
 
-            # Get the relative path of the file
-            relative_path="${file#$root_dir/}"
+            # Include the full path (root_dir + relative path)
+            full_path="$file"
 
             # Get the corresponding language for syntax highlighting
             lang="${file_extensions[$ext]}"
 
-            # Append the file path and name as a header
-            echo "## $relative_path" >> "$output_file"
-            echo "" >> "$output_file"
-            echo "**File:** $(basename "$file")" >> "$output_file"
-            echo "" >> "$output_file"
+            # Append the file path as plain text (no blank line after)
+            echo "$full_path" >> "$output_file"
 
             # Append the text or source code with proper formatting for markdown
             if [ -n "$lang" ]; then
@@ -87,8 +84,8 @@ combine_text_files() {
             cat "$file" >> "$output_file"
             echo "\`\`\`" >> "$output_file"  # End code block
 
-            # Add a divider between files
-            echo -e "\n\n---\n\n" >> "$output_file"
+            # Add a blank line after each file to separate them
+            echo "" >> "$output_file"
         done
     done
 }
