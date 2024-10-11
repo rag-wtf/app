@@ -4,6 +4,8 @@ import 'package:chat/src/ui/widgets/horizontal_list.dart';
 import 'package:chat/src/ui/widgets/markdown_widget.dart';
 import 'package:document/document.dart';
 import 'package:flutter/material.dart';
+import 'package:settings/settings.dart';
+import 'package:ui/ui.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget(this.message, this.showDialogFunction, {super.key});
@@ -31,15 +33,11 @@ class MessageWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                   )
-                : const AvatarBrick(
-                    size: Size(32, 32),
-                    backgroundColor: Colors.black26,
-                    icon: Icon(
-                      Icons.chat_bubble_outline_rounded,
-                      size: 24,
-                      color: Colors.white,
-                    ),
-                  ),
+                  : const Logo(
+                      darkLogo: darkLogo,
+                      lightLogo: lightLogo,
+                      size: 32,
+                    )
           ),
           const SizedBox(
             width: 8,

@@ -154,7 +154,7 @@ Starting a new chat will stop the current conversation.
 Are you sure you want to proceed?''',
     );
     return response?.confirmed ?? false;
-  }  
+  }
 
   Future<void> showSystemPromptDialog() async {
     await _dialogService.showCustomDialog(

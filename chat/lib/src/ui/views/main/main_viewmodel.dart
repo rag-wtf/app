@@ -48,4 +48,9 @@ class MainViewModel extends BaseViewModel {
       data: embedding,
     );
   }
+
+  Future<bool> showNewChatDialog() async {
+    return false;
+  }
+
 }

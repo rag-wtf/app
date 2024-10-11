@@ -5,6 +5,7 @@ import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:settings/settings.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked_themes/stacked_themes.dart';
+import 'package:ui/ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawerWidget extends StatefulWidget {
@@ -64,8 +65,11 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                   children: [
                     Row(
                       children: [
-                        const FlutterLogo(
+                        const Logo(
+                          darkLogo: darkLogo,
+                          lightLogo: lightLogo,
                           size: 32,
+                          inverse: true,
                         ),
                         horizontalSpaceSmall,
                         Text(
@@ -171,10 +175,14 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                           showAboutDialog(
                             // ignore: use_build_context_synchronously
                             context: context,
-                            applicationIcon: const FlutterLogo(),
+                            applicationIcon: const Logo(
+                              darkLogo: darkLogo,
+                              lightLogo: lightLogo,
+                              size: 32,
+                            ),
                             applicationName: appTitle,
                             applicationVersion: '''
-                      ${packageInfo.version} ${packageInfo.buildNumber}''',
+${packageInfo.version} ${packageInfo.buildNumber}''',
                             applicationLegalese:
                                 '\u{a9}${DateTime.now().year} Lim Chee Kin',
                             children: aboutBoxChildren,
