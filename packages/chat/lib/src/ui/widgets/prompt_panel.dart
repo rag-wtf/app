@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:chat/src/ui/common/ui_helpers.dart';
 import 'package:chat/src/ui/widgets/prompt_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:settings/settings.dart';
+import 'package:ui/ui.dart';
 
 class PromptPanel extends StatelessWidget {
   PromptPanel(this.onSend, {super.key});
@@ -15,13 +17,24 @@ class PromptPanel extends StatelessWidget {
     prompts.shuffle(Random());
     final selectedPrompts = prompts.take(4).toList();
     if (width >= 1180) {
-      return Row(
+      return Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: selectedPrompts
-            .map(
-              (prompt) => PromptWidget(prompt, onSend: onSend),
-            )
-            .toList(),
+        children: [
+          const Logo(
+            darkLogo: darkLogo,
+            lightLogo: lightLogo,
+            size: 64,
+          ),
+          verticalSpaceMedium,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: selectedPrompts
+                .map(
+                  (prompt) => PromptWidget(prompt, onSend: onSend),
+                )
+                .toList(),
+          ),
+        ],
       );
     } else {
       return Row(
@@ -30,6 +43,12 @@ class PromptPanel extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Logo(
+                darkLogo: darkLogo,
+                lightLogo: lightLogo,
+                size: 64,
+              ),
+              verticalSpaceMedium,
               Row(
                 children: [
                   PromptWidget(selectedPrompts[0], onSend: onSend),

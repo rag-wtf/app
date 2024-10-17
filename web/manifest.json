@@ -1,11 +1,11 @@
 {
-    "name": "Rag",
-    "short_name": "Rag",
+    "name": "RAG.wtf",
+    "short_name": "rag",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A Very Good Project created by Very Good CLI.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "description": "RAG.wtf - RAG for everyone",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -80,7 +80,7 @@ const surrealDatabase = 'surreal';
 const surrealUsername = 'root';
 const surrealPassword = 'root';
 
-const appTitle = 'RAG.WTF';
+const appTitle = 'RAG.wtf';
 const appSubTitle = 'RAG for everyone';
 const lightLogo = 'assets/images/logo512x512_light.png';
 const darkLogo = 'assets/images/logo512x512_dark.png';

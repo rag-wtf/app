@@ -85,6 +85,7 @@ class ChatView extends StackedView<ChatViewModel> {
             final disabledNewChatButton =
                 viewModel.isGenerating && !viewModel.isStreaming;
             return MessageBar(
+              messageBarHintText: 'Message $appTitle',
               isSendButtonBusy: viewModel.isGenerating,
               sendButtonColor: Theme.of(context).colorScheme.primary,
               sendButtonMargin: buttonMargin,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
 import 'package:rag/ui/views/startup/startup_viewmodel.dart';
+import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:ui/ui.dart';
 
 class StartupView extends StackedView<StartupViewModel> {
   const StartupView({super.key});
@@ -18,9 +20,10 @@ class StartupView extends StackedView<StartupViewModel> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'STACKED',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
+            Logo(
+              darkLogo: darkLogo,
+              lightLogo: lightLogo,
+              size: 64,
             ),
             Row(
               mainAxisSize: MainAxisSize.min,

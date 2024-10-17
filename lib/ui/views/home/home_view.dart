@@ -9,6 +9,7 @@ import 'package:rag/ui/widgets/main_drawer_widget.dart';
 import 'package:rag_console/rag_console.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:ui/ui.dart';
 
 const largeScreenWidth = 840.0;
 const mediumScreenWidth = 600.0;
@@ -66,10 +67,16 @@ class _HomeViewState extends State<HomeView>
                 key: scaffoldKey,
                 resizeToAvoidBottomInset: true,
                 appBar: AppBar(
-                  title: Text(
-                    viewModel.isBusy ? appTitle : viewModel.appName,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  title: viewModel.isBusy
+                      ? const Logo(
+                          darkLogo: darkLogo,
+                          lightLogo: lightLogo,
+                          size: 32,
+                        )
+                      : Text(
+                          viewModel.appName,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                   leading: constraints.maxWidth < mediumScreenWidth
                       ? Builder(
                           builder: (context) => IconButton(
