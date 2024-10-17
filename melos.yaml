@@ -26,6 +26,7 @@ scripts:
         - document
         - chat
         - rag_console
+        - stacked_package_template
 
 
   start_server:
