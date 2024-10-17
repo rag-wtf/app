@@ -1,0 +1,5 @@
+# melos_managed_dependency_overrides: ui,meta
+dependency_overrides:
+  ui:
+    path: ../ui
+  meta: ^1.15.0

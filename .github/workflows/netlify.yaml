@@ -17,28 +17,26 @@ jobs:
           channel: stable
       - run: flutter --version
 
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Melos Bootstrap
+        run: melos bootstrap
+
       - name: Generate Codes
-        run: |
-          chmod +x ./database/generate.sh && cd database && ./generate.sh && cd ..
-          chmod +x ./document/generate.sh && cd document && ./generate.sh && cd ..
-          chmod +x ./chat/generate.sh && cd chat && ./generate.sh && cd ..
-          chmod +x ./rag_console/generate.sh && cd rag_console && ./generate.sh && cd ..
-          chmod +x ./settings/generate.sh && cd settings && ./generate.sh && cd ..
+        run: melos generate --no-select
+
+      - name: Run Integration Tests
+        run: melos ci_integration_test --no-select
 
       - name: Create .env file
         run: echo "${{ secrets.DOT_ENV_FILE }}" > .env
 
       - name: Update GITHUB_RUN_NUMBER to version
-        run: ./update_version.sh
+        run: melos update_version
         
-      - name: Flutter Build
-        run: >
-          flutter build web 
-          --web-renderer html 
-          --release 
-          --no-tree-shake-icons 
-          --target lib/main_production.dart
-          --dart-define-from-file=.env
+      - name: Build
+        run: melos build
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0

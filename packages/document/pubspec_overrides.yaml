@@ -1,0 +1,11 @@
+# melos_managed_dependency_overrides: database,settings,ui,very_good_infinite_list,meta
+dependency_overrides:
+  database:
+    path: ../database
+  settings:
+    path: ../settings
+  ui:
+    path: ../ui
+  very_good_infinite_list:
+    path: ../very_good_infinite_list
+  meta: ^1.15.0

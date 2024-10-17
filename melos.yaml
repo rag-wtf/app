@@ -1,0 +1,62 @@
+name: rag
+
+packages:
+  - packages/**
+
+scripts:
+  analyze:
+    run: melos exec -- flutter analyze .
+    description: Run `flutter analyze` for all packages
+
+  test:
+    run: melos exec -- flutter test
+    description: Run `flutter test` for all packages
+
+  build:
+    run: flutter build web --web-renderer html --release --no-tree-shake-icons --target lib/main_production.dart --dart-define-from-file=.env
+    description: Build app for web
+
+  generate:
+    run: melos exec --order-dependents -- dart run build_runner build --delete-conflicting-outputs
+    description: Run code generation for all packages
+    packageFilters:
+      scope: 
+        - database
+        - settings
+        - document
+        - chat
+        - rag_console
+
+
+  start_server:
+    run: python -m http.server 8000 --directory ./build/web
+    description: Start a local server for the web build
+
+  start_surreal:
+    run: sudo docker run --rm --pull always -p 7000:8000 -v ~/surrealdb_data:/surrealdb_data surrealdb/surrealdb:latest start --log trace -A --user root --pass root surrealkv://surrealdb_data/test.db
+    description: Start SurrealDB in a Docker container
+
+  ci_integration_test:
+    run: |
+      docker run --rm --pull always -p 8000:8000 --name surrealdb surrealdb/surrealdb:latest start memory -A --user root --pass root &
+      melos exec --concurrency 1 -- flutter drive --driver=test_driver/integration_test.dart --target integration_test/all_tests.dart -d web-server --release --browser-name=chrome
+      docker container stop surrealdb
+    description: Run integration tests for all packages in CI environment
+    packageFilters:
+      dirExists: integration_test
+
+  local_integration_test:
+    run: |
+      docker run --rm --pull always -p 8000:8000 --name surrealdb surrealdb/surrealdb:latest start memory -A --user root --pass root &
+      melos exec --concurrency 1 -- flutter drive --driver=test_driver/integration_test.dart --target integration_test/all_tests.dart -d chrome --debug
+      docker container stop surrealdb
+    description: Run integration tests for all packages locally
+    packageFilters:
+      dirExists: integration_test
+
+  update_version:
+    run: |
+      VERSION=$(grep 'version:' pubspec.yaml | cut -d ' ' -f 2)
+      NEW_VERSION="$VERSION+$GITHUB_RUN_NUMBER"
+      sed -i "s/version: $VERSION/version: $NEW_VERSION/g" pubspec.yaml
+    description: Update version in pubspec.yaml with GitHub run number

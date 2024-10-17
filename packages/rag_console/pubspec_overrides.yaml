@@ -1,0 +1,20 @@
+# melos_managed_dependency_overrides: chat,console,database,document,flutter_console_widget,settings,ui,very_good_infinite_list,js,meta
+dependency_overrides:
+  chat:
+    path: ../chat
+  console:
+    path: ../console
+  database:
+    path: ../database
+  document:
+    path: ../document
+  flutter_console_widget:
+    path: ../flutter_console
+  settings:
+    path: ../settings
+  ui:
+    path: ../ui
+  very_good_infinite_list:
+    path: ../very_good_infinite_list
+  js: ^0.7.1
+  meta: ^1.12.0
