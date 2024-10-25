@@ -117,7 +117,11 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               ),
               verticalSpaceTiny,
             ],
-            Expanded(
+            if (viewModel.isBusy)
+              const Center(
+                child: CircularProgressIndicator(),
+              ) 
+            else Expanded(
               child: ListView(
                 children: [
                   InputFieldDropdown<ConnectionSetting>(

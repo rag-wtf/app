@@ -44,6 +44,7 @@ class ConnectionDialogModel extends FormViewModel {
 
   Future<void> initialise() async {
     _log.d('initialise()');
+    setBusy(true);
     await _clearForm();
     connectionKeySelected = newConnectionKey;
     connectionNames =
@@ -55,6 +56,7 @@ class ConnectionDialogModel extends FormViewModel {
         value: newConnectionName,
       ),
     );
+    setBusy(false);
   }
 
   Future<void> initialiseName() async {
