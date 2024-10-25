@@ -16,6 +16,12 @@ class MessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final backgroundColor =
+        brightness == Brightness.dark ? Colors.white : Colors.black;
+    final foregroundColor =
+        brightness == Brightness.dark ? Colors.black : Colors.white;
+
     return Container(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -24,15 +30,19 @@ class MessageWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: avatarPadding),
             child: message.role == Role.user
-                ? const AvatarBrick(
-                    size: Size(32, 32),
-                    backgroundColor: Colors.black26,
-                    icon: Icon(
-                      Icons.person_2_outlined,
-                      size: 24,
-                      color: Colors.white,
-                    ),
-                  )
+                ? Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        shape: BoxShape.circle, // Make the container circular
+                      ),
+                      child: Icon(
+                        Icons.person_2_outlined,
+                        size: 24,
+                        color: foregroundColor,
+                      ),
+                    )
                   : const Logo(
                       darkLogo: darkLogo,
                       lightLogo: lightLogo,
