@@ -66,9 +66,9 @@ class ConnectionSettingService {
     String protocol,
     String addressPort,
     String namespace,
-    String database,
-    String username,
-    String password,
+    String? database,
+    String? username,
+    String? password,
   ) async {
     _log
       ..d('Protocol: $protocol')
@@ -82,7 +82,7 @@ class ConnectionSettingService {
         namespace: namespace,
         database: database,
       );
-      if (username.isNotEmpty) {
+      if (username != null && username.isNotEmpty) {
         await _db.signin(
           {'username': username, 'password': password},
         );

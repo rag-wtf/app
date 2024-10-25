@@ -171,9 +171,9 @@ class ConnectionDialogModel extends FormViewModel {
         _protocol,
         addressPort,
         namespaceValue!,
-        databaseValue!,
-        usernameValue!,
-        passwordValue!,
+        databaseValue,
+        usernameValue,
+        passwordValue,
       ),
       key: connectErrorKey,
       throwException: true,
@@ -223,7 +223,7 @@ class ConnectionDialogModel extends FormViewModel {
       ConnectionSetting.usernameKey,
       usernameValue!,
     );
-    if (autoConnect) {
+    if (autoConnect && passwordValue != null) {
       await _connectionSettingRepository.createConnectionSetting(
         connectionKey,
         ConnectionSetting.passwordKey,
