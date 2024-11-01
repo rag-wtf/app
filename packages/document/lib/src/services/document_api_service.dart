@@ -9,6 +9,7 @@ import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/batch_service.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
+import 'package:document/src/services/split_config.dart';
 import 'package:http_parser/http_parser.dart';
 
 class DocumentApiService {
@@ -134,8 +135,53 @@ class DocumentApiService {
     return embeddings;
   }
 
+  Future<SplitConfig> getSplitConfig(
+    String splitUrl,
+    Dio dio,
+  ) async {
+    try {
+      final response = await dio.get<Map<String, dynamic>>(
+        '$splitUrl/config',
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+          },
+          validateStatus: (status) => status != null && status < 500,
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        return SplitConfig.fromJson(response.data!);
+      }
+
+      throw SplitConfigException(
+        'Failed to fetch split config',
+        statusCode: response.statusCode,
+      );
+    } on DioException catch (e) {
+      throw SplitConfigException(
+        e.message ?? 'Network error occurred',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (e) {
+      throw SplitConfigException('Unexpected error: $e');
+    }
+  }
+
   List<int> gzipRequestEncoder(String request, RequestOptions options) {
     options.headers.putIfAbsent('Content-Encoding', () => 'gzip');
     return _gzipEncoder.encode(utf8.encode(request))!;
+  }
+}
+
+class SplitConfigException implements Exception {
+  SplitConfigException(this.message, {this.statusCode});
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() {
+    final statusMessage = statusCode != null ? ' (Status: $statusCode)' : '';
+    return 'SplitConfigException: $message$statusMessage.';
   }
 }

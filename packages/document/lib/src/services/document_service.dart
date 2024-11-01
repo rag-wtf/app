@@ -16,6 +16,7 @@ import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
+import 'package:document/src/services/split_config.dart';
 import 'package:mutex/mutex.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -41,7 +42,8 @@ class DocumentService with ListenableServiceMixin {
   int _total = -1;
   final _items = <DocumentItem>[];
   List<DocumentItem> get items => _items.toList();
-
+  SplitConfig? splitConfig;
+  
   final _log = getLogger('DocumentService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
@@ -79,6 +81,15 @@ class DocumentService with ListenableServiceMixin {
     }
     _total = -1;
     _items.clear();
+    try {
+      splitConfig = await _apiService.getSplitConfig(
+        //'http://localhost:8000/split',
+        _settingService.get(splitApiUrlKey).value,
+        _dio,
+      );
+    } on SplitConfigException catch (e) {
+      _log.w(e.message);
+    }
   }
 
   bool get hasReachedMax {

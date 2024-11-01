@@ -5,6 +5,7 @@ import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/document_service.dart';
+import 'package:document/src/services/split_config.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -22,6 +23,7 @@ class DocumentListViewModel extends ReactiveViewModel {
   final _log = getLogger('DocumentListViewModel');
 
   List<DocumentItem> get items => _documentService.items;
+  SplitConfig? get splitConfig => _documentService.splitConfig;
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_documentService];
@@ -29,10 +31,12 @@ class DocumentListViewModel extends ReactiveViewModel {
   Future<void> initialise() async {
     _log.d('initialise() tablePrefix: $tablePrefix');
     if (inPackage) {
+      setBusy(true);
       await connectDatabase();
       await _settingService.initialise(tablePrefix);
       final dimensions = _settingService.get(embeddingsDimensionsKey).value;
       await _documentService.initialise(tablePrefix, dimensions);
+      setBusy(false);
     }
   }
 

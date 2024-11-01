@@ -32,10 +32,14 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
     return Scaffold(
       body: Column(
         children: [
-          const MessagePanelWidget(
-            icon: Icon(Icons.info_outline),
-            message: maximumFileSizeMessage,
-          ),
+          if (!viewModel.isBusy && viewModel.splitConfig != null)
+            MessagePanelWidget(
+              icon: const Icon(Icons.info_outline),
+              message: maximumFileSizeMessage.replaceFirst(
+                '{}',
+                viewModel.splitConfig!.maxFileSizeInMb.toString(),
+              ),
+            ),
           Expanded(
             child: Stack(
               children: [
@@ -50,7 +54,9 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
                       color: Colors.grey,
                     ),
                     message: uploadFileZoneMessage,
-                    onTap: () async => viewModel.addItem(await pickFile()),
+                    onTap: () async => viewModel.addItem(
+                      await pickFile(viewModel),
+                    ),
                   ),
               ],
             ),
@@ -59,7 +65,9 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
       ),
       floatingActionButton: viewModel.items.isNotEmpty
           ? FloatingActionButton(
-              onPressed: () async => viewModel.addItem(await pickFile()),
+              onPressed: () async => viewModel.addItem(
+                await pickFile(viewModel),
+              ),
               backgroundColor: Theme.of(context).cardColor,
               child: const Icon(Icons.file_upload_outlined),
             )
@@ -81,10 +89,15 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
     await viewModel.initialise();
   }
 
-  Future<Document?> pickFile() async {
+  Future<Document?> pickFile(DocumentListViewModel viewModel) async {
+    debugPrint(
+      'supportedFileTypes ${viewModel.splitConfig?.supportedFileTypes}',
+    );
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: allowedExtensions.split(','),
+      allowedExtensions: viewModel.splitConfig != null
+          ? viewModel.splitConfig!.supportedFileTypes
+          : allowedExtensions.split(','),
       //allowMultiple: false,
       //withData: false,
       withReadStream: true,
