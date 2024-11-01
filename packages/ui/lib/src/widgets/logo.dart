@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-/// A widget that displays a logo which adapts to the current theme's brightness.
+/// A widget that displays a SVG logo which adapts to the current theme's 
+/// brightness.
 ///
 /// The `Logo` widget allows you to specify different logos for dark and 
 /// light themes. It automatically selects the appropriate logo based on the 
@@ -11,8 +13,8 @@ import 'package:flutter/material.dart';
 /// Example usage:
 /// ```dart
 /// Logo(
-///   darkLogo: 'assets/logo_dark.png',
-///   lightLogo: 'assets/logo_light.png',
+///   darkLogo: 'assets/logo_dark.svg',
+///   lightLogo: 'assets/logo_light.svg',
 ///   size: 48.0,
 ///   inverse: true, // Optional, defaults to false
 /// )
@@ -77,15 +79,15 @@ class Logo extends StatelessWidget {
         ? (brightness == Brightness.dark ? darkLogo : lightLogo)
         : (brightness == Brightness.dark ? lightLogo : darkLogo);
 
-    /// Returns an [Image.asset] widget with the selected logo path.
+    /// Returns an [SvgPicture.asset] widget with the selected logo path.
     ///
     /// The image is scaled to fit within the specified [size] while 
     /// maintaining its aspect ratio.
-    return Image.asset(
-      logoPath,
-      width: size,
-      height: size,
-      fit: BoxFit.contain, // Ensures the image fits within the widget
+    return SvgPicture.asset(
+           logoPath,
+           semanticsLabel: 'RAG.wtf Logo',
+           height: size,
+           width: size,
     );
   }
 }
