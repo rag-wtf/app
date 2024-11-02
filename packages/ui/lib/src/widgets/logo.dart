@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 /// A widget that displays a SVG logo which adapts to the current theme's
 /// brightness.
@@ -83,11 +84,16 @@ class Logo extends StatelessWidget {
     ///
     /// The image is scaled to fit within the specified [size] while
     /// maintaining its aspect ratio.
-    return SvgPicture.asset(
-      logoPath,
-      semanticsLabel: 'RAG.wtf Logo',
-      height: size,
-      width: size,
-    );
+    return logoPath.endsWith('.svg.vec')
+        ? SvgPicture(
+            AssetBytesLoader(logoPath),
+            height: size,
+            width: size,
+          )
+        : SvgPicture.asset(
+            logoPath,
+            height: size,
+            width: size,
+          );
   }
 }

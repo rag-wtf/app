@@ -82,8 +82,8 @@ const surrealPassword = 'root';
 
 const appTitle = 'RAG.wtf';
 const appSubTitle = 'RAG for everyone';
-const lightLogo = 'assets/images/logo512x512_light.svg';
-const darkLogo = 'assets/images/logo512x512_dark.svg';
+const lightLogo = 'assets/images/logo512x512_light.svg.vec';
+const darkLogo = 'assets/images/logo512x512_dark.svg.vec';
 const gitHubRepoUrl = 'https://github.com/limcheekin/rag';
 const appTablePrefix = '__app';
 const defaultThemeMode = ThemeMode.system;
