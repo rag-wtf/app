@@ -84,16 +84,26 @@ class Logo extends StatelessWidget {
     ///
     /// The image is scaled to fit within the specified [size] while
     /// maintaining its aspect ratio.
-    return logoPath.endsWith('.svg.vec')
-        ? SvgPicture(
-            AssetBytesLoader(logoPath),
-            height: size,
-            width: size,
-          )
-        : SvgPicture.asset(
-            logoPath,
-            height: size,
-            width: size,
-          );
+    final lowerLogoPath = logoPath.toLowerCase();
+    if (lowerLogoPath.endsWith('.svg')) {
+      return SvgPicture.asset(
+        logoPath,
+        height: size,
+        width: size,
+      );
+    } else if (lowerLogoPath.endsWith('.svg.vec')) {
+      return SvgPicture(
+        AssetBytesLoader(logoPath),
+        height: size,
+        width: size,
+      );
+    } else {
+      return Image.asset(
+        logoPath,
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+      );
+    }
   }
 }
