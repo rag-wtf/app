@@ -40,8 +40,25 @@
     globalThis.StringRecordId = StringRecordId;
     globalThis.WasmEngine = surrealdbWasmEngines;
   </script>
+  <style>
+    .container {
+      display: flex;
+      justify-content: center; /* Horizontal centering */
+      align-items: center;     /* Vertical centering */
+      height: 100vh;           /* Full viewport height to center within */
+    }
+
+    img {
+      /* Optionally add styling to the image */
+      max-width: 100%; /* Prevents overflow */
+      height: auto;
+    }
+  </style>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <div class="container">
+    <img aria-hidden="true" src="/icons/Icon-64.png" />
+  </div>  
 </body>
 </html>
