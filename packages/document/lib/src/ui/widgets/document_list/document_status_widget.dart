@@ -42,7 +42,7 @@ class DocumentStatusWidget extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.help_outline,
+              Icons.error_outline,
               size: 16,
               color: textColor,
             ),

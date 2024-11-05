@@ -7,12 +7,9 @@ class CancelButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: IconButton(
-        icon: const Icon(Icons.cancel),
+    return IconButton(
+        icon: const Icon(Icons.stop_circle),
         onPressed: cancelToken.cancel,
-      ),
     );
   }
 }

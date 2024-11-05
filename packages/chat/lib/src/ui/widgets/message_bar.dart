@@ -199,9 +199,9 @@ class MessageBar extends StatelessWidget {
                                 padding: sendButtonPadding,
                                 onPressed: onStop,
                                 icon: Icon(
-                                  Icons.stop,
+                                  Icons.stop_circle,
                                   color: sendButtonColor,
-                                  size: sendButtonIconSize,
+                                  size: sendButtonIconSize + 8,
                                 ),
                               ),
                             )

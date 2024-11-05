@@ -13,7 +13,7 @@ class DocumentItemWidget extends StatelessWidget {
     super.key,
   });
   final DocumentItem documentItem;
-  static const int megaBytes = 1024 * 1024;
+  static const int megaBytes = 1000 * 1000; // storage size
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +60,13 @@ class DocumentItemWidget extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: DocumentProgressIndicatorWidget(
-                                    documentItem.item.status,
+                                    documentItem,
                                     progress: documentItem.progress,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                if (documentItem.item.status !=
+                                        DocumentStatus.splitting)
+                                  const SizedBox(width: 8),
                                 DocumentStatusWidget(item: documentItem.item),
                               ],
                             ),
@@ -77,9 +79,6 @@ class DocumentItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          if (documentItem.item.status == DocumentStatus.splitting &&
-              documentItem.cancelToken != null)
-            CancelButtonWidget(documentItem.cancelToken!),
         ],
       ),
     );
