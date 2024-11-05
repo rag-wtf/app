@@ -65,7 +65,7 @@ class DocumentItemWidget extends StatelessWidget {
                                   ),
                                 ),
                                 if (documentItem.item.status !=
-                                        DocumentStatus.splitting)
+                                    DocumentStatus.splitting)
                                   const SizedBox(width: 8),
                                 DocumentStatusWidget(item: documentItem.item),
                               ],

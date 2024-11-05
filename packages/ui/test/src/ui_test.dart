@@ -4,8 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Ui', () {
-    test('can be instantiated', () {
-     
-    });
+    test('can be instantiated', () {});
   });
 }

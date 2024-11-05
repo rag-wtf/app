@@ -61,7 +61,7 @@ class ChatService with ListenableServiceMixin {
       );
   double get _presencePenalty => double.parse(
         _settingService.get(presencePenaltyKey).value,
-      );      
+      );
   int get _maxTokens => int.parse(_settingService.get(maxTokensKey).value);
   String get _stop => _settingService.get(stopKey).value;
 
@@ -434,7 +434,7 @@ class ChatService with ListenableServiceMixin {
           _onChatNameResponse,
           onDone: _onChatNameResponseCompleted,
           frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
-          presencePenaltyEnabled: _presencePenaltyEnabled, 
+          presencePenaltyEnabled: _presencePenaltyEnabled,
         );
       }
     } else {
@@ -556,7 +556,7 @@ class ChatService with ListenableServiceMixin {
       onError: onError,
       cancelOnError: cancelOnError,
       frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
-      presencePenaltyEnabled: _presencePenaltyEnabled, 
+      presencePenaltyEnabled: _presencePenaltyEnabled,
     );
   }
 
@@ -581,7 +581,7 @@ class ChatService with ListenableServiceMixin {
         _temperature,
         _topP,
         frequencyPenaltyEnabled: _frequencyPenaltyEnabled,
-        presencePenaltyEnabled: _presencePenaltyEnabled, 
+        presencePenaltyEnabled: _presencePenaltyEnabled,
       );
 
       if (generatedChatName.isNotEmpty) {
@@ -681,9 +681,9 @@ class ChatService with ListenableServiceMixin {
 
   Future<void> stopGenerating() async {
     if (_streamResponseService != null) {
-        await _streamResponseService!.cancel();
-        _streamResponseService = null;
-        await _onMessageTextResponseCompleted();
+      await _streamResponseService!.cancel();
+      _streamResponseService = null;
+      await _onMessageTextResponseCompleted();
     }
   }
 }

@@ -98,8 +98,8 @@ class ChatView extends StackedView<ChatViewModel> {
                 child: IconButton(
                   padding: buttonPadding,
                   onPressed: disabledNewChatButton
-                          ? null
-                          : () async => _newChat(viewModel),
+                      ? null
+                      : () async => _newChat(viewModel),
                   icon: Icon(
                     Icons.add,
                     color: disabledNewChatButton
@@ -134,7 +134,7 @@ class ChatView extends StackedView<ChatViewModel> {
     await viewModel.addMessage(viewModel.userId, text);
   }
 
-  Future<void> _newChat(ChatViewModel viewModel) async {    
+  Future<void> _newChat(ChatViewModel viewModel) async {
     if (viewModel.isGenerating && viewModel.isStreaming) {
       if (await showNewChatDialogFunction()) {
         await viewModel.stop();

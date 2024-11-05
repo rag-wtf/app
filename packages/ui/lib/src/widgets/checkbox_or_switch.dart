@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// A [StatelessWidget] that displays either a [Checkbox] or [Switch] 
+/// A [StatelessWidget] that displays either a [Checkbox] or [Switch]
 /// based on the screen width.
 ///
 /// ## Properties
 ///
 /// - [value]: The current state of the checkbox or switch.
-/// - [onChanged]: A callback function that is triggered when the checkbox or 
+/// - [onChanged]: A callback function that is triggered when the checkbox or
 ///   switch is toggled. It takes a boolean value representing the new state.
 /// - [screenWidthBreakpoint]: The screen width threshold at which the widget
 ///   switches from a [Switch] to a [Checkbox]. Defaults to 600.
@@ -25,7 +25,7 @@ import 'package:flutter/material.dart';
 /// )
 /// ```
 ///
-/// In this example, the widget will display a [Switch] on screens 
+/// In this example, the widget will display a [Switch] on screens
 /// narrower than 800 pixels and a [Checkbox] on wider screens.
 class CheckboxOrSwitch extends StatelessWidget {
   /// Creates a [CheckboxOrSwitch].
@@ -42,11 +42,11 @@ class CheckboxOrSwitch extends StatelessWidget {
   /// The current state of the checkbox or switch.
   final bool value;
 
-  /// A callback function that is triggered when the checkbox or 
+  /// A callback function that is triggered when the checkbox or
   /// switch is toggled.
   final ValueChanged<bool> onChanged;
 
-  /// The screen width threshold at which the widget switches from 
+  /// The screen width threshold at which the widget switches from
   /// a [Switch] to a [Checkbox]. Defaults to 600.
   final double screenWidthBreakpoint;
 

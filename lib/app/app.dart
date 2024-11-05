@@ -20,7 +20,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: HomeView),
+    MaterialRoute(page: HomeView, path: '/'),
     MaterialRoute(page: StartupView),
     // @stacked-route
   ],
@@ -175,7 +175,7 @@ class App extends StatelessWidget {
         themeMode: themeMode,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        initialRoute: Routes.startupView,
+        initialRoute: Routes.homeView,
         onGenerateRoute: StackedRouter().onGenerateRoute,
         navigatorKey: StackedService.navigatorKey,
         navigatorObservers: [

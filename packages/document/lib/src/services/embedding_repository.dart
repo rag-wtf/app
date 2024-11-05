@@ -39,7 +39,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     } else {
       final sql = Embedding.defineEmbeddingsMtreeIndex
           .replaceAll('{prefix}', tablePrefix)
-          .replaceFirst('{dimensions}', dimensions);      
+          .replaceFirst('{dimensions}', dimensions);
       await _db.query(sql);
       return null;
     }
@@ -142,7 +142,8 @@ CONTENT ${jsonEncode(payload)};''';
     Transaction? txn,
   ]) async {
     if (txn == null) {
-      final results = (await _db.transaction(showSql: true,
+      final results = (await _db.transaction(
+        showSql: true,
         timeout: Duration(seconds: embeddings.length),
         (txn) async {
           for (final embedding in embeddings) {

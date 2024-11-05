@@ -55,7 +55,8 @@ void main({bool wasm = false}) {
 
     test('should create schemas and return true', () async {
       // Act
-      await db.transaction(showSql: true,
+      await db.transaction(
+        showSql: true,
         (txn) async {
           if (!await chatRepository.isSchemaCreated(tablePrefix)) {
             await chatRepository.createSchema(tablePrefix, txn);
@@ -104,7 +105,8 @@ void main({bool wasm = false}) {
     );
 
     // Act
-    final txnResults = await db.transaction(showSql: true,
+    final txnResults = await db.transaction(
+      showSql: true,
       (txn) async {
         await chatRepository.createChat(
           tablePrefix,

@@ -62,21 +62,21 @@ class SettingService with ListenableServiceMixin {
           const String.fromEnvironment(
         embeddingsModelContextLengthKey,
         defaultValue: defaultEmbeddingsModelContextLength,
-      );    
+      );
       _enviromentVariables[embeddingsApiUrlKey] =
           const String.fromEnvironment(embeddingsApiUrlKey);
       _enviromentVariables[embeddingsApiKey] =
           const String.fromEnvironment(embeddingsApiKey);
-      _enviromentVariables[embeddingsDimensionsKey] = 
+      _enviromentVariables[embeddingsDimensionsKey] =
           const String.fromEnvironment(
-            embeddingsDimensionsKey, 
-            defaultValue: defaultEmbeddingsDimensions,
-          );
-      _enviromentVariables[embeddingsDimensionsEnabledKey] = 
+        embeddingsDimensionsKey,
+        defaultValue: defaultEmbeddingsDimensions,
+      );
+      _enviromentVariables[embeddingsDimensionsEnabledKey] =
           const String.fromEnvironment(
-            embeddingsDimensionsEnabledKey, 
-            defaultValue: defaultEmbeddingsDimensionsEnabled,
-          );          
+        embeddingsDimensionsEnabledKey,
+        defaultValue: defaultEmbeddingsDimensionsEnabled,
+      );
       _enviromentVariables[embeddingsApiBatchSizeKey] =
           const String.fromEnvironment(
         embeddingsApiBatchSizeKey,
@@ -87,11 +87,11 @@ class SettingService with ListenableServiceMixin {
         embeddingsDatabaseBatchSizeKey,
         defaultValue: defaultEmbeddingsDatabaseBatchSize,
       );
-      _enviromentVariables[embeddingsCompressedKey] = 
+      _enviromentVariables[embeddingsCompressedKey] =
           const String.fromEnvironment(
-            embeddingsCompressedKey, 
-            defaultValue: defaultEmbeddingsCompressed,
-          );
+        embeddingsCompressedKey,
+        defaultValue: defaultEmbeddingsCompressed,
+      );
       _enviromentVariables[searchTypeKey] =
           const String.fromEnvironment(searchTypeKey);
       _enviromentVariables[searchIndexKey] =
@@ -140,7 +140,7 @@ class SettingService with ListenableServiceMixin {
           const String.fromEnvironment(
         frequencyPenaltyEnabledKey,
         defaultValue: defaultFrequencyPenaltyEnabled,
-      ); 
+      );
       _enviromentVariables[presencePenaltyKey] = const String.fromEnvironment(
         presencePenaltyKey,
         defaultValue: defaultPresencePenalty,
@@ -149,14 +149,14 @@ class SettingService with ListenableServiceMixin {
           const String.fromEnvironment(
         presencePenaltyEnabledKey,
         defaultValue: defaultPresencePenaltyEnabled,
-      );           
+      );
       _enviromentVariables[maxTokensKey] = const String.fromEnvironment(
         maxTokensKey,
         defaultValue: defaultMaxTokens,
       );
       _enviromentVariables[stopKey] = const String.fromEnvironment(stopKey);
       _enviromentVariables[streamKey] = const String.fromEnvironment(
-        streamKey, 
+        streamKey,
         defaultValue: defaultStream,
       );
     }
@@ -196,7 +196,8 @@ class SettingService with ListenableServiceMixin {
   }
 
   Future<void> _loadLlmProviders() async {
-    final json = await rootBundle.loadString('packages/settings/assets/json/llm_providers.json');
+    final json = await rootBundle
+        .loadString('packages/settings/assets/json/llm_providers.json');
     final llmProviderMaps = List<Map<String, dynamic>>.from(
       jsonDecode(json) as List,
     );
@@ -205,7 +206,7 @@ class SettingService with ListenableServiceMixin {
         llmProviderMap['id'] as String: LlmProvider.fromJson(llmProviderMap),
     };
   }
-  
+
   Future<void> clearData(String tablePrefix) async {
     await _settingRepository.deleteAllSettings(tablePrefix);
     await _settingRepository.createSetting(

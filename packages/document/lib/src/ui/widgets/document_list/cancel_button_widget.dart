@@ -8,8 +8,8 @@ class CancelButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: const Icon(Icons.stop_circle),
-        onPressed: cancelToken.cancel,
+      icon: const Icon(Icons.stop_circle),
+      onPressed: cancelToken.cancel,
     );
   }
 }

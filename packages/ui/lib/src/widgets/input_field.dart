@@ -4,9 +4,9 @@ import 'package:ui/src/widgets/password_field.dart';
 
 /// A customizable [StatelessWidget] for input fields.
 ///
-/// This widget provides a flexible input field with various customization 
-/// options, including label text, hint text, input formatters, keyboard type, 
-/// prefix and suffix icons, and more. 
+/// This widget provides a flexible input field with various customization
+/// options, including label text, hint text, input formatters, keyboard type,
+/// prefix and suffix icons, and more.
 /// It also supports displaying an error message and a clear text button.
 ///
 /// Example usage:
@@ -24,37 +24,37 @@ import 'package:ui/src/widgets/password_field.dart';
 /// ### Properties:
 ///
 /// - [controller]: A [TextEditingController] to control the text being edited.
-/// - [labelText]: An optional [String] to display as the label for the 
+/// - [labelText]: An optional [String] to display as the label for the
 ///   input field.
-/// - [errorText]: An optional [String] to display as an error message below 
+/// - [errorText]: An optional [String] to display as an error message below
 ///   the input field.
-/// - [hintText]: An optional [String] to display as a hint inside the 
+/// - [hintText]: An optional [String] to display as a hint inside the
 ///   input field. Defaults to an empty string.
-/// - [inputFormatters]: An optional list of [TextInputFormatter] to apply to 
+/// - [inputFormatters]: An optional list of [TextInputFormatter] to apply to
 ///   the input field.
-/// - [textInputType]: An optional [TextInputType] to specify the type of 
+/// - [textInputType]: An optional [TextInputType] to specify the type of
 ///   keyboard to display.
-/// - [prefixIcon]: An optional [Widget] to display as a prefix icon inside the 
+/// - [prefixIcon]: An optional [Widget] to display as a prefix icon inside the
 ///   input field.
-/// - [suffixIcon]: An optional [Widget] to display as a suffix icon inside the 
+/// - [suffixIcon]: An optional [Widget] to display as a suffix icon inside the
 ///   input field.
-/// - [showClearTextButton]: A boolean to determine if a clear text button 
-///   should be shown when the input field is focused and contains text. 
+/// - [showClearTextButton]: A boolean to determine if a clear text button
+///   should be shown when the input field is focused and contains text.
 ///   Defaults to `true`.
-/// - [enabled]: A boolean to determine if the input field is enabled. 
+/// - [enabled]: A boolean to determine if the input field is enabled.
 ///   Defaults to `true`.
-/// - [readOnly]: A boolean to determine if the input field is read-only. 
+/// - [readOnly]: A boolean to determine if the input field is read-only.
 ///   Defaults to `false`.
-/// - [maxLines]: An optional integer to specify the maximum number of lines 
+/// - [maxLines]: An optional integer to specify the maximum number of lines
 ///   for the input field. Defaults to `1`.
-/// - [isDense]: An optional boolean to determine if the input field 
+/// - [isDense]: An optional boolean to determine if the input field
 ///   should be dense.
 ///
 /// ### Styling:
 ///
-/// The widget uses the current [Theme] to style the text and input decoration. 
-/// The border of the input field is an [OutlineInputBorder] with 
-/// rounded corners. 
+/// The widget uses the current [Theme] to style the text and input decoration.
+/// The border of the input field is an [OutlineInputBorder] with
+/// rounded corners.
 /// The error message is styled with a bold font and the theme's error color.
 class InputField extends StatelessWidget {
   /// Creates an [InputField] widget.
@@ -86,7 +86,7 @@ class InputField extends StatelessWidget {
   /// An optional [String] to display as an error message below the input field.
   final String? errorText;
 
-  /// An optional [String] to display as a hint inside the input field. 
+  /// An optional [String] to display as a hint inside the input field.
   /// Defaults to an empty string.
   final String? hintText;
 
@@ -102,18 +102,18 @@ class InputField extends StatelessWidget {
   /// An optional [Widget] to display as a suffix icon inside the input field.
   final Widget? suffixIcon;
 
-  /// A boolean to determine if a clear text button should be shown when the 
+  /// A boolean to determine if a clear text button should be shown when the
   /// input field is focused and contains text. Defaults to `true`.
   final bool showClearTextButton;
 
   /// A boolean to determine if the input field is enabled. Defaults to `true`.
   final bool enabled;
 
-  /// A boolean to determine if the input field is read-only. 
+  /// A boolean to determine if the input field is read-only.
   /// Defaults to `false`.
   final bool readOnly;
 
-  /// An optional integer to specify the maximum number of lines for the 
+  /// An optional integer to specify the maximum number of lines for the
   /// input field. Defaults to `1`.
   final int? maxLines;
 

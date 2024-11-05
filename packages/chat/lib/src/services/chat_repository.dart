@@ -101,8 +101,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     final chatId = chat.id!.startsWith(fullChatTableName)
         ? chat.id!
         : '$fullChatTableName:${chat.id!}';
-    if (!((await _db.query('RETURN record::exists(r"$chatId")'))!
-        as bool)) {
+    if (!((await _db.query('RETURN record::exists(r"$chatId")'))! as bool)) {
       return null;
     }
     final payload = chat.toJson()..remove('id');

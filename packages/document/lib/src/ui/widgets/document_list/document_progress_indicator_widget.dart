@@ -10,7 +10,7 @@ class DocumentProgressIndicatorWidget extends StatelessWidget {
     this.progress,
     super.key,
   });
-  
+
   final DocumentItem documentItem;
   final double? progress;
 

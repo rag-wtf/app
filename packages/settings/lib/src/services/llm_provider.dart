@@ -63,7 +63,7 @@ sealed class ChatCompletions with _$ChatCompletions {
     double? frequencyPenalty,
     double? presencePenalty,
     @Default(true) bool frequencyPenaltyEnabled,
-    @Default(true) bool presencePenaltyEnabled,    
+    @Default(true) bool presencePenaltyEnabled,
   }) = _ChatCompletions;
 
   factory ChatCompletions.fromJson(Map<String, dynamic> json) =>

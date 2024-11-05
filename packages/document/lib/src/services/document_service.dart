@@ -43,7 +43,7 @@ class DocumentService with ListenableServiceMixin {
   final _items = <DocumentItem>[];
   List<DocumentItem> get items => _items.toList();
   SplitConfig? splitConfig;
-  
+
   final _log = getLogger('DocumentService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
@@ -222,19 +222,19 @@ class DocumentService with ListenableServiceMixin {
         embedding: vectors[i],
       );
     }
-    
+
     final batchSize = int.parse(
-            _settingService.get(embeddingsDatabaseBatchSizeKey).value,
-          );
-    final batchResults = await _batchService.execute<Embedding, dynamic>(
-        embeddings, batchSize, (values) async {
-      _log.d('values $values');    
+      _settingService.get(embeddingsDatabaseBatchSizeKey).value,
+    );
+    final batchResults = await _batchService
+        .execute<Embedding, dynamic>(embeddings, batchSize, (values) async {
+      _log.d('values $values');
       return _embeddingRepository.updateEmbeddings(
         tablePrefix,
         values,
         txn,
       );
-    });    
+    });
     return batchResults;
   }
 

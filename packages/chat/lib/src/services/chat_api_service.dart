@@ -51,7 +51,7 @@ class ChatApiService {
     String stop,
     double temperature,
     double topP, {
-    bool frequencyPenaltyEnabled = true,  
+    bool frequencyPenaltyEnabled = true,
     bool presencePenaltyEnabled = true,
   }) async {
     final response = await dio.post<Map<String, dynamic>>(
@@ -161,7 +161,7 @@ class ChatApiService {
     Function? onError,
     void Function()? onDone,
     bool? cancelOnError,
-    bool frequencyPenaltyEnabled = true,  
+    bool frequencyPenaltyEnabled = true,
     bool presencePenaltyEnabled = true,
   }) async {
     //generationApiUrl = 'http://localhost:11434/v1/chat/completions';
@@ -204,7 +204,7 @@ class ChatApiService {
       onDone: onDone,
       cancelOnError: cancelOnError,
     );
-    
+
     return _streamResponseService;
   }
 

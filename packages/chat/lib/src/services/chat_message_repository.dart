@@ -29,8 +29,9 @@ class ChatMessageRepository {
     ChatMessage chatMessage, [
     Transaction? txn,
   ]) async {
-    final chatId =  '${tablePrefix}_${Chat.tableName}:${chatMessage.chatId}';
-    final messageId = '${tablePrefix}_${Message.tableName}:${chatMessage.messageId}';
+    final chatId = '${tablePrefix}_${Chat.tableName}:${chatMessage.chatId}';
+    final messageId =
+        '${tablePrefix}_${Message.tableName}:${chatMessage.messageId}';
 
     final sql = '''
 RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// An adaptive dialog widget that switches between a fullscreen and 
+/// An adaptive dialog widget that switches between a fullscreen and
 /// a constrained dialog based on screen width.
 ///
-/// This widget is designed to provide a responsive dialog experience by 
-/// automatically switching to a fullscreen dialog on smaller screens and 
-/// a constrained dialog on larger screens. It is particularly useful in 
-/// applications where you want to ensure a consistent user experience across 
+/// This widget is designed to provide a responsive dialog experience by
+/// automatically switching to a fullscreen dialog on smaller screens and
+/// a constrained dialog on larger screens. It is particularly useful in
+/// applications where you want to ensure a consistent user experience across
 /// different screen sizes.
 ///
 /// Example usage:
@@ -28,8 +28,8 @@ class AdaptiveDialog extends StatelessWidget {
   /// Creates an [AdaptiveDialog] widget.
   ///
   /// The [child] parameter is required and represents the content of the dialog
-  /// The [shape], [backgroundColor], [fullScreenWidthBreakpoint], [maxWidth], 
-  /// and [maxHeight] parameters are optional and allow customization of the 
+  /// The [shape], [backgroundColor], [fullScreenWidthBreakpoint], [maxWidth],
+  /// and [maxHeight] parameters are optional and allow customization of the
   /// dialog's appearance and behavior.
   const AdaptiveDialog({
     required this.child,
@@ -50,7 +50,7 @@ class AdaptiveDialog extends StatelessWidget {
   /// The background color of the dialog. Defaults to `null`.
   final Color? backgroundColor;
 
-  /// The screen width breakpoint at which the dialog switches to 
+  /// The screen width breakpoint at which the dialog switches to
   /// fullscreen mode.
   /// Defaults to `600`.
   final double fullScreenWidthBreakpoint;

@@ -100,23 +100,25 @@ class DocumentApiService {
         final data = {'model': model, 'input': values};
         if (embeddingsDimensionsEnabled) {
           data['dimensions'] = dimensions;
-        }             
+        }
         // Send the batch and add the future to the list
-        final response = await dio.post<Map<String, dynamic>>(
-          apiUrl,
-          options: Options(
-            headers: {
-              'Content-type': 'application/json',
-              if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
-            },
-            requestEncoder: compressed ? gzipRequestEncoder : null,
-            sendTimeout: const Duration(seconds: 600),
-            receiveTimeout: const Duration(seconds: 600),
-          ),
-          data: data,
-        ).timeout(
-          const Duration(seconds: 900),
-        );
+        final response = await dio
+            .post<Map<String, dynamic>>(
+              apiUrl,
+              options: Options(
+                headers: {
+                  'Content-type': 'application/json',
+                  if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
+                },
+                requestEncoder: compressed ? gzipRequestEncoder : null,
+                sendTimeout: const Duration(seconds: 600),
+                receiveTimeout: const Duration(seconds: 600),
+              ),
+              data: data,
+            )
+            .timeout(
+              const Duration(seconds: 900),
+            );
 
         final embeddingsDataMap = response.data;
         return List<Map<String, dynamic>>.from(

@@ -186,25 +186,27 @@ class MessageBar extends StatelessWidget {
                       ),
                       prefixIcon: prefixIcon,
                       suffixIcon: isSendButtonBusy
-                          ? onStop == null ? AvatarBrick(
-                              isLoading: true,
-                              size: Size(
-                                sendButtonIconSize + 8,
-                                sendButtonIconSize + 8,
-                              ),
-                              backgroundColor: Colors.transparent,
-                            ) : Padding(
-                              padding: sendButtonMargin,
-                              child: IconButton(
-                                padding: sendButtonPadding,
-                                onPressed: onStop,
-                                icon: Icon(
-                                  Icons.stop_circle,
-                                  color: sendButtonColor,
-                                  size: sendButtonIconSize + 8,
-                                ),
-                              ),
-                            )
+                          ? onStop == null
+                              ? AvatarBrick(
+                                  isLoading: true,
+                                  size: Size(
+                                    sendButtonIconSize + 8,
+                                    sendButtonIconSize + 8,
+                                  ),
+                                  backgroundColor: Colors.transparent,
+                                )
+                              : Padding(
+                                  padding: sendButtonMargin,
+                                  child: IconButton(
+                                    padding: sendButtonPadding,
+                                    onPressed: onStop,
+                                    icon: Icon(
+                                      Icons.stop_circle,
+                                      color: sendButtonColor,
+                                      size: sendButtonIconSize + 8,
+                                    ),
+                                  ),
+                                )
                           : Padding(
                               padding: sendButtonMargin,
                               child: IconButton(

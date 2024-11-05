@@ -135,7 +135,7 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
         created.copyWith(name: name1),
       );
       final updated = await repository.getChatById(created.id!);
-      
+
       // Assert
       expect(updated, isNotNull);
       expect(updated?.name, equals(name1));

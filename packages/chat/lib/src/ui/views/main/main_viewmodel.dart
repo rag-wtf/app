@@ -52,5 +52,4 @@ class MainViewModel extends BaseViewModel {
   Future<bool> showNewChatDialog() async {
     return false;
   }
-
 }

@@ -46,7 +46,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   bool get frequencyPenaltyEnabled => _frequencyPenaltyEnabled;
 
   bool _presencePenaltyEnabled = true;
-  bool get presencePenaltyEnabled => _presencePenaltyEnabled;  
+  bool get presencePenaltyEnabled => _presencePenaltyEnabled;
 
   String get llmProviderId => _settingService.get(llmProviderKey).value;
   Map<String, LlmProvider> get llmProviders => _settingService.llmProviders;
@@ -536,8 +536,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   }
 
   Future<void> setPresencePenalty() async {
-    if (presencePenaltyValue != null &&
-        !hasPresencePenaltyValidationMessage) {
+    if (presencePenaltyValue != null && !hasPresencePenaltyValidationMessage) {
       await _settingService.set(
         tablePrefix,
         presencePenaltyKey,
@@ -633,7 +632,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
       await setGenerationModelContextLengthWith(generationModel);
 
-      final generationApiUrl = '${llmProvider.baseUrl}$generationApiUriPath'; 
+      final generationApiUrl = '${llmProvider.baseUrl}$generationApiUriPath';
       await _settingService.set(
         tablePrefix,
         generationApiUrlKey,
@@ -670,7 +669,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         );
         frequencyPenaltyValue =
             llmProvider.chatCompletions.frequencyPenalty.toString();
-      } 
+      }
       await setFrequencyPenaltyEnabled(
         llmProvider.chatCompletions.frequencyPenaltyEnabled,
       );
@@ -687,7 +686,6 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       await setPresencePenaltyEnabled(
         llmProvider.chatCompletions.presencePenaltyEnabled,
       );
-           
 
       if (llmProvider.chatCompletions.stop.isNotEmpty) {
         final stop = llmProvider.chatCompletions.stop.join(',');
@@ -734,7 +732,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     } else if (llmProviderSelected?.embeddings.dimensions != null) {
       embeddingsDimensionsValue =
           llmProviderSelected!.embeddings.dimensions.toString();
-    }    
+    }
     await setEmbeddingsDimensions();
   }
 
@@ -752,7 +750,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       if (redefineEmbeddingIndexError != null) {
         fieldsValidationMessages[EmbeddingsModelValueKey] =
             redefineEmbeddingIndexError.replaceFirst('dimensions', 'model');
-        notifyListeners();        
+        notifyListeners();
       } else {
         await _settingService.set(
           tablePrefix,
@@ -760,7 +758,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
           model.name,
         );
         embeddingsModelValue = model.name;
-        await setEmbeddingsModelContextLengthAndDimensions(model);  
+        await setEmbeddingsModelContextLengthAndDimensions(model);
       }
     }
   }

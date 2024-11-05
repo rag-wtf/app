@@ -66,8 +66,8 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
     final sqlBuffer = StringBuffer();
     for (final messageEmbedding in messageEmbeddings) {
       final messageId =
-        '${tablePrefix}_${Message.tableName}:${messageEmbedding.messageId}';
-      final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';   
+          '${tablePrefix}_${Message.tableName}:${messageEmbedding.messageId}';
+      final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';
       final embeddingId =
           messageEmbedding.embeddingId.startsWith(fullEmbeddingTableName)
               ? messageEmbedding.embeddingId
@@ -124,7 +124,6 @@ SELECT * FROM \$message_embeddings.*.id;
     if (results.isNotEmpty) {
       final messageEmbeddings = results[1] as List;
       final embeddings = results[2] as List;
-      
 
       return embeddings.asMap().entries.map(
         (entry) {

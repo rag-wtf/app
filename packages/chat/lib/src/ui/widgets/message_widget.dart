@@ -28,9 +28,9 @@ class MessageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: avatarPadding),
-            child: message.role == Role.user
-                ? Container(
+              padding: const EdgeInsets.only(top: avatarPadding),
+              child: message.role == Role.user
+                  ? Container(
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
@@ -47,8 +47,7 @@ class MessageWidget extends StatelessWidget {
                       darkLogo: darkLogo,
                       lightLogo: lightLogo,
                       size: 32,
-                    )
-          ),
+                    )),
           const SizedBox(
             width: 8,
           ), // Add spacing between the leading widget and title

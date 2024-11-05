@@ -34,7 +34,7 @@ class DocumentEmbeddingRepository {
             ? documentEmbedding.documentId
             : '$fullDocumentTableName:${documentEmbedding.documentId}';
     final embeddingId =
-      '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
+        '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
 
     final sql = '''
 RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddingId;''';
@@ -70,7 +70,7 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
               ? documentEmbedding.documentId
               : '$fullDocumentTableName:${documentEmbedding.documentId}';
       final embeddingId =
-        '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
+          '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${DocumentEmbedding.tableName}';
       sqlBuffer.write('RELATE ONLY $documentId->$fullTableName->$embeddingId;');
     }

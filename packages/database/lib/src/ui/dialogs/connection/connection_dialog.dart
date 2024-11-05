@@ -52,8 +52,8 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
         ConnectionDialogModel.newConnectionKey;
     final showDeleteButton = showClearTextButton;
     final isDense = MediaQuery.sizeOf(context).width < 600;
-    final notMemAndIndxDB = viewModel.protocol != 'mem' &&
-                      viewModel.protocol != 'indxdb';
+    final notMemAndIndxDB =
+        viewModel.protocol != 'mem' && viewModel.protocol != 'indxdb';
     final checkboxLabel =
         notMemAndIndxDB ? 'Remember password' : 'Connect automatically';
     return AdaptiveDialog(
@@ -120,138 +120,140 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
             if (viewModel.isBusy)
               const Center(
                 child: CircularProgressIndicator(),
-              ) 
-            else Expanded(
-              child: ListView(
-                children: [
-                  InputFieldDropdown<ConnectionSetting>(
-                    isDense: isDense,
-                    hintText: 'Name',
-                    controller: nameController,
-                    errorText: viewModel.nameValidationMessage,
-                    isLoading: viewModel.isBusy,
-                    items: viewModel.connectionNames,
-                    getItemValue: (ConnectionSetting name) => name.key,
-                    getItemDisplayText: (ConnectionSetting name) => name.value,
-                    onSelected: (ConnectionSetting selectedName) async {
-                      final connectionKey = selectedName.key ==
-                              ConnectionDialogModel.newConnectionKey
-                          ? selectedName.key
-                          : selectedName.key
-                              .substring(0, selectedName.key.indexOf('_'));
-                      await viewModel.onConnectionSelected(connectionKey);
-                    },
-                  ),
-                  verticalSpaceTiny,
-                  InputField(
-                    isDense: isDense,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: SizedBox(
-                        width: 115,
-                        child: DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 12),
-                            border: InputBorder.none,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8),
-                          ),
-                          value: viewModel.protocol,
-                          items: const [
-                            DropdownMenuItem(
-                              value: 'http',
-                              child: Text('HTTP'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'https',
-                              child: Text('HTTPS'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'ws',
-                              child: Text('WS'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'wss',
-                              child: Text('WSS'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'mem',
-                              child: Text('Memory'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'indxdb',
-                              child: Text('IndexedDB'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            viewModel.protocol = value!;
-                            if (viewModel.protocol == 'mem' ||
-                                viewModel.protocol == 'indxdb') {
-                              addressPortController.clear();
-                              usernameController.clear();
-                              passwordController.clear();
-                            }
-                          },
-                        ),
-                      ),
+              )
+            else
+              Expanded(
+                child: ListView(
+                  children: [
+                    InputFieldDropdown<ConnectionSetting>(
+                      isDense: isDense,
+                      hintText: 'Name',
+                      controller: nameController,
+                      errorText: viewModel.nameValidationMessage,
+                      isLoading: viewModel.isBusy,
+                      items: viewModel.connectionNames,
+                      getItemValue: (ConnectionSetting name) => name.key,
+                      getItemDisplayText: (ConnectionSetting name) =>
+                          name.value,
+                      onSelected: (ConnectionSetting selectedName) async {
+                        final connectionKey = selectedName.key ==
+                                ConnectionDialogModel.newConnectionKey
+                            ? selectedName.key
+                            : selectedName.key
+                                .substring(0, selectedName.key.indexOf('_'));
+                        await viewModel.onConnectionSelected(connectionKey);
+                      },
                     ),
-                    readOnly: viewModel.protocol == 'mem',
-                    hintText: getAddressPortHintText(viewModel.protocol),
-                    controller: addressPortController,
-                    errorText: viewModel.addressPortValidationMessage,
-                    showClearTextButton: showClearTextButton,
-                  ),
-                  verticalSpaceTiny,
-                  InputField(
-                    isDense: isDense,
-                    labelText: 'Namespace',
-                    controller: namespaceController,
-                    errorText: viewModel.namespaceValidationMessage,
-                    showClearTextButton: showClearTextButton,
-                  ),
-                  verticalSpaceTiny,
-                  InputField(
-                    isDense: isDense,
-                    labelText: 'Database',
-                    controller: databaseController,
-                    errorText: viewModel.databaseValidationMessage,
-                    showClearTextButton: showClearTextButton,
-                  ),
-                  if (notMemAndIndxDB) ...[
                     verticalSpaceTiny,
                     InputField(
                       isDense: isDense,
-                      labelText: 'Username',
-                      controller: usernameController,
-                      errorText: viewModel.usernameValidationMessage,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: SizedBox(
+                          width: 115,
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.only(left: 12),
+                              border: InputBorder.none,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              bottomLeft: Radius.circular(8),
+                            ),
+                            value: viewModel.protocol,
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'http',
+                                child: Text('HTTP'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'https',
+                                child: Text('HTTPS'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'ws',
+                                child: Text('WS'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'wss',
+                                child: Text('WSS'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'mem',
+                                child: Text('Memory'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'indxdb',
+                                child: Text('IndexedDB'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              viewModel.protocol = value!;
+                              if (viewModel.protocol == 'mem' ||
+                                  viewModel.protocol == 'indxdb') {
+                                addressPortController.clear();
+                                usernameController.clear();
+                                passwordController.clear();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      readOnly: viewModel.protocol == 'mem',
+                      hintText: getAddressPortHintText(viewModel.protocol),
+                      controller: addressPortController,
+                      errorText: viewModel.addressPortValidationMessage,
                       showClearTextButton: showClearTextButton,
                     ),
                     verticalSpaceTiny,
                     InputField(
                       isDense: isDense,
-                      labelText: 'Password',
-                      controller: passwordController,
-                      errorText: viewModel.passwordValidationMessage,
-                      textInputType: TextInputType.none,
+                      labelText: 'Namespace',
+                      controller: namespaceController,
+                      errorText: viewModel.namespaceValidationMessage,
+                      showClearTextButton: showClearTextButton,
+                    ),
+                    verticalSpaceTiny,
+                    InputField(
+                      isDense: isDense,
+                      labelText: 'Database',
+                      controller: databaseController,
+                      errorText: viewModel.databaseValidationMessage,
+                      showClearTextButton: showClearTextButton,
+                    ),
+                    if (notMemAndIndxDB) ...[
+                      verticalSpaceTiny,
+                      InputField(
+                        isDense: isDense,
+                        labelText: 'Username',
+                        controller: usernameController,
+                        errorText: viewModel.usernameValidationMessage,
+                        showClearTextButton: showClearTextButton,
+                      ),
+                      verticalSpaceTiny,
+                      InputField(
+                        isDense: isDense,
+                        labelText: 'Password',
+                        controller: passwordController,
+                        errorText: viewModel.passwordValidationMessage,
+                        textInputType: TextInputType.none,
+                      ),
+                    ],
+                    verticalSpaceTiny,
+                    CheckboxOrSwitchListTile(
+                      title: Text(
+                        checkboxLabel,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: viewModel.autoConnect,
+                      onChanged: (value) {
+                        viewModel.autoConnect = value;
+                      },
                     ),
                   ],
-                  verticalSpaceTiny,
-                  CheckboxOrSwitchListTile(
-                    title: Text(
-                      checkboxLabel,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: viewModel.autoConnect,
-                    onChanged: (value) {
-                      viewModel.autoConnect = value;
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
             verticalSpaceSmall,
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

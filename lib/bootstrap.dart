@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
-import 'package:rag/app/app.bottomsheets.dart';
+// import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
 import 'package:rag/app/app.locator.dart';
 import 'package:stacked_themes/stacked_themes.dart';
@@ -16,7 +16,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   await setupLocator();
   await ThemeManager.initialise();
   setupDialogUi();
-  setupBottomSheetUi();
+  // setupBottomSheetUi();
 
   runApp(await builder());
 }

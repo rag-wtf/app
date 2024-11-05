@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// A custom [TextField] widget designed for secure password input.
 ///
-/// This widget provides a password input field with an optional label, 
-/// hint text, prefix icon, and a toggle button to show/hide the password. 
-/// The field can also be configured to be dense, 
+/// This widget provides a password input field with an optional label,
+/// hint text, prefix icon, and a toggle button to show/hide the password.
+/// The field can also be configured to be dense,
 /// which reduces the height of the input field.
 ///
 /// Example usage:
@@ -21,27 +21,27 @@ import 'package:flutter/material.dart';
 /// ### Properties:
 ///
 /// - [controller]: A [TextEditingController] to control the text being edited.
-/// - [labelText]: An optional [String] to display as the label for the 
+/// - [labelText]: An optional [String] to display as the label for the
 ///   input field.
-/// - [errorText]: An optional [String] to display as an error message below 
+/// - [errorText]: An optional [String] to display as an error message below
 ///   the input field.
-/// - [hintText]: An optional [String] to display as a hint inside the 
+/// - [hintText]: An optional [String] to display as a hint inside the
 ///   input field. Defaults to an empty string.
-/// - [prefixIcon]: An optional [Widget] to display as a prefix icon inside the 
+/// - [prefixIcon]: An optional [Widget] to display as a prefix icon inside the
 ///   input field.
-/// - [isDense]: An optional [bool] to determine if the input field should be 
+/// - [isDense]: An optional [bool] to determine if the input field should be
 ///   dense.
 ///
 /// ### State Management:
 ///
-/// The visibility of the password text is managed internally by the widget. 
-/// A toggle button is provided as a suffix icon to switch between showing and 
+/// The visibility of the password text is managed internally by the widget.
+/// A toggle button is provided as a suffix icon to switch between showing and
 /// hiding the password.
 ///
 /// ### Styling:
 ///
-/// The widget uses the current [Theme] to style the text and input decoration. 
-/// The border of the input field is an [OutlineInputBorder] with 
+/// The widget uses the current [Theme] to style the text and input decoration.
+/// The border of the input field is an [OutlineInputBorder] with
 /// rounded corners.
 class PasswordField extends StatefulWidget {
   /// Creates a [PasswordField] widget.
@@ -66,7 +66,7 @@ class PasswordField extends StatefulWidget {
   /// An optional [String] to display as an error message below the input field.
   final String? errorText;
 
-  /// An optional [String] to display as a hint inside the input field. 
+  /// An optional [String] to display as a hint inside the input field.
   /// Defaults to an empty string.
   final String? hintText;
 

@@ -85,7 +85,7 @@ import 'package:ui/ui.dart';
     FormTextField(
       name: 'presencePenalty',
       validator: SettingsValidators.validateFrequencyPenalty,
-    ),    
+    ),
     FormTextField(
       name: 'maxTokens',
       validator: SettingsValidators.validateMaxTokens,
@@ -126,7 +126,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     final generationModels =
         viewModel.llmProviderSelected?.chatCompletions.models;
     final switchHorizontalPadding =
-        MediaQuery.sizeOf(context).width < 600 ? 0.0 : 4.0;    
+        MediaQuery.sizeOf(context).width < 600 ? 0.0 : 4.0;
     return Scaffold(
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
@@ -236,11 +236,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               getItemDisplayText: (model) => model.name,
                               onSelected: viewModel.onEmbeddingModelSelected,
                               defaultValue: embeddingModels?.firstWhere(
-                                      (model) =>
-                                          embeddingsModelController.text ==
-                                          model.name,
-                                      orElse: EmbeddingModel.nullObject,
-                                    ),
+                                (model) =>
+                                    embeddingsModelController.text ==
+                                    model.name,
+                                orElse: EmbeddingModel.nullObject,
+                              ),
                             ),
                             InputField(
                               isDense: isDense,
@@ -251,7 +251,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               ),
                               hintText: defaultEmbeddingsModelContextLength,
                               errorText: viewModel
-                                .embeddingsModelContextLengthValidationMessage,
+                                  .embeddingsModelContextLengthValidationMessage,
                               controller:
                                   embeddingsModelContextLengthController,
                               textInputType: TextInputType.number,
@@ -423,12 +423,12 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               getItemDisplayText: (model) => model.name,
                               onSelected: viewModel.onGenerationModelSelected,
                               defaultValue: generationModels?.firstWhere(
-                                      (model) =>
-                                          generationModelController.text ==
-                                          model.name,
-                                      orElse: ChatModel.nullObject,
-                                    ),
-                            ),                         
+                                (model) =>
+                                    generationModelController.text ==
+                                    model.name,
+                                orElse: ChatModel.nullObject,
+                              ),
+                            ),
                             InputField(
                               isDense: isDense,
                               labelText: 'Context Length',
@@ -438,7 +438,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               ),
                               hintText: defaultGenerationModelContextLength,
                               errorText: viewModel
-                                .generationModelContextLengthValidationMessage,
+                                  .generationModelContextLengthValidationMessage,
                               controller:
                                   generationModelContextLengthController,
                               textInputType: TextInputType.number,
@@ -605,7 +605,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                               ),
                               onTap: showPromptTemplateDialogFunction,
                             ),
-                            
                           ],
                         ),
                         isExpanded: viewModel.isPanelExpanded(3),

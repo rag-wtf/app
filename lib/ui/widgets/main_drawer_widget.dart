@@ -41,7 +41,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
     final listTileTextStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
           color: textAndIconColor,
         );
-    const expansionTileChildrenPadding = EdgeInsets.only(left: 16);    
+    const expansionTileChildrenPadding = EdgeInsets.only(left: 16);
 
     return ZoomDrawer(
       isRtl: true,
@@ -108,7 +108,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                             'Check out our app at https://',
                             subject: '$appSubTitle: $appTitle',
                           );
-                      
+
                           if (result.status == ShareResultStatus.success) {
                             await showDialog(
                               // ignore: use_build_context_synchronously
@@ -137,12 +137,12 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                       ),
                       ListTile(
                         leading: Image.asset(
-                            isDarkMode
-                                ? 'assets/images/github_light.png'
-                                : 'assets/images/github_dark.png',
-                            width: 24,
-                            height: 24,
-                            ),
+                          isDarkMode
+                              ? 'assets/images/github_light.png'
+                              : 'assets/images/github_dark.png',
+                          width: 24,
+                          height: 24,
+                        ),
                         title: Text(
                           'GitHub',
                           style: listTileTextStyle,
@@ -216,39 +216,45 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                         shape: const Border(),
                         children: [
                           ListTile(
-                            leading: Image.asset('assets/images/pubdev.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/pubdev.png',
+                                width: 24, height: 24),
                             title: Text(
                               'surrealdb_js',
                               style: listTileTextStyle,
                             ),
                             onTap: () async {
-                              final url = Uri.parse('https://pub.dev/packages/surrealdb_js');
+                              final url = Uri.parse(
+                                  'https://pub.dev/packages/surrealdb_js');
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               }
                             },
                           ),
                           ListTile(
-                            leading: Image.asset('assets/images/pubdev.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/pubdev.png',
+                                width: 24, height: 24),
                             title: Text(
                               'surrealdb_wasm',
                               style: listTileTextStyle,
                             ),
                             onTap: () async {
-                              final url = Uri.parse('https://pub.dev/packages/surrealdb_wasm');
+                              final url = Uri.parse(
+                                  'https://pub.dev/packages/surrealdb_wasm');
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               }
                             },
                           ),
                           ListTile(
-                            leading: Image.asset('assets/images/pypi.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/pypi.png',
+                                width: 24, height: 24),
                             title: Text(
                               'open-text-embeddings',
                               style: listTileTextStyle,
                             ),
                             onTap: () async {
-                              final url = Uri.parse('https://pypi.org/project/open-text-embeddings/');
+                              final url = Uri.parse(
+                                  'https://pypi.org/project/open-text-embeddings/');
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               }
@@ -282,7 +288,8 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                             },
                           ),
                           ListTile(
-                            leading: Image.asset('assets/images/surrealdb.png', width: 24, height: 24),
+                            leading: Image.asset('assets/images/surrealdb.png',
+                                width: 24, height: 24),
                             title: Text(
                               'SurrealDB',
                               style: listTileTextStyle,
