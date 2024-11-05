@@ -4,7 +4,6 @@ import 'package:settings/src/ui/common/app_colors.dart';
 import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/dialogs/prompt_template/prompt_template_dialog.form.dart';
 import 'package:settings/src/ui/dialogs/prompt_template/prompt_template_dialog_model.dart';
-import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -14,7 +13,7 @@ import 'package:ui/ui.dart';
   fields: [
     FormTextField(
       name: 'promptTemplate',
-      validator: SettingsValidators.validatePromptTemplate,
+      //validator: SettingsValidators.validatePromptTemplate,
     ),
   ],
 )
