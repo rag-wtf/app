@@ -17,7 +17,8 @@ class StreamResponseService {
         final data = Map<String, dynamic>.from(jsonDecode(dataLine) as Map);
         final choices = List<dynamic>.from(data['choices'] as List);
         final choice = Map<String, dynamic>.from(choices[0] as Map);
-        if (choice['finish_reason'] == null) {
+        if (choice['finish_reason'] == null ||
+            choice['finish_reason'].toString().isEmpty) {
           final delta = Map<String, dynamic>.from(choice['delta'] as Map);
           if (delta['content'] != null) {
             final content = delta['content'] as String;
