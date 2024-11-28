@@ -63,6 +63,7 @@ DEFINE EVENT {prefix}_${tableName}_updated ON TABLE {prefix}_$tableName
 WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
     UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
 );
+$defineEmbeddingsMtreeIndex
 ''';
 
   static const defineEmbeddingsMtreeIndex = '''

@@ -102,14 +102,21 @@ CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<Message?> updateMessage(
+    String tablePrefix,
     Message message, [
     Transaction? txn,
   ]) async {
-    if (await _db.select(message.id!) == null) return null;
-
+    final messageTableName = '${tablePrefix}_${Message.tableName}';
+    final messageId = message.id!.startsWith(messageTableName)
+        ? message.id!
+        : '$messageTableName:${message.id!}';
+    if (!((await _db.query('RETURN record::exists(r"$messageId")'))! as bool)) {
+      return null;
+    }
     final payload = message.toJson();
-    final id = payload.remove('id') as String;
-    final sql = 'UPDATE ONLY $id MERGE ${jsonEncode(payload)};';
+    payload.remove('id') as String;
+    final sql = 'UPDATE ONLY $messageId MERGE ${jsonEncode(payload)};';
+    _log.i('sql $sql');
     if (txn == null) {
       final result = await _db.query(sql);
       return Message.fromJson(

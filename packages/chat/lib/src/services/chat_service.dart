@@ -453,7 +453,7 @@ class ChatService with ListenableServiceMixin {
     return isTxnSucess;
   }
 
-  Future<bool> _addMessage(
+  Future<Message?> _addMessage(
     String tablePrefix,
     String authorId,
     Role role,
@@ -461,7 +461,7 @@ class ChatService with ListenableServiceMixin {
   ) async {
     final now = DateTime.now();
     _log.d('addMessage: _chatIndex $_chatIndex');
-    final message = Message(
+    Message? message = Message(
       id: Ulid().toString(),
       authorId: authorId,
       role: role,
@@ -507,8 +507,10 @@ class ChatService with ListenableServiceMixin {
         _messages.first = message;
       }
       notifyListeners();
+    } else {
+      message = null;
     }
-    return isTxnSucess;
+    return message;
   }
 
   Future<void> addMessage(
@@ -517,15 +519,15 @@ class ChatService with ListenableServiceMixin {
     Role role,
     String text,
   ) async {
-    final isSuccess = await _addMessage(tablePrefix, authorId, role, text);
-    if (isSuccess) {
+    final message = await _addMessage(tablePrefix, authorId, role, text);
+    if (message != null) {
       if (role == Role.user) {
         isGeneratingMessage = true;
         _addLoadingMessage(tablePrefix); // messages[0] status is sending
         if (isStreaming) {
-          await _rag(tablePrefix, text);
+          await _rag(tablePrefix, message);
         } else {
-          final generatedText = await _rag(tablePrefix, text);
+          final generatedText = await _rag(tablePrefix, message);
           isGeneratingMessage = false;
           await addMessage(
             tablePrefix,
@@ -611,7 +613,7 @@ class ChatService with ListenableServiceMixin {
 
   Future<List<Embedding>> _retrieve(
     String tablePrefix,
-    String input,
+    Message message,
   ) async {
     if (await _embeddingRepository.getTotal(tablePrefix) == 0) {
       return List.empty();
@@ -621,7 +623,7 @@ class ChatService with ListenableServiceMixin {
       _embeddingsApiUrl,
       _embeddingsApiKey,
       _settingService.get(embeddingsModelKey).value,
-      input,
+      message.value.content,
       dimensions: int.parse(
         _settingService.get(embeddingsDimensionsKey).value,
       ),
@@ -634,6 +636,10 @@ class ChatService with ListenableServiceMixin {
     );
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
+    await _messageRepository.updateMessage(
+      tablePrefix,
+      message.copyWith(value: message.value.copyWith(embedding: queryVector)),
+    );
     final embeddings = await _documentService.similaritySearch(
       tablePrefix,
       queryVector,
@@ -643,9 +649,9 @@ class ChatService with ListenableServiceMixin {
     return embeddings;
   }
 
-  Future<String> _rag(String tablePrefix, String input) async {
+  Future<String> _rag(String tablePrefix, Message message) async {
     _tablePrefix = tablePrefix; // used by _onMessageTextResponseCompleted()
-    final embeddings = await _retrieve(tablePrefix, input);
+    final embeddings = await _retrieve(tablePrefix, message);
     String prompt;
     if (embeddings.isNotEmpty) {
       final context = embeddings.map((e) {
@@ -653,10 +659,10 @@ class ChatService with ListenableServiceMixin {
       }).join('\n');
       prompt = _promptTemplate
           .replaceFirst(contextPlaceholder, context)
-          .replaceFirst(instructionPlaceholder, input);
+          .replaceFirst(instructionPlaceholder, message.value.content);
       _messages.first = _messages.first.copyWith(embeddings: embeddings);
     } else {
-      prompt = input;
+      prompt = message.value.content;
     }
 
     if (isStreaming) {

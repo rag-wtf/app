@@ -156,6 +156,7 @@ void main({bool wasm = false}) {
       // Act
       const remark = 'remark1';
       final updated = await repository.updateMessage(
+        defaultTablePrefix,
         created.copyWith(value: const Embedding(content: remark)),
       );
 
@@ -168,13 +169,16 @@ void main({bool wasm = false}) {
       final message = Message(
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        id: '${Message.tableName}:1',
+        id: '1',
         value: const Embedding(content: 'user message 1'),
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
       // Act & Assert
-      expect(await repository.updateMessage(message), isNull);
+      expect(
+        await repository.updateMessage(defaultTablePrefix, message),
+        isNull,
+      );
     });
   });
 
