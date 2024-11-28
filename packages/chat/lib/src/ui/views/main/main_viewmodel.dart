@@ -23,7 +23,7 @@ class MainViewModel extends BaseViewModel {
     if (inPackage) {
       await connectDatabase();
       await _settingService.initialise(tablePrefix);
-      await _chatService.initialise(tablePrefix);
+      await _chatService.initialise(tablePrefix, defaultEmbeddingsDimensions);
     }
   }
 

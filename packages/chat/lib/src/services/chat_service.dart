@@ -97,29 +97,30 @@ class ChatService with ListenableServiceMixin {
   }
 
   Future<void> createSchema(
-    String tablePrefix, [
+    String tablePrefix, 
+    String dimensions, [
     Transaction? txn,
   ]) async {
     if (txn == null) {
       await _db.transaction(
         (txn) async {
           await _chatRepository.createSchema(tablePrefix, txn);
-          await _messageRepository.createSchema(tablePrefix, txn);
+          await _messageRepository.createSchema(tablePrefix, dimensions, txn);
           await _chatMessageRepository.createSchema(tablePrefix, txn);
           await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
         },
       );
     } else {
       await _chatRepository.createSchema(tablePrefix, txn);
-      await _messageRepository.createSchema(tablePrefix, txn);
+      await _messageRepository.createSchema(tablePrefix, dimensions, txn);
       await _chatMessageRepository.createSchema(tablePrefix, txn);
       await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
     }
   }
 
-  Future<void> initialise(String tablePrefix) async {
+  Future<void> initialise(String tablePrefix, String dimensions) async {
     if (!await isSchemaCreated(tablePrefix)) {
-      await createSchema(tablePrefix);
+      await createSchema(tablePrefix, dimensions);
     }
     _chats.clear();
     _messages.clear();
@@ -136,12 +137,20 @@ class ChatService with ListenableServiceMixin {
     notifyListeners();
   }
 
-  Future<void> clearData(String tablePrefix) async {
+  Future<void> clearData(String tablePrefix, {
+    required bool clearSettings,
+  }) async {
     await _chatRepository.deleteAllChats(tablePrefix);
     await _messageRepository.deleteAllMessages(tablePrefix);
     _chats.clear();
     _totalChats = -1;
     newChat();
+    if (clearSettings) {
+      await _messageRepository.redefineEmbeddingIndex(
+        tablePrefix,
+        defaultEmbeddingsDimensions,
+      );
+    }
   }
 
   Future<Object?> createChatAndMessage(

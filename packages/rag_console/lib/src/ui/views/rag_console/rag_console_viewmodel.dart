@@ -111,7 +111,7 @@ Example:
       await _settingService.initialise(tablePrefix);
       final dimensions = _settingService.get(embeddingsDimensionsKey).value;
       await _documentService.initialise(tablePrefix, dimensions);
-      await _chatService.initialise(tablePrefix);
+      await _chatService.initialise(tablePrefix, dimensions);
     }
     _initMessages();
     _surrealVersion = await _db.version();

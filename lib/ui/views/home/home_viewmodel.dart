@@ -22,6 +22,7 @@ class HomeViewModel extends BaseViewModel {
   final _documentService = locator<DocumentService>();
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _chatRepository = locator<ChatRepository>();
+  final _messageRepository = locator<MessageRepository>();
   final _chatService = locator<ChatService>();
   // ignore: unused_field
   final _log = getLogger('HomeViewModel');
@@ -75,8 +76,30 @@ class HomeViewModel extends BaseViewModel {
   Future<String?> Function(
     String tablePrefix,
     String dimensions,
-  )? get redefineEmbeddingIndexFunction =>
-      _embeddingRepository.redefineEmbeddingIndex;
+  )? get redefineEmbeddingIndexFunction => _redefineEmbeddingIndex;
+
+  Future<String?> _redefineEmbeddingIndex(
+    String tablePrefix,
+    String dimensions,
+  ) async {
+    _log.d('redefineEmbeddingIndex($tablePrefix, $dimensions)');
+    final embeddingTotal = await _embeddingRepository.getTotal(tablePrefix);
+    final messageTotal = await _messageRepository.getTotal(tablePrefix);
+    if (embeddingTotal > 0 || messageTotal > 0) {
+      return '''
+Cannot change dimensions, there are existing embeddings in the database.''';
+    } else {
+      await _embeddingRepository.redefineEmbeddingIndex(
+        tablePrefix,
+        dimensions,
+      );
+      await _messageRepository.redefineEmbeddingIndex(
+        tablePrefix,
+        dimensions,
+      );
+      return null;
+    }
+  }
 
   Future<void> initialise() async {
     setBusy(true);
@@ -105,7 +128,7 @@ class HomeViewModel extends BaseViewModel {
     await _settingService.initialise(tablePrefix);
     final dimensions = _settingService.get(embeddingsDimensionsKey).value;
     await _documentService.initialise(tablePrefix, dimensions);
-    await _chatService.initialise(tablePrefix);
+    await _chatService.initialise(tablePrefix, dimensions);
     _totalChats = await _chatRepository.getTotal(tablePrefix);
   }
 
@@ -115,7 +138,7 @@ class HomeViewModel extends BaseViewModel {
       await _settingService.clearData(tablePrefix);
     }
     await _documentService.clearData(tablePrefix, clearSettings: clearSettings);
-    await _chatService.clearData(tablePrefix);
+    await _chatService.clearData(tablePrefix, clearSettings: clearSettings);
   }
 
   Future<void> showEmbeddingDialog(Embedding embedding) async {

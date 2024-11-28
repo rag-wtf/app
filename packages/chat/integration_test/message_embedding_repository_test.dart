@@ -61,7 +61,11 @@ void main({bool wasm = false}) {
       await db.transaction(
         (txn) async {
           if (!await messageRepository.isSchemaCreated(tablePrefix)) {
-            await messageRepository.createSchema(tablePrefix, txn);
+            await messageRepository.createSchema(
+              tablePrefix,
+              defaultEmbeddingsDimensions,
+              txn,
+            );
           }
           if (!await embeddingRepository.isSchemaCreated(tablePrefix)) {
             await embeddingRepository.createSchema(tablePrefix, '384', txn);

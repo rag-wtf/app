@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:chat/src/app/app.locator.dart';
+import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class MessageRepository {
   final _db = locator<Surreal>();
+  final _log = getLogger('MessageRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -15,11 +17,39 @@ class MessageRepository {
   }
 
   Future<void> createSchema(
-    String tablePrefix, [
+    String tablePrefix,
+    String dimensions, [
     Transaction? txn,
   ]) async {
-    final sqlSchema = Message.sqlSchema.replaceAll('{prefix}', tablePrefix);
+    final sqlSchema = Message.sqlSchema
+        .replaceAll('{prefix}', tablePrefix)
+        .replaceFirst('{dimensions}', dimensions);
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
+  }
+
+  Future<String?> redefineEmbeddingIndex(
+    String tablePrefix,
+    String dimensions,
+  ) async {
+    _log.d('redefineEmbeddingIndex($tablePrefix, $dimensions)');
+    final total = await getTotal(tablePrefix);
+    if (total > 0) {
+      return '''
+Cannot change dimensions, there are existing embeddings in the database.''';
+    } else {
+      final sql = Message.defineEmbeddingsMtreeIndex
+          .replaceAll('{prefix}', tablePrefix)
+          .replaceFirst('{dimensions}', dimensions);
+      await _db.query(sql);
+      return null;
+    }
+  }
+
+  Future<int> getTotal(String tablePrefix) async {
+    final sql =
+        'SELECT count() FROM ${tablePrefix}_${Message.tableName} GROUP ALL;';
+    final results = (await _db.query(sql))! as List;
+    return results.isEmpty ? 0 : (results.first as Map)['count'] as int;
   }
 
   Future<Message> createMessage(

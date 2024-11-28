@@ -64,6 +64,15 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
     UPDATE {prefix}_$tableName SET updated = time::now() WHERE id = \$after.id 
 );
 ''';
+
+  static const defineEmbeddingsMtreeIndex = '''
+DEFINE INDEX OVERWRITE {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
+FIELDS value.embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32;
+''';
+
+  static const rebuildEmbeddingsMtreeIndex = '''
+REBUILD INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
+''';
 }
 
 enum MessageType {

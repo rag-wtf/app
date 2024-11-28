@@ -48,7 +48,10 @@ void main({bool wasm = false}) {
     test('should create schemas and return true', () async {
       // Act
       if (!await chatService.isSchemaCreated(tablePrefix)) {
-        await chatService.createSchema(tablePrefix);
+        await chatService.createSchema(
+          tablePrefix,
+          defaultEmbeddingsDimensions,
+        );
       }
 
       // Assert
