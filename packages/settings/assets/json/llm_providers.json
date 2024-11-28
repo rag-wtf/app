@@ -255,6 +255,7 @@
     "base_url": "http://localhost:11434/v1",
     "embeddings": {
       "model": "nomic-embed-text",
+      "dimensions": 768,
       "models": [
         {
           "name": "nomic-embed-text",
