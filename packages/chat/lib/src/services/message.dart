@@ -10,7 +10,7 @@ sealed class Message with _$Message {
   const factory Message({
     required String authorId,
     required Role role,
-    required String text,
+    required Embedding value,
     required MessageType type,
     String? id,
     int? vote,
@@ -29,7 +29,7 @@ sealed class Message with _$Message {
       id: json['id'].toString(),
       authorId: json['authorId'].toString(),
       role: Role.values.byName(json['role'] as String),
-      text: json['text'] as String,
+      value: Embedding.fromJson(Map<String,dynamic>.from(json['value'] as Map)),
       type: MessageType.values.byName(json['type'] as String),
       vote: (json['vote'] as num?)?.toInt(),
       share: (json['share'] as num?)?.toInt(),
@@ -50,7 +50,7 @@ DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD authorId ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD role ON {prefix}_$tableName TYPE string;
-DEFINE FIELD text ON {prefix}_$tableName TYPE string;
+DEFINE FIELD value ON {prefix}_$tableName TYPE object;
 DEFINE FIELD type ON {prefix}_$tableName TYPE string;
 DEFINE FIELD status ON {prefix}_$tableName TYPE option<string>;
 DEFINE FIELD vote ON {prefix}_$tableName TYPE number DEFAULT 0;

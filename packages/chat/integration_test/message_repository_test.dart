@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat/chat.dart';
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/constants.dart';
+import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
@@ -57,7 +58,7 @@ void main({bool wasm = false}) {
       final message = Message(
         authorId: defaultAgentId,
         role: Role.agent,
-        text: 'agent message 1',
+        value: const Embedding(content: 'agent message 1'),
         type: MessageType.text,
         metadata: metadata,
       );
@@ -85,7 +86,7 @@ void main({bool wasm = false}) {
         (index) => Message(
           authorId: userId,
           role: Role.user,
-          text: 'user message $index',
+          value: Embedding(content: 'user message $index'),
           type: MessageType.text,
           metadata: {'id': 'customId$index'},
         ).toJson(),
@@ -112,7 +113,7 @@ void main({bool wasm = false}) {
       final message = Message(
         authorId: userId,
         role: Role.user,
-        text: 'user message 1',
+        value: const Embedding(content: 'user message 1'),
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
@@ -142,7 +143,7 @@ void main({bool wasm = false}) {
       final message = Message(
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        text: 'user message 1',
+        value: const Embedding(content: 'user message 1'),
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
@@ -151,11 +152,12 @@ void main({bool wasm = false}) {
 
       // Act
       const remark = 'remark1';
-      final updated =
-          await repository.updateMessage(created.copyWith(text: remark));
+      final updated = await repository.updateMessage(
+        created.copyWith(value: const Embedding(content: remark)),
+      );
 
       // Assert
-      expect(updated?.text, equals(remark));
+      expect(updated?.value.content, equals(remark));
     });
 
     test('should be null when the update message is not found', () async {
@@ -164,7 +166,7 @@ void main({bool wasm = false}) {
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
         id: '${Message.tableName}:1',
-        text: 'user message 1',
+        value: const Embedding(content: 'user message 1'),
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
@@ -179,7 +181,7 @@ void main({bool wasm = false}) {
       final message = Message(
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        text: 'user message 1',
+        value: const Embedding(content: 'user message 1'),
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );

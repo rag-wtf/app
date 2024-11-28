@@ -355,12 +355,13 @@ class ChatService with ListenableServiceMixin {
     _log.d('${DateTime.now().millisecond} $content');
     if (_messages.first.status == Status.sending) {
       _messages.first = _messages.first.copyWith(
-        text: content,
+        value: Embedding(content: content),
         status: Status.sent,
       );
     } else {
       _messages.first = _messages.first.copyWith(
-        text: _messages.first.text + content,
+        value: _messages.first.value
+            .copyWith(content: _messages.first.value.content + content),
       );
     }
     notifyListeners();
@@ -393,7 +394,7 @@ class ChatService with ListenableServiceMixin {
         id: Ulid().toString(),
         authorId: defaultAgentId,
         role: Role.agent,
-        text: '',
+        value: const Embedding(content: ''),
         type: MessageType.text,
         status: Status.sending,
         created: now,
@@ -421,7 +422,7 @@ class ChatService with ListenableServiceMixin {
           [],
           defaultChatWindow,
           chatNameSummarizerSystemPrompt,
-          '$summarizeInASentencePrompt${_messages.first.text}',
+          '$summarizeInASentencePrompt${_messages.first.value.content}',
           _generationApiUrl,
           _generationApiKey,
           _model,
@@ -455,7 +456,7 @@ class ChatService with ListenableServiceMixin {
       id: Ulid().toString(),
       authorId: authorId,
       role: role,
-      text: text,
+      value: Embedding(content: text),
       type: MessageType.text,
       created: now,
       updated: now,

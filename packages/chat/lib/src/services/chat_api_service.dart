@@ -226,7 +226,7 @@ class ChatApiService {
                 role: message.role == chat_message.Role.user
                     ? Role.user
                     : Role.assistant,
-                content: message.text,
+                content: message.value.content,
                 dateTime: message.updated!,
               ),
             )

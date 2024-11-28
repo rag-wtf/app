@@ -97,7 +97,7 @@ void main({bool wasm = false}) {
       id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
-      text: 'user message 1',
+      value: const Embedding(content: 'user message 1'),
       type: MessageType.text,
     );
     final embedding = Embedding(
@@ -147,7 +147,7 @@ void main({bool wasm = false}) {
       id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
-      text: 'user message 1',
+      value: const Embedding(content: 'user message 1'),
       type: MessageType.text,
     );
 
@@ -238,7 +238,7 @@ void main({bool wasm = false}) {
       id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
-      text: 'user message 1',
+      value: const Embedding(content: 'user message 1'),
       type: MessageType.text,
     );
 
@@ -247,7 +247,7 @@ void main({bool wasm = false}) {
       id: Ulid().toString(),
       authorId: 'userId:1',
       role: Role.user,
-      text: 'user message 2',
+      value: const Embedding(content: 'user message 2'),
       type: MessageType.text,
     );
 

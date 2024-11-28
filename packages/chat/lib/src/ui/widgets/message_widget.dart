@@ -66,7 +66,7 @@ class MessageWidget extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: MarkdownWidget(message.text),
+                    child: MarkdownWidget(message.value.content),
                   ),
                   HorizontalList(message.embeddings, showDialogFunction),
                 ],

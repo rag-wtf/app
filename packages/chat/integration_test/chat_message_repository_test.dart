@@ -1,6 +1,7 @@
 import 'package:chat/chat.dart';
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/constants.dart';
+import 'package:document/document.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:settings/settings.dart';
@@ -99,7 +100,7 @@ void main({bool wasm = false}) {
       id: Ulid().toString(),
       authorId: '$userIdPrefix${Ulid()}',
       role: Role.user,
-      text: 'user message 1',
+      value: const Embedding(content: 'user message 1'),
       type: MessageType.text,
       metadata: {'id': 'customId1'},
     );
@@ -155,7 +156,7 @@ void main({bool wasm = false}) {
         id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        text: 'user message 1 of 1',
+        value: const Embedding(content: 'user message 1 of 1'),
         type: MessageType.text,
         metadata: {'id': 'customId'},
       ),
@@ -163,7 +164,7 @@ void main({bool wasm = false}) {
         id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        text: 'user message 2 of 1',
+        value: const Embedding(content: 'user message 2 of 1'),
         type: MessageType.text,
         metadata: {'id': 'customId'},
       ),
@@ -173,7 +174,7 @@ void main({bool wasm = false}) {
         id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        text: 'user message 1 of 2',
+        value: const Embedding(content: 'user message 1 of 2'),
         type: MessageType.text,
         metadata: {'id': 'customId'},
       ),
@@ -181,7 +182,7 @@ void main({bool wasm = false}) {
         id: Ulid().toString(),
         authorId: '$userIdPrefix${Ulid()}',
         role: Role.user,
-        text: 'user message 2 of 2',
+        value: const Embedding(content: 'user message 2 of 2'),
         type: MessageType.text,
         metadata: {'id': 'customId'},
       ),

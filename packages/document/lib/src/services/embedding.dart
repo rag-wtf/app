@@ -19,13 +19,15 @@ sealed class Embedding with _$Embedding {
     return Embedding(
       id: json['id'].toString(),
       content: json['content'] as String,
-      embedding: (json['embedding'] as List<dynamic>)
-          .map((e) => (e as num).toDouble())
-          .toList(),
+      embedding: json['embedding'] != null
+          ? (json['embedding'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()
+          : null,
       score: (json['score'] as num?)?.toDouble(),
       metadata: json['metadata'],
-      created: json['created'] as DateTime,
-      updated: json['updated'] as DateTime,
+      created: json['created'] as DateTime?,
+      updated: json['updated'] as DateTime?,
     );
   }
 
