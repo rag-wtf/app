@@ -11,13 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   
   logger:
-  responsive_builder: ^0.7.0
-  stacked: ^3.4.0
-  stacked_services: ^1.5.0
+  responsive_builder: ^0.7.1
+  stacked: ^3.4.3
+  stacked_services: ^1.6.0
   surrealdb_js: ^1.0.1+7
   surrealdb_wasm: ^1.0.1+15
 
