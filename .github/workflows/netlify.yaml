@@ -36,14 +36,14 @@ jobs:
       - name: Run Integration Tests
         run: melos ci_integration_test --no-select
 
-      - name: Create .env file
-        run: echo "${{ secrets.DOT_ENV_FILE }}" > .env
+      - name: Create .env.prod file
+        run: echo "${{ secrets.DOT_ENV_FILE }}" > .env.prod
 
       - name: Update GITHUB_RUN_NUMBER to version
         run: melos update_version
         
       - name: Build
-        run: melos build
+        run: melos build_prod
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0

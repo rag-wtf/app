@@ -12,9 +12,17 @@ scripts:
     run: melos exec -- flutter test
     description: Run `flutter test` for all packages
 
-  build:
-    run: flutter build web --web-renderer html --release --no-tree-shake-icons --target lib/main_production.dart --dart-define-from-file=.env --no-source-maps --pwa-strategy=none
-    description: Build app for web
+  build_dev:
+    run: flutter build web --release --no-tree-shake-icons --target lib/main_development.dart --dart-define-from-file=.env.dev --no-source-maps --pwa-strategy=none
+    description: Build app for web in development flavor
+
+  build_prod:
+    run: flutter build web --release --no-tree-shake-icons --target lib/main_production.dart --dart-define-from-file=.env.prod --no-source-maps --pwa-strategy=none
+    description: Build app for web in production flavor
+
+  build_stg:
+    run: flutter build web --release --no-tree-shake-icons --target lib/main_staging.dart --dart-define-from-file=.env.stg --no-source-maps --pwa-strategy=none
+    description: Build app for web in staging flavor
 
   generate:
     run: melos exec --order-dependents -- dart run build_runner build --delete-conflicting-outputs
@@ -61,3 +69,7 @@ scripts:
       NEW_VERSION="$VERSION+$GITHUB_RUN_NUMBER"
       sed -i "s/version: $VERSION/version: $NEW_VERSION/g" pubspec.yaml
     description: Update version in pubspec.yaml with GitHub run number
+
+  run:
+    run: flutter run --flavor development --target lib/main_development.dart --dart-define-from-file .env.dev
+    description: Run app in development flavor
