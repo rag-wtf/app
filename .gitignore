@@ -1,5 +1,5 @@
 # Env Reader related
-.env
+.env*
 assets/env/
 # Miscellaneous
 *.class

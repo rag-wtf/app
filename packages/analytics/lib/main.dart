@@ -1,11 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:analytics/src/app/app.dart';
 import 'package:analytics/src/app/app.locator.dart';
 import 'package:analytics/src/app/app.router.dart';
+import 'package:analytics/src/services/analytics_facade.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
+  locator.registerLazySingletonAsync<AnalyticsFacade>(App.getAnalyticsFacade);
   runApp(const MainApp());
 }
 

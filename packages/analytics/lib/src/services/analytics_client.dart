@@ -1,4 +1,5 @@
 abstract class AnalyticsClient {
+  Future<void> setAnalyticsCollectionEnabled({required bool enabled});
   Future<void> trackDocumentsOrChatsOpened();
   Future<void> trackSettingsOpened();
   Future<void> trackSettingsShared();

@@ -6,6 +6,12 @@ class AnalyticsFacade implements AnalyticsClient {
   final List<AnalyticsClient> clients;
 
   @override
+  Future<void> setAnalyticsCollectionEnabled({required bool enabled}) =>
+      _dispatch(
+        (c) => c.setAnalyticsCollectionEnabled(enabled: enabled),
+      );
+
+  @override
   Future<void> trackDocumentsOrChatsOpened() => _dispatch(
         (c) => c.trackDocumentsOrChatsOpened(),
       );

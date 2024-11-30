@@ -15,6 +15,7 @@ dependencies:
   json_annotation: ^4.9.0
   
   logger:
+  mixpanel_flutter: ^2.3.3
   responsive_builder: ^0.7.1
   stacked: ^3.4.3
   stacked_services: ^1.6.0
