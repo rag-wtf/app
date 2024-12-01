@@ -1,9 +1,11 @@
 import 'package:analytics/src/services/analytics_facade.dart';
+import 'package:analytics/src/services/firebase_analytics_client.dart';
 import 'package:analytics/src/services/logger_analytics_client.dart';
 import 'package:analytics/src/services/mixpanel_analytics_client.dart';
 import 'package:analytics/src/services/model_repository.dart';
 import 'package:analytics/src/ui/views/main/main_view.dart';
 import 'package:analytics/src/ui/views/startup/startup_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
@@ -32,8 +34,9 @@ class App {
     static Future<AnalyticsFacade> getAnalyticsFacade() async {
     final mixpanelAnalyticsClient = await MixpanelAnalyticsClient.getInstance();
     return AnalyticsFacade([
-      LoggerAnalyticsClient(),
       mixpanelAnalyticsClient,
+      FirebaseAnalyticsClient(),
+      if (!kReleaseMode) LoggerAnalyticsClient(),
     ]);
   }
 }
