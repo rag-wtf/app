@@ -1,5 +1,9 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
+import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/ui/views/chat/chat_viewmodel.dart';
 import 'package:chat/src/ui/widgets/message_bar.dart';
 import 'package:chat/src/ui/widgets/message_widget.dart';
@@ -21,6 +25,7 @@ class ChatView extends StackedView<ChatViewModel> {
   });
   final String tablePrefix;
   final _scrollController = ScrollController();
+  final _analyticsFacade = locator<AnalyticsFacade>();
   final TabController? leftWidgetTabController;
   final Future<void> Function(Embedding embedding) showEmbeddingDialogFunction;
   final Future<bool> Function() showNewChatDialogFunction;
@@ -46,7 +51,12 @@ class ChatView extends StackedView<ChatViewModel> {
                   children: [
                     if (const String.fromEnvironment(promptsKey).isNotEmpty)
                       PromptPanel(
-                        (text) => _onSend(viewModel, text),
+                        (text) {
+                          unawaited(
+                            _analyticsFacade.trackChatStartedFromPrompt(),
+                          );
+                          _onSend(viewModel, text);
+                        },
                       ),
                   ],
                 );
@@ -91,7 +101,12 @@ class ChatView extends StackedView<ChatViewModel> {
               sendButtonMargin: buttonMargin,
               sendButtonPadding: buttonPadding,
               sendButtonIconSize: buttonIconSize,
-              onSend: (text) async => _onSend(viewModel, text),
+              onSend: (text) async {
+                unawaited(
+                  _analyticsFacade.trackChatStarted(),
+                );
+                await _onSend(viewModel, text);
+              },
               onStop: viewModel.isStreaming ? viewModel.stop : null,
               prefixIcon: Padding(
                 padding: buttonMargin,

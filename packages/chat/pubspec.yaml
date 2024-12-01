@@ -8,6 +8,8 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  analytics: 
+    path: ../analytics
   archive: ^3.6.1
   avatar_brick: ^0.2.0
   database: 
