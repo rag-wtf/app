@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:analytics/analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rag/app/app.dart';
 // import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
 import 'package:rag/app/app.locator.dart';
@@ -18,10 +20,13 @@ Future<void> bootstrap(
 
   // Add cross-flavor configuration here
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: firebaseOptions);
+  locator.registerSingletonAsync<AnalyticsFacade>(
+    App.getAnalyticsFacade,
+  );
   await setupLocator();
   await ThemeManager.initialise();
   setupDialogUi();
-  await Firebase.initializeApp(options: firebaseOptions);
   // setupBottomSheetUi();
 
   runApp(await builder());

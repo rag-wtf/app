@@ -15,7 +15,7 @@ class AnalyticsFacade implements AnalyticsClient {
   Future<void> identifyUser(String userId) => _dispatch(
         (c) => c.identifyUser(userId),
       );
- 
+
   @override
   Future<void> resetUser() => _dispatch(
         (c) => c.resetUser(),
@@ -24,7 +24,7 @@ class AnalyticsFacade implements AnalyticsClient {
   @override
   Future<void> trackScreenView(String routeName, String action) => _dispatch(
         (c) => c.trackScreenView(routeName, action),
-      ); 
+      );
 
   @override
   Future<void> trackDocumentsOrChatsOpened() => _dispatch(
@@ -75,7 +75,7 @@ class AnalyticsFacade implements AnalyticsClient {
   Future<void> trackEmbeddingDialogOpened() => _dispatch(
         (c) => c.trackEmbeddingDialogOpened(),
       );
-      
+
   @override
   Future<void> trackEmbeddingModelSelected(String name) => _dispatch(
         (c) => c.trackEmbeddingModelSelected(name),

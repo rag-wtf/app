@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs, implementation_imports, depend_on_referenced_packages
 
+import 'package:analytics/src/services/logger_navigator_observer.dart';
 import 'package:archive/src/gzip_decoder.dart';
 import 'package:archive/src/gzip_encoder.dart';
 import 'package:chat/src/services/chat_api_service.dart';
@@ -72,4 +73,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => FlutterSecureStorage());
   locator.registerLazySingleton(() => ConnectionSettingRepository());
   locator.registerLazySingleton(() => ConnectionSettingService());
+  locator.registerLazySingleton(() => LoggerNavigatorObserver());
 }

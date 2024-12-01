@@ -27,18 +27,18 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
   Future<void> identifyUser(String userId) async {
     await _mixpanel.identify(userId);
   }
- 
+
   @override
   Future<void> resetUser() async {
     await _mixpanel.reset();
   }
- 
+
   @override
   Future<void> trackScreenView(String routeName, String action) async {
     await _mixpanel.track('Screen View',
         properties: {'name': routeName, 'action': action});
   }
-  
+
   @override
   Future<void> trackChatStarted() async {
     await _mixpanel.track('Chat Started');

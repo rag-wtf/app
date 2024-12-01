@@ -14,27 +14,27 @@ case $1 in
       --project=rag-dev-8fbc0 \
       --out=lib/firebase_options_dev.dart \
       --ios-bundle-id=wtf.rag.app.dev \
-      --ios-out=ios/flavors/dev/GoogleService-Info.plist \
+      --ios-out=ios/flavors/development/GoogleService-Info.plist \
       --android-package-name=wtf.rag.app.dev \
-      --android-out=android/app/src/dev/google-services.json
+      --android-out=android/app/src/development/google-services.json
     ;;
   stg)
     flutterfire config \
       --project=rag-stg \
       --out=lib/firebase_options_stg.dart \
       --ios-bundle-id=wtf.rag.app.stg \
-      --ios-out=ios/flavors/stg/GoogleService-Info.plist \
+      --ios-out=ios/flavors/staging/GoogleService-Info.plist \
       --android-package-name=wtf.rag.app.stg \
-      --android-out=android/app/src/stg/google-services.json
+      --android-out=android/app/src/staging/google-services.json
     ;;
   prod)
     flutterfire config \
       --project=rag-prod \
       --out=lib/firebase_options_prod.dart \
       --ios-bundle-id=wtf.rag.app \
-      --ios-out=ios/flavors/prod/GoogleService-Info.plist \
+      --ios-out=ios/flavors/main/GoogleService-Info.plist \
       --android-package-name=wtf.rag.app \
-      --android-out=android/app/src/prod/google-services.json
+      --android-out=android/app/src/main/google-services.json
     ;;
   *)
     echo "Error: Invalid environment specified. Use 'dev', 'stg', or 'prod'."

@@ -29,7 +29,8 @@ sealed class Message with _$Message {
       id: json['id'].toString(),
       authorId: json['authorId'].toString(),
       role: Role.values.byName(json['role'] as String),
-      value: Embedding.fromJson(Map<String,dynamic>.from(json['value'] as Map)),
+      value:
+          Embedding.fromJson(Map<String, dynamic>.from(json['value'] as Map)),
       type: MessageType.values.byName(json['type'] as String),
       vote: (json['vote'] as num?)?.toInt(),
       share: (json['share'] as num?)?.toInt(),

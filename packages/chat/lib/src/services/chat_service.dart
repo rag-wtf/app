@@ -97,7 +97,7 @@ class ChatService with ListenableServiceMixin {
   }
 
   Future<void> createSchema(
-    String tablePrefix, 
+    String tablePrefix,
     String dimensions, [
     Transaction? txn,
   ]) async {
@@ -137,7 +137,8 @@ class ChatService with ListenableServiceMixin {
     notifyListeners();
   }
 
-  Future<void> clearData(String tablePrefix, {
+  Future<void> clearData(
+    String tablePrefix, {
     required bool clearSettings,
   }) async {
     await _chatRepository.deleteAllChats(tablePrefix);

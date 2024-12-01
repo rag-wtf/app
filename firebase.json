@@ -1,1 +1,57 @@
-{"flutter":{"platforms":{"android":{"buildConfigurations":{"src/dev":{"projectId":"rag-dev-8fbc0","appId":"1:1082255562580:android:192464c79f1086852b5ac1","fileOutput":"android/app/src/dev/google-services.json"},"src/stg":{"projectId":"rag-stg","appId":"1:58905576586:android:786360acb48e7b07af1973","fileOutput":"android/app/src/stg/google-services.json"},"src/prod":{"projectId":"rag-prod","appId":"1:900976630231:android:e0901384193cc050181392","fileOutput":"android/app/src/prod/google-services.json"}}},"dart":{"lib/firebase_options_dev.dart":{"projectId":"rag-dev-8fbc0","configurations":{"android":"1:1082255562580:android:192464c79f1086852b5ac1","ios":"1:1082255562580:ios:9ea77b5623e9fc752b5ac1","macos":"1:1082255562580:ios:9ea77b5623e9fc752b5ac1","web":"1:1082255562580:web:434a1fdb1e8ee7782b5ac1","windows":"1:1082255562580:web:ec8c1fb0972e90e12b5ac1"}},"lib/firebase_options_stg.dart":{"projectId":"rag-stg","configurations":{"android":"1:58905576586:android:786360acb48e7b07af1973","ios":"1:58905576586:ios:7b17578efad2b340af1973","macos":"1:58905576586:ios:7b17578efad2b340af1973","web":"1:58905576586:web:4c8369e1d5a88811af1973","windows":"1:58905576586:web:1c4b7c0d9dad14d2af1973"}},"lib/firebase_options_prod.dart":{"projectId":"rag-prod","configurations":{"android":"1:900976630231:android:e0901384193cc050181392","ios":"1:900976630231:ios:f4b6c5f95ef35569181392","macos":"1:900976630231:ios:f4b6c5f95ef35569181392","web":"1:900976630231:web:f1d6f4ad0e46e23c181392","windows":"1:900976630231:web:86fa0c028623624a181392"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "buildConfigurations": {
+                    "src/development": {
+                        "projectId": "rag-dev-8fbc0",
+                        "appId": "1:1082255562580:android:192464c79f1086852b5ac1",
+                        "fileOutput": "android/app/src/development/google-services.json"
+                    },
+                    "src/staging": {
+                        "projectId": "rag-stg",
+                        "appId": "1:58905576586:android:786360acb48e7b07af1973",
+                        "fileOutput": "android/app/src/staging/google-services.json"
+                    },
+                    "src/main": {
+                        "projectId": "rag-prod",
+                        "appId": "1:900976630231:android:e0901384193cc050181392",
+                        "fileOutput": "android/app/src/main/google-services.json"
+                    }
+                }
+            },
+            "dart": {
+                "lib/firebase_options_dev.dart": {
+                    "projectId": "rag-dev-8fbc0",
+                    "configurations": {
+                        "android": "1:1082255562580:android:192464c79f1086852b5ac1",
+                        "ios": "1:1082255562580:ios:9ea77b5623e9fc752b5ac1",
+                        "macos": "1:1082255562580:ios:9ea77b5623e9fc752b5ac1",
+                        "web": "1:1082255562580:web:434a1fdb1e8ee7782b5ac1",
+                        "windows": "1:1082255562580:web:ec8c1fb0972e90e12b5ac1"
+                    }
+                },
+                "lib/firebase_options_stg.dart": {
+                    "projectId": "rag-stg",
+                    "configurations": {
+                        "android": "1:58905576586:android:786360acb48e7b07af1973",
+                        "ios": "1:58905576586:ios:7b17578efad2b340af1973",
+                        "macos": "1:58905576586:ios:7b17578efad2b340af1973",
+                        "web": "1:58905576586:web:4c8369e1d5a88811af1973",
+                        "windows": "1:58905576586:web:1c4b7c0d9dad14d2af1973"
+                    }
+                },
+                "lib/firebase_options_prod.dart": {
+                    "projectId": "rag-prod",
+                    "configurations": {
+                        "android": "1:900976630231:android:e0901384193cc050181392",
+                        "ios": "1:900976630231:ios:f4b6c5f95ef35569181392",
+                        "macos": "1:900976630231:ios:f4b6c5f95ef35569181392",
+                        "web": "1:900976630231:web:f1d6f4ad0e46e23c181392",
+                        "windows": "1:900976630231:web:86fa0c028623624a181392"
+                    }
+                }
+            }
+        }
+    }
+}
