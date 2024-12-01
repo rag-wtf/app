@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58905576586",
+    "project_id": "rag-stg",
+    "storage_bucket": "rag-stg.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58905576586:android:786360acb48e7b07af1973",
+        "android_client_info": {
+          "package_name": "wtf.rag.app.stg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwPEQcdeHBoqONRq-ZLRDbG16u5R0Y_7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
