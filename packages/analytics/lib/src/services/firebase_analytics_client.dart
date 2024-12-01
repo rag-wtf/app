@@ -10,6 +10,24 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   }
 
   @override
+  Future<void> identifyUser(String userId) async {
+    await _analytics.setUserId(id: userId);
+  }
+ 
+  @override
+  Future<void> resetUser() async {
+    await _analytics.setUserId(id: 'null');
+  }
+ 
+  @override
+  Future<void> trackScreenView(String routeName, String action) async {
+    await _analytics.logScreenView(screenName: 'screen_view', parameters: {
+      'name': routeName,
+      'action': action,
+    });
+  }  
+
+  @override
   Future<void> trackChatStarted() async {
     await _analytics.logEvent(name: 'chat_started');
   }
@@ -61,6 +79,11 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   @override
   Future<void> trackDocumentsOrChatsOpened() async {
     await _analytics.logEvent(name: 'documents_or_chats_opened');
+  }
+
+  @override
+  Future<void> trackEmbeddingDialogOpened() async {
+    await _analytics.logEvent(name: 'embedding_dialog_opened');
   }
 
   @override
