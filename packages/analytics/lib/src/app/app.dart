@@ -1,5 +1,5 @@
 import 'package:analytics/src/services/analytics_facade.dart';
-import 'package:analytics/src/services/firebase_analytics_client.dart';
+//import 'package:analytics/src/services/firebase_analytics_client.dart';
 import 'package:analytics/src/services/logger_analytics_client.dart';
 import 'package:analytics/src/services/logger_navigator_observer.dart';
 import 'package:analytics/src/services/mixpanel_analytics_client.dart';
@@ -28,7 +28,7 @@ class App {
     final mixpanelAnalyticsClient = await MixpanelAnalyticsClient.getInstance();
     return AnalyticsFacade([
       mixpanelAnalyticsClient,
-      FirebaseAnalyticsClient(),
+      //FirebaseAnalyticsClient(),
       if (!kReleaseMode) LoggerAnalyticsClient(),
     ]);
   }

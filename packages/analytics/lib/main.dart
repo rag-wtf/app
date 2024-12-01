@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
       navigatorKey: StackedService.navigatorKey,
       navigatorObservers: [
         StackedService.routeObserver,
-        //locator<LoggerNavigatorObserver>(),
+        locator<LoggerNavigatorObserver>(),
       ],
     );
   }
