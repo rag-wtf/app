@@ -29,6 +29,7 @@ scripts:
     description: Run code generation for all packages
     packageFilters:
       scope: 
+        - analytics
         - database
         - settings
         - document
