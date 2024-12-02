@@ -25,7 +25,6 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   flutter_zoom_drawer: ^3.2.0
   intl: ^0.19.0
-  logger: ^2.5.0
   package_info_plus: ^8.0.2
   rag_console:
     path: packages/rag_console
@@ -33,7 +32,7 @@ dependencies:
     path: packages/settings
   share_plus: ^10.0.2
   stacked: ^3.4.3
-  stacked_services: ^1.5.0
+  stacked_services: ^1.6.0
   stacked_themes: ^0.3.13
   surrealdb_js: ^1.0.1+7
   surrealdb_wasm: ^1.0.1+15
