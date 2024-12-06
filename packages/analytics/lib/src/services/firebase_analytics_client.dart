@@ -24,7 +24,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
     await _analytics.logScreenView(screenName: 'screen_view', parameters: {
       'name': routeName,
       'action': action,
-    });
+    },);
   }
 
   @override

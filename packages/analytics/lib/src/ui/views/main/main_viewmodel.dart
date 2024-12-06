@@ -1,5 +1,5 @@
-import 'package:stacked/stacked.dart';
 import 'package:analytics/src/app/app.logger.dart';
+import 'package:stacked/stacked.dart';
 
 class MainViewModel extends BaseViewModel {
   MainViewModel(this.tablePrefix);

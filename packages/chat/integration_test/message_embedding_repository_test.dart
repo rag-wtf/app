@@ -107,7 +107,7 @@ void main({bool wasm = false}) {
     final embedding = Embedding(
       id: Ulid().toString(),
       content: 'apple',
-      embedding: testData['apple']!,
+      embedding: testData['apple'],
     );
 
     // Act
@@ -159,31 +159,31 @@ void main({bool wasm = false}) {
       Embedding(
         id: Ulid().toString(),
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'twenty',
-        embedding: testData['twenty']!,
+        embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'two',
-        embedding: testData['two']!,
+        embedding: testData['two'],
         metadata: {'id': 'customId4'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'banana',
-        embedding: testData['banana']!,
+        embedding: testData['banana'],
         metadata: {'id': 'customId5'},
       ),
     ];
@@ -259,13 +259,13 @@ void main({bool wasm = false}) {
       Embedding(
         id: Ulid().toString(),
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       ),
     ];
@@ -273,19 +273,19 @@ void main({bool wasm = false}) {
       Embedding(
         id: Ulid().toString(),
         content: 'twenty',
-        embedding: testData['twenty']!,
+        embedding: testData['twenty'],
         metadata: {'id': 'customId3'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'two',
-        embedding: testData['two']!,
+        embedding: testData['two'],
         metadata: {'id': 'customId4'},
       ),
       Embedding(
         id: Ulid().toString(),
         content: 'banana',
-        embedding: testData['banana']!,
+        embedding: testData['banana'],
         metadata: {'id': 'customId5'},
       ),
     ];

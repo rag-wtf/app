@@ -83,7 +83,7 @@ void main({bool wasm = false}) {
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
       );
       await repository.createEmbedding(defaultTablePrefix, embedding);
@@ -124,7 +124,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Arrange
       final embedding = Embedding(
         content: 'apple',
-        embedding: testData['apple']!,
+        embedding: testData['apple'],
         metadata: {'id': 'customId1'},
       );
 
@@ -143,27 +143,27 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple']!,
+          embedding: testData['apple'],
           metadata: {'id': 'customId1'},
         ),
         Embedding(
           content: 'ten',
-          embedding: testData['ten']!,
+          embedding: testData['ten'],
           metadata: {'id': 'customId2'},
         ),
         Embedding(
           content: 'twenty',
-          embedding: testData['twenty']!,
+          embedding: testData['twenty'],
           metadata: {'id': 'customId3'},
         ),
         Embedding(
           content: 'two',
-          embedding: testData['two']!,
+          embedding: testData['two'],
           metadata: {'id': 'customId4'},
         ),
         Embedding(
           content: 'banana',
-          embedding: testData['banana']!,
+          embedding: testData['banana'],
           metadata: {'id': 'customId5'},
         ),
       ];
@@ -223,12 +223,12 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple']!,
+          embedding: testData['apple'],
           metadata: {'id': 'customId1'},
         ).toJson(),
         Embedding(
           content: 'ten',
-          embedding: testData['ten']!,
+          embedding: testData['ten'],
           metadata: {'id': 'customId2'},
         ).toJson(),
       ];
@@ -252,7 +252,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
       final result =
@@ -294,9 +294,9 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       ];
       final results =
           await repository.createEmbeddings(defaultTablePrefix, embeddings);
-      results[0] = results[0].copyWith(embedding: testData['apple']!);
-      results[1] = results[1].copyWith(embedding: testData['ten']!);
-      results[2] = results[2].copyWith(embedding: testData['twenty']!);
+      results[0] = results[0].copyWith(embedding: testData['apple']);
+      results[1] = results[1].copyWith(embedding: testData['ten']);
+      results[2] = results[2].copyWith(embedding: testData['twenty']);
 
       // Act
       final txnResults = await repository.updateEmbeddings(
@@ -325,7 +325,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
       final created =
@@ -347,7 +347,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       final embedding = Embedding(
         id: '${defaultTablePrefix}_${Embedding.tableName}:1',
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
       // Act & Assert
@@ -363,7 +363,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Arrange
       final embedding = Embedding(
         content: 'ten',
-        embedding: testData['ten']!,
+        embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
       final created =
@@ -394,27 +394,27 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       final embeddings = [
         Embedding(
           content: 'apple',
-          embedding: testData['apple']!,
+          embedding: testData['apple'],
           metadata: {'id': 'customId1'},
         ),
         Embedding(
           content: 'ten',
-          embedding: testData['ten']!,
+          embedding: testData['ten'],
           metadata: {'id': 'customId2'},
         ),
         Embedding(
           content: 'twenty',
-          embedding: testData['twenty']!,
+          embedding: testData['twenty'],
           metadata: {'id': 'customId3'},
         ),
         Embedding(
           content: 'two',
-          embedding: testData['two']!,
+          embedding: testData['two'],
           metadata: {'id': 'customId4'},
         ),
         Embedding(
           content: 'banana',
-          embedding: testData['banana']!,
+          embedding: testData['banana'],
           metadata: {'id': 'customId5'},
         ),
       ];

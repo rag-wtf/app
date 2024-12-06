@@ -47,7 +47,7 @@ class MessageWidget extends StatelessWidget {
                       darkLogo: darkLogo,
                       lightLogo: lightLogo,
                       size: 32,
-                    )),
+                    ),),
           const SizedBox(
             width: 8,
           ), // Add spacing between the leading widget and title

@@ -217,14 +217,14 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                         children: [
                           ListTile(
                             leading: Image.asset('assets/images/pubdev.png',
-                                width: 24, height: 24),
+                                width: 24, height: 24,),
                             title: Text(
                               'surrealdb_js',
                               style: listTileTextStyle,
                             ),
                             onTap: () async {
                               final url = Uri.parse(
-                                  'https://pub.dev/packages/surrealdb_js');
+                                  'https://pub.dev/packages/surrealdb_js',);
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               }
@@ -232,14 +232,14 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           ),
                           ListTile(
                             leading: Image.asset('assets/images/pubdev.png',
-                                width: 24, height: 24),
+                                width: 24, height: 24,),
                             title: Text(
                               'surrealdb_wasm',
                               style: listTileTextStyle,
                             ),
                             onTap: () async {
                               final url = Uri.parse(
-                                  'https://pub.dev/packages/surrealdb_wasm');
+                                  'https://pub.dev/packages/surrealdb_wasm',);
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               }
@@ -247,14 +247,14 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           ),
                           ListTile(
                             leading: Image.asset('assets/images/pypi.png',
-                                width: 24, height: 24),
+                                width: 24, height: 24,),
                             title: Text(
                               'open-text-embeddings',
                               style: listTileTextStyle,
                             ),
                             onTap: () async {
                               final url = Uri.parse(
-                                  'https://pypi.org/project/open-text-embeddings/');
+                                  'https://pypi.org/project/open-text-embeddings/',);
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               }
@@ -289,7 +289,7 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           ),
                           ListTile(
                             leading: Image.asset('assets/images/surrealdb.png',
-                                width: 24, height: 24),
+                                width: 24, height: 24,),
                             title: Text(
                               'SurrealDB',
                               style: listTileTextStyle,

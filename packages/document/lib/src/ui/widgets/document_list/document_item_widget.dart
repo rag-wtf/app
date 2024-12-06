@@ -1,6 +1,5 @@
 import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
-import 'package:document/src/ui/widgets/document_list/cancel_button_widget.dart';
 import 'package:document/src/ui/widgets/document_list/document_progress_indicator_widget.dart';
 import 'package:document/src/ui/widgets/document_list/document_status_widget.dart';
 

@@ -1,7 +1,6 @@
+import 'package:analytics/src/ui/views/main/main_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
-import 'package:analytics/src/ui/views/main/main_viewmodel.dart';
 
 class MainView extends StackedView<MainViewModel> {
   const MainView({super.key, this.tablePrefix = 'main'});
