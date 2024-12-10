@@ -31,7 +31,7 @@ class MainViewModel extends BaseViewModel {
     var confirmed = false;
     if (!await _connectionSettingService.autoConnect()) {
       while (!confirmed) {
-        final response = await _dialogService.showCustomDialog(
+        final response = await _dialogService.showCustomDialog<void, void>(
           variant: DialogType.connection,
           title: 'Connection',
           description: 'Create database connection',

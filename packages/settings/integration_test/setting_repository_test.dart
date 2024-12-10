@@ -100,10 +100,10 @@ INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}''
       );
       final result =
           await repository.createSetting(defaultTablePrefix, setting);
-      final id = result.id!;
+      final id = result.id;
 
       // Act
-      final getSettingById = await repository.getSettingById(id);
+      final getSettingById = await repository.getSettingById(id!);
 
       // Assert
       expect(getSettingById?.id, equals(id));

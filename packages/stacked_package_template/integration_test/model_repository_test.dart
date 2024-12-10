@@ -95,10 +95,10 @@ INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''',
         name: 'name1',
       );
       final result = await repository.createModel(defaultTablePrefix, model);
-      final id = result.id!;
+      final id = result.id;
 
       // Act
-      final getModelById = await repository.getModelById(id);
+      final getModelById = await repository.getModelById(id!);
 
       // Assert
       expect(getModelById?.id, equals(id));

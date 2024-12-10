@@ -122,10 +122,10 @@ void main({bool wasm = false}) {
       );
       final result =
           await repository.createMessage(defaultTablePrefix, message);
-      final id = result.id!;
+      final id = result.id;
 
       // Act
-      final getMessageById = await repository.getMessageById(id);
+      final getMessageById = await repository.getMessageById(id!);
 
       // Assert
       expect(getMessageById?.id, equals(id));

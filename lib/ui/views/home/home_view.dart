@@ -57,7 +57,9 @@ class _HomeViewState extends State<HomeView>
             _leftWidgetTabController.animateTo(0);
           }
         });
-
+        
+        final appVersionBuildNumber =
+            '${viewModel.version} ${viewModel.buildNumber}';
         return MainDrawerWidget(
           controller: _zoomDrawerController,
           logoutFunction: viewModel.disconnect,
@@ -125,7 +127,7 @@ class _HomeViewState extends State<HomeView>
                               flex: 4,
                               child: Center(
                                 child: Text(
-                                  '${viewModel.version} ${viewModel.buildNumber}',
+                                  appVersionBuildNumber,
                                   style: const TextStyle(fontSize: 12),
                                 ),
                               ),

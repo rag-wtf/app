@@ -162,16 +162,16 @@ class ConnectionDialogModel extends FormViewModel {
   }
 
   Future<bool> connectAndSave() async {
-    var addressPort = addressPortValue!;
+    var addressPort = addressPortValue;
     if (_protocol != 'mem' &&
         protocol != 'indxdb' &&
-        !addressPort.endsWith(_rpcUri)) {
+        !addressPort!.endsWith(_rpcUri)) {
       addressPort += _rpcUri;
     }
     await runErrorFuture(
       _connectionSettingService.connect(
         _protocol,
-        addressPort,
+        addressPort!,
         namespaceValue!,
         databaseValue,
         usernameValue,

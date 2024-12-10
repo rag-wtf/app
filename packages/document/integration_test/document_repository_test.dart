@@ -208,10 +208,10 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
       );
       final result =
           await repository.createDocument(defaultTablePrefix, document);
-      final id = result.id!;
+      final id = result.id;
 
       // Act
-      final getDocumentById = await repository.getDocumentById(id);
+      final getDocumentById = await repository.getDocumentById(id!);
 
       // Assert
       expect(getDocumentById?.id, equals(id));

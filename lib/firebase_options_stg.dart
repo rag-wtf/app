@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'rag-stg.firebasestorage.app',
     measurementId: 'G-8NT7BHJKD6',
   );
-
 }

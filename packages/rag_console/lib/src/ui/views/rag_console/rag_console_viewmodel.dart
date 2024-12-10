@@ -121,9 +121,9 @@ Example:
       final connectionSettings = await _connectionSettingRepository
           .getAllConnectionSettings(lastConnectionKey);
       final protocol = connectionSettings[
-          '${lastConnectionKey}_${ConnectionSetting.protocolKey}']!;
+          '${lastConnectionKey}_${ConnectionSetting.protocolKey}'];
       final addressPort = connectionSettings[
-          '${lastConnectionKey}_${ConnectionSetting.addressPortKey}']!;
+          '${lastConnectionKey}_${ConnectionSetting.addressPortKey}'];
       surrealEndpoint = '$protocol://$addressPort';
       surrealNamespace = connectionSettings[
           '${lastConnectionKey}_${ConnectionSetting.namespaceKey}']!;

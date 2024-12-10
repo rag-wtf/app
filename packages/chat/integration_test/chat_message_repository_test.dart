@@ -64,7 +64,10 @@ void main({bool wasm = false}) {
           }
           if (!await messageRepository.isSchemaCreated(tablePrefix)) {
             await messageRepository.createSchema(
-                tablePrefix, defaultEmbeddingsDimensions, txn,);
+              tablePrefix,
+              defaultEmbeddingsDimensions,
+              txn,
+            );
           }
           if (!await chatMessageRepository.isSchemaCreated(tablePrefix)) {
             await chatMessageRepository.createSchema(

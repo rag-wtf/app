@@ -31,22 +31,22 @@ class ConnectionSettingService {
         final connectionSettings = await _connectionSettingRepository
             .getAllConnectionSettings(lastConnectionKey);
         final protocol = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.protocolKey}']!;
+            '${lastConnectionKey}_${ConnectionSetting.protocolKey}'];
         final addressPort = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.addressPortKey}']!;
+            '${lastConnectionKey}_${ConnectionSetting.addressPortKey}'];
         final namespace = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.namespaceKey}']!;
+            '${lastConnectionKey}_${ConnectionSetting.namespaceKey}'];
         final database = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.databaseKey}']!;
+            '${lastConnectionKey}_${ConnectionSetting.databaseKey}'];
         final username = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.usernameKey}']!;
+            '${lastConnectionKey}_${ConnectionSetting.usernameKey}'];
         final password = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.passwordKey}']!;
+            '${lastConnectionKey}_${ConnectionSetting.passwordKey}'];
         try {
           await connect(
-            protocol,
-            addressPort,
-            namespace,
+            protocol!,
+            addressPort!,
+            namespace!,
             database,
             username,
             password,

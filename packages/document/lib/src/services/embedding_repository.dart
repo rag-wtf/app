@@ -142,7 +142,7 @@ CONTENT ${jsonEncode(payload)};''';
     Transaction? txn,
   ]) async {
     if (txn == null) {
-      final results = (await _db.transaction(
+      final results = await _db.transaction(
         showSql: true,
         timeout: Duration(seconds: embeddings.length),
         (txn) async {
@@ -155,7 +155,7 @@ CONTENT ${jsonEncode(payload)};''';
           }
           await rebuildEmbeddingIndex(tablePrefix, txn);
         },
-      ))!;
+      );
 
       return results is Iterable ? results as List : [results];
     } else {

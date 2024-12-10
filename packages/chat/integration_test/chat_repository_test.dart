@@ -101,10 +101,10 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
         metadata: metadata,
       );
       final result = await repository.createChat(defaultTablePrefix, chat);
-      final id = result.id!;
+      final id = result.id;
 
       // Act
-      final getChatById = await repository.getChatById(id);
+      final getChatById = await repository.getChatById(id!);
 
       // Assert
       expect(getChatById?.id, equals(id));

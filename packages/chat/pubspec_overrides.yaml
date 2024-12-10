@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: database,document,settings,ui,very_good_infinite_list,js,meta
+# melos_managed_dependency_overrides: database,document,settings,ui,very_good_infinite_list,js,meta,analytics
 dependency_overrides:
   database:
     path: ../database
@@ -12,3 +12,5 @@ dependency_overrides:
     path: ../very_good_infinite_list
   js: ^0.7.1
   meta: ^1.15.0
+  analytics:
+    path: ../analytics

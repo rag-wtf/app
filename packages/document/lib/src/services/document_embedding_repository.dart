@@ -29,12 +29,13 @@ class DocumentEmbeddingRepository {
     Transaction? txn,
   ]) async {
     final fullDocumentTableName = '${tablePrefix}_${Document.tableName}';
+    final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';
     final documentId =
         documentEmbedding.documentId.startsWith(fullDocumentTableName)
             ? documentEmbedding.documentId
             : '$fullDocumentTableName:${documentEmbedding.documentId}';
     final embeddingId =
-        '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
+        '$fullEmbeddingTableName:${documentEmbedding.embeddingId}';
 
     final sql = '''
 RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddingId;''';
@@ -64,13 +65,14 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
   ]) async {
     final sqlBuffer = StringBuffer();
     final fullDocumentTableName = '${tablePrefix}_${Document.tableName}';
+    final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';
     for (final documentEmbedding in documentEmbeddings) {
       final documentId =
           documentEmbedding.documentId.startsWith(fullDocumentTableName)
               ? documentEmbedding.documentId
               : '$fullDocumentTableName:${documentEmbedding.documentId}';
       final embeddingId =
-          '${tablePrefix}_${Embedding.tableName}:${documentEmbedding.embeddingId}';
+          '$fullEmbeddingTableName:${documentEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${DocumentEmbedding.tableName}';
       sqlBuffer.write('RELATE ONLY $documentId->$fullTableName->$embeddingId;');
     }

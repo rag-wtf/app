@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.11
+  vector_graphics: any
   vector_graphics_compiler: ^1.1.12
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

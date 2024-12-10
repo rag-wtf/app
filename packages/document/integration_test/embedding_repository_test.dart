@@ -257,10 +257,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       );
       final result =
           await repository.createEmbedding(defaultTablePrefix, embedding);
-      final id = result.id!;
+      final id = result.id;
 
       // Act
-      final getEmbeddingById = await repository.getEmbeddingById(id);
+      final getEmbeddingById = await repository.getEmbeddingById(id!);
 
       // Assert
       expect(getEmbeddingById?.id, equals(id));

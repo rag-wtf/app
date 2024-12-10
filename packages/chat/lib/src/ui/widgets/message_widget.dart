@@ -1,4 +1,3 @@
-import 'package:avatar_brick/avatar_brick.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:chat/src/ui/widgets/horizontal_list.dart';
 import 'package:chat/src/ui/widgets/markdown_widget.dart';
@@ -28,26 +27,27 @@ class MessageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-              padding: const EdgeInsets.only(top: avatarPadding),
-              child: message.role == Role.user
-                  ? Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: backgroundColor,
-                        shape: BoxShape.circle, // Make the container circular
-                      ),
-                      child: Icon(
-                        Icons.person_2_outlined,
-                        size: 24,
-                        color: foregroundColor,
-                      ),
-                    )
-                  : const Logo(
-                      darkLogo: darkLogo,
-                      lightLogo: lightLogo,
-                      size: 32,
-                    ),),
+            padding: const EdgeInsets.only(top: avatarPadding),
+            child: message.role == Role.user
+                ? Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      shape: BoxShape.circle, // Make the container circular
+                    ),
+                    child: Icon(
+                      Icons.person_2_outlined,
+                      size: 24,
+                      color: foregroundColor,
+                    ),
+                  )
+                : const Logo(
+                    darkLogo: darkLogo,
+                    lightLogo: lightLogo,
+                    size: 32,
+                  ),
+          ),
           const SizedBox(
             width: 8,
           ), // Add spacing between the leading widget and title
