@@ -1,9 +1,22 @@
 import 'package:analytics/src/services/analytics_client.dart';
+import 'package:analytics/src/services/firebase_analytics_client.dart';
+import 'package:analytics/src/services/logger_analytics_client.dart';
+import 'package:analytics/src/services/mixpanel_analytics_client.dart';
+import 'package:flutter/foundation.dart';
 
 // https://refactoring.guru/design-patterns/facade
 class AnalyticsFacade implements AnalyticsClient {
   const AnalyticsFacade(this.clients);
   final List<AnalyticsClient> clients;
+
+  static Future<AnalyticsFacade> getInstance() async {
+    final mixpanelAnalyticsClient = await MixpanelAnalyticsClient.getInstance();
+    return AnalyticsFacade([
+      mixpanelAnalyticsClient,
+      FirebaseAnalyticsClient(),
+      if (!kReleaseMode) LoggerAnalyticsClient(),
+    ]);
+  }  
 
   @override
   Future<void> setAnalyticsCollectionEnabled({required bool enabled}) =>
@@ -19,6 +32,15 @@ class AnalyticsFacade implements AnalyticsClient {
   @override
   Future<void> resetUser() => _dispatch(
         (c) => c.resetUser(),
+      );
+  
+  @override
+  Future<void> trackDatabaseConnected(
+    String protocol, {
+    required bool autoConnect,
+  }) =>
+      _dispatch(
+        (c) => c.trackDatabaseConnected(protocol, autoConnect: autoConnect),
       );
 
   @override

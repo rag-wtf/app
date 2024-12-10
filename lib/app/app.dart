@@ -4,7 +4,6 @@ import 'package:chat/chat.dart';
 import 'package:database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rag/app/app.router.dart';
@@ -98,15 +97,6 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 )
 class App extends StatelessWidget {
   const App({super.key});
-
-  static Future<AnalyticsFacade> getAnalyticsFacade() async {
-    final mixpanelAnalyticsClient = await MixpanelAnalyticsClient.getInstance();
-    return AnalyticsFacade([
-      mixpanelAnalyticsClient,
-      FirebaseAnalyticsClient(),
-      if (!foundation.kReleaseMode) LoggerAnalyticsClient(),
-    ]);
-  }
 
   @override
   Widget build(BuildContext context) {

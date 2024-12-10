@@ -108,7 +108,10 @@ Example:
     setBusy(true);
     _log.d('initialise() tablePrefix: $tablePrefix');
     if (inPackage) {
-      await _settingService.initialise(tablePrefix);
+      await _settingService.initialise(
+        tablePrefix,
+        analyticsEnabled: true,
+      );
       final dimensions = _settingService.get(embeddingsDimensionsKey).value;
       await _documentService.initialise(tablePrefix, dimensions);
       await _chatService.initialise(tablePrefix, dimensions);

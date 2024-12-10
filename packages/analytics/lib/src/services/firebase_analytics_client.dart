@@ -20,6 +20,17 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   }
 
   @override
+  Future<void> trackDatabaseConnected(
+    String protocol, {
+    required bool autoConnect,
+  }) async {
+    await _analytics.logEvent(
+      name: 'database_connected',
+      parameters: {'protocol': protocol, 'autoConnect': autoConnect.toString()},
+    );
+  }
+
+  @override
   Future<void> trackScreenView(String routeName, String action) async {
     await _analytics.logScreenView(
       screenName: 'screen_view',
@@ -39,7 +50,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackCompressedToggled({required bool enabled}) async {
     await _analytics.logEvent(
       name: 'compressed_toggled',
-      parameters: {'enabled': enabled},
+      parameters: {'enabled': enabled.toString()},
     );
   }
 
@@ -52,7 +63,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackDataCleared({required bool keepSettings}) async {
     await _analytics.logEvent(
       name: 'data_cleared',
-      parameters: {'keep_settings': keepSettings},
+      parameters: {'keep_settings': keepSettings.toString()},
     );
   }
 
@@ -60,7 +71,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackDimensionsToggled({required bool enabled}) async {
     await _analytics.logEvent(
       name: 'dimensions_toggled',
-      parameters: {'enabled': enabled},
+      parameters: {'enabled': enabled.toString()},
     );
   }
 
@@ -101,7 +112,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackFrequencyPenaltyToggled({required bool enabled}) async {
     await _analytics.logEvent(
       name: 'frequency_penalty_toggled',
-      parameters: {'enabled': enabled},
+      parameters: {'enabled': enabled.toString()},
     );
   }
 
@@ -130,7 +141,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackPresencePenaltyToggled({required bool enabled}) async {
     await _analytics.logEvent(
       name: 'presence_penalty_toggled',
-      parameters: {'enabled': enabled},
+      parameters: {'enabled': enabled.toString()},
     );
   }
 
@@ -158,7 +169,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackStreamingToggled({required bool enabled}) async {
     await _analytics.logEvent(
       name: 'streaming_toggled',
-      parameters: {'enabled': enabled},
+      parameters: {'enabled': enabled.toString()},
     );
   }
 

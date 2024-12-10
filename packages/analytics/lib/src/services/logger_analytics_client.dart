@@ -25,6 +25,18 @@ class LoggerAnalyticsClient implements AnalyticsClient {
   }
 
   @override
+  Future<void> trackDatabaseConnected(
+    String protocol, {
+    required bool autoConnect,
+  }) async {
+    _log.d(
+      '''
+$_name: trackDatabaseConnected protocol=$protocol, autoConnect=$autoConnect''',
+      time: DateTime.now(),
+    );
+  }
+
+  @override
   Future<void> trackScreenView(String routeName, String action) async {
     _log.d(
       'Navigation: trackScreenView($routeName, $action)',

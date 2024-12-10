@@ -33,6 +33,18 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
     await _mixpanel.reset();
   }
 
+
+  @override
+  Future<void> trackDatabaseConnected(
+    String protocol, {
+    required bool autoConnect,
+  }) async {
+    await _mixpanel.track(
+      'Database Connected',
+      properties: {'protocol': protocol, 'autoConnect': autoConnect},
+    );
+  }
+
   @override
   Future<void> trackScreenView(String routeName, String action) async {
     await _mixpanel.track(

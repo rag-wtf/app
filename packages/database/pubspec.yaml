@@ -8,9 +8,10 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  analytics: 
+    path: ../analytics
   flutter:
     sdk: flutter
-
   flutter_secure_storage: ^9.2.2
   freezed_annotation: ^2.4.1
   fzregex: ^2.0.0

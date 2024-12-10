@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:database/src/app/app.locator.dart';
 import 'package:database/src/app/app.logger.dart';
 import 'package:database/src/constants.dart';
@@ -16,6 +19,7 @@ class ConnectionDialogModel extends FormViewModel {
   static const newConnectionName = '[New connection]';
 
   final _log = getLogger('ConnectionDialogModel');
+  final _analyticsFacade = locator<AnalyticsFacade>();
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
   final _connectionSettingService = locator<ConnectionSettingService>();
   final _storage = locator<FlutterSecureStorage>();
@@ -23,12 +27,21 @@ class ConnectionDialogModel extends FormViewModel {
   String _protocol = 'ws';
   late List<ConnectionSetting> connectionNames;
   bool _autoConnect = true;
+  bool _analyticsEnabled = true;
 
   bool get autoConnect => _autoConnect;
+  bool get analyticsEnabled => _analyticsEnabled;
 
   set autoConnect(bool value) {
     if (_autoConnect != value) {
       _autoConnect = value;
+      notifyListeners();
+    }
+  }
+
+  set analyticsEnabled(bool value) {
+    if (_analyticsEnabled != value) {
+      _analyticsEnabled = value;
       notifyListeners();
     }
   }
@@ -185,6 +198,14 @@ class ConnectionDialogModel extends FormViewModel {
       key: ConnectionSetting.autoConnectKey,
       value: autoConnect.toString(),
     );
+    if (_analyticsEnabled) {
+      unawaited(
+        _analyticsFacade.trackDatabaseConnected(
+          _protocol,
+          autoConnect: _autoConnect,
+        ),
+      );
+    }
     return true;
   }
 

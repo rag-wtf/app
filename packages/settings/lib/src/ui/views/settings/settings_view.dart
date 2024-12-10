@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
@@ -116,6 +117,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   final Future<void> Function() showSystemPromptDialogFunction;
   final Future<void> Function() showPromptTemplateDialogFunction;
 
+
   @override
   Widget builder(
     BuildContext context,
@@ -124,9 +126,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   ) {
     final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     final isDense = MediaQuery.sizeOf(context).width < 600;
-    final embeddingModels = viewModel.llmProviderSelected?.embeddings.models;
-    final generationModels =
-        viewModel.llmProviderSelected?.chatCompletions.models;
     final switchHorizontalPadding =
         MediaQuery.sizeOf(context).width < 600 ? 0.0 : 4.0;
     return Scaffold(
@@ -171,6 +170,25 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                       },
                     ),
                   ),
+                          Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Enabled Analytics',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              CheckboxOrSwitch(
+                value: viewModel.analyticsEnabled,
+                onChanged: (value) async {
+                  await viewModel.setAnalyticsEnabled(value);
+                },
+              ),
+            ],
+          ),
+        ),
+
                   ExpansionPanelList(
                     children: [
                       SimpleExpansionPanel(
@@ -190,7 +208,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         body: IndexingSettingsWidget(
                           iconColor: iconColor,
                           embeddingsModelController: embeddingsModelController,
-                          embeddingModels: embeddingModels,
+                          embeddingModels: _getEmbeddingModels(viewModel),
                           isDense: isDense,
                           embeddingsModelContextLengthController:
                               embeddingsModelContextLengthController,
@@ -226,7 +244,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         body: GenerationSettingsWidget(
                           iconColor: iconColor,
                           generationModelController: generationModelController,
-                          generationModels: generationModels,
+                          generationModels: _getGenerationModels(viewModel),
                           isDense: isDense,
                           generationModelContextLengthController:
                               generationModelContextLengthController,
@@ -265,6 +283,17 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
               ),
             ),
     );
+  }
+
+  List<ChatModel>? _getGenerationModels(SettingsViewModel viewModel) {
+    final generationModels =
+        viewModel.llmProviderSelected?.chatCompletions.models;
+    return generationModels;
+  }
+
+  List<EmbeddingModel>? _getEmbeddingModels(SettingsViewModel viewModel) {
+    final embeddingModels = viewModel.llmProviderSelected?.embeddings.models;
+    return embeddingModels;
   }
 
   @override

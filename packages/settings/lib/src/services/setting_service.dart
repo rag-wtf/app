@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:analytics/analytics.dart';
 import 'package:flutter/services.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
@@ -21,6 +23,7 @@ class SettingService with ListenableServiceMixin {
   final _log = getLogger('SettingService');
   late Map<String, LlmProvider> _llmProviders;
   Map<String, LlmProvider> get llmProviders => _llmProviders;
+  final _analyticsFacade = locator<AnalyticsFacade>();
 
   Setting get(String key) {
     Setting setting;
@@ -38,7 +41,7 @@ class SettingService with ListenableServiceMixin {
     final value = _enviromentVariables[key];
     return Setting(
       key: key,
-      value: value!,
+      value: value ?? 'null',
     );
   }
 
@@ -162,7 +165,10 @@ class SettingService with ListenableServiceMixin {
     }
   }
 
-  Future<void> initialise(String tablePrefix) async {
+  Future<void> initialise(
+    String tablePrefix, {
+    required bool analyticsEnabled,
+  }) async {
     if (_settings.isEmpty) {
       _initialiseEnvironmentVariables();
       await _loadLlmProviders();
@@ -186,6 +192,12 @@ class SettingService with ListenableServiceMixin {
         );
         await _settingRepository.createSetting(tablePrefix, userId);
       }
+
+      await setAnalyticsEnabled(
+        tablePrefix,
+        enabled: analyticsEnabled,
+      );
+
       final settings = await _settingRepository.getAllSettings(tablePrefix);
       if (settings.isNotEmpty) {
         for (final setting in settings) {
@@ -195,9 +207,33 @@ class SettingService with ListenableServiceMixin {
     }
   }
 
+  Future<void> setAnalyticsEnabled(
+    String tablePrefix, {
+    required bool enabled,
+  }) async {
+    _log.d('enabled $enabled');
+    await set(
+      tablePrefix,
+      analyticsEnabledKey,
+      enabled.toString(),
+    );
+    unawaited(
+      _analyticsFacade.setAnalyticsCollectionEnabled(
+        enabled: enabled,
+      ),
+    );
+  }
+
   Future<void> _loadLlmProviders() async {
-    final json = await rootBundle
-        .loadString('packages/settings/assets/json/llm_providers.json');
+    String json;
+    try {
+      // Works in main, but hit 404 error in package.
+      json = await rootBundle
+          .loadString('packages/settings/assets/json/llm_providers.json');
+    } catch (_) {
+      json = await rootBundle
+          .loadString('assets/json/llm_providers.json');      
+    }
     final llmProviderMaps = List<Map<String, dynamic>>.from(
       jsonDecode(json) as List,
     );
@@ -208,13 +244,17 @@ class SettingService with ListenableServiceMixin {
   }
 
   Future<void> clearData(String tablePrefix) async {
+    final analyticsCollectionEnabled = get(analyticsEnabledKey);
     await _settingRepository.deleteAllSettings(tablePrefix);
     await _settingRepository.createSetting(
       tablePrefix,
       _settings[userIdKey]!,
     ); // add back the userId
     _settings.clear();
-    await initialise(tablePrefix);
+    await initialise(
+      tablePrefix,
+      analyticsEnabled: analyticsCollectionEnabled.value as bool,
+    );
     clearFormValuesFunction?.call();
     notifyListeners();
   }

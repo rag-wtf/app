@@ -34,6 +34,7 @@ const stopKey = 'STOP';
 const streamKey = 'STREAM';
 const userIdKey = 'USER_ID';
 const promptsKey = 'PROMPTS';
+const analyticsEnabledKey = 'analyticsEnabled';
 
 const splitApiUriPath = '/split';
 const embeddingsApiUriPath = '/embeddings';

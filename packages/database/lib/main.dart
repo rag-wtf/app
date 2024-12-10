@@ -1,3 +1,4 @@
+import 'package:analytics/analytics.dart';
 import 'package:database/src/app/app.dialogs.dart';
 import 'package:database/src/app/app.locator.dart';
 import 'package:database/src/app/app.router.dart';
@@ -6,6 +7,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  locator.registerSingletonAsync<AnalyticsFacade>(AnalyticsFacade.getInstance);
   await setupLocator();
   setupDialogUi();
   runApp(const MainApp());

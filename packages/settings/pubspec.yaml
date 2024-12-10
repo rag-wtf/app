@@ -8,6 +8,8 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  analytics: 
+    path: ../analytics
   database: 
     path: ../database
   flutter:

@@ -60,7 +60,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       maxWidth: dialogMaxWidth,
-      maxHeight: 620,
+      maxHeight: 660,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
@@ -251,6 +251,17 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                         viewModel.autoConnect = value;
                       },
                     ),
+                    CheckboxOrSwitchListTile(
+                      title: Text(
+                        'Enabled anonymous reporting of crash and event data',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: viewModel.analyticsEnabled,
+                      onChanged: (value) {
+                        viewModel.analyticsEnabled = value;
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -271,8 +282,9 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                       : () async {
                           if (viewModel.validate()) {
                             return completer(
-                              DialogResponse(
+                              DialogResponse<bool>(
                                 confirmed: await viewModel.connectAndSave(),
+                                data: viewModel.analyticsEnabled,
                               ),
                             );
                           }

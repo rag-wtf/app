@@ -38,6 +38,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   bool _embeddingsCompressed = true;
   bool get embeddingsCompressed => _embeddingsCompressed;
+  bool _analyticsEnabled = true;
+  bool get analyticsEnabled => _analyticsEnabled;
 
   bool _embeddingsDimensionsEnabled = true;
   bool get embeddingsDimensionsEnabled => _embeddingsDimensionsEnabled;
@@ -66,6 +68,14 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _embeddingsCompressed = value;
+  }
+
+  Future<void> setAnalyticsEnabled(bool value) async {
+    await _settingService.setAnalyticsEnabled(
+      tablePrefix,
+      enabled: value,
+    );
+    _analyticsEnabled = value;
   }
 
   Future<void> setEmbeddingsDimensionsEnabled(bool value) async {
@@ -105,12 +115,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     _log.d(
       'tablePrefix: $tablePrefix, inPackage: $inPackage',
     );
-    if (inPackage) {
-      await connectDatabase();
-    }
     setBusy(true);
     if (inPackage) {
-      await _settingService.initialise(tablePrefix);
+      await connectDatabase();
+      await _settingService.initialise(
+        tablePrefix,
+        analyticsEnabled: true,
+      );
     }
     _settingService.clearFormValuesFunction = clearFormValues;
     _stream = bool.parse(_settingService.get(streamKey).value);
@@ -125,6 +136,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     );
     _presencePenaltyEnabled = bool.parse(
       _settingService.get(presencePenaltyEnabledKey).value,
+    );
+    _analyticsEnabled = bool.parse(
+      _settingService.get(analyticsEnabledKey).value,
     );
 
     final splitApiUrl = _settingService.get(splitApiUrlKey);

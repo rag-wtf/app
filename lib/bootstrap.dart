@@ -22,7 +22,7 @@ Future<void> bootstrap(
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: firebaseOptions);
   locator.registerSingletonAsync<AnalyticsFacade>(
-    App.getAnalyticsFacade,
+    AnalyticsFacade.getInstance,
   );
   await setupLocator();
   await ThemeManager.initialise();

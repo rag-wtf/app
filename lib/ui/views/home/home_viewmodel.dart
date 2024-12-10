@@ -112,20 +112,26 @@ Cannot change dimensions, there are existing embeddings in the database.''';
 
   Future<void> _connectDatabase() async {
     var confirmed = false;
+    var analyticsEnabled = true;
+
     if (!await _connectionSettingService.autoConnect()) {
       while (!confirmed) {
-        final response = await _dialogService.showCustomDialog(
+        final response = await _dialogService.showCustomDialog<bool, void>(
           variant: DialogType.connection,
           title: 'Database Login',
           description: 'Enter your connection details below.',
         );
 
         confirmed = response?.confirmed ?? false;
+        analyticsEnabled = response?.data ?? true;
       }
     }
     _appName =
         await _connectionSettingService.getCurrentConnectionName() ?? appTitle;
-    await _settingService.initialise(tablePrefix);
+    await _settingService.initialise(
+      tablePrefix,
+      analyticsEnabled: analyticsEnabled,
+    );
     final dimensions = _settingService.get(embeddingsDimensionsKey).value;
     await _documentService.initialise(tablePrefix, dimensions);
     await _chatService.initialise(tablePrefix, dimensions);

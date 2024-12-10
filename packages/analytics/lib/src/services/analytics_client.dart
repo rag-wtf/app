@@ -2,6 +2,10 @@ abstract class AnalyticsClient {
   Future<void> setAnalyticsCollectionEnabled({required bool enabled});
   Future<void> identifyUser(String userId);
   Future<void> resetUser();
+  Future<void> trackDatabaseConnected(
+    String protocol, {
+    required bool autoConnect,
+  });
   Future<void> trackScreenView(String routeName, String action);
   Future<void> trackDocumentsOrChatsOpened();
   Future<void> trackSettingsOpened();
