@@ -45,6 +45,10 @@ class _HomeViewState extends State<HomeView>
     }
   }
 
+  String getAppVersionBuildNumber(HomeViewModel viewModel) {
+    return '${viewModel.version} ${viewModel.buildNumber}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
@@ -58,8 +62,6 @@ class _HomeViewState extends State<HomeView>
           }
         });
         
-        final appVersionBuildNumber =
-            '${viewModel.version} ${viewModel.buildNumber}';
         return MainDrawerWidget(
           controller: _zoomDrawerController,
           logoutFunction: viewModel.disconnect,
@@ -127,7 +129,7 @@ class _HomeViewState extends State<HomeView>
                               flex: 4,
                               child: Center(
                                 child: Text(
-                                  appVersionBuildNumber,
+                                  getAppVersionBuildNumber(viewModel),
                                   style: const TextStyle(fontSize: 12),
                                 ),
                               ),
