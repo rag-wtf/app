@@ -59,8 +59,8 @@ class AnalyticsFacade implements AnalyticsClient {
       );
 
   @override
-  Future<void> trackChatStartedFromPrompt() => _dispatch(
-        (c) => c.trackChatStartedFromPrompt(),
+  Future<void> trackChatStartedFromPrompt(String prompt) => _dispatch(
+        (c) => c.trackChatStartedFromPrompt(prompt),
       );
 
   @override

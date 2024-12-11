@@ -16,7 +16,7 @@ abstract class AnalyticsClient {
   Future<void> trackDocumentUploadCompleted();
   Future<void> trackDocumentUploadFailed();
   Future<void> trackChatStarted();
-  Future<void> trackChatStartedFromPrompt();
+  Future<void> trackChatStartedFromPrompt(String prompt);
   Future<void> trackGenerationStoppedByUser();
   Future<void> trackLlmProviderSelected(String id);
   Future<void> trackEmbeddingModelSelected(String name);

@@ -50,8 +50,11 @@ $_name: trackDatabaseConnected protocol=$protocol, autoConnect=$autoConnect''',
   }
 
   @override
-  Future<void> trackChatStartedFromPrompt() async {
-    _log.d('$_name: trackChatStartedFromPrompt', time: DateTime.now());
+  Future<void> trackChatStartedFromPrompt(String prompt) async {
+    _log.d(
+      '$_name: trackChatStartedFromPrompt prompt=$prompt',
+      time: DateTime.now(),
+    );
   }
 
   @override

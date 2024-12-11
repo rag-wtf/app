@@ -33,7 +33,6 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
     await _mixpanel.reset();
   }
 
-
   @override
   Future<void> trackDatabaseConnected(
     String protocol, {
@@ -59,8 +58,11 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
   }
 
   @override
-  Future<void> trackChatStartedFromPrompt() async {
-    await _mixpanel.track('Chat Started From Prompt');
+  Future<void> trackChatStartedFromPrompt(String prompt) async {
+    await _mixpanel.track(
+      'Chat Started From Prompt',
+      properties: {'prompt': prompt},
+    );
   }
 
   @override

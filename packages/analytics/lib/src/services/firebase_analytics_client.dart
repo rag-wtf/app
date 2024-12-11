@@ -55,8 +55,11 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   }
 
   @override
-  Future<void> trackChatStartedFromPrompt() async {
-    await _analytics.logEvent(name: 'chat_started_from_prompt');
+  Future<void> trackChatStartedFromPrompt(String prompt) async {
+    await _analytics.logEvent(
+      name: 'chat_started_from_prompt',
+      parameters: {'prompt': prompt},
+    );
   }
 
   @override
