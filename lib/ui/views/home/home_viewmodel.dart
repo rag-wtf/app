@@ -149,6 +149,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     }
     await _documentService.clearData(tablePrefix, clearSettings: clearSettings);
     await _chatService.clearData(tablePrefix, clearSettings: clearSettings);
+    unawaited(_analyticsFacade.trackDataCleared(keepSettings: isKeepSettings));
   }
 
   Future<void> showEmbeddingDialog(Embedding embedding) async {
