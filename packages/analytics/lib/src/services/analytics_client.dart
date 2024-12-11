@@ -12,7 +12,7 @@ abstract class AnalyticsClient {
   Future<void> trackSettingsImported();
   Future<void> trackDocumentUploadCancelled();
   Future<void> trackDocumentUploadCompleted();
-  Future<void> trackDocumentUploadFailed();
+  Future<void> trackDocumentUploadFailed(String error);
   Future<void> trackChatStarted();
   Future<void> trackChatStartedFromPrompt(String prompt);
   Future<void> trackGenerationStoppedByUser();

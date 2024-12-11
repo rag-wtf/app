@@ -100,8 +100,11 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
   }
 
   @override
-  Future<void> trackDocumentUploadFailed() async {
-    await _mixpanel.track('Document Upload Failed');
+  Future<void> trackDocumentUploadFailed(String error) async {
+    await _mixpanel.track(
+      'Document Upload Failed',
+      properties: {'error': error},
+    );
   }
 
   @override

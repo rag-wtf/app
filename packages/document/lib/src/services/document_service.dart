@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:analytics/analytics.dart';
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
@@ -37,6 +39,7 @@ class DocumentService with ListenableServiceMixin {
   final _settingService = locator<SettingService>();
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
+  final _analyticsFacade = locator<AnalyticsFacade>();
   final _mutex = Mutex();
 
   int _total = -1;
@@ -555,8 +558,8 @@ class DocumentService with ListenableServiceMixin {
     DocumentStatus status, [
     String? errorMessage,
   ]) async {
+    unawaited(_trackDocumentDoneStatus(status, errorMessage));
     final now = DateTime.now();
-
     documentItem.item = (errorMessage == null
         ? await _documentRepository.updateDocument(
             documentItem.item.copyWith(
@@ -574,6 +577,24 @@ class DocumentService with ListenableServiceMixin {
 
     notifyListeners();
   }
+
+  Future<void> _trackDocumentDoneStatus(
+    DocumentStatus status, [
+    String? errorMessage,
+  ]) async {
+    switch(status) {
+      case DocumentStatus.completed:
+        unawaited(_analyticsFacade.trackDocumentUploadCompleted());
+      case DocumentStatus.failed:
+        unawaited(_analyticsFacade.trackDocumentUploadFailed(errorMessage!));
+      case DocumentStatus.canceled:
+        unawaited(_analyticsFacade.trackDocumentUploadCancelled());
+      // ignore: no_default_cases
+      default:
+        // do nothing
+    }
+  }
+
 
   Future<void> updateDocumentIndexingStatus(DocumentItem documentItem) async {
     final now = DateTime.now();

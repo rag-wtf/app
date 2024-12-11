@@ -1,3 +1,4 @@
+import 'package:analytics/analytics.dart';
 import 'package:archive/archive.dart';
 import 'package:database/database.dart';
 import 'package:dio/dio.dart';
@@ -10,6 +11,7 @@ import 'package:document/src/services/embedding_repository.dart';
 import 'package:document/src/ui/dialogs/embedding/embedding_dialog.dart';
 import 'package:document/src/ui/views/document_list/document_list_view.dart';
 import 'package:document/src/ui/views/startup/startup_view.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -62,4 +64,12 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   ],
   logger: StackedLogger(),
 )
-class App {}
+class App {
+  static Future<AnalyticsFacade> getAnalyticsFacade() async {
+    final mixpanelAnalyticsClient = await MixpanelAnalyticsClient.getInstance();
+    return AnalyticsFacade([
+      mixpanelAnalyticsClient,
+      if (!foundation.kReleaseMode) LoggerAnalyticsClient(),
+    ]);
+  }  
+}

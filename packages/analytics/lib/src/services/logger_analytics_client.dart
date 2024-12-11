@@ -92,8 +92,11 @@ $_name: trackDatabaseConnected protocol=$protocol, autoConnect=$autoConnect''',
   }
 
   @override
-  Future<void> trackDocumentUploadFailed() async {
-    _log.d('$_name: trackDocumentUploadFailed', time: DateTime.now());
+  Future<void> trackDocumentUploadFailed(String error) async {
+    _log.d(
+      '$_name: trackDocumentUploadFailed error=$error',
+      time: DateTime.now(),
+    );
   }
 
   @override

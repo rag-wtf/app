@@ -89,8 +89,9 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   }
 
   @override
-  Future<void> trackDocumentUploadFailed() async {
-    await _analytics.logEvent(name: 'document_upload_failed');
+  Future<void> trackDocumentUploadFailed(String error) async {
+    await _analytics.logEvent(name: 'document_upload_failed',
+    parameters: {'error': error},);
   }
 
   @override

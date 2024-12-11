@@ -84,8 +84,8 @@ class AnalyticsFacade implements AnalyticsClient {
       );
 
   @override
-  Future<void> trackDocumentUploadFailed() => _dispatch(
-        (c) => c.trackDocumentUploadFailed(),
+  Future<void> trackDocumentUploadFailed(String error) => _dispatch(
+        (c) => c.trackDocumentUploadFailed(error),
       );
 
   @override
