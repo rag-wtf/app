@@ -53,7 +53,7 @@ class ChatView extends StackedView<ChatViewModel> {
                       PromptPanel(
                         (text) {
                           unawaited(
-                            _analyticsFacade.trackChatStartedFromPrompt(),
+                            _analyticsFacade.trackChatStartedFromPrompt(text),
                           );
                           _onSend(viewModel, text);
                         },
