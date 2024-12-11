@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/constants.dart';
@@ -75,6 +78,7 @@ class ChatService with ListenableServiceMixin {
   final _chatMessageRepository = locator<ChatMessageRepository>();
   final _embeddingRepository = locator<EmbeddingRepository>();
   final _messageEmbeddingRepository = locator<MessageEmbeddingRepository>();
+  final _analyticsFacade = locator<AnalyticsFacade>();
 
   final _chats = <Chat>[];
   final _messages = <Message>[];
@@ -700,6 +704,7 @@ class ChatService with ListenableServiceMixin {
     if (_streamResponseService != null) {
       await _streamResponseService!.cancel();
       _streamResponseService = null;
+      unawaited(_analyticsFacade.trackGenerationStoppedByUser());
       await _onMessageTextResponseCompleted();
     }
   }

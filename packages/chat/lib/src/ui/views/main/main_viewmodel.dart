@@ -21,12 +21,14 @@ class MainViewModel extends BaseViewModel {
   Future<void> initialise() async {
     _log.d('init() tablePrefix: $tablePrefix');
     if (inPackage) {
+      setBusy(true);
       await connectDatabase();
       await _settingService.initialise(
         tablePrefix,
         analyticsEnabled: true,
       );
       await _chatService.initialise(tablePrefix, defaultEmbeddingsDimensions);
+      setBusy(false);
     }
   }
 

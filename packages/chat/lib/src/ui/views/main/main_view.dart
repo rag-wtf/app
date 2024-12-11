@@ -21,21 +21,23 @@ class MainView extends StackedView<MainViewModel> {
   ) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Row(
-        children: [
-          const Flexible(
-            flex: 4,
-            child: ChatListView(),
-          ),
-          Flexible(
-            flex: 6,
-            child: ChatView(
-              showEmbeddingDialogFunction: viewModel.showEmbeddingDialog,
-              showNewChatDialogFunction: viewModel.showNewChatDialog,
+      body: viewModel.isBusy
+          ? const Center(child: CircularProgressIndicator())
+          : Row(
+              children: [
+                const Flexible(
+                  flex: 4,
+                  child: ChatListView(),
+                ),
+                Flexible(
+                  flex: 6,
+                  child: ChatView(
+                    showEmbeddingDialogFunction: viewModel.showEmbeddingDialog,
+                    showNewChatDialogFunction: viewModel.showNewChatDialog,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 

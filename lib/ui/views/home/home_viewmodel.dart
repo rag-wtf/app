@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:chat/chat.dart';
 import 'package:database/database.dart';
 import 'package:document/document.dart';
@@ -24,6 +27,7 @@ class HomeViewModel extends BaseViewModel {
   final _chatRepository = locator<ChatRepository>();
   final _messageRepository = locator<MessageRepository>();
   final _chatService = locator<ChatService>();
+  final _analyticsFacade = locator<AnalyticsFacade>();
   // ignore: unused_field
   final _log = getLogger('HomeViewModel');
   int get totalChats => _totalChats;
@@ -148,6 +152,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
   }
 
   Future<void> showEmbeddingDialog(Embedding embedding) async {
+    unawaited(_analyticsFacade.trackEmbeddingDialogOpened());
     await _dialogService.showCustomDialog<void, Embedding>(
       variant: DialogType.embedding,
       data: embedding,
