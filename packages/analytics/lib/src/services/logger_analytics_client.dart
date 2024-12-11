@@ -97,11 +97,6 @@ $_name: trackDatabaseConnected protocol=$protocol, autoConnect=$autoConnect''',
   }
 
   @override
-  Future<void> trackDocumentsOrChatsOpened() async {
-    _log.d('$_name: trackDocumentsOrChatsOpened', time: DateTime.now());
-  }
-
-  @override
   Future<void> trackEmbeddingDialogOpened() async {
     _log.d('$_name: trackEmbeddingDialogOpened', time: DateTime.now());
   }
@@ -156,11 +151,6 @@ $_name: trackDatabaseConnected protocol=$protocol, autoConnect=$autoConnect''',
   @override
   Future<void> trackSettingsImported() async {
     _log.d('$_name: trackSettingsImported', time: DateTime.now());
-  }
-
-  @override
-  Future<void> trackSettingsOpened() async {
-    _log.d('$_name: trackSettingsOpened', time: DateTime.now());
   }
 
   @override

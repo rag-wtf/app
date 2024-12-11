@@ -7,8 +7,6 @@ abstract class AnalyticsClient {
     required bool autoConnect,
   });
   Future<void> trackScreenView(String routeName, String action);
-  Future<void> trackDocumentsOrChatsOpened();
-  Future<void> trackSettingsOpened();
   Future<void> trackEmbeddingDialogOpened();
   Future<void> trackSettingsShared();
   Future<void> trackSettingsImported();

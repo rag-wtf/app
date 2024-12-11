@@ -105,11 +105,6 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
   }
 
   @override
-  Future<void> trackDocumentsOrChatsOpened() async {
-    await _mixpanel.track('Documents or Chats Opened');
-  }
-
-  @override
   Future<void> trackEmbeddingDialogOpened() async {
     await _mixpanel.track('Embedding Dialog Opened');
   }
@@ -167,11 +162,6 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
   @override
   Future<void> trackSettingsImported() async {
     await _mixpanel.track('Settings Imported');
-  }
-
-  @override
-  Future<void> trackSettingsOpened() async {
-    await _mixpanel.track('Settings Opened');
   }
 
   @override

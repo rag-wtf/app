@@ -49,11 +49,6 @@ class AnalyticsFacade implements AnalyticsClient {
       );
 
   @override
-  Future<void> trackDocumentsOrChatsOpened() => _dispatch(
-        (c) => c.trackDocumentsOrChatsOpened(),
-      );
-
-  @override
   Future<void> trackChatStarted() => _dispatch(
         (c) => c.trackChatStarted(),
       );
@@ -138,11 +133,6 @@ class AnalyticsFacade implements AnalyticsClient {
   @override
   Future<void> trackSettingsImported() => _dispatch(
         (c) => c.trackSettingsImported(),
-      );
-
-  @override
-  Future<void> trackSettingsOpened() => _dispatch(
-        (c) => c.trackSettingsOpened(),
       );
 
   @override

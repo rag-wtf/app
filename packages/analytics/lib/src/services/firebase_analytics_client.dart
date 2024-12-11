@@ -94,11 +94,6 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   }
 
   @override
-  Future<void> trackDocumentsOrChatsOpened() async {
-    await _analytics.logEvent(name: 'documents_or_chats_opened');
-  }
-
-  @override
   Future<void> trackEmbeddingDialogOpened() async {
     await _analytics.logEvent(name: 'embedding_dialog_opened');
   }
@@ -156,11 +151,6 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   @override
   Future<void> trackSettingsImported() async {
     await _analytics.logEvent(name: 'settings_imported');
-  }
-
-  @override
-  Future<void> trackSettingsOpened() async {
-    await _analytics.logEvent(name: 'settings_opened');
   }
 
   @override
