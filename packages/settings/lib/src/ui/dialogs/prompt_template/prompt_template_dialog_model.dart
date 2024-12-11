@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:settings/settings.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
@@ -8,6 +11,7 @@ class PromptTemplateDialogModel extends FormViewModel {
   PromptTemplateDialogModel(this.tablePrefix);
   final _log = getLogger('PromptTemplateDialogModel');
   final _settingService = locator<SettingService>();
+  final _analyticsFacade = locator<AnalyticsFacade>();
   final String tablePrefix;
 
   Future<void> initialise() async {
@@ -24,6 +28,7 @@ class PromptTemplateDialogModel extends FormViewModel {
         promptTemplateKey,
         promptTemplateValue!,
       );
+      unawaited(_analyticsFacade.trackPromptTemplateEdited());
     }
   }
 }

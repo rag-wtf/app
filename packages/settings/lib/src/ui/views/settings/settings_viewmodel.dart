@@ -1,4 +1,7 @@
 // ignore_for_file: avoid_positional_boolean_parameters
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:database/database.dart';
 import 'package:settings/src/app/app.dialogs.dart';
 import 'package:settings/src/app/app.locator.dart';
@@ -23,6 +26,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   final _settingService = locator<SettingService>();
   final _dialogService = locator<DialogService>();
   final _connectionSettingService = locator<ConnectionSettingService>();
+  final _analyticsFacade = locator<AnalyticsFacade>();
   final Future<String?> Function(
     String tablePrefix,
     String dimensions,
@@ -68,6 +72,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _embeddingsCompressed = value;
+    unawaited(_analyticsFacade.trackCompressedToggled(enabled: value));
   }
 
   Future<void> setAnalyticsEnabled(bool value) async {
@@ -85,6 +90,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _embeddingsDimensionsEnabled = value;
+    unawaited(_analyticsFacade.trackDimensionsToggled(enabled: value));
   }
 
   Future<void> setFrequencyPenaltyEnabled(bool value) async {
@@ -94,6 +100,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _frequencyPenaltyEnabled = value;
+    unawaited(_analyticsFacade.trackFrequencyPenaltyToggled(enabled: value));
   }
 
   Future<void> setPresencePenaltyEnabled(bool value) async {
@@ -103,6 +110,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _presencePenaltyEnabled = value;
+    unawaited(_analyticsFacade.trackPresencePenaltyToggled(enabled: value));
   }
 
   void setPanelExpanded(int index, {required bool isExpanded}) {
@@ -586,6 +594,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value.toString(),
     );
     _stream = value;
+    unawaited(_analyticsFacade.trackStreamingToggled(enabled: value));
   }
 
   Future<void> setLlmProvider(String value) async {
@@ -595,6 +604,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       value,
     );
     if (value.isNotEmpty) {
+      unawaited(_analyticsFacade.trackLlmProviderSelected(value));
       final llmProvider = llmProviderSelected!;
       _log.d('llmProviderSelected $llmProvider');
       await _settingService.set(
@@ -626,6 +636,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         (model) => llmProvider.embeddings.model == model.name,
         orElse: EmbeddingModel.nullObject,
       );
+      unawaited(
+        _analyticsFacade.trackEmbeddingModelSelected(embeddingModel.name),
+      );
 
       await setEmbeddingsModelContextLengthAndDimensions(embeddingModel);
       await setEmbeddingsDimensionsEnabled(
@@ -642,6 +655,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       final generationModel = llmProvider.chatCompletions.models.firstWhere(
         (model) => llmProvider.chatCompletions.model == model.name,
         orElse: ChatModel.nullObject,
+      );
+      unawaited(
+        _analyticsFacade.trackGenerationModelSelected(generationModel.name),
       );
 
       await setGenerationModelContextLengthWith(generationModel);
@@ -753,6 +769,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   Future<void> onEmbeddingModelSelected(EmbeddingModel model) async {
     _log.d(model);
     if (model.name != embeddingsModelValue) {
+      unawaited(
+        _analyticsFacade.trackEmbeddingModelSelected(model.name),
+      );
       String? redefineEmbeddingIndexError;
       if (redefineEmbeddingIndexFunction != null) {
         redefineEmbeddingIndexError = await redefineEmbeddingIndexFunction!(
@@ -780,6 +799,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   Future<void> onGenerationModelSelected(ChatModel model) async {
     _log.d(model);
     if (model.name != generationModelValue) {
+      unawaited(
+        _analyticsFacade.trackGenerationModelSelected(model.name),
+      );      
       await _settingService.set(
         tablePrefix,
         generationModelKey,
