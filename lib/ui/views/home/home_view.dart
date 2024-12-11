@@ -61,7 +61,7 @@ class _HomeViewState extends State<HomeView>
             _leftWidgetTabController.animateTo(0);
           }
         });
-        
+
         return MainDrawerWidget(
           controller: _zoomDrawerController,
           logoutFunction: viewModel.disconnect,
