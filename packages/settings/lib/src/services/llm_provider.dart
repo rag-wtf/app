@@ -8,9 +8,12 @@ sealed class LlmProvider with _$LlmProvider {
   const factory LlmProvider({
     required String id,
     required String name,
-    required String baseUrl,
+    required String baseUrl,    
     required Embeddings embeddings,
     required ChatCompletions chatCompletions,
+    required String website,
+    String? apiKeyUrl,
+    @Default(false) bool litellm,
   }) = _LlmProvider;
 
   factory LlmProvider.fromJson(Map<String, dynamic> json) =>
@@ -22,8 +25,11 @@ sealed class Embeddings with _$Embeddings {
   const factory Embeddings({
     required String model,
     required List<EmbeddingModel> models,
+    String? apiKeyUrl,
     int? dimensions,
+    String? name,
     int? maxBatchSize,
+    String? website,
     @Default(true) bool dimensionsEnabled,
   }) = _Embeddings;
 
@@ -60,8 +66,11 @@ sealed class ChatCompletions with _$ChatCompletions {
     required double topP,
     required List<String> stop,
     required List<ChatModel> models,
+    String? apiKeyUrl,
     double? frequencyPenalty,
+    String? name,
     double? presencePenalty,
+    String? website,
     @Default(true) bool frequencyPenaltyEnabled,
     @Default(true) bool presencePenaltyEnabled,
   }) = _ChatCompletions;
