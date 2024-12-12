@@ -41,7 +41,7 @@ dependencies:
   url_launcher: ^6.3.0
 
 dev_dependencies:
-  analyzer: ^6.5.0
+  analyzer: ^6.11.0
   build_runner: ^2.4.5
   flutter_test:
     sdk: flutter
