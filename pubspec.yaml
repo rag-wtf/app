@@ -33,7 +33,7 @@ dependencies:
   share_plus: ^10.0.2
   stacked: ^3.4.3
   stacked_services: ^1.6.0
-  stacked_themes: ^0.3.13
+  stacked_themes: ^0.3.14
   surrealdb_js: ^1.0.1+7
   surrealdb_wasm: ^1.0.1+15
   ui:
