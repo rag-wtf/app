@@ -30,7 +30,7 @@ dependencies:
     path: packages/rag_console
   settings:
     path: packages/settings
-  share_plus: ^10.0.2
+  share_plus: ^10.1.3
   stacked: ^3.4.3
   stacked_services: ^1.6.0
   stacked_themes: ^0.3.13
