@@ -121,11 +121,10 @@
   },
   {
     "id": "gemini",
-    "name": "Gemini via LiteLLM",
-    "base_url": "http://localhost:4000/v1",
+    "name": "Gemini",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
     "api_key_url": "https://aistudio.google.com/app/apikey",
     "website": "https://deepmind.google/technologies/gemini",
-    "litellm": true,
     "embeddings": {
       "model": "text-embedding-004",
       "dimensions": 768,
@@ -151,6 +150,10 @@
       "presence_penalty": 0.0,
       "stop": [],
       "models": [
+        {
+          "name": "gemini-2.0-flash-exp",
+          "context_length": 1000000
+        },
         {
           "name": "gemini-1.5-flash",
           "context_length": 1000000
