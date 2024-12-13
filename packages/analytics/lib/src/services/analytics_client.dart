@@ -27,4 +27,5 @@ abstract class AnalyticsClient {
   Future<void> trackSystemPromptEdited();
   Future<void> trackPromptTemplateEdited();
   Future<void> trackDataCleared({required bool keepSettings});
+  Future<void> trackUrlOpened(Uri url);
 }

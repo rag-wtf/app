@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/llm_provider.dart';
+import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:ui/ui.dart';
@@ -47,10 +48,18 @@ class GenerationSettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final generationModelProvider =
+        viewModel.llmProviderSelected?.chatCompletions;
+    final modelLabel = generationModelProvider?.name != null
+        ? 'Model of ${generationModelProvider?.name}'
+        : 'Model';
+    final generationModelApiKeyUrl = generationModelProvider?.apiKeyUrl ??
+        viewModel.llmProviderSelected?.apiKeyUrl;      
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InputFieldDropdown<ChatModel>(
-          labelText: 'Model',
+          labelText: modelLabel,
           prefixIcon: Icon(
             Icons.api_outlined,
             color: iconColor,
@@ -68,6 +77,16 @@ class GenerationSettingsWidget extends StatelessWidget {
             orElse: ChatModel.nullObject,
           ),
         ),
+        if (generationModelProvider?.website != null) ...[
+          Link(
+            url: Uri.parse(
+              generationModelProvider!.website! + defaultUtmParams,
+            ),
+            text: generationModelProvider.website!,
+            onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
+          ),
+          verticalSpaceTiny,
+        ],       
         InputField(
           isDense: isDense,
           labelText: 'Context Length',
@@ -104,6 +123,18 @@ class GenerationSettingsWidget extends StatelessWidget {
           controller: generationApiKeyController,
           textInputType: TextInputType.none,
         ),
+        if (viewModel.llmProviderSelected != null &&
+            generationModelApiKeyUrl != null)
+          ...[
+          Link(
+            url: Uri.parse(
+              generationModelApiKeyUrl + defaultUtmParams,
+            ),
+            text: getApiKeyText,
+            onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
+          ),
+          verticalSpaceTiny,
+        ],        
         InputField(
           isDense: isDense,
           labelText: 'Max Tokens',

@@ -1,12 +1,16 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:rag/app/app.locator.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
+import 'package:rag/ui/widgets/link_tile.dart';
 import 'package:settings/settings.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 import 'package:ui/ui.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawerWidget extends StatefulWidget {
   const MainDrawerWidget({
@@ -23,6 +27,8 @@ class MainDrawerWidget extends StatefulWidget {
 }
 
 class _MainDrawerWidgetState extends State<MainDrawerWidget> {
+  final _analyticsFacade = locator<AnalyticsFacade>();
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -135,24 +141,14 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                           getThemeManager(context).toggleDarkLightTheme();
                         },
                       ),
-                      ListTile(
-                        leading: Image.asset(
-                          isDarkMode
-                              ? 'assets/images/github_light.png'
-                              : 'assets/images/github_dark.png',
-                          width: 24,
-                          height: 24,
-                        ),
-                        title: Text(
-                          'GitHub',
-                          style: listTileTextStyle,
-                        ),
-                        onTap: () async {
-                          final url = Uri.parse(gitHubRepoUrl);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          }
-                        },
+                      LinkTile(
+                        imagePath: isDarkMode
+                            ? 'assets/images/github_light.png'
+                            : 'assets/images/github_dark.png',
+                        title: 'GitHub',
+                        url: Uri.parse(gitHubRepoUrl + defaultUtmParams),
+                        textStyle: listTileTextStyle,
+                        onUrlLaunched: _analyticsFacade.trackUrlOpened,
                       ),
                       ListTile(
                         leading: Icon(
@@ -215,62 +211,26 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                         childrenPadding: expansionTileChildrenPadding,
                         shape: const Border(),
                         children: [
-                          ListTile(
-                            leading: Image.asset(
-                              'assets/images/pubdev.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            title: Text(
-                              'surrealdb_js',
-                              style: listTileTextStyle,
-                            ),
-                            onTap: () async {
-                              final url = Uri.parse(
-                                'https://pub.dev/packages/surrealdb_js',
-                              );
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              }
-                            },
+                          LinkTile(
+                            imagePath: 'assets/images/pubdev.png',
+                            title: 'surrealdb_js',
+                            url: Uri.parse('https://pub.dev/packages/surrealdb_js$defaultUtmParams'),
+                            textStyle: listTileTextStyle,
+                            onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
-                          ListTile(
-                            leading: Image.asset(
-                              'assets/images/pubdev.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            title: Text(
-                              'surrealdb_wasm',
-                              style: listTileTextStyle,
-                            ),
-                            onTap: () async {
-                              final url = Uri.parse(
-                                'https://pub.dev/packages/surrealdb_wasm',
-                              );
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              }
-                            },
+                          LinkTile(
+                            imagePath: 'assets/images/pubdev.png',
+                            title: 'surrealdb_wasm',
+                            url: Uri.parse('https://pub.dev/packages/surrealdb_wasm$defaultUtmParams'),
+                            textStyle: listTileTextStyle,
+                            onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
-                          ListTile(
-                            leading: Image.asset(
-                              'assets/images/pypi.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            title: Text(
-                              'open-text-embeddings',
-                              style: listTileTextStyle,
-                            ),
-                            onTap: () async {
-                              final url = Uri.parse(
-                                'https://pypi.org/project/open-text-embeddings/',
-                              );
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              }
-                            },
+                          LinkTile(
+                            imagePath: 'assets/images/pypi.png',
+                            title: 'open-text-embeddings',
+                            url: Uri.parse('https://pypi.org/project/open-text-embeddings$defaultUtmParams'),
+                            textStyle: listTileTextStyle,
+                            onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
                         ],
                       ),
@@ -286,35 +246,19 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                         childrenPadding: expansionTileChildrenPadding,
                         shape: const Border(),
                         children: [
-                          ListTile(
-                            leading: const FlutterLogo(size: 24),
-                            title: Text(
-                              'Flutter',
-                              style: listTileTextStyle,
-                            ),
-                            onTap: () async {
-                              final url = Uri.parse('https://flutter.dev');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              }
-                            },
+                          LinkTile(
+                            imagePath: 'assets/images/flutter.png',
+                            title: 'Flutter',
+                            url: Uri.parse('https://flutter.dev$defaultUtmParams'),
+                            textStyle: listTileTextStyle,
+                            onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
-                          ListTile(
-                            leading: Image.asset(
-                              'assets/images/surrealdb.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            title: Text(
-                              'SurrealDB',
-                              style: listTileTextStyle,
-                            ),
-                            onTap: () async {
-                              final url = Uri.parse('https://surrealdb.com');
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              }
-                            },
+                          LinkTile(
+                            imagePath: 'assets/images/surrealdb.png',
+                            title: 'SurrealDB',
+                            url: Uri.parse('https://surrealdb.com$defaultUtmParams'),
+                            textStyle: listTileTextStyle,
+                            onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
                         ],
                       ),

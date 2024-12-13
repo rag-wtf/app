@@ -184,4 +184,12 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
   Future<void> trackSystemPromptEdited() async {
     await _mixpanel.track('System Prompt Edited');
   }
+
+  @override
+  Future<void> trackUrlOpened(Uri url) async {
+    await _mixpanel.track(
+      'Url Opened',
+      properties: {'url': url.toString()},
+    );
+  }   
 }

@@ -171,4 +171,12 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackSystemPromptEdited() async {
     await _analytics.logEvent(name: 'system_prompt_edited');
   }
+
+  @override
+  Future<void> trackUrlOpened(Uri url) async {
+    await _analytics.logEvent(
+      name: 'url_opened',
+      parameters: {'url': url.toString()},
+    );
+  }  
 }

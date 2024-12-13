@@ -60,7 +60,6 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       maxWidth: dialogMaxWidth,
-      maxHeight: 660,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
@@ -73,17 +72,19 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                     fontWeight: FontWeight.w900,
                   ),
             ),
-            if (request.description != null) ...[
-              verticalSpaceTiny,
-              Text(
-                request.description!,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).textTheme.bodySmall!.color,
-                    ),
-                maxLines: 3,
-                softWrap: true,
-              ),
-            ],
+            verticalSpaceTiny,
+            Text(
+              request.description!,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).textTheme.bodySmall!.color,
+                  ),
+              softWrap: true,
+            ),
+            Link(
+              url: Uri.parse(surrealReferralUrl),
+              text: 'Start for free today!',
+              onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
+            ),
             verticalSpaceSmall,
             if (viewModel
                 .hasErrorForKey(ConnectionDialogModel.connectErrorKey)) ...[

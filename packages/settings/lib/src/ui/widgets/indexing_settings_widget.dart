@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/llm_provider.dart';
+import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:ui/ui.dart';
@@ -37,10 +38,17 @@ class IndexingSettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final embeddingModelProvider = viewModel.llmProviderSelected?.embeddings;
+    final modelLabel = embeddingModelProvider?.name != null
+        ? 'Model of ${embeddingModelProvider?.name}'
+        : 'Model';
+    final embeddingModelApiKeyUrl = embeddingModelProvider?.apiKeyUrl ?? 
+        viewModel.llmProviderSelected?.apiKeyUrl;    
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InputFieldDropdown<EmbeddingModel>(
-          labelText: 'Model',
+          labelText: modelLabel,
           prefixIcon: Icon(
             Icons.api_outlined,
             color: iconColor,
@@ -58,6 +66,16 @@ class IndexingSettingsWidget extends StatelessWidget {
             orElse: EmbeddingModel.nullObject,
           ),
         ),
+        if (embeddingModelProvider?.website != null) ...[
+          Link(
+            url: Uri.parse(
+              embeddingModelProvider!.website! + defaultUtmParams,
+            ),
+            text: embeddingModelProvider.website!,
+            onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
+          ),
+          verticalSpaceTiny,
+        ],
         InputField(
           isDense: isDense,
           labelText: 'Context Length',
@@ -94,6 +112,17 @@ class IndexingSettingsWidget extends StatelessWidget {
           controller: embeddingsApiKeyController,
           textInputType: TextInputType.none,
         ),
+        if (viewModel.llmProviderSelected != null &&
+            embeddingModelApiKeyUrl != null) ...[
+          Link(
+            url: Uri.parse(
+              embeddingModelApiKeyUrl + defaultUtmParams,
+            ),
+            text: getApiKeyText,
+            onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
+          ),
+          verticalSpaceTiny,
+        ],
         InputField(
           isDense: isDense,
           labelText: 'API Batch Size',

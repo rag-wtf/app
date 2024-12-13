@@ -123,7 +123,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         final response = await _dialogService.showCustomDialog<bool, void>(
           variant: DialogType.connection,
           title: 'Database Login',
-          description: 'Enter your connection details below.',
+          description: '''
+Experience the app with SurrealDB's Memory or IndexedDB mode, keeping your data stored locally in your browser.
+For a secure and permanent solution, easily create a free SurrealDB instance on Surreal Cloud.
+''',
         );
 
         confirmed = response?.confirmed ?? false;

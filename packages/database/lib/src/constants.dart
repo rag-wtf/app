@@ -5,6 +5,6 @@ const surrealNamespace = 'surreal';
 const surrealDatabase = 'surreal';
 const surrealUsername = 'root';
 const surrealPassword = 'root';
-
+const surrealReferralUrl = 'https://surrealdb.com/cloud?utm_source=rag.wtf&utm_medium=referral';
 const dialogMaxWidth = 840.0;
 const defaultName = 'New RAG';

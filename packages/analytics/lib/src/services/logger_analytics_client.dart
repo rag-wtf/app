@@ -173,4 +173,12 @@ $_name: trackDatabaseConnected protocol=$protocol, autoConnect=$autoConnect''',
   Future<void> trackSystemPromptEdited() async {
     _log.d('$_name: trackSystemPromptEdited', time: DateTime.now());
   }
+
+  @override
+  Future<void> trackUrlOpened(Uri url) async {
+    _log.d(
+      '$_name: trackUrlOpened url=$url',
+      time: DateTime.now(),
+    );
+  }
 }

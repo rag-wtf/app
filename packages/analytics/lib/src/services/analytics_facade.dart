@@ -150,6 +150,11 @@ class AnalyticsFacade implements AnalyticsClient {
         (c) => c.trackSystemPromptEdited(),
       );
 
+  @override
+  Future<void> trackUrlOpened(Uri url) => _dispatch(
+        (c) => c.trackUrlOpened(url),
+      );      
+
   Future<void> _dispatch(
     Future<void> Function(AnalyticsClient client) work,
   ) async {

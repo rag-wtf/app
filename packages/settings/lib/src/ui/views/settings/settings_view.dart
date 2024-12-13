@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/llm_provider.dart';
+import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
@@ -100,7 +102,7 @@ import 'package:ui/ui.dart';
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
-  const SettingsView({
+  SettingsView({
     required this.showSystemPromptDialogFunction,
     required this.showPromptTemplateDialogFunction,
     super.key,
@@ -116,7 +118,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   )? redefineEmbeddingIndexFunction;
   final Future<void> Function() showSystemPromptDialogFunction;
   final Future<void> Function() showPromptTemplateDialogFunction;
-
 
   @override
   Widget builder(
@@ -136,38 +137,64 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        isDense: isDense,
-                        label: Text(
-                          'LLM Provider',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                      value: viewModel.llmProviderId,
-                      items: viewModel.llmProviders.entries
-                          .map(
-                            (llmProviderEntry) => DropdownMenuItem(
-                              value: llmProviderEntry.key,
-                              child: Text(llmProviderEntry.value.name),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            isDense: isDense,
+                            label: Text(
+                              'LLM Provider',
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                          )
-                          .toList()
-                        ..insert(
-                          0,
-                          const DropdownMenuItem(
-                            value: '',
-                            child: Text('Select a LLM provider'),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
                           ),
+                          value: viewModel.llmProviderId,
+                          items: viewModel.llmProviders.entries
+                              .map(
+                                (llmProviderEntry) => DropdownMenuItem(
+                                  value: llmProviderEntry.key,
+                                  child: Text(llmProviderEntry.value.name),
+                                ),
+                              )
+                              .toList()
+                            ..insert(
+                              0,
+                              const DropdownMenuItem(
+                                value: '',
+                                child: Text('Select a LLM provider'),
+                              ),
+                            ),
+                          onChanged: (value) async {
+                            await viewModel.setLlmProvider(value!);
+                          },
                         ),
-                      onChanged: (value) async {
-                        await viewModel.setLlmProvider(value!);
-                      },
+                        if (viewModel.llmProviderSelected != null) ...[
+                          verticalSpaceTiny,
+                          Link(
+                            url: Uri.parse(
+                              viewModel.llmProviderSelected!.website +
+                                  defaultUtmParams,
+                            ),
+                            text: viewModel.llmProviderSelected!.website,
+                            onUrlLaunched:
+                                viewModel.analyticsFacade.trackUrlOpened,
+                          ),
+                          if (viewModel.llmProviderSelected!.litellm)
+                            Link(
+                              url: Uri.parse(
+                                liteLlmWebsite + defaultUtmParams,
+                              ),
+                              text: liteLlmWebsite,
+                              onUrlLaunched:
+                                  viewModel.analyticsFacade.trackUrlOpened,
+                            ),
+                        ],
+                      ],
                     ),
                   ),
                           Padding(

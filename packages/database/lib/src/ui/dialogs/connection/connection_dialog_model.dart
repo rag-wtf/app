@@ -19,7 +19,7 @@ class ConnectionDialogModel extends FormViewModel {
   static const newConnectionName = '[New connection]';
 
   final _log = getLogger('ConnectionDialogModel');
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final analyticsFacade = locator<AnalyticsFacade>();
   final _connectionSettingRepository = locator<ConnectionSettingRepository>();
   final _connectionSettingService = locator<ConnectionSettingService>();
   final _storage = locator<FlutterSecureStorage>();
@@ -200,7 +200,7 @@ class ConnectionDialogModel extends FormViewModel {
     );
     if (_analyticsEnabled) {
       unawaited(
-        _analyticsFacade.trackDatabaseConnected(
+        analyticsFacade.trackDatabaseConnected(
           _protocol,
           autoConnect: _autoConnect,
         ),

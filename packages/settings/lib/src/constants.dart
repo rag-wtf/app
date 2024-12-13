@@ -92,3 +92,4 @@ const themeModeKey = 'THEME_MODE';
 const dialogMaxWidth = 840.0;
 const liteLlmWebsite = 'https://www.litellm.ai';
 const defaultUtmParams = '?utm_source=rag.wtf&utm_medium=referral';
+const getApiKeyText = 'Get API Key';
