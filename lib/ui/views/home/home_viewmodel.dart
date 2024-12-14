@@ -124,8 +124,8 @@ Cannot change dimensions, there are existing embeddings in the database.''';
           variant: DialogType.connection,
           title: 'Database Login',
           description: '''
-Experience the app with SurrealDB's Memory or IndexedDB mode, keeping your data stored locally in your browser.
-For a secure and permanent solution, easily create a free SurrealDB instance on Surreal Cloud.
+Experience the app with SurrealDB's Memory or IndexedDB mode, keeping your data securely stored locally in your browser.  
+Prefer self-hosting? You can do that too. Or, better yet, try it out on Surreal Cloud.
 ''',
         );
 
