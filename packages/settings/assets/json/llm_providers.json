@@ -121,7 +121,7 @@
   },
   {
     "id": "gemini",
-    "name": "Gemini",
+    "name": "Google Gemini",
     "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
     "api_key_url": "https://aistudio.google.com/app/apikey",
     "website": "https://deepmind.google/technologies/gemini",
@@ -146,8 +146,8 @@
       "temperature": 0.7,
       "max_tokens": 512,
       "top_p": 1.0,
-      "frequency_penalty": 0.0,
-      "presence_penalty": 0.0,
+      "frequency_penalty_enabled": false,
+      "presence_penalty_enabled": false,
       "stop": [],
       "models": [
         {
