@@ -125,7 +125,8 @@ Cannot change dimensions, there are existing embeddings in the database.''';
           title: 'Database Login',
           description: '''
 Experience the app with SurrealDB's Memory or IndexedDB mode, keeping your data securely stored locally in your browser.  
-Prefer self-hosting? You can do that too. Or, better yet, try it out on Surreal Cloud.
+For a permanent and reliable solution, store your data with a self-hosted SurrealDB. 
+Or, better yet, try it out on Surreal Cloud.
 ''',
         );
 
