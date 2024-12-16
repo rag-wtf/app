@@ -31,7 +31,7 @@ dependencies:
   settings:
     path: packages/settings
   share_plus: ^10.0.2
-  stacked: ^3.4.3
+  stacked: ^3.4.4
   stacked_services: ^1.6.0
   stacked_themes: ^0.3.13
   surrealdb_js: ^1.0.1+7
