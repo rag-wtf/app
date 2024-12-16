@@ -494,10 +494,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_statusbarcolor_ns
-      sha256: "28ad644daac2d692b6d0d576458b7967f1aaeaf212eddfcb40ec8b5e68621abc"
+      sha256: a971b00344dff1bff95c95e1c5d4cd38923a27d0d6fac684ebaf220b1d1abbdc
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.6.0"
   flutter_svg:
     dependency: transitive
     description:
@@ -560,10 +560,10 @@ packages:
     dependency: transitive
     description:
       name: get_it
-      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
+      sha256: f126a3e286b7f5b578bf436d5592968706c4c1de28a228b870ce375d9f743103
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.0"
+    version: "8.0.3"
   glob:
     dependency: transitive
     description:
@@ -1187,10 +1187,10 @@ packages:
     dependency: "direct main"
     description:
       name: stacked
-      sha256: ed19ecdc2dcc682b9be9c7e34646e603c0f770437a914b15c7d2d13391c92a09
+      sha256: fe77da8b5dae6488a0caa0feea59c4f79a0fb11cd88a211f87f653411a4c142b
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.3"
+    version: "3.4.4"
   stacked_generator:
     dependency: "direct dev"
     description:
@@ -1211,18 +1211,18 @@ packages:
     dependency: transitive
     description:
       name: stacked_shared
-      sha256: "26e11dcfe23df81d565d0180eb5bcf4742efed066ba3328623b458f21a82b346"
+      sha256: "3d69b34d87422b78a7e5123681d3f4bcdd79757170454933f68795c54812d003"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1"
+    version: "1.4.2"
   stacked_themes:
     dependency: "direct main"
     description:
       name: stacked_themes
-      sha256: e525c7f4e321e9cacbf7528047385cd334026224faee7466e397c6c60ff4703c
+      sha256: "67706c36df46440026a94b40428be12765185907224bd919a82b94ea0ec575fd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.13"
+    version: "0.3.15"
   stream_channel:
     dependency: transitive
     description:
