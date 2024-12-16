@@ -84,6 +84,7 @@ sealed class ChatModel with _$ChatModel {
   const factory ChatModel({
     required String name,
     required int contextLength,
+    List<String>? stop,
   }) = _ChatModel;
 
   factory ChatModel.nullObject() {

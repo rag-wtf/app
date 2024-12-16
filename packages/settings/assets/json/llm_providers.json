@@ -1,5 +1,58 @@
 [
   {
+    "id": "ollama",
+    "name": "Ollama",
+    "base_url": "http://localhost:11434/v1",
+    "website": "https://ollama.com",
+    "embeddings": {
+      "model": "nomic-embed-text",
+      "dimensions": 768,
+      "models": [
+        {
+          "name": "nomic-embed-text",
+          "dimensions": 768,
+          "context_length": 8192
+        },
+        {
+          "name": "mxbai-embed-large",
+          "dimensions": 1024,
+          "context_length": 512
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "llama3.2",
+      "temperature": 0.7,
+      "max_tokens": 256,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "llama3.2",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral",
+          "context_length": 32768
+        },
+        {
+          "name": "qwen2.5",
+          "context_length": 131072
+        },
+        {
+          "name": "phi3.5",
+          "context_length": 131072
+        },
+        {
+          "name": "gemma2",
+          "context_length": 8192
+        }
+      ]
+    }
+  },  
+  {
     "id": "anthropic",
     "name": "Anthropic via LiteLLM",
     "base_url": "http://localhost:4000/v1",
@@ -278,6 +331,80 @@
     }
   },
   {
+    "id": "together",
+    "name": "Together AI",
+    "base_url": "https://api.together.xyz/v1",
+    "api_key_url": "https://api.together.xyz/settings/api-keys",
+    "website": "https://www.together.ai",
+    "embeddings": {
+      "model": "BAAI/bge-base-en-v1.5",
+      "dimensions": 768,
+      "models": [
+        {
+          "name": "BAAI/bge-base-en-v1.5",
+          "dimensions": 768,
+          "context_length": 512
+        },
+        {
+          "name": "BAAI/bge-large-en-v1.5",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "togethercomputer/m2-bert-80M-2k-retrieval",
+          "dimensions": 768,
+          "context_length": 2048
+        },
+        {
+          "name": "togethercomputer/m2-bert-80M-8k-retrieval",
+          "dimensions": 768,
+          "context_length": 8192
+        },
+        {
+          "name": "togethercomputer/m2-bert-80M-32k-retrieval",
+          "dimensions": 768,
+          "context_length": 32768
+        }              
+      ]
+    },
+    "chat_completions": {
+      "model": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 0.7,
+      "frequency_penalty": 1.0,
+      "presence_penalty": 0.0,
+      "stop": ["<|eot_id|>","<|eom_id|>"],
+      "models": [
+        {
+          "name": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+          "context_length": 131072,
+          "stop": ["<|eot_id|>","<|eom_id|>"]
+        },
+        {
+          "name": "Qwen/QwQ-32B-Preview",
+          "context_length": 32768,
+          "stop": ["<|im_end|>","<|endoftext|>"]
+        },
+        {
+          "name": "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+          "context_length": 131072,
+          "stop": ["<|eot_id|>","<|eom_id|>"]
+        },
+        {
+          "name": "scb10x/scb10x-llama3-typhoon-v1-5-8b-instruct",
+          "context_length": 8192,
+          "stop": ["<|eot_id|>"]
+        },
+        {
+          "name": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+          "context_length": 131072,
+          "stop": ["<|eot_id|>","<|eom_id|>"]
+        }
+      ]
+    }
+  },  
+  {
     "id": "siliconflow",
     "name": "SiliconFlow",
     "base_url": "https://api.siliconflow.cn/v1",
@@ -333,59 +460,6 @@
         {
           "name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
           "context_length": 32768
-        }
-      ]
-    }
-  },
-  {
-    "id": "ollama",
-    "name": "Ollama",
-    "base_url": "http://localhost:11434/v1",
-    "website": "https://ollama.com",
-    "embeddings": {
-      "model": "nomic-embed-text",
-      "dimensions": 768,
-      "models": [
-        {
-          "name": "nomic-embed-text",
-          "dimensions": 768,
-          "context_length": 8192
-        },
-        {
-          "name": "mxbai-embed-large",
-          "dimensions": 1024,
-          "context_length": 512
-        }
-      ]
-    },
-    "chat_completions": {
-      "model": "llama3.2",
-      "temperature": 0.7,
-      "max_tokens": 256,
-      "top_p": 1.0,
-      "frequency_penalty": 0.0,
-      "presence_penalty": 0.0,
-      "stop": [],
-      "models": [
-        {
-          "name": "llama3.2",
-          "context_length": 131072
-        },
-        {
-          "name": "mistral",
-          "context_length": 32768
-        },
-        {
-          "name": "qwen2.5",
-          "context_length": 131072
-        },
-        {
-          "name": "phi3.5",
-          "context_length": 131072
-        },
-        {
-          "name": "gemma2",
-          "context_length": 8192
         }
       ]
     }

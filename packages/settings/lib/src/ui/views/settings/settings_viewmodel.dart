@@ -717,15 +717,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         llmProvider.chatCompletions.presencePenaltyEnabled,
       );
 
-      if (llmProvider.chatCompletions.stop.isNotEmpty) {
-        final stop = llmProvider.chatCompletions.stop.join(',');
-        await _settingService.set(
-          tablePrefix,
-          stopKey,
-          stop,
-        );
-        stopValue = stop;
-      }
+      final stop = llmProvider.chatCompletions.stop.join(',');
+      await _settingService.set(
+        tablePrefix,
+        stopKey,
+        stop,
+      );
+      stopValue = stop;
     }
   }
 
@@ -742,6 +740,20 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
           generationModel.contextLength.toString();
     }
   }
+
+  Future<void> setStopWith(
+    ChatModel generationModel,
+  ) async {
+    if (generationModel.name != 'null' && generationModel.stop != null) {
+      final stop = generationModel.stop!.join(',');
+      await _settingService.set(
+        tablePrefix,
+        stopKey,
+        stop,
+      );
+      stopValue = stop;
+    }
+  }  
 
   Future<void> setEmbeddingsModelContextLengthAndDimensions(
     EmbeddingModel embeddingModel,
@@ -810,6 +822,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       generationModelValue = model.name;
 
       await setGenerationModelContextLengthWith(model);
+      await setStopWith(model);
 
       notifyListeners();
     }

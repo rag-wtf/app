@@ -253,7 +253,7 @@ class SettingService with ListenableServiceMixin {
     _settings.clear();
     await initialise(
       tablePrefix,
-      analyticsEnabled: analyticsCollectionEnabled.value as bool,
+      analyticsEnabled: bool.parse(analyticsCollectionEnabled.value),
     );
     clearFormValuesFunction?.call();
     notifyListeners();
