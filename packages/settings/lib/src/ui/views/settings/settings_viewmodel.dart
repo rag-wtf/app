@@ -388,6 +388,15 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         embeddingsApiKey,
         embeddingsApiKeyValue!,
       );
+      if (llmProviderId != 'anthropic' &&
+          _settingService.get(generationApiKey).value == '') {
+        await _settingService.set(
+          tablePrefix,
+          generationApiKey,
+          embeddingsApiKeyValue!,
+        );
+        generationApiKeyValue = embeddingsApiKeyValue;
+      }
     }
   }
 
