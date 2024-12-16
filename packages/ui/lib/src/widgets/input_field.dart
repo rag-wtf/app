@@ -26,6 +26,8 @@ import 'package:ui/src/widgets/password_field.dart';
 /// - [controller]: A [TextEditingController] to control the text being edited.
 /// - [labelText]: An optional [String] to display as the label for the
 ///   input field.
+/// - [helperText]: An optional [String] to display as an info message below
+///   the input field on focus.
 /// - [errorText]: An optional [String] to display as an error message below
 ///   the input field.
 /// - [hintText]: An optional [String] to display as a hint inside the
@@ -64,6 +66,7 @@ class InputField extends StatelessWidget {
     required this.controller,
     super.key,
     this.labelText,
+    this.helperText,
     this.errorText,
     this.hintText = '',
     this.inputFormatters,
@@ -82,6 +85,10 @@ class InputField extends StatelessWidget {
 
   /// An optional [String] to display as the label for the input field.
   final String? labelText;
+
+  /// An optional [String] to display as an info message below the input field
+  /// on focus.
+  final String? helperText;
 
   /// An optional [String] to display as an error message below the input field.
   final String? errorText;
@@ -124,79 +131,65 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Focus(
-            child: Builder(
-              builder: (context) {
-                if (textInputType == TextInputType.none) {
-                  return PasswordField(
-                    controller: controller,
-                    labelText: labelText,
-                    errorText: errorText,
-                    hintText: hintText,
-                    prefixIcon: prefixIcon,
-                    isDense: isDense,
-                  );
-                } else {
-                  return TextField(
-                    maxLines: maxLines,
-                    readOnly: readOnly,
-                    enabled: enabled,
-                    controller: controller,
-                    decoration: InputDecoration(
-                      isDense: isDense,
-                      label: labelText != null
-                          ? Text(
-                              labelText!,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            )
-                          : null,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      hintText: hintText,
-                      hintStyle:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.grey,
-                              ),
-                      prefixIcon: prefixIcon,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.grey),
+      child: Focus(
+        child: Builder(
+          builder: (context) {
+            if (textInputType == TextInputType.none) {
+              return PasswordField(
+                controller: controller,
+                labelText: labelText,
+                errorText: errorText,
+                hintText: hintText,
+                prefixIcon: prefixIcon,
+                isDense: isDense,
+              );
+            } else {
+              return TextField(
+                maxLines: maxLines,
+                readOnly: readOnly,
+                enabled: enabled,
+                controller: controller,
+                decoration: InputDecoration(
+                  isDense: isDense,
+                  label: labelText != null
+                      ? Text(
+                          labelText!,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        )
+                      : null,
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  helperText: Focus.of(context).hasFocus &&
+                          helperText != null &&
+                          !readOnly
+                      ? helperText
+                      : null,
+                  errorText: errorText,
+                  hintText: hintText,
+                  hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey,
                       ),
-                      suffixIcon: suffixIcon ??
-                          (Focus.of(context).hasFocus &&
-                                  controller.text.isNotEmpty &&
-                                  showClearTextButton &&
-                                  !readOnly
-                              ? IconButton(
-                                  icon: const Icon(Icons.cancel),
-                                  onPressed: controller.clear,
-                                )
-                              : null),
-                    ),
-                    inputFormatters: inputFormatters,
-                    keyboardType: textInputType,
-                  );
-                }
-              },
-            ),
-          ),
-          if (errorText != null) ...[
-            const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Text(
-                errorText!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ),
-          ],
-        ],
+                  prefixIcon: prefixIcon,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  suffixIcon: suffixIcon ??
+                      (Focus.of(context).hasFocus &&
+                              controller.text.isNotEmpty &&
+                              showClearTextButton &&
+                              !readOnly
+                          ? IconButton(
+                              icon: const Icon(Icons.cancel),
+                              onPressed: controller.clear,
+                            )
+                          : null),
+                ),
+                inputFormatters: inputFormatters,
+                keyboardType: textInputType,
+              );
+            }
+          },
+        ),
       ),
     );
   }

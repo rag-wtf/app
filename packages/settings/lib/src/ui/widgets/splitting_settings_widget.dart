@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:settings/src/info_text.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:ui/ui.dart';
@@ -27,6 +28,7 @@ class SplittingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'API URL',
+          helperText: splittingApiUrlInfoText,
           prefixIcon: Icon(
             Icons.http_outlined,
             color: iconColor,

@@ -10,3 +10,4 @@ export 'src/widgets/link.dart';
 export 'src/widgets/logo.dart';
 export 'src/widgets/password_field.dart';
 export 'src/widgets/simple_expansion_panel.dart';
+export 'src/widgets/tooltip_label.dart';
