@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/info_text.dart';
 import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/views/settings/settings_validators.dart';
@@ -201,18 +202,19 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Enabled Analytics',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              CheckboxOrSwitch(
-                value: viewModel.analyticsEnabled,
-                onChanged: (value) async {
-                  await viewModel.setAnalyticsEnabled(value);
-                },
-              ),
-            ],
+                      children: [
+                        TooltipLabel(
+                          text: 'Enabled Analytics',
+                          tooltipMessage: enabledAnalyticsInfoText,
+                          textStyle: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        CheckboxOrSwitch(
+                          value: viewModel.analyticsEnabled,
+                          onChanged: (value) async {
+                            await viewModel.setAnalyticsEnabled(value);
+                          },
+                        ),
+                      ],
           ),
         ),
 

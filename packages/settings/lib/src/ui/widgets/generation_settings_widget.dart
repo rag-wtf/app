@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/info_text.dart';
 import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
@@ -64,6 +65,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.api_outlined,
             color: iconColor,
           ),
+          helperText: generationModelInfoText,
           hintText: 'gpt-4o-mini',
           errorText: viewModel.generationModelValidationMessage,
           controller: generationModelController,
@@ -94,6 +96,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: generationContextLengthInfoText,
           hintText: defaultGenerationModelContextLength,
           errorText: viewModel.generationModelContextLengthValidationMessage,
           controller: generationModelContextLengthController,
@@ -106,6 +109,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.http_outlined,
             color: iconColor,
           ),
+          helperText: generationApiUrlInfoText,
           hintText: 'https://api.openai.com/v1/chat/completions',
           errorText: viewModel.generationApiUrlValidationMessage,
           controller: generationApiUrlController,
@@ -118,6 +122,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.key_outlined,
             color: iconColor,
           ),
+          helperText: generationApiKeyInfoText,
           hintText: '*' * 48,
           errorText: viewModel.generationApiKeyValidationMessage,
           controller: generationApiKeyController,
@@ -142,6 +147,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: maxTokensInfoText,
           hintText: 'Half of the Context Length',
           errorText: viewModel.maxTokensValidationMessage,
           controller: maxTokensController,
@@ -154,6 +160,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: temperatureInfoText,
           hintText: '0 to 1',
           errorText: viewModel.temperatureValidationMessage,
           controller: temperatureController,
@@ -166,6 +173,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: topPInfoText,
           hintText: '0 to 1',
           errorText: viewModel.topPValidationMessage,
           controller: topPController,
@@ -178,6 +186,7 @@ class GenerationSettingsWidget extends StatelessWidget {
             Icons.stop_circle_outlined,
             color: iconColor,
           ),
+          helperText: stopSequenceInfoText,
           hintText: 'User,</s>',
           errorText: viewModel.stopValidationMessage,
           controller: stopController,
@@ -187,6 +196,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           readOnly: !viewModel.frequencyPenaltyEnabled,
           isDense: isDense,
           labelText: 'Frequency Penalty',
+          helperText: frequencyPenaltyInfoText,
           prefixIcon: Icon(
             Icons.numbers_outlined,
             color: iconColor,
@@ -206,6 +216,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           readOnly: !viewModel.presencePenaltyEnabled,
           isDense: isDense,
           labelText: 'Presence Penalty',
+          helperText: presencePenaltyInfoText,
           prefixIcon: Icon(
             Icons.numbers_outlined,
             color: iconColor,
@@ -229,9 +240,10 @@ class GenerationSettingsWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Streaming',
-                style: Theme.of(context).textTheme.titleSmall,
+              TooltipLabel(
+                text: 'Enabled Streaming',
+                tooltipMessage: enabledStreamingInfoText,
+                textStyle: Theme.of(context).textTheme.titleSmall,
               ),
               CheckboxOrSwitch(
                 value: viewModel.stream,

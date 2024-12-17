@@ -41,6 +41,7 @@ class SplittingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Chunk Size',
+          helperText: chunkSizeInfoText,
           prefixIcon: Icon(
             Icons.numbers_outlined,
             color: iconColor,
@@ -53,6 +54,7 @@ class SplittingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Chunk Overlap',
+          helperText: chunkOverlapInfoText,
           prefixIcon: Icon(
             Icons.numbers_outlined,
             color: iconColor,

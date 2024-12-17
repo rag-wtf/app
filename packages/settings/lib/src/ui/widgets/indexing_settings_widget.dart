@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings/src/constants.dart';
+import 'package:settings/src/info_text.dart';
 import 'package:settings/src/services/llm_provider.dart';
 import 'package:settings/src/ui/common/ui_helpers.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
@@ -53,6 +54,7 @@ class IndexingSettingsWidget extends StatelessWidget {
             Icons.api_outlined,
             color: iconColor,
           ),
+          helperText: embeddingModelInfoText,
           hintText: 'text-embedding-3-large',
           errorText: viewModel.embeddingsModelValidationMessage,
           controller: embeddingsModelController,
@@ -83,6 +85,7 @@ class IndexingSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: embeddingModelContextLengthInfoText,
           hintText: defaultEmbeddingsModelContextLength,
           errorText: viewModel.embeddingsModelContextLengthValidationMessage,
           controller: embeddingsModelContextLengthController,
@@ -95,6 +98,7 @@ class IndexingSettingsWidget extends StatelessWidget {
             Icons.http_outlined,
             color: iconColor,
           ),
+          helperText: embeddingApiUrlInfoText,
           hintText: 'https://api.openai.com/v1/embeddings',
           errorText: viewModel.embeddingsApiUrlValidationMessage,
           controller: embeddingsApiUrlController,
@@ -107,6 +111,7 @@ class IndexingSettingsWidget extends StatelessWidget {
             Icons.key_outlined,
             color: iconColor,
           ),
+          helperText: embeddingApiKeyInfoText,
           hintText: '*' * 48,
           errorText: viewModel.embeddingsApiKeyValidationMessage,
           controller: embeddingsApiKeyController,
@@ -130,6 +135,7 @@ class IndexingSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: embeddingApiBatchSizeInfoText,
           hintText: '10 to 500',
           errorText: viewModel.embeddingsApiBatchSizeValidationMessage,
           controller: embeddingsApiBatchSizeController,
@@ -142,6 +148,7 @@ class IndexingSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: databaseBatchSizeInfoText,
           hintText: '10 to 500',
           errorText: viewModel.embeddingsDatabaseBatchSizeValidationMessage,
           controller: embeddingsDatabaseBatchSizeController,
@@ -151,6 +158,7 @@ class IndexingSettingsWidget extends StatelessWidget {
           readOnly: !viewModel.embeddingsDimensionsEnabled,
           isDense: isDense,
           labelText: 'Dimensions',
+          helperText: dimensionsInfoText,
           prefixIcon: Icon(
             Icons.numbers_outlined,
             color: iconColor,
@@ -174,10 +182,11 @@ class IndexingSettingsWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Compressed',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+              TooltipLabel(
+                text: 'Enabled Compression',
+                tooltipMessage: compressedInfoText,
+                textStyle: Theme.of(context).textTheme.titleSmall,
+              ),              
               CheckboxOrSwitch(
                 value: viewModel.embeddingsCompressed,
                 onChanged: (value) async {

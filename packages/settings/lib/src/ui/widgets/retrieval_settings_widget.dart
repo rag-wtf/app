@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:settings/src/info_text.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:settings/src/ui/views/settings/settings_viewmodel.dart';
 import 'package:ui/ui.dart';
@@ -42,6 +43,7 @@ class RetrievalSettingsWidget extends StatelessWidget {
             Icons.manage_search_outlined,
             color: iconColor,
           ),
+          helperText: searchThresholdInfoText,
           hintText: '0.5 to 0.9',
           errorText: viewModel.searchThresholdValidationMessage,
           controller: searchThresholdController,
@@ -54,6 +56,7 @@ class RetrievalSettingsWidget extends StatelessWidget {
             Icons.numbers_outlined,
             color: iconColor,
           ),
+          helperText: topNResultsInfoText,
           hintText: '1 to 30',
           errorText: viewModel.retrieveTopNResultsValidationMessage,
           controller: retrieveTopNResultsController,
