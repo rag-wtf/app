@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ui/src/constants.dart';
 import 'package:ui/src/widgets/password_field.dart';
 
 /// A customizable [StatelessWidget] for input fields.
@@ -131,66 +132,67 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Focus(
-        child: Builder(
-          builder: (context) {
-            if (textInputType == TextInputType.none) {
-              return PasswordField(
-                controller: controller,
-                labelText: labelText,
-                errorText: errorText,
-                hintText: hintText,
-                prefixIcon: prefixIcon,
-                isDense: isDense,
-              );
-            } else {
-              return TextField(
-                maxLines: maxLines,
-                readOnly: readOnly,
-                enabled: enabled,
-                controller: controller,
-                decoration: InputDecoration(
-                  isDense: isDense,
-                  label: labelText != null
-                      ? Text(
-                          labelText!,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        )
-                      : null,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  helperText: Focus.of(context).hasFocus &&
-                          helperText != null &&
-                          !readOnly
-                      ? helperText
-                      : null,
-                  errorText: errorText,
-                  hintText: hintText,
-                  hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey,
-                      ),
-                  prefixIcon: prefixIcon,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  suffixIcon: suffixIcon ??
-                      (Focus.of(context).hasFocus &&
-                              controller.text.isNotEmpty &&
-                              showClearTextButton &&
-                              !readOnly
-                          ? IconButton(
-                              icon: const Icon(Icons.cancel),
-                              onPressed: controller.clear,
+      child: (textInputType == TextInputType.none)
+          ? PasswordField(
+              controller: controller,
+              labelText: labelText,
+              helperText: helperText,
+              errorText: errorText,
+              hintText: hintText,
+              prefixIcon: prefixIcon,
+              isDense: isDense,
+            )
+          : Focus(
+              child: Builder(
+                builder: (context) {
+                  return TextField(
+                    maxLines: maxLines,
+                    readOnly: readOnly,
+                    enabled: enabled,
+                    controller: controller,
+                    decoration: InputDecoration(
+                      isDense: isDense,
+                      label: labelText != null
+                          ? Text(
+                              labelText!,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             )
-                          : null),
-                ),
-                inputFormatters: inputFormatters,
-                keyboardType: textInputType,
-              );
-            }
-          },
-        ),
-      ),
+                          : null,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      helperText: Focus.of(context).hasFocus &&
+                              helperText != null &&
+                              !readOnly
+                          ? helperText
+                          : null,
+                      helperMaxLines: defaultHelperMaxLines,
+                      errorText: errorText,
+                      hintText: hintText,
+                      hintStyle:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey,
+                              ),
+                      prefixIcon: prefixIcon,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      suffixIcon: suffixIcon ??
+                          (Focus.of(context).hasFocus &&
+                                  controller.text.isNotEmpty &&
+                                  showClearTextButton &&
+                                  !readOnly
+                              ? IconButton(
+                                  icon: const Icon(Icons.cancel),
+                                  onPressed: controller.clear,
+                                )
+                              : null),
+                    ),
+                    inputFormatters: inputFormatters,
+                    keyboardType: textInputType,
+                  );
+                },
+              ),
+            ),
     );
   }
 }

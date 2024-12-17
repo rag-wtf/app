@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ui/src/constants.dart';
 
 /// A custom [TextField] widget designed for secure password input.
 ///
@@ -23,6 +24,8 @@ import 'package:flutter/material.dart';
 /// - [controller]: A [TextEditingController] to control the text being edited.
 /// - [labelText]: An optional [String] to display as the label for the
 ///   input field.
+/// - [helperText]: An optional [String] to display as an info message below
+///   the input field on focus.
 /// - [errorText]: An optional [String] to display as an error message below
 ///   the input field.
 /// - [hintText]: An optional [String] to display as a hint inside the
@@ -51,6 +54,7 @@ class PasswordField extends StatefulWidget {
     required this.controller,
     super.key,
     this.labelText,
+    this.helperText,
     this.errorText,
     this.hintText = '',
     this.prefixIcon,
@@ -62,6 +66,10 @@ class PasswordField extends StatefulWidget {
 
   /// An optional [String] to display as the label for the input field.
   final String? labelText;
+
+  /// An optional [String] to display as an info message below the input field
+  /// on focus.
+  final String? helperText;
 
   /// An optional [String] to display as an error message below the input field.
   final String? errorText;
@@ -93,34 +101,45 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: widget.controller,
-      decoration: InputDecoration(
-        isDense: widget.isDense,
-        label: widget.labelText != null
-            ? Text(
-                widget.labelText!,
-                style: Theme.of(context).textTheme.bodyLarge,
-              )
-            : null,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: widget.hintText,
-        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
+    return Focus(
+      child: Builder(
+        builder: (context) {
+          return TextField(
+            controller: widget.controller,
+            decoration: InputDecoration(
+              isDense: widget.isDense,
+              label: widget.labelText != null
+                  ? Text(
+                      widget.labelText!,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    )
+                  : null,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              helperText:
+                  Focus.of(context).hasFocus && widget.helperText != null
+                      ? widget.helperText
+                      : null,
+              helperMaxLines: defaultHelperMaxLines,
+              hintText: widget.hintText,
+              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey,
+                  ),
+              prefixIcon: widget.prefixIcon,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: _toggleVisibility,
+              ),
             ),
-        prefixIcon: widget.prefixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-          ),
-          onPressed: _toggleVisibility,
-        ),
+            obscureText: _obscureText,
+          );
+        },
       ),
-      obscureText: _obscureText,
     );
   }
 }

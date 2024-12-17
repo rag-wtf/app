@@ -35,6 +35,8 @@ import 'package:ui/src/widgets/input_field.dart';
 /// - **isDense**: Whether the input field should be dense. Defaults to `false`.
 /// - **hintText**: The hint text to display when the input is empty.
 /// - **labelText**: The label text to display above the input field.
+/// - **helperText**: An optional [String] to display as an info message below
+///   the input field on focus. 
 /// - **controller**: The [TextEditingController] for the input field. Required.
 /// - **errorText**: The error text to display when the input is invalid.
 /// - **suffixIcon**: The icon to display at the end of the input field.
@@ -103,6 +105,7 @@ class InputFieldDropdown<T> extends StatelessWidget {
     this.isDense = false,
     this.hintText,
     this.labelText,
+    this.helperText,
     this.errorText,
     this.suffixIcon = Icons.arrow_drop_down,
     this.items,
@@ -134,6 +137,10 @@ class InputFieldDropdown<T> extends StatelessWidget {
 
   /// The label text to display above the input field.
   final String? labelText;
+
+  /// An optional [String] to display as an info message below the input field
+  /// on focus.
+  final String? helperText;    
 
   /// The controller for the input field. Required.
   final TextEditingController controller;
@@ -209,6 +216,7 @@ class InputFieldDropdown<T> extends StatelessWidget {
     return InputField(
       controller: controller,
       labelText: labelText,
+      helperText: helperText,
       hintText: hintText,
       errorText: errorText,
       isDense: isDense,
