@@ -52,6 +52,8 @@ import 'package:ui/src/widgets/password_field.dart';
 ///   for the input field. Defaults to `1`.
 /// - [isDense]: An optional boolean to determine if the input field
 ///   should be dense.
+/// - [verticalPadding]: An optional double to determine the vertical padding 
+///   of the input field. Defaults to `8`.
 ///
 /// ### Styling:
 ///
@@ -79,6 +81,7 @@ class InputField extends StatelessWidget {
     this.readOnly = false,
     this.maxLines = 1,
     this.isDense,
+    this.verticalPadding = 8,
   });
 
   /// The [TextEditingController] to control the text being edited.
@@ -128,71 +131,65 @@ class InputField extends StatelessWidget {
   /// An optional boolean to determine if the input field should be dense.
   final bool? isDense;
 
+  /// An optional double to determine the vertical padding of the input field. 
+  /// Defaults to `8`.
+  final double verticalPadding;
+
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: (textInputType == TextInputType.none)
-          ? PasswordField(
+      padding: EdgeInsets.symmetric(vertical: verticalPadding),
+      child: Focus(
+        child: Builder(
+          builder: (context) {
+            return TextField(
+              maxLines: maxLines,
+              readOnly: readOnly,
+              enabled: enabled,
               controller: controller,
-              labelText: labelText,
-              helperText: helperText,
-              errorText: errorText,
-              hintText: hintText,
-              prefixIcon: prefixIcon,
-              isDense: isDense,
-            )
-          : Focus(
-              child: Builder(
-                builder: (context) {
-                  return TextField(
-                    maxLines: maxLines,
-                    readOnly: readOnly,
-                    enabled: enabled,
-                    controller: controller,
-                    decoration: InputDecoration(
-                      isDense: isDense,
-                      label: labelText != null
-                          ? Text(
-                              labelText!,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            )
-                          : null,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      helperText: Focus.of(context).hasFocus &&
-                              helperText != null &&
-                              !readOnly
-                          ? helperText
-                          : null,
-                      helperMaxLines: defaultHelperMaxLines,
-                      errorText: errorText,
-                      hintText: hintText,
-                      hintStyle:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.grey,
-                              ),
-                      prefixIcon: prefixIcon,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      suffixIcon: suffixIcon ??
-                          (Focus.of(context).hasFocus &&
-                                  controller.text.isNotEmpty &&
-                                  showClearTextButton &&
-                                  !readOnly
-                              ? IconButton(
-                                  icon: const Icon(Icons.cancel),
-                                  onPressed: controller.clear,
-                                )
-                              : null),
+              decoration: InputDecoration(
+                isDense: isDense,
+                label: labelText != null
+                    ? Text(
+                        labelText!,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      )
+                    : null,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                helperText: Focus.of(context).hasFocus &&
+                        helperText != null &&
+                        !readOnly
+                    ? helperText
+                    : null,
+                helperMaxLines: defaultHelperMaxLines,
+                errorText: errorText,
+                hintText: hintText,
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey,
                     ),
-                    inputFormatters: inputFormatters,
-                    keyboardType: textInputType,
-                  );
-                },
+                prefixIcon: prefixIcon,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                suffixIcon: suffixIcon ??
+                    (Focus.of(context).hasFocus &&
+                            controller.text.isNotEmpty &&
+                            showClearTextButton &&
+                            !readOnly
+                        ? IconButton(
+                            icon: const Icon(Icons.cancel),
+                            onPressed: controller.clear,
+                          )
+                        : null),
               ),
-            ),
+              inputFormatters: inputFormatters,
+              keyboardType: textInputType,
+            );
+          },
+        ),
+      ),
     );
   }
 }

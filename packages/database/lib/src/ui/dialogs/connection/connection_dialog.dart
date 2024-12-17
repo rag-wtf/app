@@ -232,12 +232,11 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                         showClearTextButton: showClearTextButton,
                       ),
                       verticalSpaceTiny,
-                      InputField(
+                      PasswordField(
                         isDense: isDense,
                         labelText: 'Password',
                         controller: passwordController,
                         errorText: viewModel.passwordValidationMessage,
-                        textInputType: TextInputType.none,
                       ),
                     ],
                     verticalSpaceTiny,

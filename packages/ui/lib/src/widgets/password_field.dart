@@ -34,7 +34,9 @@ import 'package:ui/src/constants.dart';
 ///   input field.
 /// - [isDense]: An optional [bool] to determine if the input field should be
 ///   dense.
-///
+/// - [verticalPadding]: An optional double to determine the vertical padding 
+///   of the input field. Defaults to `8`.
+/// 
 /// ### State Management:
 ///
 /// The visibility of the password text is managed internally by the widget.
@@ -59,6 +61,7 @@ class PasswordField extends StatefulWidget {
     this.hintText = '',
     this.prefixIcon,
     this.isDense,
+    this.verticalPadding = 8,
   });
 
   /// The [TextEditingController] to control the text being edited.
@@ -84,6 +87,10 @@ class PasswordField extends StatefulWidget {
   /// An optional [bool] to determine if the input field should be dense.
   final bool? isDense;
 
+  /// An optional double to determine the vertical padding of the input field. 
+  /// Defaults to `8`.
+  final double verticalPadding;  
+
   @override
   State<PasswordField> createState() => _PasswordFieldState();
 }
@@ -101,44 +108,47 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      child: Builder(
-        builder: (context) {
-          return TextField(
-            controller: widget.controller,
-            decoration: InputDecoration(
-              isDense: widget.isDense,
-              label: widget.labelText != null
-                  ? Text(
-                      widget.labelText!,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    )
-                  : null,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              helperText:
-                  Focus.of(context).hasFocus && widget.helperText != null
-                      ? widget.helperText
-                      : null,
-              helperMaxLines: defaultHelperMaxLines,
-              hintText: widget.hintText,
-              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
-              prefixIcon: widget.prefixIcon,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.grey),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: widget.verticalPadding),
+      child: Focus(
+        child: Builder(
+          builder: (context) {
+            return TextField(
+              controller: widget.controller,
+              decoration: InputDecoration(
+                isDense: widget.isDense,
+                label: widget.labelText != null
+                    ? Text(
+                        widget.labelText!,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      )
+                    : null,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                helperText:
+                    Focus.of(context).hasFocus && widget.helperText != null
+                        ? widget.helperText
+                        : null,
+                helperMaxLines: defaultHelperMaxLines,
+                hintText: widget.hintText,
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey,
+                    ),
+                prefixIcon: widget.prefixIcon,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
-                onPressed: _toggleVisibility,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: _toggleVisibility,
+                ),
               ),
-            ),
-            obscureText: _obscureText,
-          );
-        },
+              obscureText: _obscureText,
+            );
+          },
+        ),
       ),
     );
   }

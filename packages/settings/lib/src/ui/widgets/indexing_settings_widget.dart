@@ -104,7 +104,7 @@ class IndexingSettingsWidget extends StatelessWidget {
           controller: embeddingsApiUrlController,
           textInputType: TextInputType.url,
         ),
-        InputField(
+        PasswordField(
           isDense: isDense,
           labelText: 'API Key',
           prefixIcon: Icon(
@@ -115,7 +115,6 @@ class IndexingSettingsWidget extends StatelessWidget {
           hintText: '*' * 48,
           errorText: viewModel.embeddingsApiKeyValidationMessage,
           controller: embeddingsApiKeyController,
-          textInputType: TextInputType.none,
         ),
         if (viewModel.llmProviderSelected != null &&
             embeddingModelApiKeyUrl != null) ...[

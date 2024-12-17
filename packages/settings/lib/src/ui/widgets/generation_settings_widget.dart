@@ -115,7 +115,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           controller: generationApiUrlController,
           textInputType: TextInputType.url,
         ),
-        InputField(
+        PasswordField(
           isDense: isDense,
           labelText: 'API Key',
           prefixIcon: Icon(
@@ -126,7 +126,6 @@ class GenerationSettingsWidget extends StatelessWidget {
           hintText: '*' * 48,
           errorText: viewModel.generationApiKeyValidationMessage,
           controller: generationApiKeyController,
-          textInputType: TextInputType.none,
         ),
         if (viewModel.llmProviderSelected != null &&
             generationModelApiKeyUrl != null)
