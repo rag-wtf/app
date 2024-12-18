@@ -8,7 +8,7 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
-  archive: ^3.6.1
+  archive: ^4.0.1
   chat:
     path: ../chat
   console:

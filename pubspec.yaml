@@ -9,7 +9,7 @@ environment:
 dependencies:
   analytics:
     path: packages/analytics
-  archive: ^3.6.1
+  archive: ^4.0.1
   chat:
     path: packages/chat
   database:
@@ -17,7 +17,7 @@ dependencies:
   dio: ^5.6.0
   document:
     path: packages/document
-  firebase_core: ^3.8.0
+  firebase_core: ^3.8.1
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -25,15 +25,15 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   flutter_zoom_drawer: ^3.2.0
   intl: ^0.19.0
-  package_info_plus: ^8.0.2
+  package_info_plus: ^8.1.2
   rag_console:
     path: packages/rag_console
   settings:
     path: packages/settings
-  share_plus: ^10.0.2
-  stacked: ^3.4.3
+  share_plus: ^10.1.3
+  stacked: ^3.4.4
   stacked_services: ^1.6.0
-  stacked_themes: ^0.3.13
+  stacked_themes: ^0.3.15
   surrealdb_js: ^1.0.1+7
   surrealdb_wasm: ^1.0.1+15
   ui:
@@ -41,8 +41,8 @@ dependencies:
   url_launcher: ^6.3.0
 
 dev_dependencies:
-  analyzer: ^6.5.0
-  build_runner: ^2.4.5
+  analyzer: ^6.3.0
+  build_runner: ^2.4.14
   flutter_test:
     sdk: flutter
   melos: ^6.2.0    

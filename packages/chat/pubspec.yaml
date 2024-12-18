@@ -10,7 +10,7 @@ environment:
 dependencies:
   analytics: 
     path: ../analytics
-  archive: ^3.6.1
+  archive: ^4.0.1
   avatar_brick: ^0.2.0
   database: 
     path: ../database
