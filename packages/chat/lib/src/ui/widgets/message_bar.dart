@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:avatar_brick/avatar_brick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -104,6 +106,11 @@ class MessageBar extends StatelessWidget {
       },
     );
 
+    final maxHeight = max(
+      100,
+      MediaQuery.sizeOf(context).height * 0.4,
+    ).toDouble();
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Column(
@@ -155,74 +162,77 @@ class MessageBar extends StatelessWidget {
               vertical: 8,
               horizontal: 16,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ...actions,
-                Expanded(
-                  child: TextField(
-                    controller: _textController,
-                    focusNode: focusNode,
-                    keyboardType: TextInputType.multiline,
-                    textCapitalization: TextCapitalization.sentences,
-                    maxLines: null,
-                    onChanged: onTextChanged,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: messageBarHintText,
-                      hintMaxLines: 1,
-                      hintStyle: messageBarHintStyle,
-                      fillColor: Theme.of(context).cardTheme.color,
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: textFieldBorderRadius,
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: textFieldBorderRadius,
-                        borderSide: BorderSide(
-                          color: Colors.grey[700]!,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxHeight),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ...actions,
+                  Expanded(
+                    child: TextField(
+                      controller: _textController,
+                      focusNode: focusNode,
+                      keyboardType: TextInputType.multiline,
+                      textCapitalization: TextCapitalization.sentences,
+                      maxLines: null,
+                      onChanged: onTextChanged,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: messageBarHintText,
+                        hintMaxLines: 1,
+                        hintStyle: messageBarHintStyle,
+                        fillColor: Theme.of(context).cardTheme.color,
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: textFieldBorderRadius,
+                          borderSide: BorderSide.none,
                         ),
-                      ),
-                      prefixIcon: prefixIcon,
-                      suffixIcon: isSendButtonBusy
-                          ? onStop == null
-                              ? AvatarBrick(
-                                  isLoading: true,
-                                  size: Size(
-                                    sendButtonIconSize + 8,
-                                    sendButtonIconSize + 8,
-                                  ),
-                                  backgroundColor: Colors.transparent,
-                                )
-                              : Padding(
-                                  padding: sendButtonMargin,
-                                  child: IconButton(
-                                    padding: sendButtonPadding,
-                                    onPressed: onStop,
-                                    icon: Icon(
-                                      Icons.stop_circle,
-                                      color: sendButtonColor,
-                                      size: sendButtonIconSize + 8,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: textFieldBorderRadius,
+                          borderSide: BorderSide(
+                            color: Colors.grey[700]!,
+                          ),
+                        ),
+                        prefixIcon: prefixIcon,
+                        suffixIcon: isSendButtonBusy
+                            ? onStop == null
+                                ? AvatarBrick(
+                                    isLoading: true,
+                                    size: Size(
+                                      sendButtonIconSize + 8,
+                                      sendButtonIconSize + 8,
                                     ),
+                                    backgroundColor: Colors.transparent,
+                                  )
+                                : Padding(
+                                    padding: sendButtonMargin,
+                                    child: IconButton(
+                                      padding: sendButtonPadding,
+                                      onPressed: onStop,
+                                      icon: Icon(
+                                        Icons.stop_circle,
+                                        color: sendButtonColor,
+                                        size: sendButtonIconSize + 8,
+                                      ),
+                                    ),
+                                  )
+                            : Padding(
+                                padding: sendButtonMargin,
+                                child: IconButton(
+                                  padding: sendButtonPadding,
+                                  onPressed: _send,
+                                  icon: Icon(
+                                    Icons.send,
+                                    color: sendButtonColor,
+                                    size: sendButtonIconSize,
                                   ),
-                                )
-                          : Padding(
-                              padding: sendButtonMargin,
-                              child: IconButton(
-                                padding: sendButtonPadding,
-                                onPressed: _send,
-                                icon: Icon(
-                                  Icons.send,
-                                  color: sendButtonColor,
-                                  size: sendButtonIconSize,
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
