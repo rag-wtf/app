@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:mime_type/mime_type.dart';
+import 'package:mime_type/mime_type.dart' as mime_type;
 import 'package:stacked/stacked.dart';
 
 class DocumentListView extends StackedView<DocumentListViewModel> {
@@ -90,14 +90,20 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   }
 
   Future<Document?> pickFile(DocumentListViewModel viewModel) async {
+    final allowedExtensions = viewModel.splitConfig != null
+        ? viewModel.splitConfig!.supportedFileTypes
+            .map((mimeType) => extensionFromMime(mimeType) ?? 'null')
+            .toList()
+        : defaultAllowedExtensions.split(',');
     debugPrint(
-      'supportedFileTypes ${viewModel.splitConfig?.supportedFileTypes}',
+      '''
+supportedFileTypes ${viewModel.splitConfig?.supportedFileTypes}
+allowedExtensions $allowedExtensions
+''',
     );
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: viewModel.splitConfig != null
-          ? viewModel.splitConfig!.supportedFileTypes
-          : allowedExtensions.split(','),
+      allowedExtensions: allowedExtensions,
       //allowMultiple: false,
       //withData: false,
       withReadStream: true,
@@ -124,7 +130,7 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
       }
     }
 
-    mimeType ??= mime(fileName);
+    mimeType ??= mime_type.mime(fileName);
     debugPrint('fileName $fileName, mimeType $mimeType');
 
     final contentType = mimeType != null ? MediaType.parse(mimeType) : null;

@@ -1,4 +1,4 @@
-const allowedExtensions = 'txt,pdf,html,md,ppt,pptx,doc,docx,epub,eml';
+const defaultAllowedExtensions = 'txt,pdf,html,md,ppt,pptx,doc,docx,epub,eml';
 const unknownFileName = 'Unknown';
 const fileStreamExceptionMessage = 'Cannot read file from null stream!';
 const maximumFileSizeMessage = 'Max {}MB per file.';
