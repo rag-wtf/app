@@ -36,12 +36,15 @@ class ChatView extends StackedView<ChatViewModel> {
     ChatViewModel viewModel,
     Widget? child,
   ) {
+    final isSmallScreen = MediaQuery.sizeOf(context).width < 600;
+    final horizontalPadding = isSmallScreen ? 16.0 : 32.0;
     return Column(
       children: [
         Flexible(
           child: Align(
             alignment: Alignment.topCenter,
             child: InfiniteList(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               scrollController: _scrollController,
               itemCount: viewModel.messages.length,
               centerEmpty: true,
