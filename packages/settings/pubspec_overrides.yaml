@@ -1,7 +1,9 @@
-# melos_managed_dependency_overrides: database,ui,meta
+# melos_managed_dependency_overrides: database,ui,meta,analytics
 dependency_overrides:
   database:
     path: ../database
   ui:
     path: ../ui
   meta: ^1.15.0
+  analytics:
+    path: ../analytics

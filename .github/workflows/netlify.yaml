@@ -24,7 +24,9 @@ jobs:
         run: melos bootstrap
 
       - name: Generate Codes
-        run: melos generate --no-select
+        run: |
+          melos generate_packages --no-select
+          melos generate
 
       - name: Setup chrome driver
         uses: nanasess/setup-chromedriver@v2

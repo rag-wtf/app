@@ -24,11 +24,11 @@ scripts:
     run: flutter build web --release --no-tree-shake-icons --target lib/main_staging.dart --dart-define-from-file=.env.stg --no-source-maps --pwa-strategy=none
     description: Build app for web in staging flavor
 
-  generate:
+  generate_packages:
     run: melos exec --order-dependents -- dart run build_runner build --delete-conflicting-outputs
     description: Run code generation for all packages
     packageFilters:
-      scope: 
+      scope:
         - analytics
         - database
         - settings
@@ -37,6 +37,9 @@ scripts:
         - rag_console
         - stacked_package_template
 
+  generate:
+    run: dart run build_runner build --delete-conflicting-outputs
+    description: Run code generation for project
 
   start_server:
     run: python -m http.server 8000 --directory ./build/web
