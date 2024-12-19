@@ -46,7 +46,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   melos: ^6.2.0    
-  mockito: ^5.4.1
+  mockito: ^5.4.5
   mocktail: ^1.0.0
   stacked_generator: ^2.0.0-pre.1
   very_good_analysis: ^6.0.0
