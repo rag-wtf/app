@@ -9,7 +9,7 @@ environment:
 dependencies:
   analytics:
     path: packages/analytics
-  archive: ^4.0.1
+  archive: ^4.0.2
   chat:
     path: packages/chat
   database:
