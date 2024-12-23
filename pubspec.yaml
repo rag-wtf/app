@@ -35,7 +35,7 @@ dependencies:
   stacked_services: ^1.6.0
   stacked_themes: ^0.3.15
   surrealdb_js: ^1.0.1+7
-  surrealdb_wasm: ^1.0.1+15
+  surrealdb_wasm: ^1.1.0+16
   ui:
     path: packages/ui
   url_launcher: ^6.3.0

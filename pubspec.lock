@@ -1259,18 +1259,18 @@ packages:
     dependency: "direct main"
     description:
       name: surrealdb_js
-      sha256: "3aeda59c3a794c36a3043320cdf13cb4d7b06fa0ae44b36a3997c1d6703403a3"
+      sha256: "2522b4e2b2db5edd1c7285855b48a07437f7fc5bd203d68c7461032d645b8a06"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1+7"
+    version: "1.1.0+9"
   surrealdb_wasm:
     dependency: "direct main"
     description:
       name: surrealdb_wasm
-      sha256: b107c80c16f7a763c2a09c2e7930db7cf7df2c0fc1ca8d4e24f53678c7f4d2a1
+      sha256: e6696541b5383db20e0a5a1af5b8ee3970e4062fbc74e451cab9d2de1b13d4e4
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1+15"
+    version: "1.1.0+16"
   term_glyph:
     dependency: transitive
     description:
