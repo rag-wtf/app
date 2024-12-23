@@ -22,8 +22,8 @@ dependencies:
   logger:
   stacked: ^3.4.3
   stacked_services: ^1.5.0
-  surrealdb_js: ^1.0.1+7
-  surrealdb_wasm: ^1.0.1+15
+  surrealdb_js: ^1.1.0+9
+  surrealdb_wasm: ^1.1.0+16
   ui:
     path: ../ui
   ulid: ^2.0.0
