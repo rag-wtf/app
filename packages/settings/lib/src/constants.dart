@@ -30,6 +30,7 @@ const presencePenaltyKey = 'PRESENCE_PENALTY';
 const frequencyPenaltyEnabledKey = 'FREQUENCY_PENALTY_ENABLED';
 const presencePenaltyEnabledKey = 'PRESENCE_PENALTY_ENABLED';
 const maxTokensKey = 'MAX_TOKENS';
+const maxIndexingConcurrencyKey = 'MAX_INDEXING_CONCURRENCY';
 const stopKey = 'STOP';
 const streamKey = 'STREAM';
 const userIdKey = 'USER_ID';

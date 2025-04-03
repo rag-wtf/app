@@ -71,5 +71,5 @@ class App {
       mixpanelAnalyticsClient,
       if (!foundation.kReleaseMode) LoggerAnalyticsClient(),
     ]);
-  }  
+  }
 }

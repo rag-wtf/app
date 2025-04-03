@@ -5,6 +5,8 @@ import 'dart:typed_data';
 
 import 'package:analytics/analytics.dart';
 import 'package:archive/archive.dart';
+import 'package:async/async.dart';
+import 'package:async_locks/async_locks.dart';
 import 'package:dio/dio.dart';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
@@ -19,7 +21,6 @@ import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
 import 'package:document/src/services/split_config.dart';
-import 'package:mutex/mutex.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
@@ -40,7 +41,8 @@ class DocumentService with ListenableServiceMixin {
   final _gzipEncoder = locator<GZipEncoder>();
   final _gzipDecoder = locator<GZipDecoder>();
   final _analyticsFacade = locator<AnalyticsFacade>();
-  final _mutex = Mutex();
+  final AsyncMemoizer<void> _semaphoreInitMemoizer = AsyncMemoizer<void>();
+  Semaphore? _indexingSemaphore;
 
   int _total = -1;
   final _items = <DocumentItem>[];
@@ -48,6 +50,24 @@ class DocumentService with ListenableServiceMixin {
   SplitConfig? splitConfig;
 
   final _log = getLogger('DocumentService');
+
+  // Helper to initialize the semaphore, potentially reading from settings
+  Future<void> _initializeIndexingSemaphore() async {
+    await _semaphoreInitMemoizer.runOnce(() async {
+      var maxConcurrency = 5; // Default value
+      try {
+        // Example: Load from settings if available
+        final settingValue = _settingService.get(maxIndexingConcurrencyKey);
+        maxConcurrency = int.tryParse(settingValue.value) ?? maxConcurrency;
+      } catch (e) {
+        _log.w('''
+Could not read maxIndexingConcurrency setting, using default: $maxConcurrency. 
+Error: $e''');
+      }
+      _indexingSemaphore = Semaphore(maxConcurrency);
+      _log.i('Indexing Semaphore initialized with limit: $maxConcurrency');
+    });
+  }
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -79,6 +99,9 @@ class DocumentService with ListenableServiceMixin {
   }
 
   Future<void> initialise(String tablePrefix, String dimensions) async {
+    // Initialize semaphore during service initialization
+    await _initializeIndexingSemaphore();
+
     if (!await isSchemaCreated(tablePrefix)) {
       await createSchema(tablePrefix, dimensions);
     }
@@ -135,8 +158,26 @@ class DocumentService with ListenableServiceMixin {
         );
         _items.insert(0, documentItem);
         notifyListeners();
-        _log.d('0. documentItem.hashCode ${documentItem.hashCode}');
-        await _split(documentItem);
+        _log.d('Queueing split/index for document: ${documentItem.item.id}');
+        // No await here, let it run in the background
+        unawaited(
+          _split(documentItem).catchError(
+            (Object e, StackTrace s) {
+              _log.e(
+                'Error during background split/index process for ${documentItem.item.id}',
+                error: e,
+                stackTrace: s,
+              );
+              // Ensure status is updated even if error occurs outside
+              //_onError scope
+              updateDocumentDoneStatus(
+                documentItem,
+                DocumentStatus.failed,
+                'Unhandled error during processing: $e',
+              );
+            },
+          ),
+        );
       }
     }
   }
@@ -332,7 +373,7 @@ class DocumentService with ListenableServiceMixin {
     if (_isGzFile(bytes)) {
       return Uint8List.fromList(bytes);
     } else {
-      return Uint8List.fromList(_gzipEncoder.encode(bytes)!);
+      return Uint8List.fromList(_gzipEncoder.encode(bytes));
     }
   }
 
@@ -427,11 +468,45 @@ class DocumentService with ListenableServiceMixin {
     final embeddings = await _splitted(documentItem, responseData).timeout(
       Duration(seconds: max((responseData?['items'] as List).length, 600)),
     );
-    await _mutex.protect(() async {
+    
+    // Acquire semaphore before starting indexing
+    // Check if semaphore is null before acquiring,
+    // though it should be initialized.
+    if (_indexingSemaphore == null) {
+      _log.e(
+        'Indexing Semaphore is null, cannot index ${documentItem.item.id}',
+      );
+      await _handleError(
+        documentItem,
+        'Internal error: Concurrency control not initialized.',
+      );
+      return;
+    }
+
+    await _indexingSemaphore!.acquire();
+    _log.d('Semaphore acquired for document: ${documentItem.item.id}');
+    try {
+      // Execute the indexing logic
       await _indexing(documentItem, embeddings).timeout(
         Duration(seconds: max(embeddings.length, 900)),
       );
-    });
+      _log.i(
+        'Indexing completed successfully for document: ${documentItem.item.id}',
+      );
+    } catch (e, s) {
+      _log.e(
+        'Error during _indexing for ${documentItem.item.id}',
+        error: e,
+        stackTrace: s,
+      );
+      // Handle error specifically during indexing phase
+      await _handleError(documentItem, 'Error during indexing: $e');
+    } finally {
+      // IMPORTANT: Release semaphore in the finally block
+      // to ensure it's always released, even if _indexing throws an error.
+      _indexingSemaphore!.release();
+      _log.d('Semaphore released for document: ${documentItem.item.id}');
+    }
   }
 
   Future<List<Embedding>> _splitted(
@@ -582,7 +657,7 @@ class DocumentService with ListenableServiceMixin {
     DocumentStatus status, [
     String? errorMessage,
   ]) async {
-    switch(status) {
+    switch (status) {
       case DocumentStatus.completed:
         unawaited(_analyticsFacade.trackDocumentUploadCompleted());
       case DocumentStatus.failed:
@@ -591,10 +666,9 @@ class DocumentService with ListenableServiceMixin {
         unawaited(_analyticsFacade.trackDocumentUploadCancelled());
       // ignore: no_default_cases
       default:
-        // do nothing
+      // do nothing
     }
   }
-
 
   Future<void> updateDocumentIndexingStatus(DocumentItem documentItem) async {
     final now = DateTime.now();

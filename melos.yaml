@@ -9,8 +9,17 @@ scripts:
     description: Run `flutter analyze` for all packages
 
   test:
-    run: melos exec -- flutter test
-    description: Run `flutter test` for all packages
+    run: melos exec -- flutter test --platform chrome
+    description: Run `flutter test` for all packages in web environment
+    packageFilters:
+      dirExists: test
+
+  test_document_service:
+    run: melos exec -- flutter test test/services/document_service_test.dart --platform chrome
+    description: Run `flutter test` for document service in web environment
+    packageFilters:
+      scope:
+        - document
 
   build_dev:
     run: flutter build web --release --no-tree-shake-icons --target lib/main_development.dart --dart-define-from-file=.env.dev --no-source-maps --pwa-strategy=none
