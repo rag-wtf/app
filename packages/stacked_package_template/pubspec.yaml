@@ -4,8 +4,7 @@ version: 0.1.0+1
 publish_to: none
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.10.0"
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
@@ -32,10 +31,10 @@ dev_dependencies:
   mockito:
   stacked_generator: ^2.0.0-pre.1
   ulid: ^2.0.0
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^9.0.0
 
 dependency_overrides:
-  meta: ^1.15.0
+  meta: ^1.17.0
   #surrealdb_wasm:
 #    path: ../../surrealdb_wasm
     
