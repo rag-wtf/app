@@ -58,7 +58,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
         notMemAndIndxDB ? 'Remember password' : 'Connect automatically';
     return AdaptiveDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       maxWidth: dialogMaxWidth,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

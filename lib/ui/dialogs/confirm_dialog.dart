@@ -21,7 +21,7 @@ class ConfirmDialog extends StackedView<BaseViewModel> {
   ) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           maxWidth: 400,

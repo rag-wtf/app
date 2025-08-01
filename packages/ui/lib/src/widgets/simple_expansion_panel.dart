@@ -40,17 +40,17 @@ class SimpleExpansionPanel {
 
   /// Builds and returns an [ExpansionPanel] based on the provided properties.
   ///
-  /// The [context] is used to access the theme's text styles for the header.
+  /// The context is used to access the theme's text styles for the header.
   ///
   /// Returns an [ExpansionPanel] with the following properties:
-  /// - [headerBuilder]: A [ListTile] with the [headerText] styled using the
+  /// - headerBuilder: A [ListTile] with the [headerText] styled using the
   ///   theme's [TextTheme.titleMedium].
   /// - [body]: The provided [body] content wrapped in a [Padding] widget with
   ///   left and right padding of 16.
-  /// - [backgroundColor]: Transparent to avoid overriding the default panel
+  /// - backgroundColor: Transparent to avoid overriding the default panel
   ///   background.
   /// - [isExpanded]: The value of the [isExpanded] flag.
-  /// - [canTapOnHeader]: Allows tapping on the header to toggle the panel's
+  /// - canTapOnHeader: Allows tapping on the header to toggle the panel's
   ///   expansion state.
   ExpansionPanel build(BuildContext context) {
     return ExpansionPanel(

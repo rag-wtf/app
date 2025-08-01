@@ -39,7 +39,7 @@ class PromptTemplateDialog extends StackedView<PromptTemplateDialogModel>
     return AdaptiveDialog(
       maxWidth: dialogMaxWidth,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
