@@ -5,7 +5,7 @@ import 'package:stacked_package_template/src/services/model.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class ModelRepository {
-  final _db = locator<Surreal>();
+  final Surreal _db = locator<Surreal>();
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');

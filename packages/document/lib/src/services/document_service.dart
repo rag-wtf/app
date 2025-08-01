@@ -332,7 +332,7 @@ class DocumentService with ListenableServiceMixin {
     if (_isGzFile(bytes)) {
       return Uint8List.fromList(bytes);
     } else {
-      return Uint8List.fromList(_gzipEncoder.encode(bytes)!);
+      return Uint8List.fromList(_gzipEncoder.encode(bytes));
     }
   }
 

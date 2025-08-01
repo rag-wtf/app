@@ -5,7 +5,7 @@ import 'package:stacked_services/stacked_services.dart';
 // @stacked-import
 import 'test_helpers.mocks.dart';
 
-final locator = StackedLocator.instance;
+final StackedLocator locator = StackedLocator.instance;
 
 @GenerateMocks(
   [],

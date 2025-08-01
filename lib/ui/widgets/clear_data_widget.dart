@@ -14,7 +14,7 @@ class ClearDataWidget extends StatefulWidget {
 }
 
 class _ClearDataWidgetState extends State<ClearDataWidget> {
-  final _expansionTileController = ExpansionTileController();
+  final _expansionTileController = ExpansibleController();
 
   @override
   Widget build(BuildContext context) {

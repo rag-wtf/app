@@ -4,6 +4,7 @@ import 'package:analytics/analytics.dart';
 import 'package:chat/chat.dart';
 import 'package:database/database.dart';
 import 'package:document/document.dart';
+import 'package:logger/src/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
@@ -18,18 +19,18 @@ class HomeViewModel extends BaseViewModel {
   HomeViewModel({this.tablePrefix = defaultTablePrefix});
   final String tablePrefix;
 
-  final _connectionSettingService = locator<ConnectionSettingService>();
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
-  final _settingService = locator<SettingService>();
-  final _documentService = locator<DocumentService>();
-  final _embeddingRepository = locator<EmbeddingRepository>();
-  final _chatRepository = locator<ChatRepository>();
-  final _messageRepository = locator<MessageRepository>();
-  final _chatService = locator<ChatService>();
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final ConnectionSettingService _connectionSettingService = locator<ConnectionSettingService>();
+  final DialogService _dialogService = locator<DialogService>();
+  final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  final SettingService _settingService = locator<SettingService>();
+  final DocumentService _documentService = locator<DocumentService>();
+  final EmbeddingRepository _embeddingRepository = locator<EmbeddingRepository>();
+  final ChatRepository _chatRepository = locator<ChatRepository>();
+  final MessageRepository _messageRepository = locator<MessageRepository>();
+  final ChatService _chatService = locator<ChatService>();
+  final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
   // ignore: unused_field
-  final _log = getLogger('HomeViewModel');
+  final Logger _log = getLogger('HomeViewModel');
   int get totalChats => _totalChats;
   late int _totalChats;
 

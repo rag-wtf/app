@@ -27,7 +27,7 @@ class MainDrawerWidget extends StatefulWidget {
 }
 
 class _MainDrawerWidgetState extends State<MainDrawerWidget> {
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
 
   @override
   Widget build(BuildContext context) {

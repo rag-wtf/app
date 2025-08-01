@@ -101,7 +101,7 @@ Example:
   // gzip request
   List<int> gzipEncoder(String request, RequestOptions options) {
     options.headers.putIfAbsent('Content-Encoding', () => 'gzip');
-    return _gzipEncoder.encode(utf8.encode(request))!;
+    return _gzipEncoder.encode(utf8.encode(request));
   }
 
   Future<void> initialise() async {

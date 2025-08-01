@@ -275,7 +275,7 @@ class ChatApiService {
 
   List<int> _gzipEncoderFunction(String request, RequestOptions options) {
     options.headers.putIfAbsent('Content-Encoding', () => 'gzip');
-    return _gzipEncoder.encode(utf8.encode(request))!;
+    return _gzipEncoder.encode(utf8.encode(request));
   }
 
   Future<Map<String, dynamic>?> embed(

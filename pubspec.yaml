@@ -40,6 +40,7 @@ dependencies:
     path: packages/ui
   url_launcher: ^6.3.0
 
+  logger: any
 dev_dependencies:
   analyzer: ^6.3.0
   build_runner: ^2.4.14

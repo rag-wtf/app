@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ui/src/constants.dart';
-import 'package:ui/src/widgets/password_field.dart';
 
 /// A customizable [StatelessWidget] for input fields.
 ///
