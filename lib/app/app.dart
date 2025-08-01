@@ -125,7 +125,7 @@ class App extends StatelessWidget {
           fontSize: 14,
         ),
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         labelColor: Colors.blue,
         unselectedLabelColor: Colors.black54,
         labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -158,7 +158,7 @@ class App extends StatelessWidget {
           fontSize: 14,
         ),
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         labelColor: Colors.white,
         unselectedLabelColor: Colors.white70,
         labelStyle: TextStyle(fontWeight: FontWeight.bold),
