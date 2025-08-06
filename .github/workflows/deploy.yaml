@@ -1,19 +1,26 @@
-name: Deploy to Netlify
-
+name: Deploy to GitHub Pages
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
+  workflow_call:
 
+permissions:
+  contents: write
+      
 jobs:
-  build:
-    permissions:
-      contents: write
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter  
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - run: flutter --version
+      - run: flutter doctor -v
 
       - name: Install Melos
         run: dart pub global activate melos
@@ -45,17 +52,8 @@ jobs:
       - name: Build
         run: melos build_prod
 
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          publish-dir: "./build/web"
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: false
-          enable-commit-comment: true
-          overwrites-pull-request-comment: true
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
+          branch: gh-pages
+          folder: "./build/web"
