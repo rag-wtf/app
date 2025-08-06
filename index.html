@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="RAG.wtf - RAG for everyone">
+  <!-- Ensures the page is displayed correctly on both mobile devices and desktops. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <!-- 
+  Only send the origin (e.g., https://yourwebsite.com) when linking to a different origin (cross-origin).
+  -->
+  <meta http-equiv="Content-Security-Policy" content="referrer origin-when-cross-origin">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="RAG.wtf">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <title>RAG.wtf</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="/assets/packages/mixpanel_flutter/assets/mixpanel.js"></script>
+  <script type="module">
+    import * as fflate from "/assets/packages/surrealdb_wasm/assets/js/fflate-0.8.2.min.js";
+    globalThis.fflate = fflate;
+  </script>
+  <script type="module">
+    import { Surreal, StringRecordId } from "/assets/packages/surrealdb_js/assets/js/index.bundled.mjs";
+    import { surrealdbWasmEngines } from "/assets/packages/surrealdb_wasm/assets/wasm/surrealdb/surrealdb_wasm.js";
+    
+    // expose the type to the global scope
+    globalThis.SurrealJS = Surreal;
+    globalThis.StringRecordId = StringRecordId;
+    globalThis.WasmEngine = surrealdbWasmEngines;
+  </script>
+  <style>
+    body {
+      overflow: hidden; /* Hide scroll bar */
+    }
+
+    .container {
+      display: flex;
+      justify-content: center; /* Horizontal centering */
+      align-items: center;     /* Vertical centering */
+      height: 100vh;           /* Full viewport height to center within */
+    }
+
+    img {
+      /* Optionally add styling to the image */
+      max-width: 100%; /* Prevents overflow */
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+  <div class="container">
+    <img aria-hidden="true" src="/icons/Icon-64.png" />
+  </div>  
+</body>
+</html>
