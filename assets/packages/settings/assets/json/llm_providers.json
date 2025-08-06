@@ -1,0 +1,467 @@
+[
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "base_url": "http://localhost:11434/v1",
+    "website": "https://ollama.com",
+    "embeddings": {
+      "model": "nomic-embed-text",
+      "dimensions": 768,
+      "models": [
+        {
+          "name": "nomic-embed-text",
+          "dimensions": 768,
+          "context_length": 8192
+        },
+        {
+          "name": "mxbai-embed-large",
+          "dimensions": 1024,
+          "context_length": 512
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "llama3.2",
+      "temperature": 0.7,
+      "max_tokens": 256,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "llama3.2",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral",
+          "context_length": 32768
+        },
+        {
+          "name": "qwen2.5",
+          "context_length": 131072
+        },
+        {
+          "name": "phi3.5",
+          "context_length": 131072
+        },
+        {
+          "name": "gemma2",
+          "context_length": 8192
+        }
+      ]
+    }
+  },  
+  {
+    "id": "anthropic",
+    "name": "Anthropic via LiteLLM",
+    "base_url": "http://localhost:4000/v1",
+    "api_key_url": "https://console.anthropic.com/settings/keys",
+    "website": "https://www.anthropic.com",
+    "litellm": true,
+    "embeddings": {
+      "name": "Voyage AI",
+      "website": "https://www.voyageai.com",
+      "api_key_url": "https://dash.voyageai.com/api-keys",
+      "model": "voyage-3-lite",
+      "dimensions": 512,
+      "models": [
+        {
+          "name": "voyage-3",
+          "dimensions": 1024,
+          "context_length": 32000
+        },
+        {
+          "name": "voyage-3-lite",
+          "dimensions": 512,
+          "context_length": 32000
+        },
+        {
+          "name": "voyage-code-3",
+          "dimensions": 1024,
+          "context_length": 32000
+        }, 
+        {
+          "name": "voyage-multilingual-2",
+          "dimensions": 1024,
+          "context_length": 32000
+        }, 
+        {
+          "name": "voyage-code-2",
+          "dimensions": 1536,
+          "context_length": 16000
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "",
+      "temperature": 0.7,
+      "max_tokens": 256,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "claude-3-5-haiku-latest",
+          "context_length": 200000
+        },
+        {
+          "name": "claude-3-5-sonnet-latest",
+          "context_length": 200000
+        },
+        {
+          "name": "claude-3-haiku-20240307",
+          "context_length": 200000
+        },
+        {
+          "name": "claude-3-sonnet-20240229",
+          "context_length": 200000
+        },
+        {
+          "name": "claude-3-opus-latest",
+          "context_length": 200000
+        }                
+      ]
+    }
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "base_url": "https://api.openai.com/v1",
+    "api_key_url": "https://platform.openai.com/api-keys",
+    "website": "https://openai.com",
+    "embeddings": {
+      "model": "text-embedding-3-large",
+      "dimensions": 256,
+      "models": [
+        {
+          "name": "text-embedding-ada-002",
+          "dimensions": 1536,
+          "context_length": 8191
+        },
+        {
+          "name": "text-embedding-3-small",
+          "dimensions": 1536,
+          "context_length": 8191
+        },
+        {
+          "name": "text-embedding-3-large",
+          "dimensions": 3072,
+          "context_length": 8191
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "gpt-4o-mini",
+      "temperature": 0.7,
+      "max_tokens": 256,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "gpt-4o-mini",
+          "context_length": 131072
+        },
+        {
+          "name": "gpt-4o",
+          "context_length": 131072
+        }
+      ]
+    }
+  },
+  {
+    "id": "gemini",
+    "name": "Google Gemini",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "api_key_url": "https://aistudio.google.com/app/apikey",
+    "website": "https://deepmind.google/technologies/gemini",
+    "embeddings": {
+      "model": "text-embedding-004",
+      "dimensions": 768,
+      "models": [
+        {
+          "name": "text-embedding-004",
+          "dimensions": 768,
+          "context_length": 2048
+        },
+        {
+          "name": "text-multilingual-embedding-002",
+          "dimensions": 768,
+          "context_length": 8192
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "gemini-1.5-flash",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 1.0,
+      "frequency_penalty_enabled": false,
+      "presence_penalty_enabled": false,
+      "stop": [],
+      "models": [
+        {
+          "name": "gemini-2.0-flash-exp",
+          "context_length": 1000000
+        },
+        {
+          "name": "gemini-1.5-flash",
+          "context_length": 1000000
+        },
+        {
+          "name": "gemini-1.5-pro",
+          "context_length": 2000000
+        }
+      ]
+    }
+  },
+  {
+    "id": "mistral",
+    "name": "Mistral AI",
+    "base_url": "https://api.mistral.ai/v1",
+    "api_key_url": "https://console.mistral.ai/api-keys/",
+    "website": "https://mistral.ai",    
+    "embeddings": {
+      "model": "mistral-embed",
+      "dimensions": 1024,
+      "dimensions_enabled": false,
+      "models": [
+        {
+          "name": "mistral-embed",
+          "dimensions": 1024,
+          "context_length": 8000
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "open-mistral-nemo-2407",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 1.0,
+      "frequency_penalty_enabled": false,
+      "presence_penalty_enabled": false,
+      "stop": [],
+      "models": [
+        {
+          "name": "open-mistral-nemo-2407",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral-large-2407",
+          "context_length": 131072
+        },
+        {
+          "name": "mistral-small-2409",
+          "context_length": 131072
+        },
+        {
+          "name": "codestral-2405",
+          "context_length": 32768
+        },
+        {
+          "name": "pixtral-12b-2409",
+          "context_length": 131072
+        }
+      ]
+    }
+  },
+  {
+    "id": "cohere",
+    "name": "Cohere via LiteLLM",
+    "base_url": "http://localhost:4000/v1",
+    "api_key_url": "https://dashboard.cohere.com/api-keys",
+    "website": "https://cohere.com",
+    "litellm": true,
+    "embeddings": {
+      "model": "embed-english-v3.0",
+      "dimensions": 1024,
+      "max_batch_size": 96,
+      "models": [
+        {
+          "name": "embed-english-v3.0",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "embed-english-light-v3.0",
+          "dimensions": 384,
+          "context_length": 512
+        },
+        {
+          "name": "embed-multilingual-v3.0",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "embed-multilingual-light-v3.0",
+          "dimensions": 384,
+          "context_length": 512
+        }
+      ]
+    },
+    "chat_completions": {
+      "model": "command-r",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "command-r",
+          "context_length": 131072
+        },        
+        {
+          "name": "command-r-08-2024",
+          "context_length": 131072
+        },        
+        {
+          "name": "command-r-plus",
+          "context_length": 131072
+        },
+        {
+          "name": "command-r-plus-08-2024",
+          "context_length": 131072
+        }
+      ]
+    }
+  },
+  {
+    "id": "together",
+    "name": "Together AI",
+    "base_url": "https://api.together.xyz/v1",
+    "api_key_url": "https://api.together.xyz/settings/api-keys",
+    "website": "https://www.together.ai",
+    "embeddings": {
+      "model": "BAAI/bge-base-en-v1.5",
+      "dimensions": 768,
+      "models": [
+        {
+          "name": "BAAI/bge-base-en-v1.5",
+          "dimensions": 768,
+          "context_length": 512
+        },
+        {
+          "name": "BAAI/bge-large-en-v1.5",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "togethercomputer/m2-bert-80M-2k-retrieval",
+          "dimensions": 768,
+          "context_length": 2048
+        },
+        {
+          "name": "togethercomputer/m2-bert-80M-8k-retrieval",
+          "dimensions": 768,
+          "context_length": 8192
+        },
+        {
+          "name": "togethercomputer/m2-bert-80M-32k-retrieval",
+          "dimensions": 768,
+          "context_length": 32768
+        }              
+      ]
+    },
+    "chat_completions": {
+      "model": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "temperature": 0.7,
+      "max_tokens": 512,
+      "top_p": 0.7,
+      "frequency_penalty": 1.0,
+      "presence_penalty": 0.0,
+      "stop": ["<|eot_id|>","<|eom_id|>"],
+      "models": [
+        {
+          "name": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+          "context_length": 131072,
+          "stop": ["<|eot_id|>","<|eom_id|>"]
+        },
+        {
+          "name": "Qwen/QwQ-32B-Preview",
+          "context_length": 32768,
+          "stop": ["<|im_end|>","<|endoftext|>"]
+        },
+        {
+          "name": "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+          "context_length": 131072,
+          "stop": ["<|eot_id|>","<|eom_id|>"]
+        },
+        {
+          "name": "scb10x/scb10x-llama3-typhoon-v1-5-8b-instruct",
+          "context_length": 8192,
+          "stop": ["<|eot_id|>"]
+        },
+        {
+          "name": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+          "context_length": 131072,
+          "stop": ["<|eot_id|>","<|eom_id|>"]
+        }
+      ]
+    }
+  },  
+  {
+    "id": "siliconflow",
+    "name": "SiliconFlow",
+    "base_url": "https://api.siliconflow.cn/v1",
+    "api_key_url": "https://cloud.siliconflow.cn/account/ak",
+    "website": "https://siliconflow.cn",    
+    "embeddings": {
+      "model": "BAAI/bge-large-en-v1.5",
+      "dimensions": 1024,
+      "max_batch_size": 32,
+      "models": [
+        {
+          "name": "BAAI/bge-m3",
+          "dimensions": 1024,
+          "context_length": 8192
+        },
+        {
+          "name": "BAAI/bge-large-en-v1.5",
+          "dimensions": 1024,
+          "context_length": 512
+        },
+        {
+          "name": "BAAI/bge-large-zh-v1.5",
+          "dimensions": 1024,
+          "context_length": 512
+        }
+      ]
+    },    
+    "chat_completions": {
+      "model": "THUDM/glm-4-9b-chat",
+      "temperature": 0.7,
+      "max_tokens": 1024,
+      "top_p": 1.0,
+      "frequency_penalty": 0.0,
+      "presence_penalty": 0.0,
+      "stop": [],
+      "models": [
+        {
+          "name": "THUDM/glm-4-9b-chat",
+          "context_length": 131072
+        },
+        {
+          "name": "01-ai/Yi-1.5-9B-Chat-16K",
+          "context_length": 16384
+        },
+        {
+          "name": "internlm/internlm2_5-7b-chat",
+          "context_length": 32768
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-V2.5",
+          "context_length": 32768
+        },
+        {
+          "name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+          "context_length": 32768
+        }
+      ]
+    }
+  }
+]
