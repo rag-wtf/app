@@ -1,16 +1,12 @@
-name: rag
+name: ci
 
-concurrency:
-  group: $-$
-  cancel-in-progress: true
-
-#on:
-#  push:
-#    branches:
-#      - main
-#  pull_request:
-#    branches:
-#      - main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   semantic-pull-request:
