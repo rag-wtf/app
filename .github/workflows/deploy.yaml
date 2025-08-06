@@ -1,4 +1,5 @@
-name: Deploy to GitHub Pages
+name: Deploy
+
 on:
   push:
     branches:
@@ -6,16 +7,15 @@ on:
   workflow_dispatch:
   workflow_call:
 
-permissions:
-  contents: write
-      
 jobs:
-  deploy:
+  build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout      
         uses: actions/checkout@v4
-
+      
       - name: Setup Flutter  
         uses: subosito/flutter-action@v2
         with:
@@ -43,17 +43,56 @@ jobs:
       - name: Run Integration Tests
         run: melos ci_integration_test --no-select
 
+      - name: Update GITHUB_RUN_NUMBER to version
+        run: melos update_version
+
+      - name: Create .env.dev file
+        run: echo "${{ secrets.DOT_ENV_DEV_FILE }}" > .env.dev
+
+      - name: Build development
+        run: melos build_dev
+
+      - name: Publish to develop branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: develop
+          folder: "./build/web"
+        
+      - name: Create .env.stg file
+        run: echo "${{ secrets.DOT_ENV_STG_FILE }}" > .env.stg
+
+      - name: Build staging
+        run: melos build_stg
+
+      - name: Publish to staging branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: staging
+          folder: "./build/web"
+
+      - name: Deploy staging to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "."
+          production-branch: staging
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
+
       - name: Create .env.prod file
         run: echo "${{ secrets.DOT_ENV_FILE }}" > .env.prod
 
-      - name: Update GITHUB_RUN_NUMBER to version
-        run: melos update_version
-        
-      - name: Build
+      - name: Build production
         run: melos build_prod
 
-      - name: Deploy 🚀
+      - name: Publish to production branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
+          branch: production
           folder: "./build/web"

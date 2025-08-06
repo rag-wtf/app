@@ -13,15 +13,15 @@ scripts:
     description: Run `flutter test` for all packages
 
   build_dev:
-    run: flutter build web --release --no-tree-shake-icons --target lib/main_development.dart --dart-define-from-file=.env.dev --no-source-maps --pwa-strategy=none
+    run: flutter clean;flutter build web --release --no-tree-shake-icons --target lib/main_development.dart --dart-define-from-file=.env.dev --pwa-strategy=none
     description: Build app for web in development flavor
 
   build_prod:
-    run: flutter build web --release --no-tree-shake-icons --target lib/main_production.dart --dart-define-from-file=.env.prod --no-source-maps --pwa-strategy=none
+    run: flutter clean;flutter build web --release --no-tree-shake-icons --target lib/main_production.dart --dart-define-from-file=.env.prod --no-source-maps --pwa-strategy=none
     description: Build app for web in production flavor
 
   build_stg:
-    run: flutter build web --release --no-tree-shake-icons --target lib/main_staging.dart --dart-define-from-file=.env.stg --no-source-maps --pwa-strategy=none
+    run: flutter clean;flutter build web --release --no-tree-shake-icons --target lib/main_staging.dart --dart-define-from-file=.env.stg --pwa-strategy=none
     description: Build app for web in staging flavor
 
   generate_packages:
