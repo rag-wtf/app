@@ -1,8 +1,8 @@
 # **RAG.WTF: A Private, Modular RAG Application**
 
 <p align="center">  
-<a href="https://github.com/rag-wtf/app/actions/workflows/netlify.yaml">  
-<img src="https://github.com/rag-wtf/app/actions/workflows/netlify.yaml/badge.svg" alt="Build Status">  
+<a href="https://github.com/rag-wtf/app/actions/workflows/deploy.yaml">  
+<img src="https://github.com/rag-wtf/app/actions/workflows/deploy.yaml/badge.svg" alt="Build Status">  
 </a>  
 <a href="https://github.com/rag-wtf/app/blob/main/LICENSE">  
 <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">  
@@ -26,7 +26,7 @@ A GIF demonstrating the full user flow: uploading a document, asking a question,
 
 * [**Why RAG.WTF?**](#-why-ragwtf)  
 * [**Key Features**](#-key-features)  
-* [**Architectural Overview**](#-architectural-overview)  
+* [**Architectural Overview**](#-architectural-overview)
 * [**Project Structure**](#-project-structure)  
 * [**Technologies Used**](#-technologies-used)  
 * [**Getting Started**](#-getting-started)  
@@ -110,21 +110,22 @@ graph TD
 ## **🏗️ Project Structure**
 
 The project is a Melos-managed monorepo. Key directories and files include:
-
-├── .github/              \# CI/CD workflows (GitHub Actions, Netlify)  
+```
+├── .github/              # CI/CD workflows (GitHub Actions, Netlify, Coolify)  
 ├── packages/  
-│   ├── analytics/        \# Event tracking (Mixpanel, Firebase)  
-│   ├── chat/             \# Chat UI, state management, and RAG backend communication  
-│   ├── console/          \# Console interface for direct system interaction  
-│   ├── database/         \# SurrealDB connection management and models  
-│   ├── document/         \# File uploads, chunking, and embedding logic  
-│   ├── settings/         \# Management of LLM providers and RAG parameters  
-│   └── ui/               \# Shared UI components and widgets  
-├── scripts/              \# Utility scripts for building, generating code, etc.  
-├── lib/                  \# Main application shell and bootstrapping logic  
-├── firebase.json         \# Firebase configurations for dev, stg, and prod  
-├── melos.yaml            \# Monorepo scripts and workspace definitions  
-├── pubspec.yaml          \# Root project dependencies  
+│   ├── analytics/        # Event tracking (Mixpanel, Firebase)  
+│   ├── chat/             # Chat UI, state management, and RAG backend communication  
+│   ├── console/          # Console interface for direct system interaction  
+│   ├── database/         # SurrealDB connection management and models  
+│   ├── document/         # File uploads, chunking, and embedding logic  
+│   ├── settings/         # Management of LLM providers and RAG parameters  
+│   └── ui/               # Shared UI components and widgets  
+├── scripts/              # Utility scripts for building, generating code, etc.  
+├── lib/                  # Main application shell and bootstrapping logic  
+├── firebase.json         # Firebase configurations for dev, stg, and prod  
+├── melos.yaml            # Monorepo scripts and workspace definitions  
+├── pubspec.yaml          # Root project dependencies
+```  
 
 ## **🛠️ Technologies Used**
 
@@ -135,7 +136,7 @@ The project is a Melos-managed monorepo. Key directories and files include:
 * 🗄️ **Database**: SurrealDB (via surrealdb\_wasm)  
 * 🔥 **Backend Services**: Firebase (for multi-environment config)  
 * 🔄 **CI/CD**: GitHub Actions  
-* 🌐 **Deployment**: Netlify
+* 🌐 **Deployment**: Netlify and Coolify
 
 ## **🚀 Getting Started**
 
@@ -157,14 +158,17 @@ The project is a Melos-managed monorepo. Key directories and files include:
 
 This method runs the application using SurrealDB's in-browser storage (IndexedDB), requiring no external database or LLM setup.
 
-1. **Clone and Bootstrap:**  
-   git clone https://github.com/rag-wtf/app.git  
-   cd rag  
-   melos bootstrap
+1. **Clone and Bootstrap:**
+    ```  
+    git clone https://github.com/rag-wtf/app.git  
+    cd app  
+    melos bootstrap
+    ```
 
-2. **Run the App:**  
-   melos run
-
+2. **Run the App:**
+    ```  
+    melos run
+    ```
    The melos run command executes the Flutter application in development flavor, using configuration from .env.dev.
 
 ### **Full Local Setup (with Ollama)**
@@ -174,66 +178,72 @@ This setup provides a complete offline RAG experience using local models via Oll
 1. **Clone and Bootstrap** (if you haven't already).  
 2. **Set up Ollama:**  
    * [Install Ollama](https://ollama.com).  
-   * Pull the default models required by the application:  
-     ollama pull llama3.2  
-     ollama pull nomic-embed-text
+   * Pull the default models required by the application:
+      ```  
+      ollama pull llama3.2  
+      ollama pull nomic-embed-text
+      ```
 
-3. **Start SurrealDB:**  
-   melos start\_surreal
-
+3. **Start SurrealDB:**
+    ```
+    melos start_surreal
+    ```
    This starts a local SurrealDB instance in a Docker container, with data persisted in \~/surrealdb\_data.  
 4. **Configure Environment Variables:**  
    * Copy the example environment file: cp .env.example .env.dev  
    * The default values in .env.dev are pre-configured for this local setup. No changes are needed.  
-5. **Run the App:**  
-   melos run
-
+5. **Run the App:**
+    ```
+    melos run
+    ```
 ## **🔧 Configuration**
 
 ### **Environment Variables**
 
 Create .env.dev, .env.stg, and .env.prod files for each environment. Start by copying .env.example and filling in your details.
+```
+# .env.example
 
-\# .env.example
+# Analytics (Optional)  
+MIXPANEL_PROJECT_TOKEN=your_mixpanel_token
 
-\# Analytics (Optional)  
-MIXPANEL\_PROJECT\_TOKEN=your\_mixpanel\_token
-
-\# RAG Services URLs (Default values are for the local Ollama setup)  
-SPLIT\_API\_URL=http://localhost:8000/split  
-EMBEDDINGS\_API\_URL=http://localhost:11434/v1/embeddings  
-GENERATION\_API\_URL=http://localhost:11434/v1/chat/completions
+# RAG Services URLs (Default values are for the local Ollama setup)  
+SPLIT_API_URL=http://localhost:8000/split  
+EMBEDDINGS_API_URL=http://localhost:11434/v1/embeddings  
+GENERATION_API_URL=http://localhost:11434/v1/chat/completions
+```
 
 ### **LLM Provider Configuration**
 
-The application's settings UI is dynamically populated from packages/settings/assets/json/llm\_providers.json. You can add, remove, or modify LLM providers and their default models in this file.
-
-// Example from packages/settings/assets/json/llm\_providers.json  
+The application's settings UI is dynamically populated from packages/settings/assets/json/llm_providers.json. You can add, remove, or modify LLM providers and their default models in this file.
+```
+// Example from packages/settings/assets/json/llm_providers.json  
 {  
   "id": "ollama",  
   "name": "Ollama",  
-  "base\_url": "http://localhost:11434/v1",  
+  "base_url": "http://localhost:11434/v1",  
   "website": "https://ollama.com",  
   "embeddings": {  
     "model": "nomic-embed-text",  
     // ... other embedding models  
   },  
-  "chat\_completions": {  
+  "chat_completions": {  
     "model": "llama3.2",  
     // ... other chat models  
   }  
 }
+```
 
 ### **External Services**
 
-**Text Splitting Service** The application relies on an external API endpoint for text splitting, defined by SPLIT\_API\_URL. The source code for this service is available at [github.com/rag-wtf/split](https://github.com/rag-wtf/split). You must run this service locally or deploy it for the document processing to work.
+**Text Splitting Service** The application relies on an external API endpoint for text splitting, defined by SPLIT_API_URL. The source code for this service is available at [github.com/rag-wtf/split](https://github.com/rag-wtf/split). You must run this service locally or deploy it for the document processing to work.
 
 ### **Firebase Setup**
 
 The project uses Firebase for environment separation. To configure your own Firebase projects, run the configuration script for each environment:
-
+```
 ./flutterfire-config.sh <environment>
-
+```
 Replace <environment> with dev, stg, or prod.
 
 ## **🛡️ Security Considerations**
@@ -244,7 +254,7 @@ Replace <environment> with dev, stg, or prod.
 
 ## **📜 Scripts**
 
-Key scripts are defined in melos.yaml and can be run with melos <script\_name>:
+Key scripts are defined in melos.yaml and can be run with melos `<script_name>`:
 
 | Script | Description |
 | :---- | :---- |
@@ -259,19 +269,20 @@ Key scripts are defined in melos.yaml and can be run with melos <script\_name>:
 ## **🧪 Testing**
 
 The project includes a full suite of tests. Run all unit and widget tests with:
-
+```
 melos test
-
+```
 For end-to-end testing, run the local integration tests:
-
-melos local\_integration\_test
+```
+melos local_integration_test
+```
 
 ## **🔄 CI/CD & Deployment**
 
 The CI/CD pipeline is managed by GitHub Actions:
 
 * **main.yaml**: Validates pull requests with spell checks, analysis, and build tests.  
-* **netlify.yaml**: Deploys the main branch to Netlify. The workflow automatically runs the full integration test suite before building and deploying the web application, ensuring the stability of the production release.
+* **deploy.yaml**: Publish changes from the `main` branch to the `develop`, `staging`, and `production` branches. The `staging` branch is automatically deployed to Netlify, while the `production` branch is deployed to Coolify via a manual trigger. Before any deployment, the workflow runs the full integration test suite to ensure application stability and prevent regressions in the production release.
 
 For a self-hosted production deployment, you can deploy the production web build (melos build\_prod) to any static host and run a production instance of SurrealDB using Docker on your server. Ensure all environment variables in your .env.prod file point to your production services.
 
