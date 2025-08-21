@@ -12,7 +12,10 @@
 </a>  
 <a href="https://github.com/rag-wtf/app/pulse">  
 <img src="https://img.shields.io/github/commit-activity/m/rag-wtf/app" alt="Commit Activity">  
-</a>  
+</a>
+<a href="https://deepwiki.com/rag-wtf/app">
+<img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
+</a>
 </p>
 
 **RAG.WTF** is a comprehensive, Flutter-based Retrieval-Augmented Generation (RAG) application built to be open-source, modular, and easy to deploy. It provides developers with full control over their data and infrastructure, demystifying the complexities of building RAG systems by offering a clear, feature-rich starting point.
