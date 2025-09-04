@@ -125,6 +125,30 @@ graph TD
 * **Key Endpoints Used**: `POST /convert/file`
 * **Integration Method**: The `DocumentApiService` in `packages/document` will first send the file to Docling for content extraction. The clean text is then sent to the existing `/split` endpoint for chunking.
 
+### Split API
+* **Purpose**: To provide text chunking with different chunking strategies.
+* **Documentation**: [https://github.com/rag-wtf/split](https://github.com/rag-wtf/split)
+* **Base URL**: `https://split.rag.wtf`
+* **Authentication**: API Key
+* **Key Endpoints Used**: `POST /split`
+* **Integration Method**: The `DocumentApiService` in `packages/document` will send the clean text to the existing `/split` endpoint for chunking.
+
+### Embedding API
+* **Purpose**: To generate vector embeddings for text chunks.
+* **Documentation**: [https://platform.openai.com/docs/api-reference/embeddings](https://platform.openai.com/docs/api-reference/embeddings)
+* **Base URL**: Defaults to `https://api.openai.com/v1`, user-configurable.
+* **Authentication**: API Key.
+* **Key Endpoints Used**: `POST /v1/embeddings`
+* **Integration Method**: Integrated into the `document` and `chat` packages.
+
+### Chat Completion API
+* **Purpose**: To generate final, context-aware answers based on user queries and relevant document chunks.
+* **Documentation**: [https://platform.openai.com/docs/api-reference/chat](https://platform.openai.com/docs/api-reference/chat)
+* **Base URL**: Defaults to `https://api.openai.com/v1`, user-configurable.
+* **Authentication**: API Key.
+* **Key Endpoints Used**: `POST /v1/chat/completions`
+* **Integration Method**: Integrated into the `chat` package.
+
 ### Audio Transcription API
 * **Purpose**: To transcribe audio files into text.
 * **Documentation**: [https://platform.openai.com/docs/api-reference/audio/createTranscription](https://platform.openai.com/docs/api-reference/audio/createTranscription)
