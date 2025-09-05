@@ -29,7 +29,7 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.8.0
   mockito:
-  stacked_generator: ^2.0.0-pre.1
+  stacked_generator: ^2.0.0
   ulid: ^2.0.0
   very_good_analysis: ^9.0.0
 

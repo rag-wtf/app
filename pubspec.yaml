@@ -45,14 +45,13 @@ dependencies:
   url_launcher: ^6.3.0
 
 dev_dependencies:
-  analyzer: ^6.3.0
   build_runner: ^2.4.13
   flutter_test:
     sdk: flutter
-  melos: ^6.3.3    
+  melos: ^6.3.3
   mockito: ^5.4.1
   mocktail: ^1.0.0
-  stacked_generator: ^2.0.0-pre.1
+  stacked_generator: ^2.0.0
   very_good_analysis: ^9.0.0
 
 dependency_overrides:

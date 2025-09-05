@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   
   logger:
@@ -30,7 +30,7 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.8.0
   mockito:
-  stacked_generator: ^2.0.0-pre.1
+  stacked_generator: ^2.0.0
   very_good_analysis: ^5.1.0
 
 dependency_overrides:
