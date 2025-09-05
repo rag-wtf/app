@@ -2,6 +2,7 @@
 library settings;
 
 export 'src/constants.dart';
+export 'src/services/feature_flag_service.dart';
 export 'src/services/setting.dart';
 export 'src/services/setting_repository.dart';
 export 'src/services/setting_service.dart';
