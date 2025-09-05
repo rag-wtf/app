@@ -35,6 +35,7 @@ const streamKey = 'STREAM';
 const userIdKey = 'USER_ID';
 const promptsKey = 'PROMPTS';
 const analyticsEnabledKey = 'analyticsEnabled';
+const ragPipelineLevelKey = 'ragPipelineLevel';
 
 const splitApiUriPath = '/split';
 const embeddingsApiUriPath = '/embeddings';

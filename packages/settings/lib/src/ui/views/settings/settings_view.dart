@@ -108,11 +108,9 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     required this.showPromptTemplateDialogFunction,
     super.key,
     this.tablePrefix = 'main',
-    this.inPackage = false,
     this.redefineEmbeddingIndexFunction,
   });
   final String tablePrefix;
-  final bool inPackage;
   final Future<String?> Function(
     String tablePrefix,
     String dimensions,
@@ -176,6 +174,39 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                         ),
                         if (viewModel.llmProviderSelected != null) ...[
                           verticalSpaceTiny,
+                          if (viewModel.isRagPipelineLevelSelectorEnabled) ...[
+                            verticalSpaceMedium,
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                isDense: isDense,
+                                label: Text(
+                                  'RAG Pipeline Level',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      const BorderSide(color: Colors.grey),
+                                ),
+                              ),
+                              value: viewModel.ragPipelineLevel,
+                              items: viewModel.ragPipelineLevels
+                                  .map(
+                                    (level) => DropdownMenuItem(
+                                      value: level,
+                                      child: Text(level),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) async {
+                                if (value != null) {
+                                  await viewModel.setRagPipelineLevel(value);
+                                }
+                              },
+                            ),
+                          ],
                           Link(
                             url: Uri.parse(
                               viewModel.llmProviderSelected!.website +
@@ -332,7 +363,6 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
       SettingsViewModel(
         tablePrefix,
         redefineEmbeddingIndexFunction,
-        inPackage: inPackage,
       );
 
   @override

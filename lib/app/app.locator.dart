@@ -36,6 +36,8 @@ import 'package:stacked_shared/stacked_shared.dart';
 import 'package:surrealdb_js/src/surrealdb_js.dart';
 import 'package:surrealdb_wasm/src/surreal_wasm.dart';
 
+import '../src/services/feature_flag_service.dart';
+
 final locator = StackedLocator.instance;
 
 Future<void> setupLocator({
@@ -47,6 +49,7 @@ Future<void> setupLocator({
       environment: environment, environmentFilter: environmentFilter);
 
 // Register dependencies
+  locator.registerLazySingleton(() => FeatureFlagService());
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
