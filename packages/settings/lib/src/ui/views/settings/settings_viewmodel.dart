@@ -8,6 +8,7 @@ import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
 import 'package:settings/src/services/llm_provider.dart';
+import 'package:settings/src/services/feature_flag_service.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/views/settings/settings_view.form.dart';
 import 'package:stacked/stacked.dart';
@@ -16,16 +17,15 @@ import 'package:stacked_services/stacked_services.dart';
 class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   SettingsViewModel(
     this.tablePrefix,
-    this.redefineEmbeddingIndexFunction, {
-    required this.inPackage,
-  });
+    this.redefineEmbeddingIndexFunction,
+  );
   final String tablePrefix;
-  final bool inPackage;
   final _log = getLogger('SettingsViewModel');
   final _isPanelExpanded = List.filled(4, true);
   final _settingService = locator<SettingService>();
   final _dialogService = locator<DialogService>();
   final _connectionSettingService = locator<ConnectionSettingService>();
+  final _featureFlagService = locator<FeatureFlagService>();
   final analyticsFacade = locator<AnalyticsFacade>();
   final Future<String?> Function(
     String tablePrefix,
@@ -33,7 +33,30 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   )? redefineEmbeddingIndexFunction;
 
   @override
-  List<ListenableServiceMixin> get listenableServices => [_settingService];
+  List<ListenableServiceMixin> get listenableServices =>
+      [_settingService, _featureFlagService];
+
+  bool get isRagPipelineLevelSelectorEnabled =>
+      _featureFlagService.showRagPipelineLevelSelector;
+
+  String get ragPipelineLevel =>
+      _settingService.get(ragPipelineLevelKey).value;
+
+  final List<String> ragPipelineLevels = [
+    'Level 0: Short-Document Bypass',
+    'Level 1: Lexical Search',
+    'Level 2: Standard RAG (Baseline)',
+    'Level 3: Advanced RAG',
+    'Level 4: Moonshot Techniques',
+  ];
+
+  Future<void> setRagPipelineLevel(String value) async {
+    await _settingService.set(
+      tablePrefix,
+      ragPipelineLevelKey,
+      value,
+    );
+  }
 
   bool isPanelExpanded(int index) => _isPanelExpanded[index];
 
@@ -121,16 +144,14 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> initialise() async {
     _log.d(
-      'tablePrefix: $tablePrefix, inPackage: $inPackage',
+      'tablePrefix: $tablePrefix',
     );
     setBusy(true);
-    if (inPackage) {
-      await connectDatabase();
-      await _settingService.initialise(
-        tablePrefix,
-        analyticsEnabled: true,
-      );
-    }
+    await connectDatabase();
+    await _settingService.initialise(
+      tablePrefix,
+      analyticsEnabled: true,
+    );
     _settingService.clearFormValuesFunction = clearFormValues;
     _stream = bool.parse(_settingService.get(streamKey).value);
     _embeddingsCompressed = bool.parse(
@@ -271,6 +292,11 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
     final stop = _settingService.get(stopKey);
     if (stop.id != null) {
       stopValue = stop.value;
+    }
+
+    final ragPipelineLevel = _settingService.get(ragPipelineLevelKey);
+    if (ragPipelineLevel.id != null) {
+      ragPipelineLevelValue = ragPipelineLevel.value;
     }
     setBusy(false);
   }

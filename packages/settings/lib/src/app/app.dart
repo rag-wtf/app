@@ -2,6 +2,7 @@ import 'package:analytics/analytics.dart';
 import 'package:database/database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:settings/src/services/feature_flag_service.dart';
 import 'package:settings/src/services/setting_repository.dart';
 import 'package:settings/src/services/setting_service.dart';
 import 'package:settings/src/ui/dialogs/prompt_template/prompt_template_dialog.dart';
@@ -24,6 +25,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<SettingService>(classType: SettingService),
+    LazySingleton<FeatureFlagService>(classType: FeatureFlagService),
     LazySingleton<SettingRepository>(classType: SettingRepository),
 
     LazySingleton<Surreal>(

@@ -6,6 +6,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rag/app/app.locator.dart';
 import 'package:rag/ui/common/ui_helpers.dart';
+import 'package:rag/app/app.router.dart';
 import 'package:rag/ui/widgets/link_tile.dart';
 import 'package:settings/settings.dart';
 import 'package:share_plus/share_plus.dart';
@@ -124,6 +125,20 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                               },
                             );
                           }
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(
+                          Icons.insights,
+                          color: textAndIconColor,
+                        ),
+                        title: Text(
+                          'Evaluation',
+                          style: listTileTextStyle,
+                        ),
+                        onTap: () {
+                          locator<NavigationService>()
+                              .navigateTo(Routes.evaluationView);
                         },
                       ),
                       ListTile(

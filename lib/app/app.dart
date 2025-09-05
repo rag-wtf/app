@@ -11,6 +11,8 @@ import 'package:rag/l10n/arb/app_localizations.dart';
 import 'package:rag/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:rag/ui/dialogs/confirm_dialog.dart';
 import 'package:rag/ui/views/home/home_view.dart';
+import 'package:evaluation/src/ui/views/evaluation/evaluation_view.dart';
+import 'package:rag/src/services/feature_flag_service.dart';
 import 'package:rag/ui/views/startup/startup_view.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -23,9 +25,11 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
   routes: [
     MaterialRoute(page: HomeView, path: '/'),
     MaterialRoute(page: StartupView),
+    MaterialRoute(page: EvaluationView),
     // @stacked-route
   ],
   dependencies: [
+    LazySingleton<FeatureFlagService>(classType: FeatureFlagService),
     LazySingleton<BottomSheetService>(classType: BottomSheetService),
     LazySingleton<DialogService>(classType: DialogService),
     LazySingleton<NavigationService>(classType: NavigationService),

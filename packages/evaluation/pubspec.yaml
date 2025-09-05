@@ -1,0 +1,25 @@
+name: evaluation
+description: A package for the evaluation framework.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  logger:
+  stacked: ^3.4.3
+  stacked_services: ^1.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito:
+  stacked_generator: ^2.0.0-pre.1
+  very_good_analysis: ^9.0.0
+
+flutter:
+  uses-material-design: true
