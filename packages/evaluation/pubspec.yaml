@@ -15,9 +15,10 @@ dependencies:
   stacked_services: ^1.6.0
 
 dev_dependencies:
+  build_runner: ^2.4.13
   flutter_test:
     sdk: flutter
-  mockito:
+  mockito: ^5.4.1
   stacked_generator: ^2.0.0
   very_good_analysis: ^9.0.0
 
