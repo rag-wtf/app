@@ -10,6 +10,7 @@ import 'package:rag/app/app.router.dart';
 import 'package:rag/ui/widgets/link_tile.dart';
 import 'package:settings/settings.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 import 'package:ui/ui.dart';
 

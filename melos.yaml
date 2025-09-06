@@ -51,9 +51,13 @@ scripts:
 
   ci_integration_test:
     run: |
-      docker run --rm --pull always -p 8000:8000 --name surrealdb surrealdb/surrealdb:latest start memory -A --user root --pass root &
+      export PATH=.:$PATH
+      ./chromedriver --port=4444 &
+      sleep 3
+      sudo docker run --rm --pull always -p 8000:8000 --name surrealdb surrealdb/surrealdb:latest start memory -A --user root --pass root &
       melos exec --concurrency 1 -- flutter drive --driver=test_driver/integration_test.dart --target integration_test/all_tests.dart -d web-server --release --browser-name=chrome
-      docker container stop surrealdb
+      sudo docker container stop surrealdb
+      pkill chromedriver
     description: Run integration tests for all packages in CI environment
     packageFilters:
       dirExists: integration_test

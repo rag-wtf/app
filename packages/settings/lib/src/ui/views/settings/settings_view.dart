@@ -100,6 +100,7 @@ import 'package:ui/ui.dart';
       name: 'stop',
       validator: SettingsValidators.validateStop,
     ),
+    FormTextField(name: 'ragPipelineLevel'),
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
