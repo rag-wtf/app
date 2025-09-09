@@ -22,8 +22,7 @@
 
 <br/>
 
-A GIF demonstrating the full user flow: uploading a document, asking a question, and receiving a sourced answer would be ideal here.  
-[Screenshot or GIF of the RAG.WTF App UI in Action]
+![demo](https://github.com/user-attachments/assets/92c134c3-9d90-4f29-886b-ec712487cbf8)
 
 ## **📋 Table of Contents**
 
