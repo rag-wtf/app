@@ -44,9 +44,9 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
     }
 
     final textAndIconColor = isDarkMode ? Colors.black : Colors.white;
-    final listTileTextStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: textAndIconColor,
-        );
+    final listTileTextStyle = Theme.of(
+      context,
+    ).textTheme.titleMedium?.copyWith(color: textAndIconColor);
     const expansionTileChildrenPadding = EdgeInsets.only(left: 16);
 
     return ZoomDrawer(
@@ -80,19 +80,14 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                         horizontalSpaceSmall,
                         Text(
                           appTitle,
-                          style:
-                              Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: textAndIconColor,
-                                  ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(color: textAndIconColor),
                         ),
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
-                      child: Icon(
-                        Icons.close,
-                        color: textAndIconColor,
-                      ),
+                      child: Icon(Icons.close, color: textAndIconColor),
                     ),
                   ],
                 ),
@@ -105,10 +100,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                           Icons.share_outlined,
                           color: textAndIconColor,
                         ),
-                        title: Text(
-                          'Share',
-                          style: listTileTextStyle,
-                        ),
+                        title: Text('Share', style: listTileTextStyle),
                         onTap: () async {
                           final result = await Share.share(
                             'Check out our app at https://',
@@ -155,10 +147,7 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                           Icons.info_outline,
                           color: textAndIconColor,
                         ),
-                        title: Text(
-                          'About Us',
-                          style: listTileTextStyle,
-                        ),
+                        title: Text('About Us', style: listTileTextStyle),
                         onTap: () async {
                           final aboutBoxChildren = <Widget>[
                             verticalSpaceMedium,
@@ -190,10 +179,7 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           Icons.logout_outlined,
                           color: textAndIconColor,
                         ),
-                        title: Text(
-                          'Logout',
-                          style: listTileTextStyle,
-                        ),
+                        title: Text('Logout', style: listTileTextStyle),
                         onTap: () async {
                           await widget.controller.close!();
                           await widget.logoutFunction();
@@ -214,21 +200,27 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           LinkTile(
                             imagePath: 'assets/images/pubdev.png',
                             title: 'surrealdb_js',
-                            url: Uri.parse('https://pub.dev/packages/surrealdb_js$defaultUtmParams'),
+                            url: Uri.parse(
+                              'https://pub.dev/packages/surrealdb_js$defaultUtmParams',
+                            ),
                             textStyle: listTileTextStyle,
                             onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
                           LinkTile(
                             imagePath: 'assets/images/pubdev.png',
                             title: 'surrealdb_wasm',
-                            url: Uri.parse('https://pub.dev/packages/surrealdb_wasm$defaultUtmParams'),
+                            url: Uri.parse(
+                              'https://pub.dev/packages/surrealdb_wasm$defaultUtmParams',
+                            ),
                             textStyle: listTileTextStyle,
                             onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
                           LinkTile(
                             imagePath: 'assets/images/pypi.png',
                             title: 'open-text-embeddings',
-                            url: Uri.parse('https://pypi.org/project/open-text-embeddings$defaultUtmParams'),
+                            url: Uri.parse(
+                              'https://pypi.org/project/open-text-embeddings$defaultUtmParams',
+                            ),
                             textStyle: listTileTextStyle,
                             onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
@@ -239,24 +231,25 @@ ${packageInfo.version} ${packageInfo.buildNumber}''',
                           Icons.flash_on_outlined,
                           color: textAndIconColor,
                         ),
-                        title: Text(
-                          'Powered By',
-                          style: listTileTextStyle,
-                        ),
+                        title: Text('Powered By', style: listTileTextStyle),
                         childrenPadding: expansionTileChildrenPadding,
                         shape: const Border(),
                         children: [
                           LinkTile(
                             imagePath: 'assets/images/flutter.png',
                             title: 'Flutter',
-                            url: Uri.parse('https://flutter.dev$defaultUtmParams'),
+                            url: Uri.parse(
+                              'https://flutter.dev$defaultUtmParams',
+                            ),
                             textStyle: listTileTextStyle,
                             onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
                           LinkTile(
                             imagePath: 'assets/images/surrealdb.png',
                             title: 'SurrealDB',
-                            url: Uri.parse('https://surrealdb.com$defaultUtmParams'),
+                            url: Uri.parse(
+                              'https://app.surrealdb.com/referral?code=187n5bhtouzf0y0j',
+                            ),
                             textStyle: listTileTextStyle,
                             onUrlLaunched: _analyticsFacade.trackUrlOpened,
                           ),
@@ -284,11 +277,7 @@ class ThankYouDialog extends StatelessWidget {
       content: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.thumb_up,
-            color: Colors.green,
-            size: 48,
-          ),
+          Icon(Icons.thumb_up, color: Colors.green, size: 48),
           SizedBox(height: 16),
           Text(
             'Thank you for sharing our app!',

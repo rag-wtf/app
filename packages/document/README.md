@@ -151,7 +151,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-- [SurrealDB](https://surrealdb.com/) for providing a powerful and flexible database solution.
+- [SurrealDB](https://app.surrealdb.com/referral?code=187n5bhtouzf0y0j) for providing a powerful and flexible database solution.
 - [Very Good Ventures](https://verygood.ventures/) for their contributions to the Flutter ecosystem through tools like "very_good_cli" and "very_good_analysis".
 
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
