@@ -1,3 +1,4 @@
+// Form callbacks and dialog types use raw types.
 // ignore_for_file: strict_raw_type, inference_failure_on_function_return_type
 
 import 'package:database/src/constants.dart';
@@ -133,10 +134,10 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                       errorText: viewModel.nameValidationMessage,
                       isLoading: viewModel.isBusy,
                       items: viewModel.connectionNames,
-                      getItemValue: (ConnectionSetting name) => name.key,
-                      getItemDisplayText: (ConnectionSetting name) =>
+                      getItemValue: (name) => name.key,
+                      getItemDisplayText: (name) =>
                           name.value,
-                      onSelected: (ConnectionSetting selectedName) async {
+                      onSelected: (selectedName) async {
                         final connectionKey = selectedName.key ==
                                 ConnectionDialogModel.newConnectionKey
                             ? selectedName.key
@@ -161,7 +162,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                               topLeft: Radius.circular(8),
                               bottomLeft: Radius.circular(8),
                             ),
-                            value: viewModel.protocol,
+                            initialValue: viewModel.protocol,
                             items: const [
                               DropdownMenuItem(
                                 value: 'http',

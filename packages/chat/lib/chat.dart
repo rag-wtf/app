@@ -1,5 +1,5 @@
 /// chat package
-library chat;
+library;
 
 export 'src/services/chat.dart';
 export 'src/services/chat_api_service.dart';

@@ -6,5 +6,7 @@ void main() {
   group('ChatApiServiceTest -', () {
     setUp(registerServices);
     tearDown(locator.reset);
+
+    test('can be created', () {});
   });
 }

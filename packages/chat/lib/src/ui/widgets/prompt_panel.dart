@@ -8,7 +8,8 @@ import 'package:ui/ui.dart';
 
 class PromptPanel extends StatelessWidget {
   PromptPanel(this.onSend, {super.key});
-  final prompts = const String.fromEnvironment(promptsKey).split(',');
+  final List<String> prompts =
+      const String.fromEnvironment(promptsKey).split(',');
   final void Function(String) onSend;
 
   @override

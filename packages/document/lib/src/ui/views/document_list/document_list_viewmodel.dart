@@ -6,6 +6,7 @@ import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/document_service.dart';
 import 'package:document/src/services/split_config.dart';
+import 'package:logger/logger.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -15,12 +16,13 @@ class DocumentListViewModel extends ReactiveViewModel {
   final String tablePrefix;
   final bool inPackage;
 
-  final _documentService = locator<DocumentService>();
-  final _settingService = locator<SettingService>();
-  final _dialogService = locator<DialogService>();
-  final _connectionSettingService = locator<ConnectionSettingService>();
+  final DocumentService _documentService = locator<DocumentService>();
+  final SettingService _settingService = locator<SettingService>();
+  final DialogService _dialogService = locator<DialogService>();
+  final ConnectionSettingService _connectionSettingService =
+      locator<ConnectionSettingService>();
 
-  final _log = getLogger('DocumentListViewModel');
+  final Logger _log = getLogger('DocumentListViewModel');
 
   List<DocumentItem> get items => _documentService.items;
   SplitConfig? get splitConfig => _documentService.splitConfig;

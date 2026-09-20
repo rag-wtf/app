@@ -30,6 +30,7 @@ class InfiniteList extends StatelessWidget {
     this.scrollDirection = Axis.vertical,
     this.physics,
     this.cacheExtent,
+    this.scrollCacheExtent,
     this.debounceDuration = defaultDebounceDuration,
     this.reverse = false,
     this.shrinkWrap = false,
@@ -127,7 +128,7 @@ class InfiniteList extends StatelessWidget {
   /// In normal operation, this method should trigger new data to be fetched and
   /// [isLoading] to be set to `true`.
   ///
-  /// Exactly when this is called depends on the [cacheExtent].
+  /// Exactly when this is called depends on the [scrollCacheExtent].
   /// Additionally, every call to this will be debounced by the provided
   /// [debounceDuration].
   ///
@@ -135,8 +136,11 @@ class InfiniteList extends StatelessWidget {
   /// {@endtemplate}
   final VoidCallback onFetchData;
 
-  /// See [RenderViewportBase.cacheExtent]
+  /// See [RenderViewportBase.scrollCacheExtent]
   final double? cacheExtent;
+
+  /// See [RenderViewportBase.scrollCacheExtent]
+  final ScrollCacheExtent? scrollCacheExtent;
 
   /// {@template padding}
   /// The optional amount of space by which to inset the list of items.
@@ -210,7 +214,8 @@ class InfiniteList extends StatelessWidget {
       shrinkWrap: shrinkWrap,
       controller: scrollController,
       physics: physics,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: scrollCacheExtent ??
+          (cacheExtent != null ? ScrollCacheExtent.pixels(cacheExtent!) : null),
       slivers: [
         _ContextualSliverPadding(
           padding: padding,

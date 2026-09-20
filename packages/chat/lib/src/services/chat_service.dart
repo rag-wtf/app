@@ -16,6 +16,7 @@ import 'package:chat/src/services/message_repository.dart';
 import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
+import 'package:logger/logger.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
@@ -68,17 +69,20 @@ class ChatService with ListenableServiceMixin {
   int get _maxTokens => int.parse(_settingService.get(maxTokensKey).value);
   String get _stop => _settingService.get(stopKey).value;
 
-  final _db = locator<Surreal>();
-  final _dio = locator<Dio>();
-  final _chatApiService = locator<ChatApiService>();
-  final _settingService = locator<SettingService>();
-  final _documentService = locator<DocumentService>();
-  final _chatRepository = locator<ChatRepository>();
-  final _messageRepository = locator<MessageRepository>();
-  final _chatMessageRepository = locator<ChatMessageRepository>();
-  final _embeddingRepository = locator<EmbeddingRepository>();
-  final _messageEmbeddingRepository = locator<MessageEmbeddingRepository>();
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final Surreal _db = locator<Surreal>();
+  final Dio _dio = locator<Dio>();
+  final ChatApiService _chatApiService = locator<ChatApiService>();
+  final SettingService _settingService = locator<SettingService>();
+  final DocumentService _documentService = locator<DocumentService>();
+  final ChatRepository _chatRepository = locator<ChatRepository>();
+  final MessageRepository _messageRepository = locator<MessageRepository>();
+  final ChatMessageRepository _chatMessageRepository =
+      locator<ChatMessageRepository>();
+  final EmbeddingRepository _embeddingRepository =
+      locator<EmbeddingRepository>();
+  final MessageEmbeddingRepository _messageEmbeddingRepository =
+      locator<MessageEmbeddingRepository>();
+  final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
 
   final _chats = <Chat>[];
   final _messages = <Message>[];
@@ -87,7 +91,7 @@ class ChatService with ListenableServiceMixin {
   int _totalMessages = -1;
   late String _tablePrefix;
   StreamResponseService? _streamResponseService;
-  final _log = getLogger('ChatService');
+  final Logger _log = getLogger('ChatService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -169,7 +173,7 @@ class ChatService with ListenableServiceMixin {
       messageId: message.id!,
     );
     if (txn == null) {
-      return _db.transaction(
+      return await _db.transaction(
         (txn) async {
           await _chatRepository.createChat(
             tablePrefix,
@@ -235,7 +239,7 @@ class ChatService with ListenableServiceMixin {
     }
 
     if (txn == null) {
-      return _db.transaction(
+      return await _db.transaction(
         (txn) async {
           await _messageRepository.createMessage(
             tablePrefix,

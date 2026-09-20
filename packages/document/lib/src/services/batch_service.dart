@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:document/src/app/app.logger.dart';
+import 'package:logger/logger.dart';
 
 class BatchService {
-  final _log = getLogger('BatchService');
+  final Logger _log = getLogger('BatchService');
 
   Future<List<TResult>> execute<TInput, TResult>(
     List<TInput> values,

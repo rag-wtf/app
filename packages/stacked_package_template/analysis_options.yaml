@@ -1,4 +1,4 @@
-include: package:very_good_analysis/analysis_options.yaml
+include: ../../analysis_options.yaml
 
 analyzer:
   exclude:
@@ -7,6 +7,8 @@ analyzer:
     - "**/app.*.dart"
     - "**/*.form.dart"
     - "**/*.mocks.dart"
+    - build/**
+    - web/**
 
 linter:
   rules:

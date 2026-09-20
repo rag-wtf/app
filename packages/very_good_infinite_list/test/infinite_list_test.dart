@@ -145,6 +145,7 @@ void main() {
         await tester.pumpApp(
           InfiniteList(
             itemCount: itemCount,
+            cacheExtent: 1000,
             hasReachedMax: true,
             onFetchData: emptyCallback,
             itemBuilder: (_, i) {
@@ -169,7 +170,7 @@ void main() {
           InfiniteList(
             itemCount: itemCount,
             onFetchData: emptyCallback,
-            separatorBuilder: (_, __) {
+            separatorBuilder: (_, _) {
               separatorBuilderCalls++;
               return const Divider();
             },
@@ -447,7 +448,7 @@ void main() {
               dimension: 40,
               child: ColoredBox(color: colors[i % colors.length]),
             ),
-            separatorBuilder: (_, __) => const SizedBox.square(
+            separatorBuilder: (_, _) => const SizedBox.square(
               dimension: 10,
               child: ColoredBox(color: Colors.pink),
             ),
@@ -489,7 +490,7 @@ void main() {
               dimension: 40,
               child: ColoredBox(color: colors[i % colors.length]),
             ),
-            separatorBuilder: (_, __) => const SizedBox.square(
+            separatorBuilder: (_, _) => const SizedBox.square(
               dimension: 10,
               child: ColoredBox(color: Colors.pink),
             ),
@@ -534,7 +535,7 @@ void main() {
               dimension: 40,
               child: ColoredBox(color: colors[i % colors.length]),
             ),
-            separatorBuilder: (_, __) => const SizedBox.square(
+            separatorBuilder: (_, _) => const SizedBox.square(
               dimension: 10,
               child: ColoredBox(color: Colors.pink),
             ),
@@ -577,7 +578,7 @@ void main() {
               dimension: 40,
               child: ColoredBox(color: colors[i % colors.length]),
             ),
-            separatorBuilder: (_, __) => const SizedBox.square(
+            separatorBuilder: (_, _) => const SizedBox.square(
               dimension: 10,
               child: ColoredBox(color: Colors.pink),
             ),

@@ -10,15 +10,17 @@ import 'package:chat/src/services/chat_api_message.dart';
 import 'package:chat/src/services/message.dart' as chat_message;
 import 'package:chat/src/services/stream_response_service/stream_response_service.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:settings/settings.dart';
 
 enum ApiKeyType { header, body }
 
 class ChatApiService {
-  final _gzipEncoder = locator<GZipEncoder>();
-  final _settingService = locator<SettingService>();
-  final _streamResponseService = locator<StreamResponseService>();
-  final _log = getLogger('ChatApiService');
+  final GZipEncoder _gzipEncoder = locator<GZipEncoder>();
+  final SettingService _settingService = locator<SettingService>();
+  final StreamResponseService _streamResponseService =
+      locator<StreamResponseService>();
+  final Logger _log = getLogger('ChatApiService');
 
   Map<String, String>? getGenerationApiKey(
     ApiKeyType type,
@@ -263,7 +265,7 @@ class ChatApiService {
     dynamic embeddingInput;
     try {
       embeddingInput = jsonDecode(input);
-    } catch (e) {
+    } on Object catch (_) {
       embeddingInput = input;
     }
     if (embeddingInput is String && _isCohereEmbeddingModel(model)) {

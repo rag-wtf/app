@@ -2,13 +2,14 @@ import 'package:chat/src/app/app.locator.dart';
 import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat.dart';
 import 'package:chat/src/services/chat_service.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatListViewModel extends ReactiveViewModel {
   ChatListViewModel(this.tablePrefix);
   final String tablePrefix;
-  final _chatService = locator<ChatService>();
-  final _log = getLogger('ChatListViewModel');
+  final ChatService _chatService = locator<ChatService>();
+  final Logger _log = getLogger('ChatListViewModel');
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_chatService];

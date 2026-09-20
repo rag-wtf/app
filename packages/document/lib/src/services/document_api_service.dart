@@ -11,11 +11,12 @@ import 'package:document/src/services/document.dart';
 import 'package:document/src/services/document_item.dart';
 import 'package:document/src/services/split_config.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:logger/logger.dart';
 
 class DocumentApiService {
-  final _gzipEncoder = locator<GZipEncoder>();
-  final _batchService = locator<BatchService>();
-  final _log = getLogger('DocumentApiService');
+  final GZipEncoder _gzipEncoder = locator<GZipEncoder>();
+  final BatchService _batchService = locator<BatchService>();
+  final Logger _log = getLogger('DocumentApiService');
 
   Future<void> split(
     Dio dio,
@@ -33,7 +34,6 @@ class DocumentApiService {
       DocumentItem documentItem,
       Map<String, dynamic>? responseData,
     ) onSplitCompleted,
-    // ignore: prefer_void_to_null
     Future<Null> Function(DocumentItem documentItem, dynamic error) onError,
   ) async {
     final bytesLength = documentItem.item.byteData![0].length;
@@ -53,7 +53,7 @@ class DocumentApiService {
       url,
       data: formData,
       cancelToken: documentItem.cancelToken,
-      onSendProgress: (int sent, int total) async {
+      onSendProgress: (sent, total) async {
         if (documentItem.item.status == DocumentStatus.pending) {
           _log.d('updateDocumentStatus(DocumentStatus.splitting)');
           await onUpdateDocumentStatus(documentItem, DocumentStatus.splitting);
@@ -62,7 +62,7 @@ class DocumentApiService {
         final progress = sent / total;
         onProgress(documentItem, progress);
       },
-      onReceiveProgress: (int count, int total) async {
+      onReceiveProgress: (count, total) async {
         /* The same code above works but not the following code?
         if (total == 0 && widgetModel.item.status == DocumentStatus.pending) {
           await widgetModel.updateDocumentStatus(DocumentStatus.splitting);
@@ -75,8 +75,8 @@ class DocumentApiService {
       await onSplitCompleted(documentItem, response.data).timeout(
         Duration(milliseconds: max(bytesLength * 3, 600 * 1000)),
       );
-    }).catchError((dynamic error) {
-      onError(documentItem, error);
+    }).catchError((dynamic error) async {
+      await onError(documentItem, error);
     }).timeout(
       Duration(milliseconds: max(bytesLength * 3, 600 * 1000)),
     );

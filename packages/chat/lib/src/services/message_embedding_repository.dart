@@ -3,11 +3,12 @@ import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/message.dart';
 import 'package:chat/src/services/message_embedding.dart';
 import 'package:document/document.dart';
+import 'package:logger/logger.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class MessageEmbeddingRepository {
-  final _db = locator<Surreal>();
-  final _log = getLogger('MessageEmbeddingRepository');
+  final Surreal _db = locator<Surreal>();
+  final Logger _log = getLogger('MessageEmbeddingRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');

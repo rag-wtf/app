@@ -102,16 +102,18 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                         ),
                         title: Text('Share', style: listTileTextStyle),
                         onTap: () async {
-                          final result = await Share.share(
-                            'Check out our app at https://',
-                            subject: '$appSubTitle: $appTitle',
+                          final result = await SharePlus.instance.share(
+                            ShareParams(
+                              text: 'Check out our app at https://',
+                              subject: '$appSubTitle: $appTitle',
+                            ),
                           );
 
                           if (result.status == ShareResultStatus.success) {
+                            if (!context.mounted) return;
                             await showDialog(
-                              // ignore: use_build_context_synchronously
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (context) {
                                 return const ThankYouDialog();
                               },
                             );
@@ -157,8 +159,8 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
                             ),
                           ];
                           final packageInfo = await PackageInfo.fromPlatform();
+                          if (!context.mounted) return;
                           showAboutDialog(
-                            // ignore: use_build_context_synchronously
                             context: context,
                             applicationIcon: const Logo(
                               darkLogo: darkLogo,

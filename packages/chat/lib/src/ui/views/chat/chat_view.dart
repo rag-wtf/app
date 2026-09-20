@@ -1,4 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
 
 import 'dart:async';
 
@@ -25,7 +24,7 @@ class ChatView extends StackedView<ChatViewModel> {
   });
   final String tablePrefix;
   final _scrollController = ScrollController();
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
   final TabController? leftWidgetTabController;
   final Future<void> Function(Embedding embedding) showEmbeddingDialogFunction;
   final Future<bool> Function() showNewChatDialogFunction;
@@ -58,7 +57,7 @@ class ChatView extends StackedView<ChatViewModel> {
                           unawaited(
                             _analyticsFacade.trackChatStartedFromPrompt(text),
                           );
-                          _onSend(viewModel, text);
+                          unawaited(_onSend(viewModel, text));
                         },
                       ),
                   ],
@@ -82,7 +81,7 @@ class ChatView extends StackedView<ChatViewModel> {
           height: 5,
         ),
         LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
+          builder: (context, constraints) {
             EdgeInsetsGeometry buttonMargin;
             EdgeInsetsGeometry buttonPadding;
             double buttonIconSize;
@@ -116,7 +115,7 @@ class ChatView extends StackedView<ChatViewModel> {
                   padding: buttonPadding,
                   onPressed: isDisabledNewChatButton(viewModel)
                       ? null
-                      : () async => _newChat(viewModel),
+                      : () => _newChat(viewModel),
                   icon: Icon(
                     Icons.add,
                     color: isDisabledNewChatButton(viewModel)

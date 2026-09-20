@@ -1,3 +1,4 @@
+// Dialog request and response types use dynamic or raw types.
 // ignore_for_file: strict_raw_type, inference_failure_on_function_return_type
 
 import 'package:document/src/ui/common/app_colors.dart';

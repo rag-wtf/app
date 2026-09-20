@@ -10,6 +10,7 @@ import 'package:database/src/services/connection_setting_service.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog.form.dart';
 import 'package:database/src/ui/dialogs/connection/connection_dialog_validators.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
 class ConnectionDialogModel extends FormViewModel {
@@ -18,11 +19,13 @@ class ConnectionDialogModel extends FormViewModel {
   static const newConnectionKey = 'new';
   static const newConnectionName = '[New connection]';
 
-  final _log = getLogger('ConnectionDialogModel');
-  final analyticsFacade = locator<AnalyticsFacade>();
-  final _connectionSettingRepository = locator<ConnectionSettingRepository>();
-  final _connectionSettingService = locator<ConnectionSettingService>();
-  final _storage = locator<FlutterSecureStorage>();
+  final Logger _log = getLogger('ConnectionDialogModel');
+  final AnalyticsFacade analyticsFacade = locator<AnalyticsFacade>();
+  final ConnectionSettingRepository _connectionSettingRepository =
+      locator<ConnectionSettingRepository>();
+  final ConnectionSettingService _connectionSettingService =
+      locator<ConnectionSettingService>();
+  final FlutterSecureStorage _storage = locator<FlutterSecureStorage>();
   String connectionKeySelected = newConnectionKey;
   String _protocol = 'ws';
   late List<ConnectionSetting> connectionNames;

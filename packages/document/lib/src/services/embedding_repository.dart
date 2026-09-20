@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:document/src/app/app.locator.dart';
 import 'package:document/src/app/app.logger.dart';
 import 'package:document/src/services/embedding.dart';
+import 'package:logger/logger.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class EmbeddingRepository {
-  final _db = locator<Surreal>();
-  final _log = getLogger('EmbeddingRepository');
+  final Surreal _db = locator<Surreal>();
+  final Logger _log = getLogger('EmbeddingRepository');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -53,7 +54,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     final sql = Embedding.rebuildEmbeddingsMtreeIndex
         .replaceAll('{prefix}', tablePrefix);
     if (txn == null) {
-      return _db.query(sql);
+      return await _db.query(sql);
     } else {
       txn.query(sql);
       return null;

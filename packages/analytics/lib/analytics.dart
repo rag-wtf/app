@@ -1,5 +1,5 @@
 /// analytics package
-library analytics;
+library;
 
 export 'src/services/analytics_facade.dart';
 export 'src/services/firebase_analytics_client.dart';

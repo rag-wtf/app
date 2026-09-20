@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chat/src/ui/views/chat_list/chat_list_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -39,7 +41,7 @@ class ChatListView extends StackedView<ChatListViewModel> {
             ),
             key: ValueKey(item.id),
             onTap: () {
-              viewModel.fetchMessages(index);
+              unawaited(viewModel.fetchMessages(index));
               closeDrawerFunction?.call();
             },
           );

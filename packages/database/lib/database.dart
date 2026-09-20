@@ -1,5 +1,5 @@
 /// database package
-library database;
+library;
 
 export 'src/services/connection_setting.dart';
 export 'src/services/connection_setting_repository.dart';

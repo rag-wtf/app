@@ -4,7 +4,7 @@ import 'package:analytics/analytics.dart';
 import 'package:chat/chat.dart';
 import 'package:database/database.dart';
 import 'package:document/document.dart';
-import 'package:logger/src/logger.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rag/app/app.bottomsheets.dart';
 import 'package:rag/app/app.dialogs.dart';
@@ -19,17 +19,18 @@ class HomeViewModel extends BaseViewModel {
   HomeViewModel({this.tablePrefix = defaultTablePrefix});
   final String tablePrefix;
 
-  final ConnectionSettingService _connectionSettingService = locator<ConnectionSettingService>();
+  final ConnectionSettingService _connectionSettingService =
+      locator<ConnectionSettingService>();
   final DialogService _dialogService = locator<DialogService>();
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final SettingService _settingService = locator<SettingService>();
   final DocumentService _documentService = locator<DocumentService>();
-  final EmbeddingRepository _embeddingRepository = locator<EmbeddingRepository>();
+  final EmbeddingRepository _embeddingRepository =
+      locator<EmbeddingRepository>();
   final ChatRepository _chatRepository = locator<ChatRepository>();
   final MessageRepository _messageRepository = locator<MessageRepository>();
   final ChatService _chatService = locator<ChatService>();
   final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
-  // ignore: unused_field
   final Logger _log = getLogger('HomeViewModel');
   int get totalChats => _totalChats;
   late int _totalChats;
@@ -58,18 +59,22 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
+    unawaited(
+      _dialogService.showCustomDialog(
+        variant: DialogType.infoAlert,
+        title: 'Stacked Rocks!',
+        description: 'Give stacked $_counter stars on Github',
+      ),
     );
   }
 
   void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
+    unawaited(
+      _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.notice,
+        title: ksHomeBottomSheetTitle,
+        description: ksHomeBottomSheetDescription,
+      ),
     );
   }
 

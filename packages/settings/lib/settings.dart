@@ -1,5 +1,5 @@
 /// settings package
-library settings;
+library;
 
 export 'src/constants.dart';
 export 'src/services/setting.dart';

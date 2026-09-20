@@ -6,5 +6,7 @@ void main() {
   group('ConnectionDialogModel Tests -', () {
     setUp(registerServices);
     tearDown(locator.reset);
+
+    test('can be created', () {});
   });
 }

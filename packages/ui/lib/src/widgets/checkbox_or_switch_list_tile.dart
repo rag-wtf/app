@@ -95,7 +95,7 @@ class CheckboxOrSwitchListTile extends StatelessWidget {
         title: title,
         value: value,
         controlAffinity: controlAffinity,
-        onChanged: (bool? newValue) {
+        onChanged: (newValue) {
           if (newValue != null) {
             onChanged(newValue);
           }

@@ -1,10 +1,11 @@
 import 'package:analytics/src/app/app.logger.dart';
 import 'package:analytics/src/services/analytics_client.dart';
+import 'package:logger/logger.dart';
 
 class LoggerAnalyticsClient implements AnalyticsClient {
   LoggerAnalyticsClient();
   static const _name = 'Event';
-  final _log = getLogger('LoggerAnalyticsClient');
+  final Logger _log = getLogger('LoggerAnalyticsClient');
 
   @override
   Future<void> setAnalyticsCollectionEnabled({required bool enabled}) async {

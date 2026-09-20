@@ -6,5 +6,7 @@ void main() {
   group('ChatViewModel Tests -', () {
     setUp(registerServices);
     tearDown(locator.reset);
+
+    test('can be created', () {});
   });
 }

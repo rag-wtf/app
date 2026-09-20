@@ -1,8 +1,10 @@
+// View model callbacks accept positional boolean parameters for state changes.
 // ignore_for_file: avoid_positional_boolean_parameters
 import 'dart:async';
 
 import 'package:analytics/analytics.dart';
 import 'package:database/database.dart';
+import 'package:logger/logger.dart';
 import 'package:settings/src/app/app.dialogs.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
@@ -21,12 +23,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   });
   final String tablePrefix;
   final bool inPackage;
-  final _log = getLogger('SettingsViewModel');
-  final _isPanelExpanded = List.filled(4, true);
-  final _settingService = locator<SettingService>();
-  final _dialogService = locator<DialogService>();
-  final _connectionSettingService = locator<ConnectionSettingService>();
-  final analyticsFacade = locator<AnalyticsFacade>();
+  final Logger _log = getLogger('SettingsViewModel');
+  final List<bool> _isPanelExpanded = List.filled(4, true);
+  final SettingService _settingService = locator<SettingService>();
+  final DialogService _dialogService = locator<DialogService>();
+  final ConnectionSettingService _connectionSettingService =
+      locator<ConnectionSettingService>();
+  final AnalyticsFacade analyticsFacade = locator<AnalyticsFacade>();
   final Future<String?> Function(
     String tablePrefix,
     String dimensions,

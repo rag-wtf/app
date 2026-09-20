@@ -1,3 +1,4 @@
+// Prints are used for test debugging output.
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
@@ -108,7 +109,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
 
       // Act & Assert
       expect(
-        () async => repository.createEmbedding(defaultTablePrefix, embedding),
+        () => repository.createEmbedding(defaultTablePrefix, embedding),
         throwsA(
           predicate(
             (e) => e

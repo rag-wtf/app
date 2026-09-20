@@ -4,6 +4,7 @@ import 'package:chat/src/app/app.logger.dart';
 import 'package:chat/src/services/chat_service.dart';
 import 'package:database/database.dart';
 import 'package:document/document.dart';
+import 'package:logger/logger.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,11 +13,12 @@ class MainViewModel extends BaseViewModel {
   MainViewModel(this.tablePrefix, {required this.inPackage});
   final String tablePrefix;
   final bool inPackage;
-  final _dialogService = locator<DialogService>();
-  final _connectionSettingService = locator<ConnectionSettingService>();
-  final _settingService = locator<SettingService>();
-  final _chatService = locator<ChatService>();
-  final _log = getLogger('MainViewModel');
+  final DialogService _dialogService = locator<DialogService>();
+  final ConnectionSettingService _connectionSettingService =
+      locator<ConnectionSettingService>();
+  final SettingService _settingService = locator<SettingService>();
+  final ChatService _chatService = locator<ChatService>();
+  final Logger _log = getLogger('MainViewModel');
 
   Future<void> initialise() async {
     _log.d('init() tablePrefix: $tablePrefix');

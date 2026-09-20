@@ -1,4 +1,4 @@
-include: package:very_good_analysis/analysis_options.5.1.0.yaml
+include: ../../analysis_options.yaml
 
 analyzer:
   exclude:
@@ -6,6 +6,8 @@ analyzer:
     - "**/*.freezed.dart"
     - "**/app.*.dart"
     - "**/*.form.dart"
+    - build/**
+    - web/**
   errors:
     inference_failure_on_function_invocation: ignore
     public_member_api_docs: ignore

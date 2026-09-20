@@ -1,3 +1,4 @@
+// Long informational help strings are kept on single lines for readability.
 // ignore_for_file: lines_longer_than_80_chars
 
 const enabledAnalyticsInfoText = 'Enables anonymous reporting of crash and event data.';

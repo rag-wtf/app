@@ -19,6 +19,7 @@ import 'package:document/src/services/document_repository.dart';
 import 'package:document/src/services/embedding.dart';
 import 'package:document/src/services/embedding_repository.dart';
 import 'package:document/src/services/split_config.dart';
+import 'package:logger/logger.dart';
 import 'package:mutex/mutex.dart';
 import 'package:settings/settings.dart';
 import 'package:stacked/stacked.dart';
@@ -29,17 +30,19 @@ class DocumentService with ListenableServiceMixin {
   DocumentService() {
     listenToReactiveValues([_items]);
   }
-  final _dio = locator<Dio>();
-  final _db = locator<Surreal>();
-  final _documentRepository = locator<DocumentRepository>();
-  final _embeddingRepository = locator<EmbeddingRepository>();
-  final _documentEmbeddingRepository = locator<DocumentEmbeddingRepository>();
-  final _apiService = locator<DocumentApiService>();
-  final _batchService = locator<BatchService>();
-  final _settingService = locator<SettingService>();
-  final _gzipEncoder = locator<GZipEncoder>();
-  final _gzipDecoder = locator<GZipDecoder>();
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final Dio _dio = locator<Dio>();
+  final Surreal _db = locator<Surreal>();
+  final DocumentRepository _documentRepository = locator<DocumentRepository>();
+  final EmbeddingRepository _embeddingRepository =
+      locator<EmbeddingRepository>();
+  final DocumentEmbeddingRepository _documentEmbeddingRepository =
+      locator<DocumentEmbeddingRepository>();
+  final DocumentApiService _apiService = locator<DocumentApiService>();
+  final BatchService _batchService = locator<BatchService>();
+  final SettingService _settingService = locator<SettingService>();
+  final GZipEncoder _gzipEncoder = locator<GZipEncoder>();
+  final GZipDecoder _gzipDecoder = locator<GZipDecoder>();
+  final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
   final _mutex = Mutex();
 
   int _total = -1;
@@ -47,7 +50,7 @@ class DocumentService with ListenableServiceMixin {
   List<DocumentItem> get items => _items.toList();
   SplitConfig? splitConfig;
 
-  final _log = getLogger('DocumentService');
+  final Logger _log = getLogger('DocumentService');
 
   Future<bool> isSchemaCreated(String tablePrefix) async {
     final results = await _db.query('INFO FOR DB');
@@ -232,7 +235,7 @@ class DocumentService with ListenableServiceMixin {
     final batchResults = await _batchService
         .execute<Embedding, dynamic>(embeddings, batchSize, (values) async {
       _log.d('values $values');
-      return _embeddingRepository.updateEmbeddings(
+      return await _embeddingRepository.updateEmbeddings(
         tablePrefix,
         values,
         txn,
@@ -249,7 +252,7 @@ class DocumentService with ListenableServiceMixin {
       compressedFileSize: compressedFile.length,
       file: compressedFile,
     );
-    return _documentRepository.createDocument(
+    return await _documentRepository.createDocument(
       tablePrefix,
       newDocument,
     );
@@ -284,7 +287,7 @@ class DocumentService with ListenableServiceMixin {
     int k,
     double threshold,
   ) async {
-    return _embeddingRepository.similaritySearch(
+    return await _embeddingRepository.similaritySearch(
       tablePrefix,
       vector,
       k,
@@ -538,7 +541,6 @@ class DocumentService with ListenableServiceMixin {
     );
   }
 
-  // ignore: prefer_void_to_null
   Future<Null> _onError(DocumentItem documentItem, dynamic error) async {
     _log.e(error);
     // Handle the error in here
@@ -589,9 +591,11 @@ class DocumentService with ListenableServiceMixin {
         unawaited(_analyticsFacade.trackDocumentUploadFailed(errorMessage!));
       case DocumentStatus.canceled:
         unawaited(_analyticsFacade.trackDocumentUploadCancelled());
-      // ignore: no_default_cases
-      default:
-        // do nothing
+      case DocumentStatus.created:
+      case DocumentStatus.pending:
+      case DocumentStatus.splitting:
+      case DocumentStatus.indexing:
+        break;
     }
   }
 

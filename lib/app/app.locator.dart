@@ -1,4 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // StackedLocatorGenerator
@@ -42,11 +43,13 @@ Future<void> setupLocator({
   String? environment,
   EnvironmentFilter? environmentFilter,
 }) async {
-// Register environments
+  // Register environments
   locator.registerEnvironment(
-      environment: environment, environmentFilter: environmentFilter);
+    environment: environment,
+    environmentFilter: environmentFilter,
+  );
 
-// Register dependencies
+  // Register dependencies
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
@@ -66,7 +69,8 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => ChatService());
   locator.registerLazySingleton(() => ChatApiService());
   locator.registerLazySingleton<StreamResponseService>(
-      () => HttpStreamResponseService());
+    () => HttpStreamResponseService(),
+  );
   locator.registerLazySingleton(() => SettingService());
   locator.registerLazySingleton(() => SettingRepository());
   locator.registerLazySingleton<Surreal>(() => SurrealWasm.getInstance());

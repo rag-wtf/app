@@ -54,7 +54,7 @@ class SimpleExpansionPanel {
   ///   expansion state.
   ExpansionPanel build(BuildContext context) {
     return ExpansionPanel(
-      headerBuilder: (BuildContext context, bool isExpanded) {
+      headerBuilder: (context, isExpanded) {
         return ListTile(
           title: Text(
             headerText,

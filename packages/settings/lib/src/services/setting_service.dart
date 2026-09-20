@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:analytics/analytics.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:settings/src/app/app.locator.dart';
 import 'package:settings/src/app/app.logger.dart';
 import 'package:settings/src/constants.dart';
@@ -18,12 +19,12 @@ class SettingService with ListenableServiceMixin {
   }
   final Map<String, Setting> _settings = {};
   final Map<String, String> _enviromentVariables = {};
-  final _settingRepository = locator<SettingRepository>();
+  final SettingRepository _settingRepository = locator<SettingRepository>();
   void Function()? clearFormValuesFunction;
-  final _log = getLogger('SettingService');
+  final Logger _log = getLogger('SettingService');
   late Map<String, LlmProvider> _llmProviders;
   Map<String, LlmProvider> get llmProviders => _llmProviders;
-  final _analyticsFacade = locator<AnalyticsFacade>();
+  final AnalyticsFacade _analyticsFacade = locator<AnalyticsFacade>();
 
   Setting get(String key) {
     Setting setting;
@@ -230,7 +231,7 @@ class SettingService with ListenableServiceMixin {
       // Works in main, but hit 404 error in package.
       json = await rootBundle
           .loadString('packages/settings/assets/json/llm_providers.json');
-    } catch (_) {
+    } on Object catch (_) {
       json = await rootBundle
           .loadString('assets/json/llm_providers.json');      
     }

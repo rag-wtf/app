@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 import 'package:chat/chat.dart';
+// Chat API message types are internal to the chat package.
 // ignore: implementation_imports
 import 'package:chat/src/services/chat_api_message.dart' as chat_api;
 import 'package:database/database.dart';
 import 'package:dio/dio.dart';
 import 'package:document/document.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:rag_console/src/app/app.locator.dart';
 import 'package:rag_console/src/app/app.logger.dart';
 
@@ -19,16 +21,17 @@ class RagConsoleViewModel extends BaseViewModel {
   RagConsoleViewModel(this.tablePrefix, {required this.inPackage});
   final String tablePrefix;
   final bool inPackage;
-  final _settingService = locator<SettingService>();
-  final _db = locator<Surreal>();
-  final _dio = locator<Dio>();
-  final _gzipEncoder = locator<GZipEncoder>();
+  final SettingService _settingService = locator<SettingService>();
+  final Surreal _db = locator<Surreal>();
+  final Dio _dio = locator<Dio>();
+  final GZipEncoder _gzipEncoder = locator<GZipEncoder>();
   final _messages = <chat_api.ChatApiMessage>[];
-  final _documentService = locator<DocumentService>();
-  final _chatService = locator<ChatService>();
-  final _storage = locator<FlutterSecureStorage>();
-  final _connectionSettingRepository = locator<ConnectionSettingRepository>();
-  final _log = getLogger('RagConsoleViewModel');
+  final DocumentService _documentService = locator<DocumentService>();
+  final ChatService _chatService = locator<ChatService>();
+  final FlutterSecureStorage _storage = locator<FlutterSecureStorage>();
+  final ConnectionSettingRepository _connectionSettingRepository =
+      locator<ConnectionSettingRepository>();
+  final Logger _log = getLogger('RagConsoleViewModel');
   late String _surrealVersion;
   late String surrealEndpoint;
   late String surrealNamespace;
@@ -140,7 +143,7 @@ Example:
     _log.d('input #$input#');
     try {
       return jsonDecode(input);
-    } catch (e) {
+    } on Object catch (_) {
       return input;
     }
   }
@@ -252,14 +255,14 @@ Example:
       switch (command) {
         case 'e':
           final input = value.substring(3);
-          return embed(input);
+          return await embed(input);
         case 'r':
           final input = value.substring(3);
           final embeddings = await retrieve(input);
           return embeddings.map((e) => e.toJson()).toList();
         case 'g':
           final input = value.substring(3);
-          return generate(input);
+          return await generate(input);
         case 'c':
           _initMessages();
           return 'Chat messages is cleared from the memory.';
@@ -273,10 +276,10 @@ Example:
           final prompt = promptTemplate
               .replaceFirst(contextPlaceholder, context)
               .replaceFirst(instructionPlaceholder, input);
-          return generate(prompt, input);
+          return await generate(prompt, input);
         case 'sql':
           final query = value.substring(5);
-          return _db.query(query);
+          return await _db.query(query);
         case 'h':
           return helpMessage;
         default:

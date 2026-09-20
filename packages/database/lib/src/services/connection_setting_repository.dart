@@ -2,12 +2,13 @@ import 'package:database/src/app/app.locator.dart';
 import 'package:database/src/app/app.logger.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 
 class ConnectionSettingRepository {
-  final _log = getLogger('ConnectionSettingRepository');
-  final _storage = locator<FlutterSecureStorage>();
+  final Logger _log = getLogger('ConnectionSettingRepository');
+  final FlutterSecureStorage _storage = locator<FlutterSecureStorage>();
   static const connectionKeysKey = 'connectionKeysKey';
-  static const _valueKeys = [
+  static const List<String> _valueKeys = [
     ConnectionSetting.nameKey,
     ConnectionSetting.protocolKey,
     ConnectionSetting.addressPortKey,

@@ -1,5 +1,5 @@
 /// document package
-library document;
+library;
 
 export 'src/services/batch_service.dart';
 export 'src/services/document.dart';

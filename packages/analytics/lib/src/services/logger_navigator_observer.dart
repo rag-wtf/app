@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:analytics/src/app/app.locator.dart';
 import 'package:analytics/src/app/app.logger.dart';
 import 'package:analytics/src/services/analytics_facade.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logger/logger.dart';
 
 class LoggerNavigatorObserver extends NavigatorObserver {
   final AnalyticsFacade _analytics = locator<AnalyticsFacade>();
-  final _log = getLogger('LoggerNavigatorObserver');
+  final Logger _log = getLogger('LoggerNavigatorObserver');
 
   static const _name = 'Navigation';
 
@@ -28,7 +31,7 @@ class LoggerNavigatorObserver extends NavigatorObserver {
 
   void _logNavigation(String? routeName, String action) {
     if (routeName != null) {
-      _analytics.trackScreenView(routeName, action);
+      unawaited(_analytics.trackScreenView(routeName, action));
     } else {
       _log.d('$_name: Route name is missing', time: DateTime.now());
     }

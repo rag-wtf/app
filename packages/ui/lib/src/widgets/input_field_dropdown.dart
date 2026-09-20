@@ -236,8 +236,8 @@ class InputFieldDropdown<T> extends StatelessWidget {
                   onOpened: onDropdownOpened,
                   onCanceled: onDropdownClosed,
                   onSelected: onSelected,
-                  itemBuilder: (BuildContext context) {
-                    return items!.map((T item) {
+                  itemBuilder: (context) {
+                    return items!.map((item) {
                       return PopupMenuItem<T>(
                         value: item,
                         child: Text(

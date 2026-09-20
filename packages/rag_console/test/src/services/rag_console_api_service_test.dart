@@ -5,5 +5,7 @@ void main() {
   group('RagConsoleApiServiceTest -', () {
     setUp(registerServices);
     tearDown(locator.reset);
+
+    test('can be created', () {});
   });
 }

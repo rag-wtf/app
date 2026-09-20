@@ -12,7 +12,7 @@ class HorizontalList extends StatelessWidget {
   final _scrollController = ScrollController();
   static const itemMargin = 4.0;
   static const itemPadding = 8.0;
-  static const itemWidth = 200.0 + (itemMargin * 2) + (itemPadding * 2);
+  static const double itemWidth = 200.0 + (itemMargin * 2) + (itemPadding * 2);
   final Future<void> Function(Embedding embedding) showDialogFunction;
 
   @override
@@ -41,7 +41,7 @@ class HorizontalList extends StatelessWidget {
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: embeddings!.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, index) {
                   return Card(
                     margin: index == 0
                         ? const EdgeInsets.only(right: itemMargin)
@@ -69,7 +69,7 @@ class HorizontalList extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onTap: () async => showDialogFunction(embeddings![index]),
+                      onTap: () => showDialogFunction(embeddings![index]),
                     ),
                   );
                 },
@@ -77,7 +77,7 @@ class HorizontalList extends StatelessWidget {
             ),
           ),
           LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
+            builder: (context, constraints) {
               if (constraints.maxWidth < itemWidth * embeddings!.length) {
                 return Column(
                   children: [

@@ -64,7 +64,7 @@ class CheckboxOrSwitch extends StatelessWidget {
     } else {
       return Checkbox(
         value: value,
-        onChanged: (bool? newValue) {
+        onChanged: (newValue) {
           if (newValue != null) {
             onChanged(newValue);
           }

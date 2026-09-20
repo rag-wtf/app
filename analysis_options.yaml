@@ -8,6 +8,11 @@ analyzer:
     - "**/*.form.dart"
     - "**/*.mocks.dart"
     - "**/app_localizations*.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
   errors:
     cascade_invocations: ignore
     inference_failure_on_function_invocation: ignore

@@ -1,4 +1,4 @@
-library flutter_console_widget;
+library;
 
 export 'package:flutter_console_widget/flutter_console_controller.dart';
 
@@ -8,6 +8,7 @@ import 'package:flutter_console_widget/selectable_colored_text.dart';
 
 class FlutterConsole extends StatelessWidget {
   const FlutterConsole({
+    super.key,
     this.consoleBackground = Colors.black,
     this.consoleTextColor = Colors.white,
     this.consoleSelectedTextBackgroundColor = Colors.white,
@@ -16,10 +17,9 @@ class FlutterConsole extends StatelessWidget {
     required this.height,
     this.inputBackground = const Color(0xff333333),
     this.inputTextColor = Colors.white,
-    Key? key,
     this.scrollColor = Colors.grey,
     required this.width,
-  }) : super(key: key);
+  });
 
   final Color consoleBackground;
   final Color consoleTextColor;

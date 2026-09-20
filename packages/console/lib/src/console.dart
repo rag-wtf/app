@@ -1,4 +1,7 @@
+// Dynamic calls are needed for flexible console execution.
 // ignore_for_file: avoid_dynamic_calls
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_console_widget/flutter_console.dart';
@@ -61,7 +64,7 @@ class _ConsoleState extends State<Console> {
           );
         }
       }
-    } catch (error, _) {
+    } on Object catch (error) {
       controller.print(
         message: ' ❎ $error',
         endline: true,
@@ -84,19 +87,21 @@ class _ConsoleState extends State<Console> {
           );
         }
       }
-      echoLoop();
+      unawaited(echoLoop());
     });
   }
 
-  void echoLoop() {
-    controller.scan().then((value) {
-      execute(
+  Future<void> echoLoop() async {
+    while (mounted) {
+      final value = await controller.scan();
+      if (!mounted) return;
+      await execute(
         () => widget.executeFunction(value),
         value,
       );
+      if (!mounted) return;
       controller.focusNode.requestFocus();
-      echoLoop();
-    });
+    }
   }
 
   @override

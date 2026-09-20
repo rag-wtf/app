@@ -5,7 +5,7 @@ import 'package:settings/src/services/setting.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class SettingRepository {
-  final _db = locator<Surreal>();
+  final Surreal _db = locator<Surreal>();
 
   Future<bool> isSchemaCreated(String prefix) async {
     final results = await _db.query('INFO FOR DB');

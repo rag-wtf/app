@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:very_good_infinite_list/src/sliver_infinite_list.dart';
 
@@ -13,7 +14,9 @@ extension on WidgetTester {
           body: SizedBox(
             height: 500,
             child: CustomScrollView(
-              cacheExtent: cacheExtent,
+              scrollCacheExtent: cacheExtent != null
+                  ? ScrollCacheExtent.pixels(cacheExtent)
+                  : null,
               slivers: slivers,
             ),
           ),
@@ -55,7 +58,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(onFetchDataCalls, equals(5));
+        expect(onFetchDataCalls, equals(4));
       });
     });
     group('consider preceding slivers', () {

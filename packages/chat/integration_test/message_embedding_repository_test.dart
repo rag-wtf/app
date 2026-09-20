@@ -112,7 +112,7 @@ void main({bool wasm = false}) {
 
     // Act
     final txnResults = await db.transaction(
-      (Transaction txn) async {
+      (txn) async {
         await messageRepository.createMessage(
           tablePrefix,
           message,

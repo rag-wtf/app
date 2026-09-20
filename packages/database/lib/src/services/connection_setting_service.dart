@@ -3,13 +3,15 @@ import 'package:database/src/app/app.logger.dart';
 import 'package:database/src/services/connection_setting.dart';
 import 'package:database/src/services/connection_setting_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 
 class ConnectionSettingService {
-  final _log = getLogger('ConnectionSettingService');
-  final _connectionSettingRepository = locator<ConnectionSettingRepository>();
-  final _storage = locator<FlutterSecureStorage>();
-  final _db = locator<Surreal>();
+  final Logger _log = getLogger('ConnectionSettingService');
+  final ConnectionSettingRepository _connectionSettingRepository =
+      locator<ConnectionSettingRepository>();
+  final FlutterSecureStorage _storage = locator<FlutterSecureStorage>();
+  final Surreal _db = locator<Surreal>();
 
   Future<bool> autoConnect() async {
     var autoConnect = false;
@@ -51,7 +53,7 @@ class ConnectionSettingService {
             username,
             password,
           );
-        } catch (_) {
+        } on Object catch (_) {
           autoConnect = false;
         }
       } else {
