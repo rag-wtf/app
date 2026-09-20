@@ -86,17 +86,9 @@ class Logo extends StatelessWidget {
     /// maintaining its aspect ratio.
     final lowerLogoPath = logoPath.toLowerCase();
     if (lowerLogoPath.endsWith('.svg')) {
-      return SvgPicture.asset(
-        logoPath,
-        height: size,
-        width: size,
-      );
+      return SvgPicture.asset(logoPath, height: size, width: size);
     } else if (lowerLogoPath.endsWith('.svg.vec')) {
-      return SvgPicture(
-        AssetBytesLoader(logoPath),
-        height: size,
-        width: size,
-      );
+      return SvgPicture(AssetBytesLoader(logoPath), height: size, width: size);
     } else {
       return Image.asset(
         logoPath,

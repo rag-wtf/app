@@ -16,9 +16,7 @@ class DocumentUploadZoneWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
-        ),
+        border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
@@ -28,10 +26,7 @@ class DocumentUploadZoneWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null)
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: icon,
-                ),
+                Padding(padding: const EdgeInsets.all(4), child: icon),
               Text(
                 message,
                 style: const TextStyle(

@@ -66,10 +66,7 @@ class PromptTemplateDialog extends StackedView<PromptTemplateDialogModel>
               verticalSpaceTiny,
               Text(
                 request.description!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: kcMediumGrey,
-                ),
+                style: const TextStyle(fontSize: 14, color: kcMediumGrey),
                 maxLines: 3,
                 softWrap: true,
               ),

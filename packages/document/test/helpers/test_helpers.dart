@@ -16,14 +16,14 @@ final StackedLocator locator = StackedLocator.instance;
     MockSpec<DocumentApiService>(onMissingStub: OnMissingStub.returnDefault),
 
     MockSpec<BatchService>(onMissingStub: OnMissingStub.returnDefault),
-// @stacked-mock-spec
+    // @stacked-mock-spec
   ],
 )
 void registerServices() {
   getAndRegisterNavigationService();
   getAndRegisterApiService();
   getAndRegisterBatchService();
-// @stacked-mock-register
+  // @stacked-mock-register
 }
 
 MockNavigationService getAndRegisterNavigationService() {

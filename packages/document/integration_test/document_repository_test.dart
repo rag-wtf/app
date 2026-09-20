@@ -19,8 +19,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -60,8 +62,10 @@ void main({bool wasm = false}) {
       );
 
       // Act
-      final result =
-          await repository.createDocument(defaultTablePrefix, document);
+      final result = await repository.createDocument(
+        defaultTablePrefix,
+        document,
+      );
 
       // Assert
       expect(result.id, isNotNull);
@@ -206,8 +210,10 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
         originFileSize: 200,
         status: DocumentStatus.created,
       );
-      final result =
-          await repository.createDocument(defaultTablePrefix, document);
+      final result = await repository.createDocument(
+        defaultTablePrefix,
+        document,
+      );
       final id = result.id;
 
       // Act
@@ -241,8 +247,10 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
         originFileSize: 200,
         status: DocumentStatus.created,
       );
-      final created =
-          await repository.createDocument(defaultTablePrefix, document);
+      final created = await repository.createDocument(
+        defaultTablePrefix,
+        document,
+      );
 
       // Act
       final updated = await repository.updateDocument(
@@ -283,12 +291,12 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
         originFileSize: 200,
         status: DocumentStatus.created,
       );
-      final created =
-          await repository.createDocument(defaultTablePrefix, document);
-
-      final updateStatus = created.copyWith(
-        status: DocumentStatus.completed,
+      final created = await repository.createDocument(
+        defaultTablePrefix,
+        document,
       );
+
+      final updateStatus = created.copyWith(status: DocumentStatus.completed);
 
       // Act
       final result = await repository.updateDocumentStatus(updateStatus);
@@ -313,8 +321,10 @@ INSERT INTO ${defaultTablePrefix}_${Document.tableName} \$content''';
         originFileSize: 200,
         status: DocumentStatus.created,
       );
-      final created =
-          await repository.createDocument(defaultTablePrefix, document);
+      final created = await repository.createDocument(
+        defaultTablePrefix,
+        document,
+      );
 
       // Act
       final result = await repository.deleteDocument(created.id!);

@@ -25,8 +25,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -37,10 +39,7 @@ void main({bool wasm = false}) {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(
-        await documentService.isSchemaCreated(tablePrefix),
-        isFalse,
-      );
+      expect(await documentService.isSchemaCreated(tablePrefix), isFalse);
     });
 
     test('should create schemas and return true', () async {
@@ -195,12 +194,16 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
     );
 
     // Act
-    final createdDocument =
-        await documentService.createDocument(tablePrefix, document);
-    final retrievedDocument =
-        await documentService.getDocumentById(createdDocument.id!);
-    final content = await documentService
-        .convertByteDataToString(retrievedDocument!.byteData!);
+    final createdDocument = await documentService.createDocument(
+      tablePrefix,
+      document,
+    );
+    final retrievedDocument = await documentService.getDocumentById(
+      createdDocument.id!,
+    );
+    final content = await documentService.convertByteDataToString(
+      retrievedDocument!.byteData!,
+    );
 
     // Assert
     expect(content, equals(str));
@@ -217,8 +220,10 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
         originFileSize: 200,
         status: DocumentStatus.created,
       );
-      final created =
-          await repository.createDocument(defaultTablePrefix, document);
+      final created = await repository.createDocument(
+        defaultTablePrefix,
+        document,
+      );
       final oldSplitted = created.splitted;
       final documentItem = DocumentItem(defaultTablePrefix, created);
 
@@ -241,8 +246,10 @@ INSERT INTO ${tablePrefix}_${Document.tableName} ${jsonEncode(documents)}''';
       originFileSize: 200,
       status: DocumentStatus.created,
     );
-    final created =
-        await repository.createDocument(defaultTablePrefix, document);
+    final created = await repository.createDocument(
+      defaultTablePrefix,
+      document,
+    );
     final oldDone = created.done;
     final documentItem = DocumentItem(defaultTablePrefix, created);
     const errorMessage = 'Failed to update status';

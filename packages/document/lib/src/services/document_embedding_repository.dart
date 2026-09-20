@@ -14,12 +14,11 @@ class DocumentEmbeddingRepository {
     return tables.containsKey('${tablePrefix}_${DocumentEmbedding.tableName}');
   }
 
-  Future<void> createSchema(
-    String tablePrefix, [
-    Transaction? txn,
-  ]) async {
-    final sqlSchema =
-        DocumentEmbedding.sqlSchema.replaceAll('{prefix}', tablePrefix);
+  Future<void> createSchema(String tablePrefix, [Transaction? txn]) async {
+    final sqlSchema = DocumentEmbedding.sqlSchema.replaceAll(
+      '{prefix}',
+      tablePrefix,
+    );
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
@@ -32,28 +31,22 @@ class DocumentEmbeddingRepository {
     final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';
     final documentId =
         documentEmbedding.documentId.startsWith(fullDocumentTableName)
-            ? documentEmbedding.documentId
-            : '$fullDocumentTableName:${documentEmbedding.documentId}';
+        ? documentEmbedding.documentId
+        : '$fullDocumentTableName:${documentEmbedding.documentId}';
     final embeddingId =
         '$fullEmbeddingTableName:${documentEmbedding.embeddingId}';
 
     final sql = '''
 RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddingId;''';
     if (txn == null) {
-      final result = await _db.query(
-        sql,
-      );
+      final result = await _db.query(sql);
 
       final map = result! as Map;
       map['documentId'] = map.remove('in');
       map['embeddingId'] = map.remove('out');
-      return DocumentEmbedding.fromJson(
-        Map<String, dynamic>.from(map),
-      );
+      return DocumentEmbedding.fromJson(Map<String, dynamic>.from(map));
     } else {
-      txn.query(
-        sql,
-      );
+      txn.query(sql);
       return documentEmbedding;
     }
   }
@@ -69,8 +62,8 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
     for (final documentEmbedding in documentEmbeddings) {
       final documentId =
           documentEmbedding.documentId.startsWith(fullDocumentTableName)
-              ? documentEmbedding.documentId
-              : '$fullDocumentTableName:${documentEmbedding.documentId}';
+          ? documentEmbedding.documentId
+          : '$fullDocumentTableName:${documentEmbedding.documentId}';
       final embeddingId =
           '$fullEmbeddingTableName:${documentEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${DocumentEmbedding.tableName}';
@@ -80,16 +73,12 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
     if (txn == null) {
       final results = (await _db.query(sqlBuffer.toString()))! as List;
 
-      return results.map(
-        (result) {
-          final map = result as Map;
-          map['documentId'] = map.remove('in');
-          map['embeddingId'] = map.remove('out');
-          return DocumentEmbedding.fromJson(
-            Map<String, dynamic>.from(map),
-          );
-        },
-      ).toList();
+      return results.map((result) {
+        final map = result as Map;
+        map['documentId'] = map.remove('in');
+        map['embeddingId'] = map.remove('out');
+        return DocumentEmbedding.fromJson(Map<String, dynamic>.from(map));
+      }).toList();
     } else {
       txn.query(sqlBuffer.toString());
       return documentEmbeddings;
@@ -104,25 +93,21 @@ RELATE ONLY $documentId->${tablePrefix}_${DocumentEmbedding.tableName}->$embeddi
         '${tablePrefix}_${DocumentEmbedding.tableName}';
     final documentTableName = '${tablePrefix}_${Document.tableName}';
     final documentRecordId = '$documentTableName:$documentId';
-    final sql = '''
+    final sql =
+        '''
 SELECT ->$documentEmbeddingTableName->${tablePrefix}_${Embedding.tableName}.* 
 AS Embedding FROM $documentTableName 
 WHERE array::first(array::distinct(->$documentEmbeddingTableName<-$documentTableName)) = $documentRecordId;
 ''';
 
-    final results = (await _db.query(
-      sql,
-    ))! as List;
+    final results = (await _db.query(sql))! as List;
     final result = Map<String, dynamic>.from(results.first as Map);
     final embeddings = result['Embedding'] as List;
 
     return embeddings
         .map(
-          (result) => Embedding.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          ),
+          (result) =>
+              Embedding.fromJson(Map<String, dynamic>.from(result as Map)),
         )
         .toList();
   }

@@ -1,14 +1,8 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'chat_api_message.freezed.dart';
 part 'chat_api_message.g.dart';
 
-enum Role {
-  system,
-  user,
-  assistant,
-  function,
-}
+enum Role { system, user, assistant, function }
 
 @Freezed(toJson: true)
 sealed class ChatApiMessage with _$ChatApiMessage {

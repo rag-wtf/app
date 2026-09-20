@@ -40,18 +40,17 @@ class SettingService with ListenableServiceMixin {
 
   Setting _getDefaultSetting(String key) {
     final value = _enviromentVariables[key];
-    return Setting(
-      key: key,
-      value: value ?? 'null',
-    );
+    return Setting(key: key, value: value ?? 'null');
   }
 
   void _initialiseEnvironmentVariables() {
     if (_enviromentVariables.isEmpty) {
-      _enviromentVariables[llmProviderKey] =
-          const String.fromEnvironment(llmProviderKey);
-      _enviromentVariables[splitApiUrlKey] =
-          const String.fromEnvironment(splitApiUrlKey);
+      _enviromentVariables[llmProviderKey] = const String.fromEnvironment(
+        llmProviderKey,
+      );
+      _enviromentVariables[splitApiUrlKey] = const String.fromEnvironment(
+        splitApiUrlKey,
+      );
       _enviromentVariables[chunkSizeKey] = const String.fromEnvironment(
         chunkSizeKey,
         defaultValue: defaultChunkSize,
@@ -60,66 +59,74 @@ class SettingService with ListenableServiceMixin {
         chunkOverlapKey,
         defaultValue: defaultChunkOverlap,
       );
-      _enviromentVariables[embeddingsModelKey] =
-          const String.fromEnvironment(embeddingsModelKey);
+      _enviromentVariables[embeddingsModelKey] = const String.fromEnvironment(
+        embeddingsModelKey,
+      );
       _enviromentVariables[embeddingsModelContextLengthKey] =
           const String.fromEnvironment(
-        embeddingsModelContextLengthKey,
-        defaultValue: defaultEmbeddingsModelContextLength,
+            embeddingsModelContextLengthKey,
+            defaultValue: defaultEmbeddingsModelContextLength,
+          );
+      _enviromentVariables[embeddingsApiUrlKey] = const String.fromEnvironment(
+        embeddingsApiUrlKey,
       );
-      _enviromentVariables[embeddingsApiUrlKey] =
-          const String.fromEnvironment(embeddingsApiUrlKey);
-      _enviromentVariables[embeddingsApiKey] =
-          const String.fromEnvironment(embeddingsApiKey);
+      _enviromentVariables[embeddingsApiKey] = const String.fromEnvironment(
+        embeddingsApiKey,
+      );
       _enviromentVariables[embeddingsDimensionsKey] =
           const String.fromEnvironment(
-        embeddingsDimensionsKey,
-        defaultValue: defaultEmbeddingsDimensions,
-      );
+            embeddingsDimensionsKey,
+            defaultValue: defaultEmbeddingsDimensions,
+          );
       _enviromentVariables[embeddingsDimensionsEnabledKey] =
           const String.fromEnvironment(
-        embeddingsDimensionsEnabledKey,
-        defaultValue: defaultEmbeddingsDimensionsEnabled,
-      );
+            embeddingsDimensionsEnabledKey,
+            defaultValue: defaultEmbeddingsDimensionsEnabled,
+          );
       _enviromentVariables[embeddingsApiBatchSizeKey] =
           const String.fromEnvironment(
-        embeddingsApiBatchSizeKey,
-        defaultValue: defaultEmbeddingsApiBatchSize,
-      );
+            embeddingsApiBatchSizeKey,
+            defaultValue: defaultEmbeddingsApiBatchSize,
+          );
       _enviromentVariables[embeddingsDatabaseBatchSizeKey] =
           const String.fromEnvironment(
-        embeddingsDatabaseBatchSizeKey,
-        defaultValue: defaultEmbeddingsDatabaseBatchSize,
-      );
+            embeddingsDatabaseBatchSizeKey,
+            defaultValue: defaultEmbeddingsDatabaseBatchSize,
+          );
       _enviromentVariables[embeddingsCompressedKey] =
           const String.fromEnvironment(
-        embeddingsCompressedKey,
-        defaultValue: defaultEmbeddingsCompressed,
+            embeddingsCompressedKey,
+            defaultValue: defaultEmbeddingsCompressed,
+          );
+      _enviromentVariables[searchTypeKey] = const String.fromEnvironment(
+        searchTypeKey,
       );
-      _enviromentVariables[searchTypeKey] =
-          const String.fromEnvironment(searchTypeKey);
-      _enviromentVariables[searchIndexKey] =
-          const String.fromEnvironment(searchIndexKey);
+      _enviromentVariables[searchIndexKey] = const String.fromEnvironment(
+        searchIndexKey,
+      );
       _enviromentVariables[searchThresholdKey] = const String.fromEnvironment(
         searchThresholdKey,
         defaultValue: defaultSearchThreshold,
       );
       _enviromentVariables[retrieveTopNResultsKey] =
           const String.fromEnvironment(
-        retrieveTopNResultsKey,
-        defaultValue: defaultRetrieveTopNResults,
+            retrieveTopNResultsKey,
+            defaultValue: defaultRetrieveTopNResults,
+          );
+      _enviromentVariables[generationModelKey] = const String.fromEnvironment(
+        generationModelKey,
       );
-      _enviromentVariables[generationModelKey] =
-          const String.fromEnvironment(generationModelKey);
       _enviromentVariables[generationModelContextLengthKey] =
           const String.fromEnvironment(
-        generationModelContextLengthKey,
-        defaultValue: defaultGenerationModelContextLength,
+            generationModelContextLengthKey,
+            defaultValue: defaultGenerationModelContextLength,
+          );
+      _enviromentVariables[generationApiUrlKey] = const String.fromEnvironment(
+        generationApiUrlKey,
       );
-      _enviromentVariables[generationApiUrlKey] =
-          const String.fromEnvironment(generationApiUrlKey);
-      _enviromentVariables[generationApiKey] =
-          const String.fromEnvironment(generationApiKey);
+      _enviromentVariables[generationApiKey] = const String.fromEnvironment(
+        generationApiKey,
+      );
       _enviromentVariables[systemPromptKey] = const String.fromEnvironment(
         systemPromptKey,
         defaultValue: defaultSystemPrompt,
@@ -142,18 +149,18 @@ class SettingService with ListenableServiceMixin {
       );
       _enviromentVariables[frequencyPenaltyEnabledKey] =
           const String.fromEnvironment(
-        frequencyPenaltyEnabledKey,
-        defaultValue: defaultFrequencyPenaltyEnabled,
-      );
+            frequencyPenaltyEnabledKey,
+            defaultValue: defaultFrequencyPenaltyEnabled,
+          );
       _enviromentVariables[presencePenaltyKey] = const String.fromEnvironment(
         presencePenaltyKey,
         defaultValue: defaultPresencePenalty,
       );
       _enviromentVariables[presencePenaltyEnabledKey] =
           const String.fromEnvironment(
-        presencePenaltyEnabledKey,
-        defaultValue: defaultPresencePenaltyEnabled,
-      );
+            presencePenaltyEnabledKey,
+            defaultValue: defaultPresencePenaltyEnabled,
+          );
       _enviromentVariables[maxTokensKey] = const String.fromEnvironment(
         maxTokensKey,
         defaultValue: defaultMaxTokens,
@@ -173,8 +180,9 @@ class SettingService with ListenableServiceMixin {
     if (_settings.isEmpty) {
       _initialiseEnvironmentVariables();
       await _loadLlmProviders();
-      final isSchemaCreated =
-          await _settingRepository.isSchemaCreated(tablePrefix);
+      final isSchemaCreated = await _settingRepository.isSchemaCreated(
+        tablePrefix,
+      );
       _log.d('isSchemaCreated $isSchemaCreated');
 
       if (!isSchemaCreated) {
@@ -182,22 +190,13 @@ class SettingService with ListenableServiceMixin {
       }
 
       // create user id if not found.
-      if (await _settingRepository.getSettingByKey(
-            tablePrefix,
-            userIdKey,
-          ) ==
+      if (await _settingRepository.getSettingByKey(tablePrefix, userIdKey) ==
           null) {
-        final userId = Setting(
-          key: userIdKey,
-          value: Ulid().toString(),
-        );
+        final userId = Setting(key: userIdKey, value: Ulid().toString());
         await _settingRepository.createSetting(tablePrefix, userId);
       }
 
-      await setAnalyticsEnabled(
-        tablePrefix,
-        enabled: analyticsEnabled,
-      );
+      await setAnalyticsEnabled(tablePrefix, enabled: analyticsEnabled);
 
       final settings = await _settingRepository.getAllSettings(tablePrefix);
       if (settings.isNotEmpty) {
@@ -213,27 +212,19 @@ class SettingService with ListenableServiceMixin {
     required bool enabled,
   }) async {
     _log.d('enabled $enabled');
-    await set(
-      tablePrefix,
-      analyticsEnabledKey,
-      enabled.toString(),
-    );
-    unawaited(
-      _analyticsFacade.setAnalyticsCollectionEnabled(
-        enabled: enabled,
-      ),
-    );
+    await set(tablePrefix, analyticsEnabledKey, enabled.toString());
+    unawaited(_analyticsFacade.setAnalyticsCollectionEnabled(enabled: enabled));
   }
 
   Future<void> _loadLlmProviders() async {
     String json;
     try {
       // Works in main, but hit 404 error in package.
-      json = await rootBundle
-          .loadString('packages/settings/assets/json/llm_providers.json');
+      json = await rootBundle.loadString(
+        'packages/settings/assets/json/llm_providers.json',
+      );
     } on Object catch (_) {
-      json = await rootBundle
-          .loadString('assets/json/llm_providers.json');      
+      json = await rootBundle.loadString('assets/json/llm_providers.json');
     }
     final llmProviderMaps = List<Map<String, dynamic>>.from(
       jsonDecode(json) as List,
@@ -271,9 +262,7 @@ class SettingService with ListenableServiceMixin {
       if (newValue.isNotEmpty) {
         if (setting!.value != newValue) {
           final updatedSetting = await _settingRepository.updateSetting(
-            setting.copyWith(
-              value: newValue,
-            ),
+            setting.copyWith(value: newValue),
           );
           if (updatedSetting != null) {
             if (updatedSetting.value == newValue) {
@@ -296,11 +285,16 @@ class SettingService with ListenableServiceMixin {
         }
       }
     } else if (newValue.isNotEmpty) {
-      final setting =
-          Setting(key: key, value: newValue, created: DateTime.now());
+      final setting = Setting(
+        key: key,
+        value: newValue,
+        created: DateTime.now(),
+      );
 
-      final createdSetting =
-          await _settingRepository.createSetting(tablePrefix, setting);
+      final createdSetting = await _settingRepository.createSetting(
+        tablePrefix,
+        setting,
+      );
       if (createdSetting.id != null) {
         _settings[key] = createdSetting;
         notifyListeners();

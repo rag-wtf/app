@@ -14,10 +14,7 @@ class SettingRepository {
     return tables.containsKey('${prefix}_${Setting.tableName}');
   }
 
-  Future<void> createSchema(
-    String prefix, [
-    Transaction? txn,
-  ]) async {
+  Future<void> createSchema(String prefix, [Transaction? txn]) async {
     final sqlSchema = Setting.sqlSchema.replaceAll('{prefix}', prefix);
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
@@ -33,11 +30,7 @@ CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
     if (txn == null) {
       final result = await _db.query(sql);
 
-      return Setting.fromJson(
-        Map<String, dynamic>.from(
-          result! as Map,
-        ),
-      );
+      return Setting.fromJson(Map<String, dynamic>.from(result! as Map));
     } else {
       txn.query(sql);
       return setting;
@@ -45,15 +38,13 @@ CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<List<Setting>> getAllSettings(String prefix) async {
-    final results = (await _db
-        .query('SELECT * FROM ${prefix}_${Setting.tableName}'))! as List;
+    final results =
+        (await _db.query('SELECT * FROM ${prefix}_${Setting.tableName}'))!
+            as List;
     return results
         .map(
-          (result) => Setting.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          ),
+          (result) =>
+              Setting.fromJson(Map<String, dynamic>.from(result as Map)),
         )
         .toList();
   }
@@ -61,16 +52,13 @@ CREATE ONLY ${prefix}_${Setting.tableName} CONTENT ${jsonEncode(payload)};''';
   Future<Setting?> getSettingById(String id) async {
     final result = await _db.select(id);
     return result != null
-        ? Setting.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Setting.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 
   Future<Setting?> getSettingByKey(String prefix, String key) async {
-    final sql = '''
+    final sql =
+        '''
 SELECT * FROM ${prefix}_${Setting.tableName}
 WHERE key = "$key" 
 LIMIT 1
@@ -78,11 +66,7 @@ LIMIT 1
     final result = await _db.query(sql);
 
     return result != null && (result as List).isNotEmpty
-        ? Setting.fromJson(
-            Map<String, dynamic>.from(
-              result.first as Map,
-            ),
-          )
+        ? Setting.fromJson(Map<String, dynamic>.from(result.first as Map))
         : null;
   }
 
@@ -95,22 +79,14 @@ LIMIT 1
       'UPDATE ONLY $id MERGE ${jsonEncode(payload)}',
     );
 
-    return Setting.fromJson(
-      Map<String, dynamic>.from(
-        result! as Map,
-      ),
-    );
+    return Setting.fromJson(Map<String, dynamic>.from(result! as Map));
   }
 
   Future<Setting?> deleteSetting(String id) async {
     final result = await _db.delete(id);
 
     return result != null
-        ? Setting.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Setting.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 

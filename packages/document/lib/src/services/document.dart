@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -54,7 +53,8 @@ sealed class Document with _$Document {
 
   static const tableName = 'documents';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD compressedFileSize ON {prefix}_$tableName TYPE number;

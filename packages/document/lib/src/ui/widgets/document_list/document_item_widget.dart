@@ -7,10 +7,7 @@ import 'package:file_icon/file_icon.dart';
 import 'package:flutter/material.dart';
 
 class DocumentItemWidget extends StatelessWidget {
-  const DocumentItemWidget(
-    this.documentItem, {
-    super.key,
-  });
+  const DocumentItemWidget(this.documentItem, {super.key});
   final DocumentItem documentItem;
   static const int megaBytes = 1000 * 1000; // storage size
 
@@ -25,10 +22,7 @@ class DocumentItemWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
             child: Row(
               children: [
-                FileIcon(
-                  documentItem.item.name,
-                  size: 64,
-                ),
+                FileIcon(documentItem.item.name, size: 64),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,9 +42,7 @@ class DocumentItemWidget extends StatelessWidget {
                         children: [
                           Text(
                             '${fileSizeInMB.toStringAsFixed(2)} MB',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                           const SizedBox(width: 8),
                           Expanded(

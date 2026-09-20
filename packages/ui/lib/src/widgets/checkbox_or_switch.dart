@@ -57,10 +57,7 @@ class CheckboxOrSwitch extends StatelessWidget {
 
     // Determine which widget to display based on the screen width
     if (screenWidth < screenWidthBreakpoint) {
-      return Switch(
-        value: value,
-        onChanged: onChanged,
-      );
+      return Switch(value: value, onChanged: onChanged);
     } else {
       return Checkbox(
         value: value,

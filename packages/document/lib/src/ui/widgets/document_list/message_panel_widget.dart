@@ -15,16 +15,8 @@ class MessagePanelWidget extends StatelessWidget {
         child: Row(
           children: [
             if (icon != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: icon,
-              ),
-            Text(
-              message,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+              Padding(padding: const EdgeInsets.only(right: 8), child: icon),
+            Text(message, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),

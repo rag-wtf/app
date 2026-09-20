@@ -119,17 +119,10 @@ class MessageBar extends StatelessWidget {
           if (replying)
             Container(
               color: replyWidgetColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 16,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.reply,
-                    color: replyIconColor,
-                    size: 24,
-                  ),
+                  Icon(Icons.reply, color: replyIconColor, size: 24),
                   Expanded(
                     child: Text(
                       'Re : $replyingTo',
@@ -138,11 +131,7 @@ class MessageBar extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: onTapCloseReply,
-                    child: Icon(
-                      Icons.close,
-                      color: replyCloseColor,
-                      size: 24,
-                    ),
+                    child: Icon(Icons.close, color: replyCloseColor, size: 24),
                   ),
                 ],
               ),
@@ -150,18 +139,12 @@ class MessageBar extends StatelessWidget {
           else
             Container(),
           if (replying)
-            Container(
-              height: 1,
-              color: Colors.grey.shade300,
-            )
+            Container(height: 1, color: Colors.grey.shade300)
           else
             Container(),
           Container(
             color: messageBarColor,
-            padding: const EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 16,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: maxHeight),
               child: Row(
@@ -189,33 +172,31 @@ class MessageBar extends StatelessWidget {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: textFieldBorderRadius,
-                          borderSide: BorderSide(
-                            color: Colors.grey[700]!,
-                          ),
+                          borderSide: BorderSide(color: Colors.grey[700]!),
                         ),
                         prefixIcon: prefixIcon,
                         suffixIcon: isSendButtonBusy
                             ? onStop == null
-                                ? AvatarBrick(
-                                    isLoading: true,
-                                    size: Size(
-                                      sendButtonIconSize + 8,
-                                      sendButtonIconSize + 8,
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                  )
-                                : Padding(
-                                    padding: sendButtonMargin,
-                                    child: IconButton(
-                                      padding: sendButtonPadding,
-                                      onPressed: onStop,
-                                      icon: Icon(
-                                        Icons.stop_circle,
-                                        color: sendButtonColor,
-                                        size: sendButtonIconSize + 8,
+                                  ? AvatarBrick(
+                                      isLoading: true,
+                                      size: Size(
+                                        sendButtonIconSize + 8,
+                                        sendButtonIconSize + 8,
                                       ),
-                                    ),
-                                  )
+                                      backgroundColor: Colors.transparent,
+                                    )
+                                  : Padding(
+                                      padding: sendButtonMargin,
+                                      child: IconButton(
+                                        padding: sendButtonPadding,
+                                        onPressed: onStop,
+                                        icon: Icon(
+                                          Icons.stop_circle,
+                                          color: sendButtonColor,
+                                          size: sendButtonIconSize + 8,
+                                        ),
+                                      ),
+                                    )
                             : Padding(
                                 padding: sendButtonMargin,
                                 child: IconButton(

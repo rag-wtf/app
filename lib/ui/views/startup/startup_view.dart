@@ -20,11 +20,7 @@ class StartupView extends StackedView<StartupViewModel> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Logo(
-              darkLogo: darkLogo,
-              lightLogo: lightLogo,
-              size: 64,
-            ),
+            Logo(darkLogo: darkLogo, lightLogo: lightLogo, size: 64),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -47,10 +43,7 @@ class StartupView extends StackedView<StartupViewModel> {
   }
 
   @override
-  StartupViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      StartupViewModel();
+  StartupViewModel viewModelBuilder(BuildContext context) => StartupViewModel();
 
   @override
   void onViewModelReady(StartupViewModel viewModel) => SchedulerBinding.instance

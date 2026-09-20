@@ -34,8 +34,9 @@ class ConnectionSettingRepository {
   }
 
   Future<int> getConnectionCounter() async {
-    final connectionCounterFromStorage =
-        await _storage.read(key: connectionCounterKey);
+    final connectionCounterFromStorage = await _storage.read(
+      key: connectionCounterKey,
+    );
     final connectionCounter = connectionCounterFromStorage != null
         ? int.parse(connectionCounterFromStorage) + 1
         : 1;
@@ -107,8 +108,9 @@ class ConnectionSettingRepository {
     final connectionSettings = {
       for (final valueKey in _valueKeys)
         if (await _storage.containsKey(key: '${connectionKey}_$valueKey'))
-          '${connectionKey}_$valueKey':
-              await _storage.read(key: '${connectionKey}_$valueKey'),
+          '${connectionKey}_$valueKey': await _storage.read(
+            key: '${connectionKey}_$valueKey',
+          ),
     };
     return connectionSettings;
   }
@@ -142,19 +144,13 @@ class ConnectionSettingRepository {
     final compositeKey = '${connectionKey}_$key';
     if (await _storage.containsKey(key: compositeKey)) {
       await _storage.write(key: compositeKey, value: value);
-      return ConnectionSetting(
-        key: compositeKey,
-        value: value,
-      );
+      return ConnectionSetting(key: compositeKey, value: value);
     } else {
       return null;
     }
   }
 
-  Future<void> deleteConnectionSetting(
-    String connectionKey,
-    String key,
-  ) async {
+  Future<void> deleteConnectionSetting(String connectionKey, String key) async {
     if (!await isValidConnectionKey(connectionKey)) {
       throw ArgumentError('Invalid connectionKey: $connectionKey');
     }

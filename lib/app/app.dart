@@ -44,9 +44,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
     // chat package
     LazySingleton<ChatRepository>(classType: ChatRepository),
-    LazySingleton<ChatMessageRepository>(
-      classType: ChatMessageRepository,
-    ),
+    LazySingleton<ChatMessageRepository>(classType: ChatMessageRepository),
     LazySingleton<MessageRepository>(classType: MessageRepository),
     LazySingleton<MessageEmbeddingRepository>(
       classType: MessageEmbeddingRepository,
@@ -78,7 +76,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
     // analytics package
     LazySingleton<LoggerNavigatorObserver>(classType: LoggerNavigatorObserver),
-// @stacked-service
+    // @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
@@ -116,14 +114,8 @@ class App extends StatelessWidget {
         actionsIconTheme: IconThemeData(color: Colors.black),
       ),
       textTheme: const TextTheme(
-        bodyLarge: TextStyle(
-          color: Colors.black87,
-          fontSize: 16,
-        ),
-        bodyMedium: TextStyle(
-          color: Colors.black54,
-          fontSize: 14,
-        ),
+        bodyLarge: TextStyle(color: Colors.black87, fontSize: 16),
+        bodyMedium: TextStyle(color: Colors.black54, fontSize: 14),
       ),
       tabBarTheme: const TabBarThemeData(
         labelColor: Colors.blue,
@@ -149,14 +141,8 @@ class App extends StatelessWidget {
         actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
       textTheme: const TextTheme(
-        bodyLarge: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
-        bodyMedium: TextStyle(
-          color: Colors.white70,
-          fontSize: 14,
-        ),
+        bodyLarge: TextStyle(color: Colors.white, fontSize: 16),
+        bodyMedium: TextStyle(color: Colors.white70, fontSize: 14),
       ),
       tabBarTheme: const TabBarThemeData(
         labelColor: Colors.white,

@@ -9,10 +9,10 @@ import 'package:dio/dio.dart';
 class DioStreamResponseService extends StreamResponseService {
   final _uint8Transformer =
       StreamTransformer<Uint8List, List<int>>.fromHandlers(
-    handleData: (data, sink) {
-      sink.add(List<int>.from(data));
-    },
-  );
+        handleData: (data, sink) {
+          sink.add(List<int>.from(data));
+        },
+      );
   final dio = Dio();
   final cancelToken = CancelToken();
 
@@ -29,10 +29,7 @@ class DioStreamResponseService extends StreamResponseService {
     final response = await dio.post<ResponseBody>(
       url,
       data: body,
-      options: Options(
-        responseType: ResponseType.stream,
-        headers: headers,
-      ),
+      options: Options(responseType: ResponseType.stream, headers: headers),
       //onReceiveProgress: (count, total) => print('$count/$total'),
       cancelToken: cancelToken,
     );

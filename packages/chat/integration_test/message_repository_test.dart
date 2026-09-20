@@ -22,8 +22,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -67,8 +69,10 @@ void main({bool wasm = false}) {
       );
 
       // Act
-      final result =
-          await repository.createMessage(defaultTablePrefix, message);
+      final result = await repository.createMessage(
+        defaultTablePrefix,
+        message,
+      );
 
       // Assert
       expect(result.id, isNotNull);
@@ -120,8 +124,10 @@ void main({bool wasm = false}) {
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
-      final result =
-          await repository.createMessage(defaultTablePrefix, message);
+      final result = await repository.createMessage(
+        defaultTablePrefix,
+        message,
+      );
       final id = result.id;
 
       // Act
@@ -150,8 +156,10 @@ void main({bool wasm = false}) {
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
-      final created =
-          await repository.createMessage(defaultTablePrefix, message);
+      final created = await repository.createMessage(
+        defaultTablePrefix,
+        message,
+      );
 
       // Act
       const remark = 'remark1';
@@ -192,8 +200,10 @@ void main({bool wasm = false}) {
         type: MessageType.text,
         metadata: {'id': 'customId1'},
       );
-      final created =
-          await repository.createMessage(defaultTablePrefix, message);
+      final created = await repository.createMessage(
+        defaultTablePrefix,
+        message,
+      );
 
       // Act
       final result = await repository.deleteMessage(created.id!);

@@ -13,13 +13,13 @@ final StackedLocator locator = StackedLocator.instance;
   customMocks: [
     MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
     MockSpec<ChatApiService>(onMissingStub: OnMissingStub.returnDefault),
-// @stacked-mock-spec
+    // @stacked-mock-spec
   ],
 )
 void registerServices() {
   getAndRegisterNavigationService();
   getAndRegisterChatApiService();
-// @stacked-mock-register
+  // @stacked-mock-register
 }
 
 MockNavigationService getAndRegisterNavigationService() {

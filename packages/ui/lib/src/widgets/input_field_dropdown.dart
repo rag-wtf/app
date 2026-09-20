@@ -36,7 +36,7 @@ import 'package:ui/src/widgets/input_field.dart';
 /// - **hintText**: The hint text to display when the input is empty.
 /// - **labelText**: The label text to display above the input field.
 /// - **helperText**: An optional [String] to display as an info message below
-///   the input field on focus. 
+///   the input field on focus.
 /// - **controller**: The [TextEditingController] for the input field. Required.
 /// - **errorText**: The error text to display when the input is invalid.
 /// - **suffixIcon**: The icon to display at the end of the input field.
@@ -140,7 +140,7 @@ class InputFieldDropdown<T> extends StatelessWidget {
 
   /// An optional [String] to display as an info message below the input field
   /// on focus.
-  final String? helperText;    
+  final String? helperText;
 
   /// The controller for the input field. Required.
   final TextEditingController controller;
@@ -223,34 +223,35 @@ class InputFieldDropdown<T> extends StatelessWidget {
       prefixIcon: prefixIcon,
       suffixIcon: showPopupMenuButton
           ? isLoading
-              ? const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                )
-              : PopupMenuButton<T>(
-                  icon: Icon(suffixIcon),
-                  onOpened: onDropdownOpened,
-                  onCanceled: onDropdownClosed,
-                  onSelected: onSelected,
-                  itemBuilder: (context) {
-                    return items!.map((item) {
-                      return PopupMenuItem<T>(
-                        value: item,
-                        child: Text(
-                          getItemDisplayText?.call(item) ?? '',
-                          style: dropdownTextStyle ??
-                              Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      );
-                    }).toList();
-                  },
-                  constraints: BoxConstraints(maxHeight: dropdownMaxHeight),
-                  initialValue: defaultValue,
-                )
+                ? const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                : PopupMenuButton<T>(
+                    icon: Icon(suffixIcon),
+                    onOpened: onDropdownOpened,
+                    onCanceled: onDropdownClosed,
+                    onSelected: onSelected,
+                    itemBuilder: (context) {
+                      return items!.map((item) {
+                        return PopupMenuItem<T>(
+                          value: item,
+                          child: Text(
+                            getItemDisplayText?.call(item) ?? '',
+                            style:
+                                dropdownTextStyle ??
+                                Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      }).toList();
+                    },
+                    constraints: BoxConstraints(maxHeight: dropdownMaxHeight),
+                    initialValue: defaultValue,
+                  )
           : null,
       showClearTextButton: !showPopupMenuButton,
       enabled: enabled && !isLoading,

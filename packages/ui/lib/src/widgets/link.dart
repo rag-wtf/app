@@ -184,7 +184,8 @@ class Link extends StatelessWidget {
             : onDisabledTap,
         splashColor: splashColor,
         hoverColor: hoverColor,
-        mouseCursor: cursor ??
+        mouseCursor:
+            cursor ??
             (isEnabled ? SystemMouseCursors.click : SystemMouseCursors.basic),
         borderRadius: BorderRadius.circular(rippleRadius ?? 4),
         child: Container(
@@ -194,7 +195,8 @@ class Link extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: MouseRegion(
-            cursor: cursor ??
+            cursor:
+                cursor ??
                 (isEnabled
                     ? SystemMouseCursors.click
                     : SystemMouseCursors.basic),
@@ -204,18 +206,18 @@ class Link extends StatelessWidget {
               curve: hoverAnimationCurve ?? Curves.easeInOut,
               style: isEnabled
                   ? (hoverTextStyle ??
-                      textStyle ??
-                      TextStyle(
-                        color: Colors.blue,
-                        decoration: underlineByDefault
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                      ))
+                        textStyle ??
+                        TextStyle(
+                          color: Colors.blue,
+                          decoration: underlineByDefault
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
+                        ))
                   : (disabledTextStyle ??
-                      const TextStyle(
-                        color: Colors.grey,
-                        decoration: TextDecoration.lineThrough,
-                      )),
+                        const TextStyle(
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        )),
               child: Text(text),
             ),
           ),

@@ -17,12 +17,11 @@ class MessageEmbeddingRepository {
     return tables.containsKey('${tablePrefix}_${MessageEmbedding.tableName}');
   }
 
-  Future<void> createSchema(
-    String tablePrefix, [
-    Transaction? txn,
-  ]) async {
-    final sqlSchema =
-        MessageEmbedding.sqlSchema.replaceAll('{prefix}', tablePrefix);
+  Future<void> createSchema(String tablePrefix, [Transaction? txn]) async {
+    final sqlSchema = MessageEmbedding.sqlSchema.replaceAll(
+      '{prefix}',
+      tablePrefix,
+    );
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
 
@@ -36,25 +35,20 @@ class MessageEmbeddingRepository {
     final embeddingId =
         '${tablePrefix}_${Embedding.tableName}:${messageEmbedding.embeddingId}';
 
-    final sql = '''
+    final sql =
+        '''
 RELATE ONLY $messageId->${tablePrefix}_${MessageEmbedding.tableName}->$embeddingId
 SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.score};
 ''';
     if (txn == null) {
-      final result = await _db.query(
-        sql,
-      );
+      final result = await _db.query(sql);
 
       final map = result! as Map;
       map['messageId'] = map.remove('in');
       map['embeddingId'] = map.remove('out');
-      return MessageEmbedding.fromJson(
-        Map<String, dynamic>.from(map),
-      );
+      return MessageEmbedding.fromJson(Map<String, dynamic>.from(map));
     } else {
-      txn.query(
-        sql,
-      );
+      txn.query(sql);
       return messageEmbedding;
     }
   }
@@ -71,8 +65,8 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
       final fullEmbeddingTableName = '${tablePrefix}_${Embedding.tableName}';
       final embeddingId =
           messageEmbedding.embeddingId.startsWith(fullEmbeddingTableName)
-              ? messageEmbedding.embeddingId
-              : '$fullEmbeddingTableName:${messageEmbedding.embeddingId}';
+          ? messageEmbedding.embeddingId
+          : '$fullEmbeddingTableName:${messageEmbedding.embeddingId}';
       final fullTableName = '${tablePrefix}_${MessageEmbedding.tableName}';
       sqlBuffer.write('''
 RELATE ONLY $messageId->$fullTableName->$embeddingId
@@ -83,16 +77,12 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
     if (txn == null) {
       final results = (await _db.query(sqlBuffer.toString()))! as List;
 
-      return results.map(
-        (result) {
-          final map = result as Map;
-          map['messageId'] = map.remove('in');
-          map['embeddingId'] = map.remove('out');
-          return MessageEmbedding.fromJson(
-            Map<String, dynamic>.from(map),
-          );
-        },
-      ).toList();
+      return results.map((result) {
+        final map = result as Map;
+        map['messageId'] = map.remove('in');
+        map['embeddingId'] = map.remove('out');
+        return MessageEmbedding.fromJson(Map<String, dynamic>.from(map));
+      }).toList();
     } else {
       txn.query(sqlBuffer.toString());
       return messageEmbeddings;
@@ -109,7 +99,8 @@ SET searchType = '${messageEmbedding.searchType}', score = ${messageEmbedding.sc
     final messageRecordId = messageId.startsWith(messageTableName)
         ? messageId
         : '$messageTableName:$messageId';
-    final sql = '''
+    final sql =
+        '''
 LET \$message_embeddings = SELECT out AS id, score FROM $messageEmbeddingTableName 
 WHERE in = $messageRecordId
 ORDER BY score DESC;
@@ -119,27 +110,21 @@ SELECT * FROM \$message_embeddings.*.id;
 
     _log.d('sql $sql');
 
-    final results = (await _db.query(
-      sql,
-    ))! as List;
+    final results = (await _db.query(sql))! as List;
     if (results.isNotEmpty) {
       final messageEmbeddings = results[1] as List;
       final embeddings = results[2] as List;
 
-      return embeddings.asMap().entries.map(
-        (entry) {
-          final idx = entry.key;
-          final val = entry.value as Map;
-          final embedding = Embedding.fromJson(
-            Map<String, dynamic>.from(val),
-          );
-          return embedding.copyWith(
-            score: double.parse(
-              (messageEmbeddings[idx] as Map)['score'].toString(),
-            ),
-          );
-        },
-      ).toList();
+      return embeddings.asMap().entries.map((entry) {
+        final idx = entry.key;
+        final val = entry.value as Map;
+        final embedding = Embedding.fromJson(Map<String, dynamic>.from(val));
+        return embedding.copyWith(
+          score: double.parse(
+            (messageEmbeddings[idx] as Map)['score'].toString(),
+          ),
+        );
+      }).toList();
     } else {
       return List.empty();
     }

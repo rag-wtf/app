@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat.freezed.dart';
@@ -32,7 +31,8 @@ sealed class Chat with _$Chat {
 
   static const tableName = 'chats';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;

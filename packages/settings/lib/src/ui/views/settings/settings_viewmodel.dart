@@ -30,10 +30,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   final ConnectionSettingService _connectionSettingService =
       locator<ConnectionSettingService>();
   final AnalyticsFacade analyticsFacade = locator<AnalyticsFacade>();
-  final Future<String?> Function(
-    String tablePrefix,
-    String dimensions,
-  )? redefineEmbeddingIndexFunction;
+  final Future<String?> Function(String tablePrefix, String dimensions)?
+  redefineEmbeddingIndexFunction;
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_settingService];
@@ -79,10 +77,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   }
 
   Future<void> setAnalyticsEnabled(bool value) async {
-    await _settingService.setAnalyticsEnabled(
-      tablePrefix,
-      enabled: value,
-    );
+    await _settingService.setAnalyticsEnabled(tablePrefix, enabled: value);
     _analyticsEnabled = value;
   }
 
@@ -123,16 +118,11 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   }
 
   Future<void> initialise() async {
-    _log.d(
-      'tablePrefix: $tablePrefix, inPackage: $inPackage',
-    );
+    _log.d('tablePrefix: $tablePrefix, inPackage: $inPackage');
     setBusy(true);
     if (inPackage) {
       await connectDatabase();
-      await _settingService.initialise(
-        tablePrefix,
-        analyticsEnabled: true,
-      );
+      await _settingService.initialise(tablePrefix, analyticsEnabled: true);
     }
     _settingService.clearFormValuesFunction = clearFormValues;
     _stream = bool.parse(_settingService.get(streamKey).value);
@@ -172,8 +162,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsModelValue = embeddingsModel.value;
     }
 
-    final embeddingsModelContextLength =
-        _settingService.get(embeddingsModelContextLengthKey);
+    final embeddingsModelContextLength = _settingService.get(
+      embeddingsModelContextLengthKey,
+    );
     if (embeddingsModelContextLength.id != null) {
       embeddingsModelContextLengthValue = embeddingsModelContextLength.value;
     }
@@ -193,14 +184,16 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       embeddingsDimensionsValue = embeddingsDimensions.value;
     }
 
-    final embeddingsApiBatchSize =
-        _settingService.get(embeddingsApiBatchSizeKey);
+    final embeddingsApiBatchSize = _settingService.get(
+      embeddingsApiBatchSizeKey,
+    );
     if (embeddingsApiBatchSize.id != null) {
       embeddingsApiBatchSizeValue = embeddingsApiBatchSize.value;
     }
 
-    final embeddingsDatabaseBatchSize =
-        _settingService.get(embeddingsDatabaseBatchSizeKey);
+    final embeddingsDatabaseBatchSize = _settingService.get(
+      embeddingsDatabaseBatchSizeKey,
+    );
     if (embeddingsDatabaseBatchSize.id != null) {
       embeddingsDatabaseBatchSizeValue = embeddingsDatabaseBatchSize.value;
     }
@@ -230,8 +223,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
       generationModelValue = generationModel.value;
     }
 
-    final generationModelContextLength =
-        _settingService.get(generationModelContextLengthKey);
+    final generationModelContextLength = _settingService.get(
+      generationModelContextLengthKey,
+    );
     if (generationModelContextLength.id != null) {
       generationModelContextLengthValue = generationModelContextLength.value;
     }
@@ -323,21 +317,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> setSplitApiUrl() async {
     if (hasSplitApiUrl && !hasSplitApiUrlValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        splitApiUrlKey,
-        splitApiUrlValue!,
-      );
+      await _settingService.set(tablePrefix, splitApiUrlKey, splitApiUrlValue!);
     }
   }
 
   Future<void> setChunkSize() async {
     if (chunkSizeValue != null && !hasChunkSizeValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        chunkSizeKey,
-        chunkSizeValue!,
-      );
+      await _settingService.set(tablePrefix, chunkSizeKey, chunkSizeValue!);
     }
   }
 
@@ -404,8 +390,9 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   }
 
   Future<void> setEmbeddingsDimensions() async {
-    final embeddingsDimensions =
-        _settingService.get(embeddingsDimensionsKey).value;
+    final embeddingsDimensions = _settingService
+        .get(embeddingsDimensionsKey)
+        .value;
     if (embeddingsDimensionsValue != null &&
         embeddingsDimensionsValue!.isNotEmpty &&
         embeddingsDimensionsValue != embeddingsDimensions &&
@@ -456,21 +443,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> setSearchType() async {
     if (searchTypeValue != null && !hasSearchTypeValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        searchTypeKey,
-        searchTypeValue!,
-      );
+      await _settingService.set(tablePrefix, searchTypeKey, searchTypeValue!);
     }
   }
 
   Future<void> setSearchIndex() async {
     if (searchIndexValue != null && !hasSearchIndexValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        searchIndexKey,
-        searchIndexValue!,
-      );
+      await _settingService.set(tablePrefix, searchIndexKey, searchIndexValue!);
     }
   }
 
@@ -540,21 +519,13 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> setTemperature() async {
     if (temperatureValue != null && !hasTemperatureValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        temperatureKey,
-        temperatureValue!,
-      );
+      await _settingService.set(tablePrefix, temperatureKey, temperatureValue!);
     }
   }
 
   Future<void> setTopP() async {
     if (topPValue != null && !hasTopPValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        topPKey,
-        topPValue!,
-      );
+      await _settingService.set(tablePrefix, topPKey, topPValue!);
     }
   }
 
@@ -581,40 +552,24 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
 
   Future<void> setMaxTokens() async {
     if (maxTokensValue != null && !hasMaxTokensValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        maxTokensKey,
-        maxTokensValue!,
-      );
+      await _settingService.set(tablePrefix, maxTokensKey, maxTokensValue!);
     }
   }
 
   Future<void> setStop() async {
     if (stopValue != null && !hasStopValidationMessage) {
-      await _settingService.set(
-        tablePrefix,
-        stopKey,
-        stopValue!,
-      );
+      await _settingService.set(tablePrefix, stopKey, stopValue!);
     }
   }
 
   Future<void> setStream(bool value) async {
-    await _settingService.set(
-      tablePrefix,
-      streamKey,
-      value.toString(),
-    );
+    await _settingService.set(tablePrefix, streamKey, value.toString());
     _stream = value;
     unawaited(analyticsFacade.trackStreamingToggled(enabled: value));
   }
 
   Future<void> setLlmProvider(String value) async {
-    await _settingService.set(
-      tablePrefix,
-      llmProviderKey,
-      value,
-    );
+    await _settingService.set(tablePrefix, llmProviderKey, value);
     if (value.isNotEmpty) {
       unawaited(analyticsFacade.trackLlmProviderSelected(value));
       final llmProvider = llmProviderSelected!;
@@ -709,8 +664,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
           frequencyPenaltyKey,
           llmProvider.chatCompletions.frequencyPenalty.toString(),
         );
-        frequencyPenaltyValue =
-            llmProvider.chatCompletions.frequencyPenalty.toString();
+        frequencyPenaltyValue = llmProvider.chatCompletions.frequencyPenalty
+            .toString();
       }
       await setFrequencyPenaltyEnabled(
         llmProvider.chatCompletions.frequencyPenaltyEnabled,
@@ -722,19 +677,15 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
           presencePenaltyKey,
           llmProvider.chatCompletions.presencePenalty.toString(),
         );
-        presencePenaltyValue =
-            llmProvider.chatCompletions.presencePenalty.toString();
+        presencePenaltyValue = llmProvider.chatCompletions.presencePenalty
+            .toString();
       }
       await setPresencePenaltyEnabled(
         llmProvider.chatCompletions.presencePenaltyEnabled,
       );
 
       final stop = llmProvider.chatCompletions.stop.join(',');
-      await _settingService.set(
-        tablePrefix,
-        stopKey,
-        stop,
-      );
+      await _settingService.set(tablePrefix, stopKey, stop);
       stopValue = stop;
     }
   }
@@ -748,24 +699,18 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         generationModelContextLengthKey,
         generationModel.contextLength.toString(),
       );
-      generationModelContextLengthValue =
-          generationModel.contextLength.toString();
+      generationModelContextLengthValue = generationModel.contextLength
+          .toString();
     }
   }
 
-  Future<void> setStopWith(
-    ChatModel generationModel,
-  ) async {
+  Future<void> setStopWith(ChatModel generationModel) async {
     if (generationModel.name != 'null' && generationModel.stop != null) {
       final stop = generationModel.stop!.join(',');
-      await _settingService.set(
-        tablePrefix,
-        stopKey,
-        stop,
-      );
+      await _settingService.set(tablePrefix, stopKey, stop);
       stopValue = stop;
     }
-  }  
+  }
 
   Future<void> setEmbeddingsModelContextLengthAndDimensions(
     EmbeddingModel embeddingModel,
@@ -776,16 +721,16 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
         embeddingsModelContextLengthKey,
         embeddingModel.contextLength.toString(),
       );
-      embeddingsModelContextLengthValue =
-          embeddingModel.contextLength.toString();
+      embeddingsModelContextLengthValue = embeddingModel.contextLength
+          .toString();
     }
 
     if (embeddingModel.name != 'null' &&
         llmProviderSelected?.embeddings.model != embeddingModel.name) {
       embeddingsDimensionsValue = embeddingModel.dimensions.toString();
     } else if (llmProviderSelected?.embeddings.dimensions != null) {
-      embeddingsDimensionsValue =
-          llmProviderSelected!.embeddings.dimensions.toString();
+      embeddingsDimensionsValue = llmProviderSelected!.embeddings.dimensions
+          .toString();
     }
     await setEmbeddingsDimensions();
   }
@@ -793,9 +738,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   Future<void> onEmbeddingModelSelected(EmbeddingModel model) async {
     _log.d(model);
     if (model.name != embeddingsModelValue) {
-      unawaited(
-        analyticsFacade.trackEmbeddingModelSelected(model.name),
-      );
+      unawaited(analyticsFacade.trackEmbeddingModelSelected(model.name));
       String? redefineEmbeddingIndexError;
       if (redefineEmbeddingIndexFunction != null) {
         redefineEmbeddingIndexError = await redefineEmbeddingIndexFunction!(
@@ -809,11 +752,7 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
             redefineEmbeddingIndexError.replaceFirst('dimensions', 'model');
         notifyListeners();
       } else {
-        await _settingService.set(
-          tablePrefix,
-          embeddingsModelKey,
-          model.name,
-        );
+        await _settingService.set(tablePrefix, embeddingsModelKey, model.name);
         embeddingsModelValue = model.name;
         await setEmbeddingsModelContextLengthAndDimensions(model);
       }
@@ -823,14 +762,8 @@ class SettingsViewModel extends ReactiveViewModel with FormStateHelper {
   Future<void> onGenerationModelSelected(ChatModel model) async {
     _log.d(model);
     if (model.name != generationModelValue) {
-      unawaited(
-        analyticsFacade.trackGenerationModelSelected(model.name),
-      );      
-      await _settingService.set(
-        tablePrefix,
-        generationModelKey,
-        model.name,
-      );
+      unawaited(analyticsFacade.trackGenerationModelSelected(model.name));
+      await _settingService.set(tablePrefix, generationModelKey, model.name);
       generationModelValue = model.name;
 
       await setGenerationModelContextLengthWith(model);

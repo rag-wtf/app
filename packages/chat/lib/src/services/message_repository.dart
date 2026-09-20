@@ -59,17 +59,14 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     Transaction? txn,
   ]) async {
     final payload = message.toJson();
-    final sql = '''
+    final sql =
+        '''
 CREATE ONLY ${tablePrefix}_${Message.tableName} 
 CONTENT ${jsonEncode(payload)};''';
     if (txn == null) {
       final result = await _db.query(sql);
 
-      return Message.fromJson(
-        Map<String, dynamic>.from(
-          result! as Map,
-        ),
-      );
+      return Message.fromJson(Map<String, dynamic>.from(result! as Map));
     } else {
       txn.query(sql);
       return message;
@@ -77,15 +74,13 @@ CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<List<Message>> getAllMessages(String tablePrefix) async {
-    final results = (await _db
-        .query('SELECT * FROM ${tablePrefix}_${Message.tableName}'))! as List;
+    final results =
+        (await _db.query('SELECT * FROM ${tablePrefix}_${Message.tableName}'))!
+            as List;
     return results
         .map(
-          (result) => Message.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          ),
+          (result) =>
+              Message.fromJson(Map<String, dynamic>.from(result as Map)),
         )
         .toList();
   }
@@ -94,11 +89,7 @@ CONTENT ${jsonEncode(payload)};''';
     final result = await _db.select(id);
 
     return result != null
-        ? Message.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Message.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 
@@ -120,11 +111,7 @@ CONTENT ${jsonEncode(payload)};''';
     _log.i('sql $sql');
     if (txn == null) {
       final result = await _db.query(sql);
-      return Message.fromJson(
-        Map<String, dynamic>.from(
-          result! as Map,
-        ),
-      );
+      return Message.fromJson(Map<String, dynamic>.from(result! as Map));
     } else {
       txn.query(sql);
       return null;
@@ -135,11 +122,7 @@ CONTENT ${jsonEncode(payload)};''';
     final result = await _db.delete(id);
 
     return result != null
-        ? Message.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Message.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 

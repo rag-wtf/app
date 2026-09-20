@@ -34,9 +34,9 @@ import 'package:ui/src/constants.dart';
 ///   input field.
 /// - [isDense]: An optional [bool] to determine if the input field should be
 ///   dense.
-/// - [verticalPadding]: An optional double to determine the vertical padding 
+/// - [verticalPadding]: An optional double to determine the vertical padding
 ///   of the input field. Defaults to `8`.
-/// 
+///
 /// ### State Management:
 ///
 /// The visibility of the password text is managed internally by the widget.
@@ -87,9 +87,9 @@ class PasswordField extends StatefulWidget {
   /// An optional [bool] to determine if the input field should be dense.
   final bool? isDense;
 
-  /// An optional double to determine the vertical padding of the input field. 
+  /// An optional double to determine the vertical padding of the input field.
   /// Defaults to `8`.
-  final double verticalPadding;  
+  final double verticalPadding;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -126,13 +126,13 @@ class _PasswordFieldState extends State<PasswordField> {
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 helperText:
                     Focus.of(context).hasFocus && widget.helperText != null
-                        ? widget.helperText
-                        : null,
+                    ? widget.helperText
+                    : null,
                 helperMaxLines: defaultHelperMaxLines,
                 hintText: widget.hintText,
-                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                hintStyle: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 prefixIcon: widget.prefixIcon,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),

@@ -25,8 +25,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -42,14 +44,8 @@ void main({bool wasm = false}) {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(
-        await messageRepository.isSchemaCreated(tablePrefix),
-        isFalse,
-      );
-      expect(
-        await embeddingRepository.isSchemaCreated(tablePrefix),
-        isFalse,
-      );
+      expect(await messageRepository.isSchemaCreated(tablePrefix), isFalse);
+      expect(await embeddingRepository.isSchemaCreated(tablePrefix), isFalse);
       expect(
         await messageEmbeddingRepository.isSchemaCreated(tablePrefix),
         isFalse,
@@ -58,36 +54,25 @@ void main({bool wasm = false}) {
 
     test('should create schemas and return true', () async {
       // Act
-      await db.transaction(
-        (txn) async {
-          if (!await messageRepository.isSchemaCreated(tablePrefix)) {
-            await messageRepository.createSchema(
-              tablePrefix,
-              defaultEmbeddingsDimensions,
-              txn,
-            );
-          }
-          if (!await embeddingRepository.isSchemaCreated(tablePrefix)) {
-            await embeddingRepository.createSchema(tablePrefix, '384', txn);
-          }
-          if (!await messageEmbeddingRepository.isSchemaCreated(tablePrefix)) {
-            await messageEmbeddingRepository.createSchema(
-              tablePrefix,
-              txn,
-            );
-          }
-        },
-      );
+      await db.transaction((txn) async {
+        if (!await messageRepository.isSchemaCreated(tablePrefix)) {
+          await messageRepository.createSchema(
+            tablePrefix,
+            defaultEmbeddingsDimensions,
+            txn,
+          );
+        }
+        if (!await embeddingRepository.isSchemaCreated(tablePrefix)) {
+          await embeddingRepository.createSchema(tablePrefix, '384', txn);
+        }
+        if (!await messageEmbeddingRepository.isSchemaCreated(tablePrefix)) {
+          await messageEmbeddingRepository.createSchema(tablePrefix, txn);
+        }
+      });
 
       // Assert
-      expect(
-        await messageRepository.isSchemaCreated(tablePrefix),
-        isTrue,
-      );
-      expect(
-        await embeddingRepository.isSchemaCreated(tablePrefix),
-        isTrue,
-      );
+      expect(await messageRepository.isSchemaCreated(tablePrefix), isTrue);
+      expect(await embeddingRepository.isSchemaCreated(tablePrefix), isTrue);
       expect(
         await messageEmbeddingRepository.isSchemaCreated(tablePrefix),
         isTrue,
@@ -111,30 +96,20 @@ void main({bool wasm = false}) {
     );
 
     // Act
-    final txnResults = await db.transaction(
-      (txn) async {
-        await messageRepository.createMessage(
-          tablePrefix,
-          message,
-          txn,
-        );
-        await embeddingRepository.createEmbedding(
-          tablePrefix,
-          embedding,
-          txn,
-        );
-        await messageEmbeddingRepository.createMessageEmbedding(
-          tablePrefix,
-          MessageEmbedding(
-            messageId: message.id!,
-            embeddingId: embedding.id!,
-            score: 0,
-            searchType: defaultSearchType,
-          ),
-          txn,
-        );
-      },
-    );
+    final txnResults = await db.transaction((txn) async {
+      await messageRepository.createMessage(tablePrefix, message, txn);
+      await embeddingRepository.createEmbedding(tablePrefix, embedding, txn);
+      await messageEmbeddingRepository.createMessageEmbedding(
+        tablePrefix,
+        MessageEmbedding(
+          messageId: message.id!,
+          embeddingId: embedding.id!,
+          score: 0,
+          searchType: defaultSearchType,
+        ),
+        txn,
+      );
+    });
 
     // Assert
     final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
@@ -200,25 +175,15 @@ void main({bool wasm = false}) {
       );
     }
     // Act
-    final txnResults = await db.transaction(
-      (txn) async {
-        await messageRepository.createMessage(
-          tablePrefix,
-          message,
-          txn,
-        );
-        await embeddingRepository.createEmbeddings(
-          tablePrefix,
-          embeddings,
-          txn,
-        );
-        await messageEmbeddingRepository.createMessageEmbeddings(
-          tablePrefix,
-          messageEmbeddings,
-          txn,
-        );
-      },
-    );
+    final txnResults = await db.transaction((txn) async {
+      await messageRepository.createMessage(tablePrefix, message, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings, txn);
+      await messageEmbeddingRepository.createMessageEmbeddings(
+        tablePrefix,
+        messageEmbeddings,
+        txn,
+      );
+    });
 
     // Assert
     final results = txnResults! as List;
@@ -314,40 +279,22 @@ void main({bool wasm = false}) {
       );
     }
     // Act
-    final txnResults = await db.transaction(
-      (txn) async {
-        await messageRepository.createMessage(
-          tablePrefix,
-          message1,
-          txn,
-        );
-        await messageRepository.createMessage(
-          tablePrefix,
-          message2,
-          txn,
-        );
-        await embeddingRepository.createEmbeddings(
-          tablePrefix,
-          embeddings1,
-          txn,
-        );
-        await embeddingRepository.createEmbeddings(
-          tablePrefix,
-          embeddings2,
-          txn,
-        );
-        await messageEmbeddingRepository.createMessageEmbeddings(
-          tablePrefix,
-          messageEmbeddings1,
-          txn,
-        );
-        await messageEmbeddingRepository.createMessageEmbeddings(
-          tablePrefix,
-          messageEmbeddings2,
-          txn,
-        );
-      },
-    );
+    final txnResults = await db.transaction((txn) async {
+      await messageRepository.createMessage(tablePrefix, message1, txn);
+      await messageRepository.createMessage(tablePrefix, message2, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings1, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings2, txn);
+      await messageEmbeddingRepository.createMessageEmbeddings(
+        tablePrefix,
+        messageEmbeddings1,
+        txn,
+      );
+      await messageEmbeddingRepository.createMessageEmbeddings(
+        tablePrefix,
+        messageEmbeddings2,
+        txn,
+      );
+    });
 
     // Assert
     final results = txnResults! as List;

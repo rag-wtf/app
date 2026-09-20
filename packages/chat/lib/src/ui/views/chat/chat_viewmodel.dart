@@ -24,17 +24,9 @@ class ChatViewModel extends ReactiveViewModel {
 
   bool get isStreaming => _chatService.isStreaming;
 
-  Future<void> addMessage(
-    String authorId,
-    String text,
-  ) async {
+  Future<void> addMessage(String authorId, String text) async {
     _log.d('addMessage($authorId, $text)');
-    await _chatService.addMessage(
-      tablePrefix,
-      authorId,
-      Role.user,
-      text,
-    );
+    await _chatService.addMessage(tablePrefix, authorId, Role.user, text);
   }
 
   Future<void> fetchMessages() async {

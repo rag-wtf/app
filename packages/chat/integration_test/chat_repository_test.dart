@@ -20,8 +20,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -52,9 +54,7 @@ void main({bool wasm = false}) {
   group('createChat', () {
     test('should create chat', () async {
       // Arrange
-      const chat = Chat(
-        name: 'name1',
-      );
+      const chat = Chat(name: 'name1');
 
       // Act
       final result = await repository.createChat(defaultTablePrefix, chat);
@@ -71,18 +71,12 @@ void main({bool wasm = false}) {
     test('should return a list of chats', () async {
       // Arrange
       final chats = [
-        const Chat(
-          name: 'name1',
-        ).toJson(),
-        const Chat(
-          name: 'name2',
-        ).toJson(),
+        const Chat(name: 'name1').toJson(),
+        const Chat(name: 'name2').toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Chat.tableName}');
-      await db.query(
-        '''
-INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
-      );
+      await db.query('''
+INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''');
 
       // Act
       final result = await repository.getAllChats(defaultTablePrefix);
@@ -96,10 +90,7 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
     test('should return a chat by id', () async {
       // Arrange
       final metadata = {'field': 'value'};
-      final chat = Chat(
-        name: 'name1',
-        metadata: metadata,
-      );
+      final chat = Chat(name: 'name1', metadata: metadata);
       final result = await repository.createChat(defaultTablePrefix, chat);
       final id = result.id;
 
@@ -123,9 +114,7 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
   group('updateChat', () {
     test('should update chat', () async {
       // Arrange
-      const chat = Chat(
-        name: 'name1',
-      );
+      const chat = Chat(name: 'name1');
       final created = await repository.createChat(defaultTablePrefix, chat);
 
       // Act
@@ -156,9 +145,7 @@ INSERT INTO ${defaultTablePrefix}_${Chat.tableName} ${jsonEncode(chats)}''',
   group('deleteChat', () {
     test('should delete chat', () async {
       // Arrange
-      const chat = Chat(
-        name: 'name1',
-      );
+      const chat = Chat(name: 'name1');
       final created = await repository.createChat(defaultTablePrefix, chat);
 
       // Act

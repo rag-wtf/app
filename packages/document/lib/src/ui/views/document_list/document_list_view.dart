@@ -43,9 +43,7 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
           Expanded(
             child: Stack(
               children: [
-                DocumentListWidget(
-                  viewModel: viewModel,
-                ),
+                DocumentListWidget(viewModel: viewModel),
                 if (viewModel.items.isEmpty)
                   DocumentUploadZoneWidget(
                     icon: const Icon(
@@ -78,13 +76,8 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   }
 
   @override
-  DocumentListViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      DocumentListViewModel(
-        tablePrefix,
-        inPackage: inPackage,
-      );
+  DocumentListViewModel viewModelBuilder(BuildContext context) =>
+      DocumentListViewModel(tablePrefix, inPackage: inPackage);
 
   @override
   Future<void> onViewModelReady(DocumentListViewModel viewModel) async {
@@ -94,15 +87,13 @@ class DocumentListView extends StackedView<DocumentListViewModel> {
   Future<Document?> pickFile(DocumentListViewModel viewModel) async {
     final allowedExtensions = viewModel.splitConfig != null
         ? viewModel.splitConfig!.supportedFileTypes
-            .map((mimeType) => extensionFromMime(mimeType) ?? 'null')
-            .toList()
+              .map((mimeType) => extensionFromMime(mimeType) ?? 'null')
+              .toList()
         : defaultAllowedExtensions.split(',');
-    debugPrint(
-      '''
+    debugPrint('''
 supportedFileTypes ${viewModel.splitConfig?.supportedFileTypes}
 allowedExtensions $allowedExtensions
-''',
-    );
+''');
     final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: allowedExtensions,

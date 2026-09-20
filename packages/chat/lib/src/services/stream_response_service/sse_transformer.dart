@@ -37,8 +37,9 @@ class SseEventSink implements EventSink<String> {
       return;
     }
     if (event.isEmpty) {
-      _eventSink
-          .add(SseMessage(id: _id, event: _event, data: _data, retry: _retry));
+      _eventSink.add(
+        SseMessage(id: _id, event: _event, data: _data, retry: _retry),
+      );
       _id = null;
       _event = 'message';
       _data = '';

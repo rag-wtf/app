@@ -63,14 +63,11 @@ class ConnectionDialogModel extends FormViewModel {
     setBusy(true);
     await _clearForm();
     connectionKeySelected = newConnectionKey;
-    connectionNames =
-        await _connectionSettingRepository.getAllConnectionNames();
+    connectionNames = await _connectionSettingRepository
+        .getAllConnectionNames();
     connectionNames.insert(
       0,
-      const ConnectionSetting(
-        key: newConnectionKey,
-        value: newConnectionName,
-      ),
+      const ConnectionSetting(key: newConnectionKey, value: newConnectionName),
     );
     setBusy(false);
   }
@@ -96,18 +93,18 @@ class ConnectionDialogModel extends FormViewModel {
       if (connectionSettings.isNotEmpty) {
         nameValue =
             connectionSettings['${connectionKey}_${ConnectionSetting.nameKey}'];
-        _protocol = connectionSettings[
-            '${connectionKey}_${ConnectionSetting.protocolKey}']!;
-        addressPortValue = connectionSettings[
-            '${connectionKey}_${ConnectionSetting.addressPortKey}'];
-        namespaceValue = connectionSettings[
-            '${connectionKey}_${ConnectionSetting.namespaceKey}'];
-        databaseValue = connectionSettings[
-            '${connectionKey}_${ConnectionSetting.databaseKey}'];
-        usernameValue = connectionSettings[
-            '${connectionKey}_${ConnectionSetting.usernameKey}'];
-        passwordValue = connectionSettings[
-            '${connectionKey}_${ConnectionSetting.passwordKey}'];
+        _protocol =
+            connectionSettings['${connectionKey}_${ConnectionSetting.protocolKey}']!;
+        addressPortValue =
+            connectionSettings['${connectionKey}_${ConnectionSetting.addressPortKey}'];
+        namespaceValue =
+            connectionSettings['${connectionKey}_${ConnectionSetting.namespaceKey}'];
+        databaseValue =
+            connectionSettings['${connectionKey}_${ConnectionSetting.databaseKey}'];
+        usernameValue =
+            connectionSettings['${connectionKey}_${ConnectionSetting.usernameKey}'];
+        passwordValue =
+            connectionSettings['${connectionKey}_${ConnectionSetting.passwordKey}'];
       }
     }
   }
@@ -119,9 +116,9 @@ class ConnectionDialogModel extends FormViewModel {
     }
     var validationMessage =
         ConnectionDialogValidators.validateNamespaceOrDatabaseValue(
-      namespaceValue,
-      databaseValue,
-    );
+          namespaceValue,
+          databaseValue,
+        );
     if (validationMessage != null && validationMessage.isNotEmpty) {
       fieldsValidationMessages[NamespaceValueKey] = validationMessage;
       notifyListeners();
@@ -164,8 +161,9 @@ class ConnectionDialogModel extends FormViewModel {
         }
         return true;
       case 'indxdb':
-        validationMessage =
-            ConnectionDialogValidators.validateDatabaseName(addressPortValue);
+        validationMessage = ConnectionDialogValidators.validateDatabaseName(
+          addressPortValue,
+        );
         if (validationMessage != null && validationMessage.isNotEmpty) {
           fieldsValidationMessages[AddressPortValueKey] = validationMessage;
           notifyListeners();
@@ -265,8 +263,9 @@ class ConnectionDialogModel extends FormViewModel {
 
   Future<void> delete() async {
     if (connectionKeySelected != newConnectionKey) {
-      await _connectionSettingRepository
-          .deleteConnectionSettings(connectionKeySelected);
+      await _connectionSettingRepository.deleteConnectionSettings(
+        connectionKeySelected,
+      );
       connectionNames.removeWhere(
         (connectionSetting) =>
             connectionSetting.key.startsWith(connectionKeySelected),

@@ -39,10 +39,7 @@ class RetrievalSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Search Threshold',
-          prefixIcon: Icon(
-            Icons.manage_search_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.manage_search_outlined, color: iconColor),
           helperText: searchThresholdInfoText,
           hintText: '0.5 to 0.9',
           errorText: viewModel.searchThresholdValidationMessage,
@@ -52,10 +49,7 @@ class RetrievalSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Top N',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: topNResultsInfoText,
           hintText: '1 to 30',
           errorText: viewModel.retrieveTopNResultsValidationMessage,

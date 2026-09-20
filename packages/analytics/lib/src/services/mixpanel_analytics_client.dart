@@ -143,10 +143,7 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
 
   @override
   Future<void> trackLlmProviderSelected(String id) async {
-    await _mixpanel.track(
-      'LLM Provider Selected',
-      properties: {'id': id},
-    );
+    await _mixpanel.track('LLM Provider Selected', properties: {'id': id});
   }
 
   @override
@@ -187,9 +184,6 @@ class MixpanelAnalyticsClient implements AnalyticsClient {
 
   @override
   Future<void> trackUrlOpened(Uri url) async {
-    await _mixpanel.track(
-      'Url Opened',
-      properties: {'url': url.toString()},
-    );
-  }   
+    await _mixpanel.track('Url Opened', properties: {'url': url.toString()});
+  }
 }

@@ -69,16 +69,11 @@ class AdaptiveDialog extends StatelessWidget {
         MediaQuery.sizeOf(context).width < fullScreenWidthBreakpoint;
 
     if (showFullScreen) {
-      return Dialog.fullscreen(
-        child: child,
-      );
+      return Dialog.fullscreen(child: child);
     } else {
       return Dialog(
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: maxHeight,
-            maxWidth: maxWidth,
-          ),
+          constraints: BoxConstraints(maxHeight: maxHeight, maxWidth: maxWidth),
           child: child,
         ),
       );

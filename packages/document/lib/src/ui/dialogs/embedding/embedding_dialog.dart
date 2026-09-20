@@ -52,8 +52,9 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
               children: [
                 Text(
                   request.title ??
-                      idController.text
-                          .substring(idController.text.indexOf(':') + 1),
+                      idController.text.substring(
+                        idController.text.indexOf(':') + 1,
+                      ),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
@@ -151,9 +152,7 @@ class EmbeddingDialog extends StackedView<EmbeddingDialogModel>
   }
 
   @override
-  EmbeddingDialogModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  EmbeddingDialogModel viewModelBuilder(BuildContext context) =>
       EmbeddingDialogModel();
 
   @override

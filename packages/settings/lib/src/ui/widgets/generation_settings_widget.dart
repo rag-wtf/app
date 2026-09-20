@@ -54,17 +54,15 @@ class GenerationSettingsWidget extends StatelessWidget {
     final modelLabel = generationModelProvider?.name != null
         ? 'Model of ${generationModelProvider?.name}'
         : 'Model';
-    final generationModelApiKeyUrl = generationModelProvider?.apiKeyUrl ??
-        viewModel.llmProviderSelected?.apiKeyUrl;      
+    final generationModelApiKeyUrl =
+        generationModelProvider?.apiKeyUrl ??
+        viewModel.llmProviderSelected?.apiKeyUrl;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InputFieldDropdown<ChatModel>(
           labelText: modelLabel,
-          prefixIcon: Icon(
-            Icons.api_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.api_outlined, color: iconColor),
           helperText: generationModelInfoText,
           hintText: 'gpt-4o-mini',
           errorText: viewModel.generationModelValidationMessage,
@@ -88,14 +86,11 @@ class GenerationSettingsWidget extends StatelessWidget {
             onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
           ),
           verticalSpaceTiny,
-        ],       
+        ],
         InputField(
           isDense: isDense,
           labelText: 'Context Length',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: generationContextLengthInfoText,
           hintText: defaultGenerationModelContextLength,
           errorText: viewModel.generationModelContextLengthValidationMessage,
@@ -105,10 +100,7 @@ class GenerationSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'API URL',
-          prefixIcon: Icon(
-            Icons.http_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.http_outlined, color: iconColor),
           helperText: generationApiUrlInfoText,
           hintText: 'https://api.openai.com/v1/chat/completions',
           errorText: viewModel.generationApiUrlValidationMessage,
@@ -118,34 +110,25 @@ class GenerationSettingsWidget extends StatelessWidget {
         PasswordField(
           isDense: isDense,
           labelText: 'API Key',
-          prefixIcon: Icon(
-            Icons.key_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.key_outlined, color: iconColor),
           helperText: generationApiKeyInfoText,
           hintText: '*' * 48,
           errorText: viewModel.generationApiKeyValidationMessage,
           controller: generationApiKeyController,
         ),
         if (viewModel.llmProviderSelected != null &&
-            generationModelApiKeyUrl != null)
-          ...[
+            generationModelApiKeyUrl != null) ...[
           Link(
-            url: Uri.parse(
-              generationModelApiKeyUrl + defaultUtmParams,
-            ),
+            url: Uri.parse(generationModelApiKeyUrl + defaultUtmParams),
             text: getApiKeyText,
             onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
           ),
           verticalSpaceTiny,
-        ],        
+        ],
         InputField(
           isDense: isDense,
           labelText: 'Max Tokens',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: maxTokensInfoText,
           hintText: 'Half of the Context Length',
           errorText: viewModel.maxTokensValidationMessage,
@@ -155,10 +138,7 @@ class GenerationSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Temperature',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: temperatureInfoText,
           hintText: '0 to 1',
           errorText: viewModel.temperatureValidationMessage,
@@ -168,10 +148,7 @@ class GenerationSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Top P',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: topPInfoText,
           hintText: '0 to 1',
           errorText: viewModel.topPValidationMessage,
@@ -181,10 +158,7 @@ class GenerationSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Stop',
-          prefixIcon: Icon(
-            Icons.stop_circle_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.stop_circle_outlined, color: iconColor),
           helperText: stopSequenceInfoText,
           hintText: 'User,</s>',
           errorText: viewModel.stopValidationMessage,
@@ -196,10 +170,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           isDense: isDense,
           labelText: 'Frequency Penalty',
           helperText: frequencyPenaltyInfoText,
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           suffixIcon: CheckboxOrSwitch(
             value: viewModel.frequencyPenaltyEnabled,
             onChanged: (value) async {
@@ -216,10 +187,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           isDense: isDense,
           labelText: 'Presence Penalty',
           helperText: presencePenaltyInfoText,
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           suffixIcon: CheckboxOrSwitch(
             value: viewModel.presencePenaltyEnabled,
             onChanged: (value) async {
@@ -254,10 +222,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           ),
         ),
         ListTile(
-          leading: Icon(
-            Icons.edit_note_outlined,
-            color: iconColor,
-          ),
+          leading: Icon(Icons.edit_note_outlined, color: iconColor),
           title: Text(
             'Edit System Prompt',
             style: Theme.of(context).textTheme.titleMedium,
@@ -265,10 +230,7 @@ class GenerationSettingsWidget extends StatelessWidget {
           onTap: showSystemPromptDialogFunction,
         ),
         ListTile(
-          leading: Icon(
-            Icons.edit_note_outlined,
-            color: iconColor,
-          ),
+          leading: Icon(Icons.edit_note_outlined, color: iconColor),
           title: Text(
             'Edit Prompt Template',
             style: Theme.of(context).textTheme.titleMedium,

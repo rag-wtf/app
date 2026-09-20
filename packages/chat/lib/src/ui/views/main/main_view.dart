@@ -14,21 +14,14 @@ class MainView extends StackedView<MainViewModel> {
   final bool inPackage;
 
   @override
-  Widget builder(
-    BuildContext context,
-    MainViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, MainViewModel viewModel, Widget? child) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
           : Row(
               children: [
-                const Flexible(
-                  flex: 4,
-                  child: ChatListView(),
-                ),
+                const Flexible(flex: 4, child: ChatListView()),
                 Flexible(
                   flex: 6,
                   child: ChatView(
@@ -42,9 +35,7 @@ class MainView extends StackedView<MainViewModel> {
   }
 
   @override
-  MainViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  MainViewModel viewModelBuilder(BuildContext context) =>
       MainViewModel(tablePrefix, inPackage: inPackage);
 
   @override

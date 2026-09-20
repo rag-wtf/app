@@ -68,11 +68,7 @@ class TooltipLabel extends StatelessWidget {
             message: tooltipMessage,
             preferBelow: tooltipBehavior?.preferBelow ?? true,
             verticalOffset: tooltipBehavior?.verticalOffset ?? 20.0,
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: iconSize,
-            ),
+            child: Icon(icon, color: iconColor, size: iconSize),
           ),
         ),
       ],
@@ -84,10 +80,7 @@ class TooltipLabel extends StatelessWidget {
 /// the icon and the vertical offset from the icon.
 class TooltipBehavior {
   /// Creates a [TooltipBehavior].
-  TooltipBehavior({
-    this.preferBelow = true,
-    this.verticalOffset = 20.0,
-  });
+  TooltipBehavior({this.preferBelow = true, this.verticalOffset = 20.0});
 
   /// Whether the tooltip should appear below the icon.
   ///

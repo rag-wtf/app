@@ -16,8 +16,9 @@ class MarkdownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final config =
-        isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    final config = isDark
+        ? MarkdownConfig.darkConfig
+        : MarkdownConfig.defaultConfig;
     const codeWrapper = CodeWrapperWidget.new;
 
     return MarkdownBlock(
@@ -26,9 +27,7 @@ class MarkdownWidget extends StatelessWidget {
       config: config.copy(
         configs: [
           if (isDark)
-            PreConfig.darkConfig.copy(
-              wrapper: codeWrapper,
-            )
+            PreConfig.darkConfig.copy(wrapper: codeWrapper)
           else
             const PreConfig().copy(wrapper: codeWrapper),
           PConfig(textStyle: textStyle),

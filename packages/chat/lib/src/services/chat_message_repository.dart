@@ -17,10 +17,7 @@ class ChatMessageRepository {
     return tables.containsKey('${tablePrefix}_${ChatMessage.tableName}');
   }
 
-  Future<void> createSchema(
-    String tablePrefix, [
-    Transaction? txn,
-  ]) async {
+  Future<void> createSchema(String tablePrefix, [Transaction? txn]) async {
     final sqlSchema = ChatMessage.sqlSchema.replaceAll('{prefix}', tablePrefix);
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
   }
@@ -37,20 +34,14 @@ class ChatMessageRepository {
     final sql = '''
 RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
     if (txn == null) {
-      final result = await _db.query(
-        sql,
-      );
+      final result = await _db.query(sql);
 
       final map = result! as Map;
       map['chatId'] = map.remove('in');
       map['messageId'] = map.remove('out');
-      return ChatMessage.fromJson(
-        Map<String, dynamic>.from(map),
-      );
+      return ChatMessage.fromJson(Map<String, dynamic>.from(map));
     } else {
-      txn.query(
-        sql,
-      );
+      txn.query(sql);
       return chatMessage;
     }
   }
@@ -72,16 +63,12 @@ RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
     if (txn == null) {
       final results = (await _db.query(sqlBuffer.toString()))! as List;
 
-      return results.map(
-        (result) {
-          final map = result as Map;
-          map['chatId'] = map.remove('in');
-          map['messageId'] = map.remove('out');
-          return ChatMessage.fromJson(
-            Map<String, dynamic>.from(map),
-          );
-        },
-      ).toList();
+      return results.map((result) {
+        final map = result as Map;
+        map['chatId'] = map.remove('in');
+        map['messageId'] = map.remove('out');
+        return ChatMessage.fromJson(Map<String, dynamic>.from(map));
+      }).toList();
     } else {
       txn.query(sqlBuffer.toString());
       return chatMessages;
@@ -100,7 +87,8 @@ RELATE ONLY $chatId->${tablePrefix}_${ChatMessage.tableName}->$messageId;''';
     final chatRecordId = chatId.startsWith(fullChatTableName)
         ? chatId
         : '$fullChatTableName:$chatId';
-    final sql = '''
+    final sql =
+        '''
 LET \$messages = (SELECT out AS id FROM $chatMessageTableName
 WHERE in = $chatRecordId);
 SELECT count() FROM \$messages.*.id GROUP ALL;
@@ -109,23 +97,19 @@ ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
 ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}
 ''';
     _log.d(sql);
-    final results = (await _db.query(
-      sql,
-    ))! as List;
+    final results = (await _db.query(sql))! as List;
     _log.d(results);
     final totalList = results[1] as List;
-    final total =
-        totalList.isNotEmpty ? (totalList.first as Map)['count'] as int : 0;
+    final total = totalList.isNotEmpty
+        ? (totalList.first as Map)['count'] as int
+        : 0;
     final messages = results.last as List;
 
     return MessageList(
       messages
           .map(
-            (result) => Message.fromJson(
-              Map<String, dynamic>.from(
-                result as Map,
-              ),
-            ),
+            (result) =>
+                Message.fromJson(Map<String, dynamic>.from(result as Map)),
           )
           .toList(),
       total,

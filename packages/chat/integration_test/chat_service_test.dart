@@ -22,8 +22,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -39,10 +41,7 @@ void main({bool wasm = false}) {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(
-        await chatService.isSchemaCreated(tablePrefix),
-        isFalse,
-      );
+      expect(await chatService.isSchemaCreated(tablePrefix), isFalse);
     });
 
     test('should create schemas and return true', () async {
@@ -61,10 +60,7 @@ void main({bool wasm = false}) {
 
   test('should create chat and message', () async {
     // Arrange
-    final chat = Chat(
-      id: Ulid().toString(),
-      name: 'chat 1',
-    );
+    final chat = Chat(id: Ulid().toString(), name: 'chat 1');
     final message = Message(
       id: Ulid().toString(),
       authorId: '$userIdPrefix${Ulid()}',

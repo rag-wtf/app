@@ -10,13 +10,14 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+
 // @stacked-import
 
 @StackedApp(
   routes: [
     MaterialRoute(page: StartupView),
     MaterialRoute(page: RagConsoleView),
-// @stacked-route
+    // @stacked-route
   ],
   dependencies: [
     LazySingleton<NavigationService>(classType: NavigationService),
@@ -37,9 +38,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
 
     // chat package
     LazySingleton<ChatRepository>(classType: ChatRepository),
-    LazySingleton<ChatMessageRepository>(
-      classType: ChatMessageRepository,
-    ),
+    LazySingleton<ChatMessageRepository>(classType: ChatMessageRepository),
     LazySingleton<MessageRepository>(classType: MessageRepository),
     LazySingleton<MessageEmbeddingRepository>(
       classType: MessageEmbeddingRepository,
@@ -53,7 +52,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       asType: Surreal,
       resolveUsing: SurrealWasm.getInstance,
     ),
-// @stacked-service
+    // @stacked-service
   ],
   logger: StackedLogger(),
 )

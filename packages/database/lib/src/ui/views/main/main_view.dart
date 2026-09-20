@@ -7,15 +7,9 @@ class MainView extends StackedView<MainViewModel> {
   final String tablePrefix;
 
   @override
-  Widget builder(
-    BuildContext context,
-    MainViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, MainViewModel viewModel, Widget? child) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(left: 25, right: 25),
-      ),
+      body: Container(padding: const EdgeInsets.only(left: 25, right: 25)),
       appBar: AppBar(
         title: const Text('Database'),
         actions: [
@@ -29,9 +23,7 @@ class MainView extends StackedView<MainViewModel> {
   }
 
   @override
-  MainViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  MainViewModel viewModelBuilder(BuildContext context) =>
       MainViewModel(tablePrefix);
 
   @override

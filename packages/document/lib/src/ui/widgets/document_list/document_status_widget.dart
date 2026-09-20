@@ -2,10 +2,7 @@ import 'package:document/src/services/document.dart';
 import 'package:flutter/material.dart';
 
 class DocumentStatusWidget extends StatelessWidget {
-  const DocumentStatusWidget({
-    required this.item,
-    super.key,
-  });
+  const DocumentStatusWidget({required this.item, super.key});
 
   final Document item;
 
@@ -35,27 +32,13 @@ class DocumentStatusWidget extends StatelessWidget {
         message: item.errorMessage,
         child: Row(
           children: [
-            Text(
-              item.status.name,
-              style: TextStyle(
-                color: textColor,
-              ),
-            ),
-            Icon(
-              Icons.error_outline,
-              size: 16,
-              color: textColor,
-            ),
+            Text(item.status.name, style: TextStyle(color: textColor)),
+            Icon(Icons.error_outline, size: 16, color: textColor),
           ],
         ),
       );
     } else {
-      status = Text(
-        item.status.name,
-        style: TextStyle(
-          color: textColor,
-        ),
-      );
+      status = Text(item.status.name, style: TextStyle(color: textColor));
     }
     return status;
   }

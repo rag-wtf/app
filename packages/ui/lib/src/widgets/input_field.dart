@@ -51,7 +51,7 @@ import 'package:ui/src/constants.dart';
 ///   for the input field. Defaults to `1`.
 /// - [isDense]: An optional boolean to determine if the input field
 ///   should be dense.
-/// - [verticalPadding]: An optional double to determine the vertical padding 
+/// - [verticalPadding]: An optional double to determine the vertical padding
 ///   of the input field. Defaults to `8`.
 ///
 /// ### Styling:
@@ -130,11 +130,10 @@ class InputField extends StatelessWidget {
   /// An optional boolean to determine if the input field should be dense.
   final bool? isDense;
 
-  /// An optional double to determine the vertical padding of the input field. 
+  /// An optional double to determine the vertical padding of the input field.
   /// Defaults to `8`.
   final double verticalPadding;
 
-  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -156,7 +155,8 @@ class InputField extends StatelessWidget {
                       )
                     : null,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                helperText: Focus.of(context).hasFocus &&
+                helperText:
+                    Focus.of(context).hasFocus &&
                         helperText != null &&
                         !readOnly
                     ? helperText
@@ -164,15 +164,16 @@ class InputField extends StatelessWidget {
                 helperMaxLines: defaultHelperMaxLines,
                 errorText: errorText,
                 hintText: hintText,
-                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                hintStyle: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 prefixIcon: prefixIcon,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: Colors.grey),
                 ),
-                suffixIcon: suffixIcon ??
+                suffixIcon:
+                    suffixIcon ??
                     (Focus.of(context).hasFocus &&
                             controller.text.isNotEmpty &&
                             showClearTextButton &&

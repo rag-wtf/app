@@ -20,9 +20,7 @@ Future<void> bootstrap(
   // Add cross-flavor configuration here
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: firebaseOptions);
-  locator.registerSingletonAsync<AnalyticsFacade>(
-    AnalyticsFacade.getInstance,
-  );
+  locator.registerSingletonAsync<AnalyticsFacade>(AnalyticsFacade.getInstance);
   await setupLocator();
   await ThemeManager.initialise();
   setupDialogUi();

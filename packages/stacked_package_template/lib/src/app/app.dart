@@ -5,13 +5,14 @@ import 'package:stacked_package_template/src/ui/views/startup/startup_view.dart'
 import 'package:stacked_services/stacked_services.dart';
 import 'package:surrealdb_js/surrealdb_js.dart';
 import 'package:surrealdb_wasm/surrealdb_wasm.dart';
+
 // @stacked-import
 
 @StackedApp(
   routes: [
     MaterialRoute(page: StartupView),
     MaterialRoute(page: MainView),
-// @stacked-route
+    // @stacked-route
   ],
   dependencies: [
     LazySingleton<NavigationService>(classType: NavigationService),
@@ -21,7 +22,7 @@ import 'package:surrealdb_wasm/surrealdb_wasm.dart';
       asType: Surreal,
       resolveUsing: SurrealWasm.getInstance,
     ),
-// @stacked-service
+    // @stacked-service
   ],
   logger: StackedLogger(),
 )

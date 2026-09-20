@@ -49,14 +49,16 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
     ConnectionDialogModel viewModel,
     Widget? child,
   ) {
-    final showClearTextButton = viewModel.connectionKeySelected !=
+    final showClearTextButton =
+        viewModel.connectionKeySelected !=
         ConnectionDialogModel.newConnectionKey;
     final showDeleteButton = showClearTextButton;
     final isDense = MediaQuery.sizeOf(context).width < 600;
     final notMemAndIndxDB =
         viewModel.protocol != 'mem' && viewModel.protocol != 'indxdb';
-    final checkboxLabel =
-        notMemAndIndxDB ? 'Remember password' : 'Connect automatically';
+    final checkboxLabel = notMemAndIndxDB
+        ? 'Remember password'
+        : 'Connect automatically';
     return AdaptiveDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
@@ -69,16 +71,16 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
           children: [
             Text(
               request.title ?? 'Connection',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w900),
             ),
             verticalSpaceTiny,
             Text(
               request.description!,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Theme.of(context).textTheme.bodySmall!.color,
-                  ),
+                color: Theme.of(context).textTheme.bodySmall!.color,
+              ),
               softWrap: true,
             ),
             Link(
@@ -87,13 +89,15 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
             ),
             verticalSpaceSmall,
-            if (viewModel
-                .hasErrorForKey(ConnectionDialogModel.connectErrorKey)) ...[
+            if (viewModel.hasErrorForKey(
+              ConnectionDialogModel.connectErrorKey,
+            )) ...[
               Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.errorContainer,
-                  border:
-                      Border.all(color: Theme.of(context).colorScheme.error),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 padding: const EdgeInsets.all(8),
@@ -120,9 +124,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
               verticalSpaceTiny,
             ],
             if (viewModel.isBusy)
-              const Center(
-                child: CircularProgressIndicator(),
-              )
+              const Center(child: CircularProgressIndicator())
             else
               Expanded(
                 child: ListView(
@@ -135,14 +137,16 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                       isLoading: viewModel.isBusy,
                       items: viewModel.connectionNames,
                       getItemValue: (name) => name.key,
-                      getItemDisplayText: (name) =>
-                          name.value,
+                      getItemDisplayText: (name) => name.value,
                       onSelected: (selectedName) async {
-                        final connectionKey = selectedName.key ==
+                        final connectionKey =
+                            selectedName.key ==
                                 ConnectionDialogModel.newConnectionKey
                             ? selectedName.key
-                            : selectedName.key
-                                .substring(0, selectedName.key.indexOf('_'));
+                            : selectedName.key.substring(
+                                0,
+                                selectedName.key.indexOf('_'),
+                              );
                         await viewModel.onConnectionSelected(connectionKey);
                       },
                     ),
@@ -172,10 +176,7 @@ class ConnectionDialog extends StackedView<ConnectionDialogModel>
                                 value: 'https',
                                 child: Text('HTTPS'),
                               ),
-                              DropdownMenuItem(
-                                value: 'ws',
-                                child: Text('WS'),
-                              ),
+                              DropdownMenuItem(value: 'ws', child: Text('WS')),
                               DropdownMenuItem(
                                 value: 'wss',
                                 child: Text('WSS'),

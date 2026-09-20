@@ -24,8 +24,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -69,8 +71,10 @@ void main({bool wasm = false}) {
       );
 
       // Act
-      final result =
-          await repository.createEmbedding(defaultTablePrefix, embedding);
+      final result = await repository.createEmbedding(
+        defaultTablePrefix,
+        embedding,
+      );
 
       // Assert
       expect(result.id, isNotNull);
@@ -92,8 +96,10 @@ void main({bool wasm = false}) {
 Cannot change dimensions, there are existing embeddings in the database.''';
 
       // Act
-      final result =
-          await repository.redefineEmbeddingIndex(defaultTablePrefix, '4');
+      final result = await repository.redefineEmbeddingIndex(
+        defaultTablePrefix,
+        '4',
+      );
 
       // Assert
       expect(result, equals(expected));
@@ -112,9 +118,9 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         () => repository.createEmbedding(defaultTablePrefix, embedding),
         throwsA(
           predicate(
-            (e) => e
-                .toString()
-                .contains('ResponseError: Incorrect vector dimension (4)'),
+            (e) => e.toString().contains(
+              'ResponseError: Incorrect vector dimension (4)',
+            ),
           ),
         ),
       );
@@ -130,8 +136,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       );
 
       // Act
-      final result =
-          await repository.createEmbedding(defaultTablePrefix, embedding);
+      final result = await repository.createEmbedding(
+        defaultTablePrefix,
+        embedding,
+      );
 
       // Assert
       expect(result.id, isNotNull);
@@ -170,8 +178,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       ];
 
       // Act
-      final result =
-          await repository.createEmbeddings(defaultTablePrefix, embeddings);
+      final result = await repository.createEmbeddings(
+        defaultTablePrefix,
+        embeddings,
+      );
 
       // Assert
       expect(result, hasLength(embeddings.length));
@@ -184,31 +194,18 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       // Arrange
       final emptyEmbedding = List<double>.filled(384, 0);
       final embeddings = [
-        Embedding(
-          content: 'apple',
-          embedding: emptyEmbedding,
-        ),
-        Embedding(
-          content: 'ten',
-          embedding: emptyEmbedding,
-        ),
-        Embedding(
-          content: 'twenty',
-          embedding: emptyEmbedding,
-        ),
-        Embedding(
-          content: 'two',
-          embedding: emptyEmbedding,
-        ),
-        Embedding(
-          content: 'banana',
-          embedding: emptyEmbedding,
-        ),
+        Embedding(content: 'apple', embedding: emptyEmbedding),
+        Embedding(content: 'ten', embedding: emptyEmbedding),
+        Embedding(content: 'twenty', embedding: emptyEmbedding),
+        Embedding(content: 'two', embedding: emptyEmbedding),
+        Embedding(content: 'banana', embedding: emptyEmbedding),
       ];
 
       // Act
-      final result =
-          await repository.createEmbeddings(defaultTablePrefix, embeddings);
+      final result = await repository.createEmbeddings(
+        defaultTablePrefix,
+        embeddings,
+      );
 
       // Assert
       expect(result, hasLength(embeddings.length));
@@ -256,8 +253,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
-      final result =
-          await repository.createEmbedding(defaultTablePrefix, embedding);
+      final result = await repository.createEmbedding(
+        defaultTablePrefix,
+        embedding,
+      );
       final id = result.id;
 
       // Act
@@ -280,21 +279,14 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     test('should update embeddings', () async {
       final emptyEmbedding = List<double>.filled(384, 0);
       final embeddings = [
-        Embedding(
-          content: 'apple',
-          embedding: emptyEmbedding,
-        ),
-        Embedding(
-          content: 'ten',
-          embedding: emptyEmbedding,
-        ),
-        Embedding(
-          content: 'twenty',
-          embedding: emptyEmbedding,
-        ),
+        Embedding(content: 'apple', embedding: emptyEmbedding),
+        Embedding(content: 'ten', embedding: emptyEmbedding),
+        Embedding(content: 'twenty', embedding: emptyEmbedding),
       ];
-      final results =
-          await repository.createEmbeddings(defaultTablePrefix, embeddings);
+      final results = await repository.createEmbeddings(
+        defaultTablePrefix,
+        embeddings,
+      );
       results[0] = results[0].copyWith(embedding: testData['apple']);
       results[1] = results[1].copyWith(embedding: testData['ten']);
       results[2] = results[2].copyWith(embedding: testData['twenty']);
@@ -329,8 +321,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
-      final created =
-          await repository.createEmbedding(defaultTablePrefix, embedding);
+      final created = await repository.createEmbedding(
+        defaultTablePrefix,
+        embedding,
+      );
 
       // Act
       final updatedMetadata = {'id': 'customId3'};
@@ -367,8 +361,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         embedding: testData['ten'],
         metadata: {'id': 'customId2'},
       );
-      final created =
-          await repository.createEmbedding(defaultTablePrefix, embedding);
+      final created = await repository.createEmbedding(
+        defaultTablePrefix,
+        embedding,
+      );
 
       // Act
       final result = await repository.deleteEmbedding(created.id!);
@@ -440,9 +436,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       expect(result1, hasLength(k));
       expect(
         result1.map((e) => e.content).toList(),
-        equals(
-          ['ten', 'twenty', 'apple'],
-        ),
+        equals(['ten', 'twenty', 'apple']),
       );
 
       print('*** scores: ${result2.map((e) => e.score).toList()}');
@@ -450,9 +444,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
       expect(result2, hasLength(k));
       expect(
         result2.map((e) => e.content).toList(),
-        equals(
-          ['banana', 'apple', 'ten'],
-        ),
+        equals(['banana', 'apple', 'ten']),
       );
     });
   });

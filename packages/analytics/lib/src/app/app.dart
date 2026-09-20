@@ -8,18 +8,19 @@ import 'package:analytics/src/ui/views/startup/startup_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 // @stacked-import
 
 @StackedApp(
   routes: [
     MaterialRoute(page: StartupView),
     MaterialRoute(page: MainView),
-// @stacked-route
+    // @stacked-route
   ],
   dependencies: [
     LazySingleton<NavigationService>(classType: NavigationService),
     LazySingleton<LoggerNavigatorObserver>(classType: LoggerNavigatorObserver),
-// @stacked-service
+    // @stacked-service
   ],
   logger: StackedLogger(),
 )

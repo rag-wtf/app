@@ -8,8 +8,9 @@ import 'package:ui/ui.dart';
 
 class PromptPanel extends StatelessWidget {
   PromptPanel(this.onSend, {super.key});
-  final List<String> prompts =
-      const String.fromEnvironment(promptsKey).split(',');
+  final List<String> prompts = const String.fromEnvironment(
+    promptsKey,
+  ).split(',');
   final void Function(String) onSend;
 
   @override
@@ -21,18 +22,12 @@ class PromptPanel extends StatelessWidget {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Logo(
-            darkLogo: darkLogo,
-            lightLogo: lightLogo,
-            size: 64,
-          ),
+          const Logo(darkLogo: darkLogo, lightLogo: lightLogo, size: 64),
           verticalSpaceMedium,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: selectedPrompts
-                .map(
-                  (prompt) => PromptWidget(prompt, onSend: onSend),
-                )
+                .map((prompt) => PromptWidget(prompt, onSend: onSend))
                 .toList(),
           ),
         ],
@@ -44,11 +39,7 @@ class PromptPanel extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Logo(
-                darkLogo: darkLogo,
-                lightLogo: lightLogo,
-                size: 64,
-              ),
+              const Logo(darkLogo: darkLogo, lightLogo: lightLogo, size: 64),
               verticalSpaceMedium,
               Row(
                 children: [

@@ -83,10 +83,8 @@ class HomeViewModel extends BaseViewModel {
     return setting.value;
   }
 
-  Future<String?> Function(
-    String tablePrefix,
-    String dimensions,
-  )? get redefineEmbeddingIndexFunction => _redefineEmbeddingIndex;
+  Future<String?> Function(String tablePrefix, String dimensions)?
+  get redefineEmbeddingIndexFunction => _redefineEmbeddingIndex;
 
   Future<String?> _redefineEmbeddingIndex(
     String tablePrefix,
@@ -103,10 +101,7 @@ Cannot change dimensions, there are existing embeddings in the database.''';
         tablePrefix,
         dimensions,
       );
-      await _messageRepository.redefineEmbeddingIndex(
-        tablePrefix,
-        dimensions,
-      );
+      await _messageRepository.redefineEmbeddingIndex(tablePrefix, dimensions);
       return null;
     }
   }

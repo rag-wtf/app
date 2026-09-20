@@ -1,4 +1,3 @@
-
 import 'package:document/document.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'message.freezed.dart';
@@ -28,8 +27,9 @@ sealed class Message with _$Message {
       id: json['id'].toString(),
       authorId: json['authorId'].toString(),
       role: Role.values.byName(json['role'] as String),
-      value:
-          Embedding.fromJson(Map<String, dynamic>.from(json['value'] as Map)),
+      value: Embedding.fromJson(
+        Map<String, dynamic>.from(json['value'] as Map),
+      ),
       type: MessageType.values.byName(json['type'] as String),
       vote: (json['vote'] as num?)?.toInt(),
       share: (json['share'] as num?)?.toInt(),
@@ -45,7 +45,8 @@ sealed class Message with _$Message {
 
   static const tableName = 'messages';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD authorId ON {prefix}_$tableName VALUE <record>(\$value);
@@ -66,12 +67,14 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
 $defineEmbeddingsMtreeIndex
 ''';
 
-  static const defineEmbeddingsMtreeIndex = '''
+  static const defineEmbeddingsMtreeIndex =
+      '''
 DEFINE INDEX OVERWRITE {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
 FIELDS value.embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32;
 ''';
 
-  static const rebuildEmbeddingsMtreeIndex = '''
+  static const rebuildEmbeddingsMtreeIndex =
+      '''
 REBUILD INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
 ''';
 }

@@ -22,7 +22,8 @@ sealed class DocumentEmbedding with _$DocumentEmbedding {
 
   static const tableName = 'document_embeddings';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Document.tableName}> ASSERT \$value != NONE;

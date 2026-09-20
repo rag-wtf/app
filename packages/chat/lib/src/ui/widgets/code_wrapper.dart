@@ -61,8 +61,10 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                     refresh();
                     Future.delayed(const Duration(seconds: 2), () {
                       hasCopied = false;
-                      _switchWidget =
-                          Icon(Icons.copy_rounded, key: UniqueKey());
+                      _switchWidget = Icon(
+                        Icons.copy_rounded,
+                        key: UniqueKey(),
+                      );
                       refresh();
                     });
                   },

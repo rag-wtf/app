@@ -8,7 +8,7 @@ sealed class LlmProvider with _$LlmProvider {
   const factory LlmProvider({
     required String id,
     required String name,
-    required String baseUrl,    
+    required String baseUrl,
     required Embeddings embeddings,
     required ChatCompletions chatCompletions,
     required String website,
@@ -46,11 +46,7 @@ sealed class EmbeddingModel with _$EmbeddingModel {
   }) = _EmbeddingModel;
 
   factory EmbeddingModel.nullObject() {
-    return const EmbeddingModel(
-      name: 'null',
-      dimensions: 0,
-      contextLength: 0,
-    );
+    return const EmbeddingModel(name: 'null', dimensions: 0, contextLength: 0);
   }
 
   factory EmbeddingModel.fromJson(Map<String, dynamic> json) =>
@@ -88,10 +84,7 @@ sealed class ChatModel with _$ChatModel {
   }) = _ChatModel;
 
   factory ChatModel.nullObject() {
-    return const ChatModel(
-      name: 'null',
-      contextLength: 0,
-    );
+    return const ChatModel(name: 'null', contextLength: 0);
   }
 
   factory ChatModel.fromJson(Map<String, dynamic> json) =>

@@ -8,9 +8,7 @@ import 'message_embedding_repository_test.dart' as message_embedding_repository;
 import 'message_repository_test.dart' as message_repository;
 
 Future<void> main() async {
-  final logger = Logger(
-    printer: PrettyPrinter(),
-  );
+  final logger = Logger(printer: PrettyPrinter());
   await setupLocator();
   final wasm = const String.fromEnvironment('WASM').isNotEmpty;
   logger.i('WasmEngine: $wasm');

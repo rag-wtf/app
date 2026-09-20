@@ -22,8 +22,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -39,14 +41,8 @@ void main({bool wasm = false}) {
   group('isSchemaCreated', () {
     test('should return false', () async {
       // Assert
-      expect(
-        await documentRepository.isSchemaCreated(tablePrefix),
-        isFalse,
-      );
-      expect(
-        await embeddingRepository.isSchemaCreated(tablePrefix),
-        isFalse,
-      );
+      expect(await documentRepository.isSchemaCreated(tablePrefix), isFalse);
+      expect(await embeddingRepository.isSchemaCreated(tablePrefix), isFalse);
       expect(
         await documentEmbeddingRepository.isSchemaCreated(tablePrefix),
         isFalse,
@@ -55,32 +51,21 @@ void main({bool wasm = false}) {
 
     test('should create schemas and return true', () async {
       // Act
-      await db.transaction(
-        (txn) async {
-          if (!await documentRepository.isSchemaCreated(tablePrefix)) {
-            await documentRepository.createSchema(tablePrefix, txn);
-          }
-          if (!await embeddingRepository.isSchemaCreated(tablePrefix)) {
-            await embeddingRepository.createSchema(tablePrefix, '384', txn);
-          }
-          if (!await documentEmbeddingRepository.isSchemaCreated(tablePrefix)) {
-            await documentEmbeddingRepository.createSchema(
-              tablePrefix,
-              txn,
-            );
-          }
-        },
-      );
+      await db.transaction((txn) async {
+        if (!await documentRepository.isSchemaCreated(tablePrefix)) {
+          await documentRepository.createSchema(tablePrefix, txn);
+        }
+        if (!await embeddingRepository.isSchemaCreated(tablePrefix)) {
+          await embeddingRepository.createSchema(tablePrefix, '384', txn);
+        }
+        if (!await documentEmbeddingRepository.isSchemaCreated(tablePrefix)) {
+          await documentEmbeddingRepository.createSchema(tablePrefix, txn);
+        }
+      });
 
       // Assert
-      expect(
-        await documentRepository.isSchemaCreated(tablePrefix),
-        isTrue,
-      );
-      expect(
-        await embeddingRepository.isSchemaCreated(tablePrefix),
-        isTrue,
-      );
+      expect(await documentRepository.isSchemaCreated(tablePrefix), isTrue);
+      expect(await embeddingRepository.isSchemaCreated(tablePrefix), isTrue);
       expect(
         await documentEmbeddingRepository.isSchemaCreated(tablePrefix),
         isTrue,
@@ -107,28 +92,15 @@ void main({bool wasm = false}) {
     );
 
     // Act
-    final txnResults = await db.transaction(
-      (txn) async {
-        await documentRepository.createDocument(
-          tablePrefix,
-          document,
-          txn,
-        );
-        await embeddingRepository.createEmbedding(
-          tablePrefix,
-          embedding,
-          txn,
-        );
-        await documentEmbeddingRepository.createDocumentEmbedding(
-          tablePrefix,
-          DocumentEmbedding(
-            documentId: document.id!,
-            embeddingId: embedding.id!,
-          ),
-          txn,
-        );
-      },
-    );
+    final txnResults = await db.transaction((txn) async {
+      await documentRepository.createDocument(tablePrefix, document, txn);
+      await embeddingRepository.createEmbedding(tablePrefix, embedding, txn);
+      await documentEmbeddingRepository.createDocumentEmbedding(
+        tablePrefix,
+        DocumentEmbedding(documentId: document.id!, embeddingId: embedding.id!),
+        txn,
+      );
+    });
 
     // Assert
     final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
@@ -187,32 +159,19 @@ void main({bool wasm = false}) {
     final documentEmbeddings = <DocumentEmbedding>[];
     for (final embedding in embeddings) {
       documentEmbeddings.add(
-        DocumentEmbedding(
-          documentId: document.id!,
-          embeddingId: embedding.id!,
-        ),
+        DocumentEmbedding(documentId: document.id!, embeddingId: embedding.id!),
       );
     }
     // Act
-    final txnResults = await db.transaction(
-      (txn) async {
-        await documentRepository.createDocument(
-          tablePrefix,
-          document,
-          txn,
-        );
-        await embeddingRepository.createEmbeddings(
-          tablePrefix,
-          embeddings,
-          txn,
-        );
-        await documentEmbeddingRepository.createDocumentEmbeddings(
-          tablePrefix,
-          documentEmbeddings,
-          txn,
-        );
-      },
-    );
+    final txnResults = await db.transaction((txn) async {
+      await documentRepository.createDocument(tablePrefix, document, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings, txn);
+      await documentEmbeddingRepository.createDocumentEmbeddings(
+        tablePrefix,
+        documentEmbeddings,
+        txn,
+      );
+    });
 
     // Assert
     final results = txnResults! as List;
@@ -310,40 +269,22 @@ void main({bool wasm = false}) {
       );
     }
     // Act
-    final txnResults = await db.transaction(
-      (txn) async {
-        await documentRepository.createDocument(
-          tablePrefix,
-          document1,
-          txn,
-        );
-        await documentRepository.createDocument(
-          tablePrefix,
-          document2,
-          txn,
-        );
-        await embeddingRepository.createEmbeddings(
-          tablePrefix,
-          embeddings1,
-          txn,
-        );
-        await embeddingRepository.createEmbeddings(
-          tablePrefix,
-          embeddings2,
-          txn,
-        );
-        await documentEmbeddingRepository.createDocumentEmbeddings(
-          tablePrefix,
-          documentEmbeddings1,
-          txn,
-        );
-        await documentEmbeddingRepository.createDocumentEmbeddings(
-          tablePrefix,
-          documentEmbeddings2,
-          txn,
-        );
-      },
-    );
+    final txnResults = await db.transaction((txn) async {
+      await documentRepository.createDocument(tablePrefix, document1, txn);
+      await documentRepository.createDocument(tablePrefix, document2, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings1, txn);
+      await embeddingRepository.createEmbeddings(tablePrefix, embeddings2, txn);
+      await documentEmbeddingRepository.createDocumentEmbeddings(
+        tablePrefix,
+        documentEmbeddings1,
+        txn,
+      );
+      await documentEmbeddingRepository.createDocumentEmbeddings(
+        tablePrefix,
+        documentEmbeddings2,
+        txn,
+      );
+    });
 
     // Assert
     final results = txnResults! as List;

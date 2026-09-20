@@ -9,9 +9,7 @@ class BatchService {
   Future<List<TResult>> execute<TInput, TResult>(
     List<TInput> values,
     int batchSize,
-    Future<List<TResult>> Function(
-      List<TInput> values,
-    ) batchFunction,
+    Future<List<TResult>> Function(List<TInput> values) batchFunction,
   ) async {
     final numBatches = (values.length / batchSize).ceil();
     final items = List<TResult>.empty(growable: true);

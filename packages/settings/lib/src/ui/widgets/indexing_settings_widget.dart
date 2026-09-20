@@ -43,17 +43,15 @@ class IndexingSettingsWidget extends StatelessWidget {
     final modelLabel = embeddingModelProvider?.name != null
         ? 'Model of ${embeddingModelProvider?.name}'
         : 'Model';
-    final embeddingModelApiKeyUrl = embeddingModelProvider?.apiKeyUrl ?? 
-        viewModel.llmProviderSelected?.apiKeyUrl;    
+    final embeddingModelApiKeyUrl =
+        embeddingModelProvider?.apiKeyUrl ??
+        viewModel.llmProviderSelected?.apiKeyUrl;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InputFieldDropdown<EmbeddingModel>(
           labelText: modelLabel,
-          prefixIcon: Icon(
-            Icons.api_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.api_outlined, color: iconColor),
           helperText: embeddingModelInfoText,
           hintText: 'text-embedding-3-large',
           errorText: viewModel.embeddingsModelValidationMessage,
@@ -70,9 +68,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         ),
         if (embeddingModelProvider?.website != null) ...[
           Link(
-            url: Uri.parse(
-              embeddingModelProvider!.website! + defaultUtmParams,
-            ),
+            url: Uri.parse(embeddingModelProvider!.website! + defaultUtmParams),
             text: embeddingModelProvider.website!,
             onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
           ),
@@ -81,10 +77,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Context Length',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: embeddingModelContextLengthInfoText,
           hintText: defaultEmbeddingsModelContextLength,
           errorText: viewModel.embeddingsModelContextLengthValidationMessage,
@@ -94,10 +87,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'API URL',
-          prefixIcon: Icon(
-            Icons.http_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.http_outlined, color: iconColor),
           helperText: embeddingApiUrlInfoText,
           hintText: 'https://api.openai.com/v1/embeddings',
           errorText: viewModel.embeddingsApiUrlValidationMessage,
@@ -107,10 +97,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         PasswordField(
           isDense: isDense,
           labelText: 'API Key',
-          prefixIcon: Icon(
-            Icons.key_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.key_outlined, color: iconColor),
           helperText: embeddingApiKeyInfoText,
           hintText: '*' * 48,
           errorText: viewModel.embeddingsApiKeyValidationMessage,
@@ -119,9 +106,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         if (viewModel.llmProviderSelected != null &&
             embeddingModelApiKeyUrl != null) ...[
           Link(
-            url: Uri.parse(
-              embeddingModelApiKeyUrl + defaultUtmParams,
-            ),
+            url: Uri.parse(embeddingModelApiKeyUrl + defaultUtmParams),
             text: getApiKeyText,
             onUrlLaunched: viewModel.analyticsFacade.trackUrlOpened,
           ),
@@ -130,10 +115,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'API Batch Size',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: embeddingApiBatchSizeInfoText,
           hintText: '10 to 500',
           errorText: viewModel.embeddingsApiBatchSizeValidationMessage,
@@ -143,10 +125,7 @@ class IndexingSettingsWidget extends StatelessWidget {
         InputField(
           isDense: isDense,
           labelText: 'Database Batch Size',
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           helperText: databaseBatchSizeInfoText,
           hintText: '10 to 500',
           errorText: viewModel.embeddingsDatabaseBatchSizeValidationMessage,
@@ -158,10 +137,7 @@ class IndexingSettingsWidget extends StatelessWidget {
           isDense: isDense,
           labelText: 'Dimensions',
           helperText: dimensionsInfoText,
-          prefixIcon: Icon(
-            Icons.numbers_outlined,
-            color: iconColor,
-          ),
+          prefixIcon: Icon(Icons.numbers_outlined, color: iconColor),
           suffixIcon: CheckboxOrSwitch(
             value: viewModel.embeddingsDimensionsEnabled,
             onChanged: (value) async {
@@ -185,7 +161,7 @@ class IndexingSettingsWidget extends StatelessWidget {
                 text: 'Enabled Compression',
                 tooltipMessage: compressedInfoText,
                 textStyle: Theme.of(context).textTheme.titleSmall,
-              ),              
+              ),
               CheckboxOrSwitch(
                 value: viewModel.embeddingsCompressed,
                 onChanged: (value) async {

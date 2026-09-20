@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'setting.freezed.dart';
 part 'setting.g.dart';
@@ -25,7 +24,8 @@ sealed class Setting with _$Setting {
 
   static const tableName = 'settings';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD key ON {prefix}_$tableName TYPE string;

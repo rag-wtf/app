@@ -30,9 +30,7 @@ class ChatService with ListenableServiceMixin {
   bool isGeneratingMessage = false;
   List<Chat> get chats => _chats.toList();
   List<Message> get messages => _messages.toList();
-  bool get isStreaming => bool.parse(
-        _settingService.get(streamKey).value,
-      );
+  bool get isStreaming => bool.parse(_settingService.get(streamKey).value);
   String get userId => '$userIdPrefix${_settingService.get(userIdKey).value}';
   String get _generationApiUrl =>
       _settingService.get(generationApiUrlKey).value;
@@ -42,30 +40,22 @@ class ChatService with ListenableServiceMixin {
   String get _embeddingsApiUrl =>
       _settingService.get(embeddingsApiUrlKey).value;
   String get _embeddingsApiKey => _settingService.get(embeddingsApiKey).value;
-  int get _k => int.parse(
-        _settingService.get(retrieveTopNResultsKey).value,
-      );
+  int get _k => int.parse(_settingService.get(retrieveTopNResultsKey).value);
   String get _promptTemplate => _settingService.get(promptTemplateKey).value;
-  double get _searchThreshold => double.parse(
-        _settingService.get(searchThresholdKey).value,
-      );
+  double get _searchThreshold =>
+      double.parse(_settingService.get(searchThresholdKey).value);
   String get _searchType => _settingService.get(searchTypeKey).value;
-  double get _temperature => double.parse(
-        _settingService.get(temperatureKey).value,
-      );
+  double get _temperature =>
+      double.parse(_settingService.get(temperatureKey).value);
   double get _topP => double.parse(_settingService.get(topPKey).value);
-  bool get _frequencyPenaltyEnabled => bool.parse(
-        _settingService.get(frequencyPenaltyEnabledKey).value,
-      );
-  double get _frequencyPenalty => double.parse(
-        _settingService.get(frequencyPenaltyKey).value,
-      );
-  bool get _presencePenaltyEnabled => bool.parse(
-        _settingService.get(presencePenaltyEnabledKey).value,
-      );
-  double get _presencePenalty => double.parse(
-        _settingService.get(presencePenaltyKey).value,
-      );
+  bool get _frequencyPenaltyEnabled =>
+      bool.parse(_settingService.get(frequencyPenaltyEnabledKey).value);
+  double get _frequencyPenalty =>
+      double.parse(_settingService.get(frequencyPenaltyKey).value);
+  bool get _presencePenaltyEnabled =>
+      bool.parse(_settingService.get(presencePenaltyEnabledKey).value);
+  double get _presencePenalty =>
+      double.parse(_settingService.get(presencePenaltyKey).value);
   int get _maxTokens => int.parse(_settingService.get(maxTokensKey).value);
   String get _stop => _settingService.get(stopKey).value;
 
@@ -110,14 +100,12 @@ class ChatService with ListenableServiceMixin {
     Transaction? txn,
   ]) async {
     if (txn == null) {
-      await _db.transaction(
-        (txn) async {
-          await _chatRepository.createSchema(tablePrefix, txn);
-          await _messageRepository.createSchema(tablePrefix, dimensions, txn);
-          await _chatMessageRepository.createSchema(tablePrefix, txn);
-          await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
-        },
-      );
+      await _db.transaction((txn) async {
+        await _chatRepository.createSchema(tablePrefix, txn);
+        await _messageRepository.createSchema(tablePrefix, dimensions, txn);
+        await _chatMessageRepository.createSchema(tablePrefix, txn);
+        await _messageEmbeddingRepository.createSchema(tablePrefix, txn);
+      });
     } else {
       await _chatRepository.createSchema(tablePrefix, txn);
       await _messageRepository.createSchema(tablePrefix, dimensions, txn);
@@ -168,43 +156,22 @@ class ChatService with ListenableServiceMixin {
     Message message, [
     Transaction? txn,
   ]) async {
-    final chatMessage = ChatMessage(
-      chatId: chat.id!,
-      messageId: message.id!,
-    );
+    final chatMessage = ChatMessage(chatId: chat.id!, messageId: message.id!);
     if (txn == null) {
-      return await _db.transaction(
-        (txn) async {
-          await _chatRepository.createChat(
-            tablePrefix,
-            chat,
-            txn,
-          );
+      return await _db.transaction((txn) async {
+        await _chatRepository.createChat(tablePrefix, chat, txn);
 
-          await _messageRepository.createMessage(
-            tablePrefix,
-            message,
-            txn,
-          );
-          await _chatMessageRepository.createChatMessage(
-            tablePrefix,
-            chatMessage,
-            txn,
-          );
-        },
-      );
+        await _messageRepository.createMessage(tablePrefix, message, txn);
+        await _chatMessageRepository.createChatMessage(
+          tablePrefix,
+          chatMessage,
+          txn,
+        );
+      });
     } else {
-      await _chatRepository.createChat(
-        tablePrefix,
-        chat,
-        txn,
-      );
+      await _chatRepository.createChat(tablePrefix, chat, txn);
 
-      await _messageRepository.createMessage(
-        tablePrefix,
-        message,
-        txn,
-      );
+      await _messageRepository.createMessage(tablePrefix, message, txn);
       await _chatMessageRepository.createChatMessage(
         tablePrefix,
         chatMessage,
@@ -220,10 +187,7 @@ class ChatService with ListenableServiceMixin {
     Message message, [
     Transaction? txn,
   ]) async {
-    final chatMessage = ChatMessage(
-      chatId: chat.id!,
-      messageId: message.id!,
-    );
+    final chatMessage = ChatMessage(chatId: chat.id!, messageId: message.id!);
     List<MessageEmbedding>? messageEmbeddings;
     if (message.embeddings != null && message.embeddings!.isNotEmpty) {
       messageEmbeddings = message.embeddings!
@@ -239,34 +203,24 @@ class ChatService with ListenableServiceMixin {
     }
 
     if (txn == null) {
-      return await _db.transaction(
-        (txn) async {
-          await _messageRepository.createMessage(
-            tablePrefix,
-            message,
-            txn,
-          );
-          await _chatMessageRepository.createChatMessage(
-            tablePrefix,
-            chatMessage,
-            txn,
-          );
+      return await _db.transaction((txn) async {
+        await _messageRepository.createMessage(tablePrefix, message, txn);
+        await _chatMessageRepository.createChatMessage(
+          tablePrefix,
+          chatMessage,
+          txn,
+        );
 
-          if (messageEmbeddings != null) {
-            await _messageEmbeddingRepository.createMessageEmbeddings(
-              tablePrefix,
-              messageEmbeddings,
-              txn,
-            );
-          }
-        },
-      );
+        if (messageEmbeddings != null) {
+          await _messageEmbeddingRepository.createMessageEmbeddings(
+            tablePrefix,
+            messageEmbeddings,
+            txn,
+          );
+        }
+      });
     } else {
-      await _messageRepository.createMessage(
-        tablePrefix,
-        message,
-        txn,
-      );
+      await _messageRepository.createMessage(tablePrefix, message, txn);
       await _chatMessageRepository.createChatMessage(
         tablePrefix,
         chatMessage,
@@ -347,11 +301,8 @@ class ChatService with ListenableServiceMixin {
           if (message.role == Role.agent) {
             messagesWithEmbeddings.add(
               message.copyWith(
-                embeddings:
-                    await _messageEmbeddingRepository.getAllEmbeddingsOfMessage(
-                  tablePrefix,
-                  message.id!,
-                ),
+                embeddings: await _messageEmbeddingRepository
+                    .getAllEmbeddingsOfMessage(tablePrefix, message.id!),
               ),
             );
           } else {
@@ -378,8 +329,9 @@ class ChatService with ListenableServiceMixin {
       );
     } else {
       _messages.first = _messages.first.copyWith(
-        value: _messages.first.value
-            .copyWith(content: _messages.first.value.content + content),
+        value: _messages.first.value.copyWith(
+          content: _messages.first.value.content + content,
+        ),
       );
     }
     notifyListeners();
@@ -425,15 +377,9 @@ class ChatService with ListenableServiceMixin {
   Future<bool> _addMessageWithChat(String tablePrefix, Message message) async {
     final chat = _chats[_chatIndex];
     _log.d('addMessage: chat.id ${_chats[_chatIndex].id}');
-    final txnResults = await createMessage(
-      tablePrefix,
-      chat,
-      message,
-    );
+    final txnResults = await createMessage(tablePrefix, chat, message);
     final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
-    final isTxnSucess = results.every(
-      (sublist) => sublist.isNotEmpty,
-    );
+    final isTxnSucess = results.every((sublist) => sublist.isNotEmpty);
     if (isTxnSucess) {
       if (chat.name == newChatName) {
         await _chatApiService.generateStream(
@@ -488,15 +434,9 @@ class ChatService with ListenableServiceMixin {
         created: now,
         updated: now,
       );
-      final txnResults = await createChatAndMessage(
-        tablePrefix,
-        chat,
-        message,
-      );
+      final txnResults = await createChatAndMessage(tablePrefix, chat, message);
       final results = List<Map<dynamic, dynamic>>.from(txnResults! as List);
-      isTxnSucess = results.every(
-        (sublist) => sublist.isNotEmpty,
-      );
+      isTxnSucess = results.every((sublist) => sublist.isNotEmpty);
       if (isTxnSucess) {
         _log.d('message ${message.authorId} _chats.length ${_chats.length}}');
         _chats.insert(0, chat);
@@ -581,10 +521,7 @@ class ChatService with ListenableServiceMixin {
     );
   }
 
-  Future<void> _updateChatName(
-    String tablePrefix,
-    String generatedText,
-  ) async {
+  Future<void> _updateChatName(String tablePrefix, String generatedText) async {
     if (_chats[_chatIndex].name == newChatName) {
       final generatedChatName = await _chatApiService.generate(
         _dio,
@@ -608,9 +545,7 @@ class ChatService with ListenableServiceMixin {
       if (generatedChatName.isNotEmpty) {
         final updatedChat = await _chatRepository.updateChat(
           tablePrefix,
-          _chats[_chatIndex].copyWith(
-            name: generatedChatName,
-          ),
+          _chats[_chatIndex].copyWith(name: generatedChatName),
         );
         if (updatedChat != null) {
           _chats[_chatIndex] = updatedChat;
@@ -620,10 +555,7 @@ class ChatService with ListenableServiceMixin {
     }
   }
 
-  Future<List<Embedding>> _retrieve(
-    String tablePrefix,
-    Message message,
-  ) async {
+  Future<List<Embedding>> _retrieve(String tablePrefix, Message message) async {
     if (await _embeddingRepository.getTotal(tablePrefix) == 0) {
       return List.empty();
     }
@@ -633,9 +565,7 @@ class ChatService with ListenableServiceMixin {
       _embeddingsApiKey,
       _settingService.get(embeddingsModelKey).value,
       message.value.content,
-      dimensions: int.parse(
-        _settingService.get(embeddingsDimensionsKey).value,
-      ),
+      dimensions: int.parse(_settingService.get(embeddingsDimensionsKey).value),
       compressed: bool.parse(
         _settingService.get(embeddingsCompressedKey).value,
       ),
@@ -663,9 +593,11 @@ class ChatService with ListenableServiceMixin {
     final embeddings = await _retrieve(tablePrefix, message);
     String prompt;
     if (embeddings.isNotEmpty) {
-      final context = embeddings.map((e) {
-        return '${e.content} ${e.score} ${e.id}';
-      }).join('\n');
+      final context = embeddings
+          .map((e) {
+            return '${e.content} ${e.score} ${e.id}';
+          })
+          .join('\n');
       prompt = _promptTemplate
           .replaceFirst(contextPlaceholder, context)
           .replaceFirst(instructionPlaceholder, message.value.content);

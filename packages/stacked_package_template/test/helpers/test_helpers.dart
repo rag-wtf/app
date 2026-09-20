@@ -11,12 +11,12 @@ final StackedLocator locator = StackedLocator.instance;
   [],
   customMocks: [
     MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
-// @stacked-mock-spec
+    // @stacked-mock-spec
   ],
 )
 void registerServices() {
   getAndRegisterNavigationService();
-// @stacked-mock-register
+  // @stacked-mock-register
 }
 
 MockNavigationService getAndRegisterNavigationService() {

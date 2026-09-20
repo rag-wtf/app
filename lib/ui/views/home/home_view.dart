@@ -110,9 +110,7 @@ class _HomeViewState extends State<HomeView>
                   ],
                 ),
                 body: viewModel.isBusy
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? const Center(child: CircularProgressIndicator())
                     : SafeArea(
                         child: Column(
                           children: [
@@ -148,10 +146,7 @@ class _HomeViewState extends State<HomeView>
                     : null,
                 endDrawer: constraints.maxWidth < largeScreenWidth
                     ? Drawer(
-                        child: RightWidget(
-                          viewModel,
-                          _leftWidgetTabController,
-                        ),
+                        child: RightWidget(viewModel, _leftWidgetTabController),
                       )
                     : null,
               );
@@ -198,10 +193,7 @@ class BodyWidget extends StatelessWidget {
           ),
           Flexible(
             flex: 3,
-            child: RightWidget(
-              viewModel,
-              leftWidgetTabController,
-            ),
+            child: RightWidget(viewModel, leftWidgetTabController),
           ),
         ],
       );
@@ -229,11 +221,7 @@ class BodyWidget extends StatelessWidget {
 }
 
 class RightWidget extends StatelessWidget {
-  const RightWidget(
-    this.viewModel,
-    this.leftWidgetTabController, {
-    super.key,
-  });
+  const RightWidget(this.viewModel, this.leftWidgetTabController, {super.key});
   final HomeViewModel viewModel;
   final TabController leftWidgetTabController;
 
@@ -248,12 +236,8 @@ class RightWidget extends StatelessWidget {
               appBar: AppBar(
                 title: const TabBar(
                   tabs: [
-                    Tab(
-                      text: 'Settings',
-                    ),
-                    Tab(
-                      text: 'Console',
-                    ),
+                    Tab(text: 'Settings'),
+                    Tab(text: 'Console'),
                   ],
                 ),
               ),
@@ -280,11 +264,7 @@ class RightWidget extends StatelessWidget {
 }
 
 class CenterWidget extends StatelessWidget {
-  const CenterWidget(
-    this.viewModel,
-    this.leftWidgetTabController, {
-    super.key,
-  });
+  const CenterWidget(this.viewModel, this.leftWidgetTabController, {super.key});
   final HomeViewModel viewModel;
   final TabController leftWidgetTabController;
 
@@ -317,12 +297,8 @@ class LeftWidget extends StatelessWidget {
         title: TabBar(
           controller: leftWidgetTabController,
           tabs: const [
-            Tab(
-              text: 'Documents',
-            ),
-            Tab(
-              text: 'Chats',
-            ),
+            Tab(text: 'Documents'),
+            Tab(text: 'Chats'),
           ],
         ),
       ),

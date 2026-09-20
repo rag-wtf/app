@@ -20,8 +20,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -51,14 +53,13 @@ void main({bool wasm = false}) {
   group('createSetting', () {
     test('should create setting', () async {
       // Arrange
-      const setting = Setting(
-        key: 'key1',
-        value: 'value1',
-      );
+      const setting = Setting(key: 'key1', value: 'value1');
 
       // Act
-      final result =
-          await repository.createSetting(defaultTablePrefix, setting);
+      final result = await repository.createSetting(
+        defaultTablePrefix,
+        setting,
+      );
 
       // Assert
       expect(result.key, equals('key1'));
@@ -68,14 +69,8 @@ void main({bool wasm = false}) {
     test('should return a list of settings', () async {
       // Arrange
       final settings = [
-        const Setting(
-          key: 'key1',
-          value: 'value1',
-        ).toJson(),
-        const Setting(
-          key: 'key2',
-          value: 'value2',
-        ).toJson(),
+        const Setting(key: 'key1', value: 'value1').toJson(),
+        const Setting(key: 'key2', value: 'value2').toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Setting.tableName}');
       await db.query(
@@ -94,12 +89,11 @@ INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}''
   group('getSettingById', () {
     test('should return a setting by id', () async {
       // Arrange
-      const setting = Setting(
-        key: 'key1',
-        value: 'value1',
+      const setting = Setting(key: 'key1', value: 'value1');
+      final result = await repository.createSetting(
+        defaultTablePrefix,
+        setting,
       );
-      final result =
-          await repository.createSetting(defaultTablePrefix, setting);
       final id = result.id;
 
       // Act
@@ -121,16 +115,17 @@ INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}''
   group('getSettingByKey', () {
     test('should return a setting by key', () async {
       // Arrange
-      const setting = Setting(
-        key: 'key1',
-        value: 'value1',
+      const setting = Setting(key: 'key1', value: 'value1');
+      final result = await repository.createSetting(
+        defaultTablePrefix,
+        setting,
       );
-      final result =
-          await repository.createSetting(defaultTablePrefix, setting);
 
       // Act
-      final getSettingByKey =
-          await repository.getSettingByKey(defaultTablePrefix, result.key);
+      final getSettingByKey = await repository.getSettingByKey(
+        defaultTablePrefix,
+        result.key,
+      );
 
       // Assert
       expect(getSettingByKey?.key, equals(result.key));
@@ -148,17 +143,17 @@ INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}''
   group('updateSetting', () {
     test('should update setting', () async {
       // Arrange
-      const setting = Setting(
-        key: 'key1',
-        value: 'value1',
+      const setting = Setting(key: 'key1', value: 'value1');
+      final created = await repository.createSetting(
+        defaultTablePrefix,
+        setting,
       );
-      final created =
-          await repository.createSetting(defaultTablePrefix, setting);
 
       // Act
       const value1 = 'value one';
-      final updated =
-          await repository.updateSetting(created.copyWith(value: value1));
+      final updated = await repository.updateSetting(
+        created.copyWith(value: value1),
+      );
 
       // Assert
       expect(updated?.value, equals(value1));
@@ -179,12 +174,11 @@ INSERT INTO ${defaultTablePrefix}_${Setting.tableName} ${jsonEncode(settings)}''
   group('deleteSetting', () {
     test('should delete setting', () async {
       // Arrange
-      const setting = Setting(
-        key: 'key1',
-        value: 'value1',
+      const setting = Setting(key: 'key1', value: 'value1');
+      final created = await repository.createSetting(
+        defaultTablePrefix,
+        setting,
       );
-      final created =
-          await repository.createSetting(defaultTablePrefix, setting);
 
       // Act
       final result = await repository.deleteSetting(created.id!);

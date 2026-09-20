@@ -16,10 +16,12 @@ class MessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final backgroundColor =
-        brightness == Brightness.dark ? Colors.white : Colors.black;
-    final foregroundColor =
-        brightness == Brightness.dark ? Colors.black : Colors.white;
+    final backgroundColor = brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
+    final foregroundColor = brightness == Brightness.dark
+        ? Colors.black
+        : Colors.white;
 
     return Container(
       padding: const EdgeInsets.all(10),

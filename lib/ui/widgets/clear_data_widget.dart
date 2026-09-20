@@ -20,16 +20,11 @@ class _ClearDataWidgetState extends State<ClearDataWidget> {
   Widget build(BuildContext context) {
     return ExpansionTile(
       controller: _expansionTileController,
-      title: Text(
-        'Clear Data',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
+      title: Text('Clear Data', style: Theme.of(context).textTheme.titleMedium),
       childrenPadding: const EdgeInsets.all(24),
       children: [
         const Center(child: Text('Permanently delete all data?')),
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -40,9 +35,7 @@ class _ClearDataWidgetState extends State<ClearDataWidget> {
             const Text('Keep Settings'),
           ],
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         FilledButton.icon(
           style: FilledButton.styleFrom(backgroundColor: Colors.red),
           onPressed: () async {

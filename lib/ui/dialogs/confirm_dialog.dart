@@ -14,18 +14,12 @@ class ConfirmDialog extends StackedView<BaseViewModel> {
   final void Function(DialogResponse<void>) completer;
 
   @override
-  Widget builder(
-    BuildContext context,
-    BaseViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, BaseViewModel viewModel, Widget? child) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 400,
-        ),
+        constraints: const BoxConstraints(maxWidth: 400),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
@@ -43,9 +37,7 @@ class ConfirmDialog extends StackedView<BaseViewModel> {
                 verticalSpaceMedium,
                 Text(
                   request.description!,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontSize: 14),
                   maxLines: 3,
                   softWrap: true,
                 ),

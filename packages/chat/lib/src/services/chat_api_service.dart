@@ -90,9 +90,7 @@ class ChatApiService {
     final choice = Map<String, dynamic>.from(
       (responseData?['choices'] as List).first as Map,
     );
-    final message = Map<String, dynamic>.from(
-      choice['message'] as Map,
-    );
+    final message = Map<String, dynamic>.from(choice['message'] as Map);
     final content = (message['content'] as String).trimLeft();
 
     return content;
@@ -121,12 +119,7 @@ class ChatApiService {
       if (stop.isNotEmpty) ...{'stop': stop.split(',')},
       'temperature': temperature,
       'top_p': topP,
-      'messages': _getMessages(
-        messages,
-        chatWindow,
-        prompt,
-        systemPrompt,
-      ),
+      'messages': _getMessages(messages, chatWindow, prompt, systemPrompt),
       ...?getGenerationApiKey(
         ApiKeyType.body,
         generationApiUrl,
@@ -219,43 +212,34 @@ class ChatApiService {
     final now = DateTime.now();
     // 0 is loading message
     // 1 is current user message which will be formatted with prompt template
-    final chatMessages = messages.length > 1
-        ? messages
-            .sublist(2, min(messages.length, chatWindow))
-            .reversed
-            .map(
-              (message) => ChatApiMessage(
-                role: message.role == chat_message.Role.user
-                    ? Role.user
-                    : Role.assistant,
-                content: message.value.content,
-                dateTime: message.updated!,
-              ),
-            )
-            .toList()
-        : <ChatApiMessage>[]
-      ..add(
-        // added back message[1] with formatted prompt template
-        ChatApiMessage(
-          role: Role.user,
-          content: prompt,
-          dateTime: now,
-        ),
-      );
+    final chatMessages =
+        messages.length > 1
+              ? messages
+                    .sublist(2, min(messages.length, chatWindow))
+                    .reversed
+                    .map(
+                      (message) => ChatApiMessage(
+                        role: message.role == chat_message.Role.user
+                            ? Role.user
+                            : Role.assistant,
+                        content: message.value.content,
+                        dateTime: message.updated!,
+                      ),
+                    )
+                    .toList()
+              : <ChatApiMessage>[]
+          ..add(
+            // added back message[1] with formatted prompt template
+            ChatApiMessage(role: Role.user, content: prompt, dateTime: now),
+          );
     if (systemPrompt.isNotEmpty) {
       chatMessages.insert(
         0,
-        ChatApiMessage(
-          role: Role.system,
-          content: systemPrompt,
-          dateTime: now,
-        ),
+        ChatApiMessage(role: Role.system, content: systemPrompt, dateTime: now),
       );
     }
     final messagesMap = chatMessages
-        .map(
-          (message) => message.toJson(),
-        )
+        .map((message) => message.toJson())
         .toList();
     _log.d(messagesMap);
     return messagesMap;

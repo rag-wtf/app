@@ -35,10 +35,7 @@ class DocumentListViewModel extends ReactiveViewModel {
     if (inPackage) {
       setBusy(true);
       await connectDatabase();
-      await _settingService.initialise(
-        tablePrefix,
-        analyticsEnabled: true,
-      );
+      await _settingService.initialise(tablePrefix, analyticsEnabled: true);
       final dimensions = _settingService.get(embeddingsDimensionsKey).value;
       await _documentService.initialise(tablePrefix, dimensions);
       setBusy(false);

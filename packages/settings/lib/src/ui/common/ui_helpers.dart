@@ -37,16 +37,14 @@ double screenHeightFraction(
   int dividedBy = 1,
   double offsetBy = 0,
   double max = 3000,
-}) =>
-    min((screenHeight(context) - offsetBy) / dividedBy, max);
+}) => min((screenHeight(context) - offsetBy) / dividedBy, max);
 
 double screenWidthFraction(
   BuildContext context, {
   int dividedBy = 1,
   double offsetBy = 0,
   double max = 3000,
-}) =>
-    min((screenWidth(context) - offsetBy) / dividedBy, max);
+}) => min((screenWidth(context) - offsetBy) / dividedBy, max);
 
 double halfScreenWidth(BuildContext context) =>
     screenWidthFraction(context, dividedBy: 2);

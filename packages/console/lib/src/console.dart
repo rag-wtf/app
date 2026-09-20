@@ -26,17 +26,11 @@ class _ConsoleState extends State<Console> {
   static const commandSymbol = '>';
 
   Future<dynamic> execute(Function function, String message) async {
-    controller.print(
-      message: '$commandSymbol $message',
-      endline: false,
-    );
+    controller.print(message: '$commandSymbol $message', endline: false);
     dynamic result;
     try {
       result = await function();
-      controller.print(
-        message: ' ✅',
-        endline: true,
-      );
+      controller.print(message: ' ✅', endline: true);
       if (result != null) {
         // debugPrint('Console: result $result');
         if (result is Iterable) {
@@ -45,30 +39,18 @@ class _ConsoleState extends State<Console> {
               // nested list for multiple statements
               final list = result.reduce((value, element) => value + element);
               if (list.isNotEmpty == true) {
-                controller.print(
-                  message: result.toString(),
-                  endline: true,
-                );
+                controller.print(message: result.toString(), endline: true);
               }
             } else {
-              controller.print(
-                message: result.toString(),
-                endline: true,
-              );
+              controller.print(message: result.toString(), endline: true);
             }
           }
         } else {
-          controller.print(
-            message: result.toString(),
-            endline: true,
-          );
+          controller.print(message: result.toString(), endline: true);
         }
       }
     } on Object catch (error) {
-      controller.print(
-        message: ' ❎ $error',
-        endline: true,
-      );
+      controller.print(message: ' ❎ $error', endline: true);
     }
     return result;
   }
@@ -81,10 +63,7 @@ class _ConsoleState extends State<Console> {
       if (widget.initFunction != null) {
         final message = await widget.initFunction!();
         if (message != null) {
-          controller.print(
-            message: message,
-            endline: true,
-          );
+          controller.print(message: message, endline: true);
         }
       }
       unawaited(echoLoop());
@@ -95,10 +74,7 @@ class _ConsoleState extends State<Console> {
     while (mounted) {
       final value = await controller.scan();
       if (!mounted) return;
-      await execute(
-        () => widget.executeFunction(value),
-        value,
-      );
+      await execute(() => widget.executeFunction(value), value);
       if (!mounted) return;
       controller.focusNode.requestFocus();
     }

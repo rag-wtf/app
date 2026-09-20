@@ -27,11 +27,7 @@ class PromptWidget extends StatelessWidget {
         onTap: () => onSend(text),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Text(
-            text,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 3,
-          ),
+          child: Text(text, overflow: TextOverflow.ellipsis, maxLines: 3),
         ),
       ),
     );

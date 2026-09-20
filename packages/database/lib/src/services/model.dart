@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'model.freezed.dart';
@@ -27,7 +26,8 @@ sealed class Model with _$Model {
   //static String? _fromJsonId(dynamic id) => id.toString();
   static const tableName = 'models';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD name ON {prefix}_$tableName TYPE string;

@@ -127,7 +127,8 @@ class _SliverInfiniteListState extends State<SliverInfiniteList> {
   Widget build(BuildContext context) {
     final hasItems = widget.itemCount != 0;
 
-    final showEmpty = !widget.isLoading &&
+    final showEmpty =
+        !widget.isLoading &&
         widget.itemCount == 0 &&
         widget.emptyBuilder != null;
     final showBottomWidget = showEmpty || widget.isLoading || widget.hasError;
@@ -136,7 +137,7 @@ class _SliverInfiniteListState extends State<SliverInfiniteList> {
 
     final effectiveItemCount =
         (!hasItems ? 0 : widget.itemCount + separatorCount) +
-            (showBottomWidget ? 1 : 0);
+        (showBottomWidget ? 1 : 0);
     final lastItemIndex = effectiveItemCount - 1;
 
     Widget? centeredSliver;
@@ -152,30 +153,30 @@ class _SliverInfiniteListState extends State<SliverInfiniteList> {
     if (centeredSliver != null) return centeredSliver;
 
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        childCount: effectiveItemCount,
-        (context, index) {
-          if (index == lastItemIndex) {
-            onBuiltLast(lastItemIndex);
-          }
-          if (index == lastItemIndex && showBottomWidget) {
-            if (widget.hasError) {
-              return errorBuilder(context);
-            } else if (widget.isLoading) {
-              return loadingBuilder(context);
-            } else {
-              return widget.emptyBuilder!(context);
-            }
+      delegate: SliverChildBuilderDelegate(childCount: effectiveItemCount, (
+        context,
+        index,
+      ) {
+        if (index == lastItemIndex) {
+          onBuiltLast(lastItemIndex);
+        }
+        if (index == lastItemIndex && showBottomWidget) {
+          if (widget.hasError) {
+            return errorBuilder(context);
+          } else if (widget.isLoading) {
+            return loadingBuilder(context);
           } else {
-            final itemIndex = !showSeparator ? index : (index / 2).floor();
-            if (showSeparator && index.isOdd) {
-              return widget.separatorBuilder!(context, itemIndex);
-            } else {
-              return widget.itemBuilder(context, itemIndex);
-            }
+            return widget.emptyBuilder!(context);
           }
-        },
-      ),
+        } else {
+          final itemIndex = !showSeparator ? index : (index / 2).floor();
+          if (showSeparator && index.isOdd) {
+            return widget.separatorBuilder!(context, itemIndex);
+          } else {
+            return widget.itemBuilder(context, itemIndex);
+          }
+        }
+      }),
     );
   }
 }

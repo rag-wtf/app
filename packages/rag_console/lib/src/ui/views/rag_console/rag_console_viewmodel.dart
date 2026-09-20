@@ -46,9 +46,8 @@ class RagConsoleViewModel extends BaseViewModel {
   double get _searchThreshold =>
       _settingService.get(searchThresholdKey).value as double;
   String get surrealVersion => _surrealVersion;
-  bool get _embeddingsCompressed => bool.parse(
-        _settingService.get(embeddingsCompressedKey).value,
-      );
+  bool get _embeddingsCompressed =>
+      bool.parse(_settingService.get(embeddingsCompressedKey).value);
 
   static const helpMessageHint =
       'Type /h to see the list of supported commands.';
@@ -111,30 +110,28 @@ Example:
     setBusy(true);
     _log.d('initialise() tablePrefix: $tablePrefix');
     if (inPackage) {
-      await _settingService.initialise(
-        tablePrefix,
-        analyticsEnabled: true,
-      );
+      await _settingService.initialise(tablePrefix, analyticsEnabled: true);
       final dimensions = _settingService.get(embeddingsDimensionsKey).value;
       await _documentService.initialise(tablePrefix, dimensions);
       await _chatService.initialise(tablePrefix, dimensions);
     }
     _initMessages();
     _surrealVersion = await _db.version();
-    final lastConnectionKey =
-        await _storage.read(key: ConnectionSetting.lastConnectionKey);
+    final lastConnectionKey = await _storage.read(
+      key: ConnectionSetting.lastConnectionKey,
+    );
     if (lastConnectionKey != null) {
       final connectionSettings = await _connectionSettingRepository
           .getAllConnectionSettings(lastConnectionKey);
-      final protocol = connectionSettings[
-          '${lastConnectionKey}_${ConnectionSetting.protocolKey}'];
-      final addressPort = connectionSettings[
-          '${lastConnectionKey}_${ConnectionSetting.addressPortKey}'];
+      final protocol =
+          connectionSettings['${lastConnectionKey}_${ConnectionSetting.protocolKey}'];
+      final addressPort =
+          connectionSettings['${lastConnectionKey}_${ConnectionSetting.addressPortKey}'];
       surrealEndpoint = '$protocol://$addressPort';
-      surrealNamespace = connectionSettings[
-          '${lastConnectionKey}_${ConnectionSetting.namespaceKey}']!;
-      surrealDatabase = connectionSettings[
-          '${lastConnectionKey}_${ConnectionSetting.databaseKey}']!;
+      surrealNamespace =
+          connectionSettings['${lastConnectionKey}_${ConnectionSetting.namespaceKey}']!;
+      surrealDatabase =
+          connectionSettings['${lastConnectionKey}_${ConnectionSetting.databaseKey}']!;
     }
     setBusy(false);
   }
@@ -203,9 +200,7 @@ Example:
     final choice = Map<String, dynamic>.from(
       (responseData?['choices'] as List).first as Map,
     );
-    final message = Map<String, dynamic>.from(
-      choice['message'] as Map,
-    );
+    final message = Map<String, dynamic>.from(choice['message'] as Map);
     final content = (message['content'] as String).trimLeft();
 
     if (input != null) {
@@ -232,9 +227,7 @@ Example:
     final responseData = await embed(input);
     final embedding = (responseData?['data'] as List).first as Map;
     final queryVector = List<double>.from(embedding['embedding'] as List);
-    final k = int.parse(
-      _settingService.get(retrieveTopNResultsKey).value,
-    );
+    final k = int.parse(_settingService.get(retrieveTopNResultsKey).value);
     final embeddings = await _documentService.similaritySearch(
       tablePrefix,
       queryVector,
@@ -245,8 +238,9 @@ Example:
   }
 
   Future<Object?> execute(String value) async {
-    final regex =
-        RegExp(r'^/(\w+)'); // Matches the first word starting with "/"
+    final regex = RegExp(
+      r'^/(\w+)',
+    ); // Matches the first word starting with "/"
     final match = regex.firstMatch(value);
 
     if (match != null) {
@@ -269,9 +263,11 @@ Example:
         case 'rag':
           final input = value.substring(5);
           final embeddings = await retrieve(input);
-          final context = embeddings.map((e) {
-            return '${e.content} ${e.score} ${e.id}';
-          }).join('\n');
+          final context = embeddings
+              .map((e) {
+                return '${e.content} ${e.score} ${e.id}';
+              })
+              .join('\n');
           final promptTemplate = _settingService.get(promptTemplateKey).value;
           final prompt = promptTemplate
               .replaceFirst(contextPlaceholder, context)

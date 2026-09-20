@@ -80,10 +80,7 @@ import 'package:ui/ui.dart';
       name: 'temperature',
       validator: SettingsValidators.validateTemperature,
     ),
-    FormTextField(
-      name: 'topP',
-      validator: SettingsValidators.validateTopP,
-    ),
+    FormTextField(name: 'topP', validator: SettingsValidators.validateTopP),
     FormTextField(
       name: 'frequencyPenalty',
       validator: SettingsValidators.validateFrequencyPenalty,
@@ -96,10 +93,7 @@ import 'package:ui/ui.dart';
       name: 'maxTokens',
       validator: SettingsValidators.validateMaxTokens,
     ),
-    FormTextField(
-      name: 'stop',
-      validator: SettingsValidators.validateStop,
-    ),
+    FormTextField(name: 'stop', validator: SettingsValidators.validateStop),
   ],
 )
 class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
@@ -113,10 +107,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   });
   final String tablePrefix;
   final bool inPackage;
-  final Future<String?> Function(
-    String tablePrefix,
-    String dimensions,
-  )? redefineEmbeddingIndexFunction;
+  final Future<String?> Function(String tablePrefix, String dimensions)?
+  redefineEmbeddingIndexFunction;
   final Future<void> Function() showSystemPromptDialogFunction;
   final Future<void> Function() showPromptTemplateDialogFunction;
 
@@ -128,8 +120,9 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   ) {
     final iconColor = Theme.of(context).textTheme.displaySmall?.color;
     final isDense = MediaQuery.sizeOf(context).width < 600;
-    final switchHorizontalPadding =
-        MediaQuery.sizeOf(context).width < 600 ? 0.0 : 4.0;
+    final switchHorizontalPadding = MediaQuery.sizeOf(context).width < 600
+        ? 0.0
+        : 4.0;
     return Scaffold(
       body: viewModel.isBusy
           ? const Center(child: CircularProgressIndicator())
@@ -155,21 +148,22 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                             ),
                           ),
                           initialValue: viewModel.llmProviderId,
-                          items: viewModel.llmProviders.entries
-                              .map(
-                                (llmProviderEntry) => DropdownMenuItem(
-                                  value: llmProviderEntry.key,
-                                  child: Text(llmProviderEntry.value.name),
+                          items:
+                              viewModel.llmProviders.entries
+                                  .map(
+                                    (llmProviderEntry) => DropdownMenuItem(
+                                      value: llmProviderEntry.key,
+                                      child: Text(llmProviderEntry.value.name),
+                                    ),
+                                  )
+                                  .toList()
+                                ..insert(
+                                  0,
+                                  const DropdownMenuItem(
+                                    value: '',
+                                    child: Text('Select a LLM provider'),
+                                  ),
                                 ),
-                              )
-                              .toList()
-                            ..insert(
-                              0,
-                              const DropdownMenuItem(
-                                value: '',
-                                child: Text('Select a LLM provider'),
-                              ),
-                            ),
                           onChanged: (value) async {
                             await viewModel.setLlmProvider(value!);
                           },
@@ -187,9 +181,7 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           ),
                           if (viewModel.llmProviderSelected!.litellm)
                             Link(
-                              url: Uri.parse(
-                                liteLlmWebsite + defaultUtmParams,
-                              ),
+                              url: Uri.parse(liteLlmWebsite + defaultUtmParams),
                               text: liteLlmWebsite,
                               onUrlLaunched:
                                   viewModel.analyticsFacade.trackUrlOpened,
@@ -198,10 +190,10 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                       ],
                     ),
                   ),
-                          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TooltipLabel(
                           text: 'Enabled Analytics',
@@ -215,8 +207,8 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
                           },
                         ),
                       ],
-          ),
-        ),
+                    ),
+                  ),
 
                   ExpansionPanelList(
                     children: [
@@ -326,14 +318,11 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
   }
 
   @override
-  SettingsViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      SettingsViewModel(
-        tablePrefix,
-        redefineEmbeddingIndexFunction,
-        inPackage: inPackage,
-      );
+  SettingsViewModel viewModelBuilder(BuildContext context) => SettingsViewModel(
+    tablePrefix,
+    redefineEmbeddingIndexFunction,
+    inPackage: inPackage,
+  );
 
   @override
   Future<void> onViewModelReady(SettingsViewModel viewModel) async {
@@ -343,23 +332,28 @@ class SettingsView extends StackedView<SettingsViewModel> with $SettingsView {
     chunkSizeController.addListener(viewModel.setChunkSize);
     chunkOverlapController.addListener(viewModel.setChunkOverlap);
     embeddingsModelController.addListener(viewModel.setEmbeddingsModel);
-    embeddingsModelContextLengthController
-        .addListener(viewModel.setEmbeddingsModelContextLength);
+    embeddingsModelContextLengthController.addListener(
+      viewModel.setEmbeddingsModelContextLength,
+    );
     embeddingsApiUrlController.addListener(viewModel.setEmbeddingsApiUrl);
     embeddingsApiKeyController.addListener(viewModel.setEmbeddingsApiKey);
-    embeddingsDimensionsController
-        .addListener(viewModel.setEmbeddingsDimensions);
-    embeddingsApiBatchSizeController
-        .addListener(viewModel.setEmbeddingsApiBatchSize);
-    embeddingsDatabaseBatchSizeController
-        .addListener(viewModel.setEmbeddingsDatabaseBatchSize);
+    embeddingsDimensionsController.addListener(
+      viewModel.setEmbeddingsDimensions,
+    );
+    embeddingsApiBatchSizeController.addListener(
+      viewModel.setEmbeddingsApiBatchSize,
+    );
+    embeddingsDatabaseBatchSizeController.addListener(
+      viewModel.setEmbeddingsDatabaseBatchSize,
+    );
     searchTypeController.addListener(viewModel.setSearchType);
     searchIndexController.addListener(viewModel.setSearchIndex);
     searchThresholdController.addListener(viewModel.setSearchThreshold);
     retrieveTopNResultsController.addListener(viewModel.setRetrieveTopNResults);
     generationModelController.addListener(viewModel.setGenerationModel);
-    generationModelContextLengthController
-        .addListener(viewModel.setGenerationModelContextLength);
+    generationModelContextLengthController.addListener(
+      viewModel.setGenerationModelContextLength,
+    );
     generationApiUrlController.addListener(viewModel.setGenerationApiUrl);
     generationApiKeyController.addListener(viewModel.setGenerationApiKey);
     temperatureController.addListener(viewModel.setTemperature);

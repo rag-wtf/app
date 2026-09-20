@@ -35,110 +35,103 @@ class FlutterConsole extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<FlutterConsoleData>(
-        valueListenable: controller,
-        builder: (context, consoleData, _) {
-          return !consoleData.show
-              ? const SizedBox.shrink()
-              : Container(
-                  color: consoleBackground,
-                  width: width,
-                  height: height,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          width: width,
-                          child: Theme(
-                            data: ThemeData.light().copyWith(
-                                scrollbarTheme:
-                                    const ScrollbarThemeData().copyWith(
+      valueListenable: controller,
+      builder: (context, consoleData, _) {
+        return !consoleData.show
+            ? const SizedBox.shrink()
+            : Container(
+                color: consoleBackground,
+                width: width,
+                height: height,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: width,
+                        child: Theme(
+                          data: ThemeData.light().copyWith(
+                            scrollbarTheme: const ScrollbarThemeData().copyWith(
                               thumbColor: WidgetStateProperty.all(scrollColor),
-                            )),
-                            child: Scrollbar(
+                            ),
+                          ),
+                          child: Scrollbar(
+                            controller: controller.scrollController,
+                            child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
                               controller: controller.scrollController,
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                controller: controller.scrollController,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SelectableColoredText(
-                                    consoleData.consoleContent,
-                                    style: TextStyle(
-                                      color: consoleTextColor,
-                                    ),
-                                    selectedTextColor: consoleSelectedTextColor,
-                                    selectedTextBackgroundColor:
-                                        consoleSelectedTextBackgroundColor,
-                                  ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SelectableColoredText(
+                                  consoleData.consoleContent,
+                                  style: TextStyle(color: consoleTextColor),
+                                  selectedTextColor: consoleSelectedTextColor,
+                                  selectedTextBackgroundColor:
+                                      consoleSelectedTextBackgroundColor,
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        color: inputBackground,
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: inputTextColor,
-                              size: 20,
-                            ),
-                            Flexible(
-                              child: TextField(
-                                autofocus: true,
-                                keyboardType: consoleData.keyboardType,
-                                controller: controller.inputController,
-                                focusNode: controller.focusNode,
-                                cursorColor: inputTextColor,
-                                style: TextStyle(color: inputTextColor),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: inputBackground,
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.only(
-                                    right: 10,
-                                    left: 5,
-                                  ),
+                    ),
+                    Container(
+                      color: inputBackground,
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: inputTextColor,
+                            size: 20,
+                          ),
+                          Flexible(
+                            child: TextField(
+                              autofocus: true,
+                              keyboardType: consoleData.keyboardType,
+                              controller: controller.inputController,
+                              focusNode: controller.focusNode,
+                              cursorColor: inputTextColor,
+                              style: TextStyle(color: inputTextColor),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: inputBackground,
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.only(
+                                  right: 10,
+                                  left: 5,
                                 ),
-                                onSubmitted: (value) {
-                                  if (!controller.completer.isCompleted) {
-                                    controller.completer.complete(
-                                      value,
-                                    );
-                                  }
-                                },
                               ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: consoleBackground,
-                              ),
-                              onPressed: () {
+                              onSubmitted: (value) {
                                 if (!controller.completer.isCompleted) {
-                                  controller.completer.complete(
-                                    controller.inputController.text,
-                                  );
+                                  controller.completer.complete(value);
                                 }
                               },
-                              child: const Icon(Icons.done),
                             ),
-                            const SizedBox(
-                              width: 10,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: consoleBackground,
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-        });
+                            onPressed: () {
+                              if (!controller.completer.isCompleted) {
+                                controller.completer.complete(
+                                  controller.inputController.text,
+                                );
+                              }
+                            },
+                            child: const Icon(Icons.done),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+      },
+    );
   }
 }

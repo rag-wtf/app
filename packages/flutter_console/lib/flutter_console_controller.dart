@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class FlutterConsoleController extends ValueNotifier<FlutterConsoleData> {
-  FlutterConsoleController({
-    String consoleContent = '',
-  }) : super(
-          FlutterConsoleData(
-            keyboardType: TextInputType.none,
-            consoleContent: consoleContent,
-          ),
-        );
+  FlutterConsoleController({String consoleContent = ''})
+    : super(
+        FlutterConsoleData(
+          keyboardType: TextInputType.none,
+          consoleContent: consoleContent,
+        ),
+      );
 
   final FocusNode focusNode = FocusNode();
   final TextEditingController inputController = TextEditingController();
@@ -18,15 +17,11 @@ class FlutterConsoleController extends ValueNotifier<FlutterConsoleData> {
   Completer<String> completer = Completer();
 
   void show() {
-    value = value.copyWith(
-      show: true,
-    );
+    value = value.copyWith(show: true);
   }
 
   void hide() {
-    value = value.copyWith(
-      show: false,
-    );
+    value = value.copyWith(show: false);
   }
 
   void print({required String message, required bool endline}) {
@@ -34,11 +29,7 @@ class FlutterConsoleController extends ValueNotifier<FlutterConsoleData> {
       consoleContent: '${value.consoleContent}$message${endline ? '\n' : ''}',
     );
 
-    Future.delayed(
-      const Duration(
-        milliseconds: 100,
-      ),
-    ).then((value) {
+    Future.delayed(const Duration(milliseconds: 100)).then((value) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 300),
@@ -49,9 +40,7 @@ class FlutterConsoleController extends ValueNotifier<FlutterConsoleData> {
 
   Future<String> scan({TextInputType? keyboardType}) async {
     completer = Completer();
-    value = value.copyWith(
-      keyboardType: keyboardType,
-    );
+    value = value.copyWith(keyboardType: keyboardType);
     final readedValue = await completer.future;
     inputController.clear();
     return readedValue;
@@ -77,10 +66,9 @@ class FlutterConsoleData {
     TextInputType? keyboardType,
     String? consoleContent,
     bool? show,
-  }) =>
-      FlutterConsoleData(
-        keyboardType: keyboardType ?? this.keyboardType,
-        consoleContent: consoleContent ?? this.consoleContent,
-        show: show ?? this.show,
-      );
+  }) => FlutterConsoleData(
+    keyboardType: keyboardType ?? this.keyboardType,
+    consoleContent: consoleContent ?? this.consoleContent,
+    show: show ?? this.show,
+  );
 }

@@ -34,10 +34,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> trackScreenView(String routeName, String action) async {
     await _analytics.logScreenView(
       screenName: 'screen_view',
-      parameters: {
-        'name': routeName,
-        'action': action,
-      },
+      parameters: {'name': routeName, 'action': action},
     );
   }
 
@@ -90,8 +87,10 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
 
   @override
   Future<void> trackDocumentUploadFailed(String error) async {
-    await _analytics.logEvent(name: 'document_upload_failed',
-    parameters: {'error': error},);
+    await _analytics.logEvent(
+      name: 'document_upload_failed',
+      parameters: {'error': error},
+    );
   }
 
   @override
@@ -178,5 +177,5 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
       name: 'url_opened',
       parameters: {'url': url.toString()},
     );
-  }  
+  }
 }

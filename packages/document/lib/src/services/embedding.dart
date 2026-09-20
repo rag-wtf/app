@@ -20,8 +20,8 @@ sealed class Embedding with _$Embedding {
       content: json['content'] as String,
       embedding: json['embedding'] != null
           ? (json['embedding'] as List<dynamic>)
-              .map((e) => (e as num).toDouble())
-              .toList()
+                .map((e) => (e as num).toDouble())
+                .toList()
           : null,
       score: (json['score'] as num?)?.toDouble(),
       metadata: json['metadata'],
@@ -32,7 +32,8 @@ sealed class Embedding with _$Embedding {
 
   static const tableName = 'embeddings';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD content ON {prefix}_$tableName TYPE string;
@@ -48,12 +49,14 @@ WHEN \$event = "UPDATE" AND \$before.updated == \$after.updated THEN (
 ''';
 
   // 65535 is the maximum value of an unsigned 16-bit integer
-  static const defineEmbeddingsMtreeIndex = '''
+  static const defineEmbeddingsMtreeIndex =
+      '''
 DEFINE INDEX OVERWRITE {prefix}_${tableName}_mtree_index ON {prefix}_$tableName 
 FIELDS embedding MTREE DIMENSION {dimensions} DIST COSINE TYPE F32;
 ''';
 
-  static const rebuildEmbeddingsMtreeIndex = '''
+  static const rebuildEmbeddingsMtreeIndex =
+      '''
 REBUILD INDEX {prefix}_${tableName}_mtree_index ON {prefix}_$tableName;
 ''';
 }

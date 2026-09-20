@@ -54,11 +54,7 @@ class SettingsValidators {
     return RegExp(r'^[0-9]+$').hasMatch(s);
   }
 
-  static String? _validateIntegerRange(
-    String? value,
-    int start,
-    int end,
-  ) {
+  static String? _validateIntegerRange(String? value, int start, int end) {
     if (value == null || value.isEmpty) {
       return null;
     }
@@ -131,11 +127,7 @@ class SettingsValidators {
     return null;
   }
 
-  static String? _validateDoubleRange(
-    String? value,
-    double start,
-    double end,
-  ) {
+  static String? _validateDoubleRange(String? value, double start, double end) {
     if (value != null && value.isNotEmpty) {
       if (Fzregex.hasMatch(value, _decimalNumber)) {
         final doubleValue = double.parse(value);

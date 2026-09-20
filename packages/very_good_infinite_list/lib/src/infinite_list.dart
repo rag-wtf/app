@@ -214,7 +214,8 @@ class InfiniteList extends StatelessWidget {
       shrinkWrap: shrinkWrap,
       controller: scrollController,
       physics: physics,
-      scrollCacheExtent: scrollCacheExtent ??
+      scrollCacheExtent:
+          scrollCacheExtent ??
           (cacheExtent != null ? ScrollCacheExtent.pixels(cacheExtent!) : null),
       slivers: [
         _ContextualSliverPadding(
@@ -264,10 +265,14 @@ class _ContextualSliverPadding extends StatelessWidget {
     if (padding == null) {
       if (mediaQuery != null) {
         // Automatically pad sliver with padding from MediaQuery.
-        late final mediaQueryHorizontalPadding =
-            mediaQuery.padding.copyWith(top: 0, bottom: 0);
-        late final mediaQueryVerticalPadding =
-            mediaQuery.padding.copyWith(left: 0, right: 0);
+        late final mediaQueryHorizontalPadding = mediaQuery.padding.copyWith(
+          top: 0,
+          bottom: 0,
+        );
+        late final mediaQueryVerticalPadding = mediaQuery.padding.copyWith(
+          left: 0,
+          right: 0,
+        );
         // Consume the main axis padding with SliverPadding.
         effectivePadding = scrollDirection == Axis.vertical
             ? mediaQueryVerticalPadding

@@ -67,13 +67,11 @@ class DocumentService with ListenableServiceMixin {
     Transaction? txn,
   ]) async {
     if (txn == null) {
-      await _db.transaction(
-        (txn) async {
-          await _documentRepository.createSchema(tablePrefix, txn);
-          await _embeddingRepository.createSchema(tablePrefix, dimensions, txn);
-          await _documentEmbeddingRepository.createSchema(tablePrefix, txn);
-        },
-      );
+      await _db.transaction((txn) async {
+        await _documentRepository.createSchema(tablePrefix, txn);
+        await _embeddingRepository.createSchema(tablePrefix, dimensions, txn);
+        await _documentEmbeddingRepository.createSchema(tablePrefix, txn);
+      });
     } else {
       await _documentRepository.createSchema(tablePrefix, txn);
       await _embeddingRepository.createSchema(tablePrefix, dimensions, txn);
@@ -116,9 +114,7 @@ class DocumentService with ListenableServiceMixin {
     if (documentList.total > 0 && documentList.total > _items.length) {
       _items.addAll(
         documentList.items
-            .map(
-              (item) => DocumentItem(tablePrefix, item),
-            )
+            .map((item) => DocumentItem(tablePrefix, item))
             .toList(),
       );
       _total = documentList.total;
@@ -172,33 +168,24 @@ class DocumentService with ListenableServiceMixin {
     final documentEmbeddings = <DocumentEmbedding>[];
     for (final embedding in embeddings) {
       documentEmbeddings.add(
-        DocumentEmbedding(
-          documentId: document.id!,
-          embeddingId: embedding.id!,
-        ),
+        DocumentEmbedding(documentId: document.id!, embeddingId: embedding.id!),
       );
     }
 
     if (txn == null) {
-      result = await _db.transaction(
-        showSql: true,
-        (txn) async {
-          await _documentRepository.updateDocument(
-            document,
-            txn,
-          );
-          await _embeddingRepository.createEmbeddings(
-            tablePrefix,
-            embeddings,
-            txn,
-          );
-          await _documentEmbeddingRepository.createDocumentEmbeddings(
-            tablePrefix,
-            documentEmbeddings,
-            txn,
-          );
-        },
-      );
+      result = await _db.transaction(showSql: true, (txn) async {
+        await _documentRepository.updateDocument(document, txn);
+        await _embeddingRepository.createEmbeddings(
+          tablePrefix,
+          embeddings,
+          txn,
+        );
+        await _documentEmbeddingRepository.createDocumentEmbeddings(
+          tablePrefix,
+          documentEmbeddings,
+          txn,
+        );
+      });
     } else {
       await _documentRepository.updateDocument(document, txn);
       await _embeddingRepository.createEmbeddings(tablePrefix, embeddings, txn);
@@ -224,38 +211,34 @@ class DocumentService with ListenableServiceMixin {
       'embeddings(${embeddings.length}) != vectors(${vectors.length})',
     );
     for (var i = 0; i < embeddings.length; i++) {
-      embeddings[i] = embeddings[i].copyWith(
-        embedding: vectors[i],
-      );
+      embeddings[i] = embeddings[i].copyWith(embedding: vectors[i]);
     }
 
     final batchSize = int.parse(
       _settingService.get(embeddingsDatabaseBatchSizeKey).value,
     );
-    final batchResults = await _batchService
-        .execute<Embedding, dynamic>(embeddings, batchSize, (values) async {
-      _log.d('values $values');
-      return await _embeddingRepository.updateEmbeddings(
-        tablePrefix,
-        values,
-        txn,
-      );
-    });
+    final batchResults = await _batchService.execute<Embedding, dynamic>(
+      embeddings,
+      batchSize,
+      (values) async {
+        _log.d('values $values');
+        return await _embeddingRepository.updateEmbeddings(
+          tablePrefix,
+          values,
+          txn,
+        );
+      },
+    );
     return batchResults;
   }
 
   Future<Document> createDocument(String tablePrefix, Document document) async {
-    final compressedFile = await _compressFile(
-      document.byteData!.first,
-    );
+    final compressedFile = await _compressFile(document.byteData!.first);
     final newDocument = document.copyWith(
       compressedFileSize: compressedFile.length,
       file: compressedFile,
     );
-    return await _documentRepository.createDocument(
-      tablePrefix,
-      newDocument,
-    );
+    return await _documentRepository.createDocument(tablePrefix, newDocument);
   }
 
   Future<Document?> getDocumentById(String id) async {
@@ -271,13 +254,9 @@ class DocumentService with ListenableServiceMixin {
 
   Future<String> convertByteDataToString(List<List<int>> byteData) async {
     final buffer = StringBuffer();
-    await Stream.fromIterable(byteData)
-        .transform(
-          utf8.decoder,
-        )
-        .forEach(
-          buffer.write,
-        );
+    await Stream.fromIterable(
+      byteData,
+    ).transform(utf8.decoder).forEach(buffer.write);
     return buffer.toString();
   }
 
@@ -394,9 +373,7 @@ class DocumentService with ListenableServiceMixin {
   ) async {
     _log.d('item.name ${documentItem.item.name}, status $status');
     documentItem.item = (await _documentRepository.updateDocumentStatus(
-      documentItem.item.copyWith(
-        status: status,
-      ),
+      documentItem.item.copyWith(status: status),
     ))!;
     _log.d('done!');
     notifyListeners();
@@ -414,10 +391,7 @@ class DocumentService with ListenableServiceMixin {
     );
   }
 
-  void _onProgress(
-    DocumentItem documentItem,
-    double progress,
-  ) {
+  void _onProgress(DocumentItem documentItem, double progress) {
     documentItem.progress = progress;
     notifyListeners();
   }
@@ -431,9 +405,10 @@ class DocumentService with ListenableServiceMixin {
       Duration(seconds: max((responseData?['items'] as List).length, 600)),
     );
     await _mutex.protect(() async {
-      await _indexing(documentItem, embeddings).timeout(
-        Duration(seconds: max(embeddings.length, 900)),
-      );
+      await _indexing(
+        documentItem,
+        embeddings,
+      ).timeout(Duration(seconds: max(embeddings.length, 900)));
     });
   }
 
@@ -442,14 +417,13 @@ class DocumentService with ListenableServiceMixin {
     Map<String, dynamic>? responseData,
   ) async {
     _log.d('1. documentItem.hashCode ${documentItem.hashCode}');
-    final documentItems =
-        List<Map<String, dynamic>>.from(responseData?['items'] as List);
+    final documentItems = List<Map<String, dynamic>>.from(
+      responseData?['items'] as List,
+    );
     if (documentItems.isEmpty) {
       final document = await getDocumentById(documentItem.item.id!);
       documentItems.add({
-        'content': await convertByteDataToString(
-          document!.byteData!,
-        ),
+        'content': await convertByteDataToString(document!.byteData!),
       });
     }
 
@@ -500,9 +474,7 @@ class DocumentService with ListenableServiceMixin {
     List<Embedding> embeddings,
   ) async {
     final chunkedTexts = embeddings
-        .map(
-          (embedding) => embedding.content,
-        )
+        .map((embedding) => embedding.content)
         .toList();
 
     final vectors = await _apiService
@@ -525,20 +497,11 @@ class DocumentService with ListenableServiceMixin {
             _settingService.get(embeddingsDimensionsEnabledKey).value,
           ),
         )
-        .timeout(
-          Duration(seconds: max(embeddings.length, 900)),
-        );
+        .timeout(Duration(seconds: max(embeddings.length, 900)));
 
-    await _updateEmbeddings(
-      documentItem.tablePrefix,
-      embeddings,
-      vectors,
-    );
+    await _updateEmbeddings(documentItem.tablePrefix, embeddings, vectors);
 
-    await updateDocumentDoneStatus(
-      documentItem,
-      DocumentStatus.completed,
-    );
+    await updateDocumentDoneStatus(documentItem, DocumentStatus.completed);
   }
 
   Future<Null> _onError(DocumentItem documentItem, dynamic error) async {
@@ -564,10 +527,7 @@ class DocumentService with ListenableServiceMixin {
     final now = DateTime.now();
     documentItem.item = (errorMessage == null
         ? await _documentRepository.updateDocument(
-            documentItem.item.copyWith(
-              status: status,
-              done: now,
-            ),
+            documentItem.item.copyWith(status: status, done: now),
           )
         : await _documentRepository.updateDocument(
             documentItem.item.copyWith(
@@ -584,7 +544,7 @@ class DocumentService with ListenableServiceMixin {
     DocumentStatus status, [
     String? errorMessage,
   ]) async {
-    switch(status) {
+    switch (status) {
       case DocumentStatus.completed:
         unawaited(_analyticsFacade.trackDocumentUploadCompleted());
       case DocumentStatus.failed:
@@ -598,7 +558,6 @@ class DocumentService with ListenableServiceMixin {
         break;
     }
   }
-
 
   Future<void> updateDocumentIndexingStatus(DocumentItem documentItem) async {
     final now = DateTime.now();

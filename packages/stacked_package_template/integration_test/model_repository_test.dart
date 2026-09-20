@@ -20,8 +20,10 @@ void main({bool wasm = false}) {
     } else {
       await db.connect(surrealHttpEndpoint);
       await db.use(namespace: surrealNamespace, database: surrealDatabase);
-      await db
-          .signin({'username': surrealUsername, 'password': surrealPassword});
+      await db.signin({
+        'username': surrealUsername,
+        'password': surrealPassword,
+      });
     }
   });
 
@@ -52,9 +54,7 @@ void main({bool wasm = false}) {
   group('createModel', () {
     test('should create model', () async {
       // Arrange
-      const model = Model(
-        name: 'name1',
-      );
+      const model = Model(name: 'name1');
 
       // Act
       final result = await repository.createModel(defaultTablePrefix, model);
@@ -67,18 +67,12 @@ void main({bool wasm = false}) {
     test('should return a list of models', () async {
       // Arrange
       final models = [
-        const Model(
-          name: 'name1',
-        ).toJson(),
-        const Model(
-          name: 'name2',
-        ).toJson(),
+        const Model(name: 'name1').toJson(),
+        const Model(name: 'name2').toJson(),
       ];
       await db.delete('${defaultTablePrefix}_${Model.tableName}');
-      await db.query(
-        '''
-INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''',
-      );
+      await db.query('''
+INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''');
 
       // Act
       final result = await repository.getAllModels(defaultTablePrefix);
@@ -91,9 +85,7 @@ INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''',
   group('getModelById', () {
     test('should return a model by id', () async {
       // Arrange
-      const model = Model(
-        name: 'name1',
-      );
+      const model = Model(name: 'name1');
       final result = await repository.createModel(defaultTablePrefix, model);
       final id = result.id;
 
@@ -116,15 +108,14 @@ INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''',
   group('updateModel', () {
     test('should update model', () async {
       // Arrange
-      const model = Model(
-        name: 'name1',
-      );
+      const model = Model(name: 'name1');
       final created = await repository.createModel(defaultTablePrefix, model);
 
       // Act
       const name1 = 'name one';
-      final updated =
-          await repository.updateModel(created.copyWith(name: name1));
+      final updated = await repository.updateModel(
+        created.copyWith(name: name1),
+      );
 
       // Assert
       expect(updated?.name, equals(name1));
@@ -144,9 +135,7 @@ INSERT INTO ${defaultTablePrefix}_${Model.tableName} ${jsonEncode(models)}''',
   group('deleteModel', () {
     test('should delete model', () async {
       // Arrange
-      const model = Model(
-        name: 'name1',
-      );
+      const model = Model(name: 'name1');
       final created = await repository.createModel(defaultTablePrefix, model);
 
       // Act

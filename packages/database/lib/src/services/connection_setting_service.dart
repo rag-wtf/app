@@ -16,34 +16,37 @@ class ConnectionSettingService {
   Future<bool> autoConnect() async {
     var autoConnect = false;
 
-    final autoConnectValue =
-        await _storage.read(key: ConnectionSetting.autoConnectKey);
+    final autoConnectValue = await _storage.read(
+      key: ConnectionSetting.autoConnectKey,
+    );
 
     if (autoConnectValue != null) {
       autoConnect = bool.parse(autoConnectValue);
     }
     _log.d('autoConnect $autoConnect');
     if (autoConnect) {
-      final lastConnectionKey =
-          await _storage.read(key: ConnectionSetting.lastConnectionKey);
+      final lastConnectionKey = await _storage.read(
+        key: ConnectionSetting.lastConnectionKey,
+      );
       _log.d('autoConnectionKey $lastConnectionKey');
       if (lastConnectionKey != null &&
-          await _connectionSettingRepository
-              .isValidConnectionKey(lastConnectionKey)) {
+          await _connectionSettingRepository.isValidConnectionKey(
+            lastConnectionKey,
+          )) {
         final connectionSettings = await _connectionSettingRepository
             .getAllConnectionSettings(lastConnectionKey);
-        final protocol = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.protocolKey}'];
-        final addressPort = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.addressPortKey}'];
-        final namespace = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.namespaceKey}'];
-        final database = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.databaseKey}'];
-        final username = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.usernameKey}'];
-        final password = connectionSettings[
-            '${lastConnectionKey}_${ConnectionSetting.passwordKey}'];
+        final protocol =
+            connectionSettings['${lastConnectionKey}_${ConnectionSetting.protocolKey}'];
+        final addressPort =
+            connectionSettings['${lastConnectionKey}_${ConnectionSetting.addressPortKey}'];
+        final namespace =
+            connectionSettings['${lastConnectionKey}_${ConnectionSetting.namespaceKey}'];
+        final database =
+            connectionSettings['${lastConnectionKey}_${ConnectionSetting.databaseKey}'];
+        final username =
+            connectionSettings['${lastConnectionKey}_${ConnectionSetting.usernameKey}'];
+        final password =
+            connectionSettings['${lastConnectionKey}_${ConnectionSetting.passwordKey}'];
         try {
           await connect(
             protocol!,
@@ -80,14 +83,9 @@ class ConnectionSettingService {
       ..d('Username: $username');
     try {
       await _db.connect('$protocol://$addressPort');
-      await _db.use(
-        namespace: namespace,
-        database: database,
-      );
+      await _db.use(namespace: namespace, database: database);
       if (username != null && username.isNotEmpty) {
-        await _db.signin(
-          {'username': username, 'password': password},
-        );
+        await _db.signin({'username': username, 'password': password});
       }
     } catch (e) {
       final error = e.toString();
@@ -111,16 +109,18 @@ class ConnectionSettingService {
   Future<void> deletePassword() async {
     var autoConnect = false;
 
-    final autoConnectValue =
-        await _storage.read(key: ConnectionSetting.autoConnectKey);
+    final autoConnectValue = await _storage.read(
+      key: ConnectionSetting.autoConnectKey,
+    );
 
     if (autoConnectValue != null) {
       autoConnect = bool.parse(autoConnectValue);
     }
 
     if (autoConnect) {
-      final lastConnectionKey =
-          await _storage.read(key: ConnectionSetting.lastConnectionKey);
+      final lastConnectionKey = await _storage.read(
+        key: ConnectionSetting.lastConnectionKey,
+      );
       await _connectionSettingRepository.deleteConnectionSetting(
         lastConnectionKey!,
         ConnectionSetting.passwordKey,
@@ -130,8 +130,9 @@ class ConnectionSettingService {
 
   Future<String?> getCurrentConnectionName() async {
     String? name;
-    final lastConnectionKey =
-        await _storage.read(key: ConnectionSetting.lastConnectionKey);
+    final lastConnectionKey = await _storage.read(
+      key: ConnectionSetting.lastConnectionKey,
+    );
     if (lastConnectionKey != null) {
       final connectionSetting = await _connectionSettingRepository
           .getConnectionSetting(lastConnectionKey, ConnectionSetting.nameKey);

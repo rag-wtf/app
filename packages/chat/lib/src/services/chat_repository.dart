@@ -17,10 +17,7 @@ class ChatRepository {
     return tables.containsKey('${tablePrefix}_${Chat.tableName}');
   }
 
-  Future<void> createSchema(
-    String tablePrefix, [
-    Transaction? txn,
-  ]) async {
+  Future<void> createSchema(String tablePrefix, [Transaction? txn]) async {
     final sqlSchema = Chat.sqlSchema.replaceAll('{prefix}', tablePrefix);
     _log.d(sqlSchema);
     txn == null ? await _db.query(sqlSchema) : txn.query(sqlSchema);
@@ -32,7 +29,7 @@ class ChatRepository {
     Transaction? txn,
   ]) async {
     final payload = chat.toJson();
-/*    final sql = '''
+    /*    final sql = '''
 CREATE ONLY ${tablePrefix}_${Chat.tableName} 
 SET name=\$name, 
     metadata=\$metadata,
@@ -46,11 +43,7 @@ CREATE ONLY ${tablePrefix}_${Chat.tableName} CONTENT ${jsonEncode(payload)};''';
     if (txn == null) {
       final result = await _db.query(sql);
 
-      return Chat.fromJson(
-        Map<String, dynamic>.from(
-          result! as Map,
-        ),
-      );
+      return Chat.fromJson(Map<String, dynamic>.from(result! as Map));
     } else {
       txn.query(sql, bindings: payload);
       return chat;
@@ -63,18 +56,15 @@ CREATE ONLY ${tablePrefix}_${Chat.tableName} CONTENT ${jsonEncode(payload)};''';
     int pageSize = 20,
     bool ascendingOrder = false,
   }) async {
-    final sql = '''
+    final sql =
+        '''
 SELECT * FROM ${tablePrefix}_${Chat.tableName} 
 ORDER BY updated ${ascendingOrder ? 'ASC' : 'DESC'}
 ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     final results = (await _db.query(sql))! as List;
     return results
         .map(
-          (result) => Chat.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          ),
+          (result) => Chat.fromJson(Map<String, dynamic>.from(result as Map)),
         )
         .toList();
   }
@@ -89,11 +79,7 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
   Future<Chat?> getChatById(String id) async {
     final result = await _db.select(id);
     return result != null
-        ? Chat.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Chat.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 
@@ -109,22 +95,14 @@ ${page == null ? ';' : ' LIMIT $pageSize START ${page * pageSize};'}''';
     final sql = 'UPDATE ONLY $chatId MERGE ${jsonEncode(payload)}';
     _log.d(sql);
     final result = await _db.query(sql);
-    return Chat.fromJson(
-      Map<String, dynamic>.from(
-        result! as Map,
-      ),
-    );
+    return Chat.fromJson(Map<String, dynamic>.from(result! as Map));
   }
 
   Future<Chat?> deleteChat(String id) async {
     final result = await _db.delete(id);
 
     return result != null
-        ? Chat.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Chat.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 

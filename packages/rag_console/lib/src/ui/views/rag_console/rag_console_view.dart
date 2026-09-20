@@ -22,11 +22,10 @@ class RagConsoleView extends StackedView<RagConsoleViewModel> {
   ) {
     return Scaffold(
       body: viewModel.isBusy
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : Console(
-              content: '''
+              content:
+                  '''
 Connected to ${viewModel.surrealEndpoint}, ns: ${viewModel.surrealNamespace}, db: ${viewModel.surrealDatabase}
 ${viewModel.surrealVersion}.
 
@@ -38,9 +37,7 @@ ${RagConsoleViewModel.helpMessageHint}
   }
 
   @override
-  RagConsoleViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  RagConsoleViewModel viewModelBuilder(BuildContext context) =>
       RagConsoleViewModel(tablePrefix, inPackage: inPackage);
 
   @override

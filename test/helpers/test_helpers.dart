@@ -13,14 +13,14 @@ import 'test_helpers.mocks.dart';
     MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
     MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
     MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
-// @stacked-mock-spec
+    // @stacked-mock-spec
   ],
 )
 void registerServices() {
   getAndRegisterNavigationService();
   getAndRegisterBottomSheetService();
   getAndRegisterDialogService();
-// @stacked-mock-register
+  // @stacked-mock-register
 }
 
 MockNavigationService getAndRegisterNavigationService() {

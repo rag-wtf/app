@@ -8,9 +8,7 @@ import 'document_service_test.dart' as document_service;
 import 'embedding_repository_test.dart' as embedding_repository;
 
 Future<void> main() async {
-  final logger = Logger(
-    printer: PrettyPrinter(),
-  );
+  final logger = Logger(printer: PrettyPrinter());
   await setupLocator();
   final wasm = const String.fromEnvironment('WASM').isNotEmpty;
   logger.i('WasmEngine: $wasm');

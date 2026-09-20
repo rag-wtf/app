@@ -22,18 +22,14 @@ class DocumentApiService {
     Dio dio,
     String url,
     DocumentItem documentItem,
-    Future<void> Function(
-      DocumentItem documentItem,
-      DocumentStatus status,
-    ) onUpdateDocumentStatus,
-    void Function(
-      DocumentItem documentItem,
-      double progress,
-    ) onProgress,
+    Future<void> Function(DocumentItem documentItem, DocumentStatus status)
+    onUpdateDocumentStatus,
+    void Function(DocumentItem documentItem, double progress) onProgress,
     Future<void> Function(
       DocumentItem documentItem,
       Map<String, dynamic>? responseData,
-    ) onSplitCompleted,
+    )
+    onSplitCompleted,
     Future<Null> Function(DocumentItem documentItem, dynamic error) onError,
   ) async {
     final bytesLength = documentItem.item.byteData![0].length;
@@ -45,41 +41,45 @@ class DocumentApiService {
       contentType: MediaType.parse(documentItem.item.fileMimeType),
     );
 
-    final formData = FormData.fromMap({
-      'file': multipartFile,
-    });
+    final formData = FormData.fromMap({'file': multipartFile});
 
-    await dio.post<Map<String, dynamic>>(
-      url,
-      data: formData,
-      cancelToken: documentItem.cancelToken,
-      onSendProgress: (sent, total) async {
-        if (documentItem.item.status == DocumentStatus.pending) {
-          _log.d('updateDocumentStatus(DocumentStatus.splitting)');
-          await onUpdateDocumentStatus(documentItem, DocumentStatus.splitting);
-        }
+    await dio
+        .post<Map<String, dynamic>>(
+          url,
+          data: formData,
+          cancelToken: documentItem.cancelToken,
+          onSendProgress: (sent, total) async {
+            if (documentItem.item.status == DocumentStatus.pending) {
+              _log.d('updateDocumentStatus(DocumentStatus.splitting)');
+              await onUpdateDocumentStatus(
+                documentItem,
+                DocumentStatus.splitting,
+              );
+            }
 
-        final progress = sent / total;
-        onProgress(documentItem, progress);
-      },
-      onReceiveProgress: (count, total) async {
-        /* The same code above works but not the following code?
+            final progress = sent / total;
+            onProgress(documentItem, progress);
+          },
+          onReceiveProgress: (count, total) async {
+            /* The same code above works but not the following code?
         if (total == 0 && widgetModel.item.status == DocumentStatus.pending) {
           await widgetModel.updateDocumentStatus(DocumentStatus.splitting);
         }
         */
-        final progress = count * 0.01;
-        onProgress(documentItem, progress);
-      },
-    ).then((response) async {
-      await onSplitCompleted(documentItem, response.data).timeout(
-        Duration(milliseconds: max(bytesLength * 3, 600 * 1000)),
-      );
-    }).catchError((dynamic error) async {
-      await onError(documentItem, error);
-    }).timeout(
-      Duration(milliseconds: max(bytesLength * 3, 600 * 1000)),
-    );
+            final progress = count * 0.01;
+            onProgress(documentItem, progress);
+          },
+        )
+        .then((response) async {
+          await onSplitCompleted(
+            documentItem,
+            response.data,
+          ).timeout(Duration(milliseconds: max(bytesLength * 3, 600 * 1000)));
+        })
+        .catchError((dynamic error) async {
+          await onError(documentItem, error);
+        })
+        .timeout(Duration(milliseconds: max(bytesLength * 3, 600 * 1000)));
   }
 
   Future<List<List<double>>> index(
@@ -116,20 +116,12 @@ class DocumentApiService {
               ),
               data: data,
             )
-            .timeout(
-              const Duration(seconds: 900),
-            );
+            .timeout(const Duration(seconds: 900));
 
         final embeddingsDataMap = response.data;
         return List<Map<String, dynamic>>.from(
           embeddingsDataMap?['data'] as List,
-        )
-            .map(
-              (item) => List<double>.from(
-                item['embedding'] as List,
-              ),
-            )
-            .toList();
+        ).map((item) => List<double>.from(item['embedding'] as List)).toList();
       },
     );
     _log.d('embeddings.length = ${embeddings.length}');
@@ -137,17 +129,12 @@ class DocumentApiService {
     return embeddings;
   }
 
-  Future<SplitConfig> getSplitConfig(
-    String splitUrl,
-    Dio dio,
-  ) async {
+  Future<SplitConfig> getSplitConfig(String splitUrl, Dio dio) async {
     try {
       final response = await dio.get<Map<String, dynamic>>(
         '$splitUrl/config',
         options: Options(
-          headers: {
-            'Accept': 'application/json',
-          },
+          headers: {'Accept': 'application/json'},
           validateStatus: (status) => status != null && status < 500,
         ),
       );

@@ -24,10 +24,8 @@ class ChatListView extends StackedView<ChatListViewModel> {
       body: InfiniteList(
         itemCount: viewModel.chats.length,
         centerEmpty: true,
-        emptyBuilder: (context) => Text(
-          'No chats',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        emptyBuilder: (context) =>
+            Text('No chats', style: Theme.of(context).textTheme.titleMedium),
         isLoading: viewModel.isBusy,
         onFetchData: viewModel.fetchChats,
         hasReachedMax: viewModel.hasReachedMax,
@@ -51,8 +49,6 @@ class ChatListView extends StackedView<ChatListViewModel> {
   }
 
   @override
-  ChatListViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  ChatListViewModel viewModelBuilder(BuildContext context) =>
       ChatListViewModel(tablePrefix);
 }

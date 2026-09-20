@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:analytics/analytics.dart';
@@ -30,11 +29,7 @@ class ChatView extends StackedView<ChatViewModel> {
   final Future<bool> Function() showNewChatDialogFunction;
 
   @override
-  Widget builder(
-    BuildContext context,
-    ChatViewModel viewModel,
-    Widget? child,
-  ) {
+  Widget builder(BuildContext context, ChatViewModel viewModel, Widget? child) {
     final isSmallScreen = MediaQuery.sizeOf(context).width < 600;
     final horizontalPadding = isSmallScreen ? 16.0 : 32.0;
     return Column(
@@ -52,14 +47,12 @@ class ChatView extends StackedView<ChatViewModel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (const String.fromEnvironment(promptsKey).isNotEmpty)
-                      PromptPanel(
-                        (text) {
-                          unawaited(
-                            _analyticsFacade.trackChatStartedFromPrompt(text),
-                          );
-                          unawaited(_onSend(viewModel, text));
-                        },
-                      ),
+                      PromptPanel((text) {
+                        unawaited(
+                          _analyticsFacade.trackChatStartedFromPrompt(text),
+                        );
+                        unawaited(_onSend(viewModel, text));
+                      }),
                   ],
                 );
               },
@@ -77,9 +70,7 @@ class ChatView extends StackedView<ChatViewModel> {
             ),
           ),
         ),
-        const SizedBox(
-          height: 5,
-        ),
+        const SizedBox(height: 5),
         LayoutBuilder(
           builder: (context, constraints) {
             EdgeInsetsGeometry buttonMargin;
@@ -94,7 +85,7 @@ class ChatView extends StackedView<ChatViewModel> {
               buttonPadding = const EdgeInsets.all(4);
               buttonIconSize = 24;
             }
-            
+
             return MessageBar(
               messageBarHintText: 'Message $appTitle',
               isSendButtonBusy: viewModel.isGenerating,
@@ -103,9 +94,7 @@ class ChatView extends StackedView<ChatViewModel> {
               sendButtonPadding: buttonPadding,
               sendButtonIconSize: buttonIconSize,
               onSend: (text) async {
-                unawaited(
-                  _analyticsFacade.trackChatStarted(),
-                );
+                unawaited(_analyticsFacade.trackChatStarted());
                 await _onSend(viewModel, text);
               },
               onStop: viewModel.isStreaming ? viewModel.stop : null,
@@ -140,9 +129,7 @@ class ChatView extends StackedView<ChatViewModel> {
   }
 
   @override
-  ChatViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
+  ChatViewModel viewModelBuilder(BuildContext context) =>
       ChatViewModel(tablePrefix);
 
   @override

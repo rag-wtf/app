@@ -51,8 +51,10 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     Transaction? txn,
   ]) async {
     _log.d('rebuildEmbeddingIndex($tablePrefix)');
-    final sql = Embedding.rebuildEmbeddingsMtreeIndex
-        .replaceAll('{prefix}', tablePrefix);
+    final sql = Embedding.rebuildEmbeddingsMtreeIndex.replaceAll(
+      '{prefix}',
+      tablePrefix,
+    );
     if (txn == null) {
       return await _db.query(sql);
     } else {
@@ -67,17 +69,14 @@ Cannot change dimensions, there are existing embeddings in the database.''';
     Transaction? txn,
   ]) async {
     final payload = embedding.toJson();
-    final sql = '''
+    final sql =
+        '''
 CREATE ONLY ${tablePrefix}_${Embedding.tableName} 
 CONTENT ${jsonEncode(payload)};''';
     if (txn == null) {
       final result = await _db.query(sql);
 
-      return Embedding.fromJson(
-        Map<String, dynamic>.from(
-          result! as Map,
-        ),
-      );
+      return Embedding.fromJson(Map<String, dynamic>.from(result! as Map));
     } else {
       txn.query(sql);
       return embedding;
@@ -98,11 +97,8 @@ CONTENT ${jsonEncode(payload)};''';
 
       return results
           .map(
-            (result) => Embedding.fromJson(
-              Map<String, dynamic>.from(
-                result as Map,
-              ),
-            ),
+            (result) =>
+                Embedding.fromJson(Map<String, dynamic>.from(result as Map)),
           )
           .toList();
     } else {
@@ -112,15 +108,15 @@ CONTENT ${jsonEncode(payload)};''';
   }
 
   Future<List<Embedding>> getAllEmbeddings(String tablePrefix) async {
-    final results = (await _db
-        .query('SELECT * FROM ${tablePrefix}_${Embedding.tableName}'))! as List;
+    final results =
+        (await _db.query(
+              'SELECT * FROM ${tablePrefix}_${Embedding.tableName}',
+            ))!
+            as List;
     return results
         .map(
-          (result) => Embedding.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          ),
+          (result) =>
+              Embedding.fromJson(Map<String, dynamic>.from(result as Map)),
         )
         .toList();
   }
@@ -129,11 +125,7 @@ CONTENT ${jsonEncode(payload)};''';
     final result = await _db.select(id);
 
     return result != null
-        ? Embedding.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Embedding.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 
@@ -148,11 +140,7 @@ CONTENT ${jsonEncode(payload)};''';
         timeout: Duration(seconds: embeddings.length),
         (txn) async {
           for (final embedding in embeddings) {
-            await updateEmbedding(
-              tablePrefix,
-              embedding,
-              txn,
-            );
+            await updateEmbedding(tablePrefix, embedding, txn);
           }
           await rebuildEmbeddingIndex(tablePrefix, txn);
         },
@@ -161,11 +149,7 @@ CONTENT ${jsonEncode(payload)};''';
       return results is Iterable ? results as List : [results];
     } else {
       for (final embedding in embeddings) {
-        await updateEmbedding(
-          tablePrefix,
-          embedding,
-          txn,
-        );
+        await updateEmbedding(tablePrefix, embedding, txn);
       }
       await rebuildEmbeddingIndex(tablePrefix, txn);
       return List.empty();
@@ -191,11 +175,7 @@ CONTENT ${jsonEncode(payload)};''';
     final sql = 'UPDATE ONLY $embeddingId MERGE ${jsonEncode(payload)};';
     if (txn == null) {
       final result = await _db.query(sql);
-      return Embedding.fromJson(
-        Map<String, dynamic>.from(
-          result! as Map,
-        ),
-      );
+      return Embedding.fromJson(Map<String, dynamic>.from(result! as Map));
     } else {
       txn.query(sql);
       return null;
@@ -206,11 +186,7 @@ CONTENT ${jsonEncode(payload)};''';
     final result = await _db.delete(id);
 
     return result != null
-        ? Embedding.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          )
+        ? Embedding.fromJson(Map<String, dynamic>.from(result as Map))
         : null;
   }
 
@@ -220,7 +196,8 @@ CONTENT ${jsonEncode(payload)};''';
     int k,
     double threshold,
   ) async {
-    final sql = '''
+    final sql =
+        '''
 SELECT * FROM (
   SELECT *, vector::similarity::cosine(embedding, $vector) AS score
   FROM ${tablePrefix}_${Embedding.tableName}
@@ -230,16 +207,11 @@ WHERE score >= $threshold
 ORDER BY score DESC;
 ''';
     _log.d('sql $sql');
-    final results = (await _db.query(
-      sql,
-    ))! as List;
+    final results = (await _db.query(sql))! as List;
     return results
         .map(
-          (result) => Embedding.fromJson(
-            Map<String, dynamic>.from(
-              result as Map,
-            ),
-          ),
+          (result) =>
+              Embedding.fromJson(Map<String, dynamic>.from(result as Map)),
         )
         .toList();
   }

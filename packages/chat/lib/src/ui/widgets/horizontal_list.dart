@@ -21,10 +21,7 @@ class HorizontalList extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Sources:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          const Text('Sources:', style: TextStyle(fontWeight: FontWeight.bold)),
           verticalSpaceTiny,
           Container(
             color: Colors.transparent,
@@ -32,10 +29,7 @@ class HorizontalList extends StatelessWidget {
             // REF: https://docs.flutter.dev/release/breaking-changes/default-scroll-behavior-drag#copy-and-modify-existing-scrollbehavior
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
-                dragDevices: {
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.mouse,
-                },
+                dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
               ),
               child: ListView.builder(
                 controller: _scrollController,
@@ -45,14 +39,13 @@ class HorizontalList extends StatelessWidget {
                   return Card(
                     margin: index == 0
                         ? const EdgeInsets.only(right: itemMargin)
-                        : const EdgeInsets.symmetric(
-                            horizontal: itemMargin,
-                          ),
+                        : const EdgeInsets.symmetric(horizontal: itemMargin),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: itemPadding),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: itemPadding,
+                        ),
                         width: itemWidth,
                         //color: Theme.of(context).colorScheme.surface,
                         child: ScrollConfiguration(

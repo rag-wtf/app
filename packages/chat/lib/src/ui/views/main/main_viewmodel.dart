@@ -25,10 +25,7 @@ class MainViewModel extends BaseViewModel {
     if (inPackage) {
       setBusy(true);
       await connectDatabase();
-      await _settingService.initialise(
-        tablePrefix,
-        analyticsEnabled: true,
-      );
+      await _settingService.initialise(tablePrefix, analyticsEnabled: true);
       await _chatService.initialise(tablePrefix, defaultEmbeddingsDimensions);
       setBusy(false);
     }

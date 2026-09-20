@@ -22,7 +22,8 @@ sealed class ChatMessage with _$ChatMessage {
 
   static const tableName = 'chat_messages';
 
-  static const sqlSchema = '''
+  static const sqlSchema =
+      '''
 DEFINE TABLE {prefix}_$tableName SCHEMALESS;
 DEFINE FIELD id ON {prefix}_$tableName VALUE <record>(\$value);
 DEFINE FIELD in ON {prefix}_$tableName TYPE record<{prefix}_${Chat.tableName}>;
